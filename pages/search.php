@@ -1892,87 +1892,84 @@ if($display != 'map')
             lastInteraction = "keyboard";
         });
 
-        function resetMenuState($menu){
-            $menu.find('.menu-confirm').attr('aria-hidden', 'true').removeClass('is-confirm');
-        }
-
         function closeAllMenus() {
             jQuery('.flyout-menu.is-open').each(function(){
                 const $m = jQuery(this);
-                $m.removeClass('is-open').attr('aria-hidden', 'true');
-                resetMenuState($m);
+                $m.removeClass('is-open is-confirm').attr('aria-hidden', 'true');
                 $m.css({ display: '' });
             });
+            jQuery('.resource-card-action-menu').removeClass("is-open");
             jQuery('.resource-card-action-bar[aria-expanded="true"]').attr('aria-expanded', 'false');
         }
 
 
 
 function positionMenu($btn, $menu) {
-  const GAP = 0;     // space between button and menu
-  const PAD = 0;     // padding from container edges
+  const GAP = 0;
+  const PAD = 0;
 
   const $bar = $btn.closest('.resource-card-action-bar');
-  const $container = $btn.closest('#CentralSpaceResources'); // <-- change selector if needed
-
+  const $container = $btn.closest('#CentralSpaceResources');
   if (!$bar.length || !$container.length) return;
 
   const barRect = $bar[0].getBoundingClientRect();
   const btnRect = $btn[0].getBoundingClientRect();
   const contRect = $container[0].getBoundingClientRect();
 
-  // Measure menu size (needs to be display:block to measure)
-  const wasHidden = !$menu.hasClass('is-open');
-  const prevDisplay = $menu[0].style.display;
-  const prevVis = $menu[0].style.visibility;
-
+  // Measure menu
+  const el = $menu[0];
+  const prev = { display: el.style.display, visibility: el.style.visibility };
   $menu.css({ visibility: 'hidden', display: 'block' });
   const menuW = $menu.outerWidth();
   const menuH = $menu.outerHeight();
+  $menu.css(prev);
 
-  // restore measurement styles if it was hidden
-  if (wasHidden) $menu.css({ display: prevDisplay, visibility: prevVis });
-  else $menu.css({ visibility: prevVis });
-
-  // Prefer: down + right (in viewport coords)
-  let leftVp = btnRect.right + GAP;
-  let topVp  = btnRect.bottom + GAP;
-
-  // Available space inside the scroll container (viewport coords)
   const contLeft   = contRect.left + PAD;
   const contRight  = contRect.right - PAD;
   const contTop    = contRect.top + PAD;
   const contBottom = contRect.bottom - PAD;
 
-  // Flip horizontally if it would overflow container right edge
-  if (leftVp + menuW > contRight) {
-    leftVp = btnRect.left - GAP - menuW; // open to the left
-  }
+  // Decide horizontal direction by space (not by the initial guess)
+  const spaceRight = contRight - btnRect.left;   // if left-aligned to button
+  const spaceLeft  = btnRect.right - contLeft;   // if right-aligned to button
 
-  // Flip vertically if it would overflow container bottom edge
-  if (topVp + menuH > contBottom) {
-    topVp = btnRect.top - GAP - menuH;   // open upwards
-  }
+  const openRight = spaceRight >= menuW || spaceRight >= spaceLeft;
 
-  // Clamp so it stays fully inside container viewport
+  // Horizontal: ALIGN EDGE with button
+  let leftVp = openRight
+    ? btnRect.left                      // menu left aligns with button left
+    : (btnRect.right - menuW);          // menu right aligns with button right
+
+  // Vertical: keep your original “below, else above”
+  let topVp = btnRect.bottom + GAP;
+  if (topVp + menuH > contBottom) topVp = btnRect.top - GAP - menuH;
+
+  // Clamp inside container viewport
   leftVp = Math.max(contLeft, Math.min(leftVp, contRight - menuW));
   topVp  = Math.max(contTop,  Math.min(topVp,  contBottom - menuH));
 
-  // Convert viewport coords -> bar-relative coords (because menu is absolute inside bar)
+  // Convert viewport -> bar-relative
   const left = leftVp - barRect.left;
   const top  = topVp  - barRect.top;
 
   $menu.css({ left: Math.round(left), top: Math.round(top) });
 }
 
+
+
         jQuery(document).on('click', '.flyout-menu .menu-item[data-action="delete"]', function (e) {
 
-            console.debug("toggle delete");
             e.preventDefault();
             e.stopPropagation();
+            
+            const $menuitem = jQuery(this);
+            $menuitem.addClass("is-selected");
 
-            const $flyout = jQuery(this).closest('.flyout-menu');
-            $flyout.find('.menu-confirm').attr('aria-hidden', 'false').addClass('is-confirm');
+
+            const $flyout = $menuitem.closest('.flyout-menu');
+
+            $flyout.addClass('is-confirm');
+            $flyout.find('.menu-confirm').attr('aria-hidden', 'false');
 
         });
 
@@ -2005,6 +2002,7 @@ function positionMenu($btn, $menu) {
             closeAllMenus();
 
             if (!isOpen) {
+                $btn.addClass("is-open");
                 $menu.addClass('is-open').attr('aria-hidden', 'false');
                 $btn.attr('aria-expanded', 'true');
                 positionMenu($btn, $menu);

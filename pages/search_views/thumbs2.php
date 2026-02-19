@@ -60,8 +60,8 @@ $thumbs_displayed_fields_height = $resource_panel_height_max = max($thumbs_displ
      id="ResourceShell<?php echo escape($ref); ?>">
     <div class="resource-card-action-bar">
         <?php 
-                if ($use_selection_collection) {
-            if (!in_array($result[$n]['resource_type'], $collection_block_restypes)) { ?>
+            if ($use_selection_collection) {
+                if (!in_array($result[$n]['resource_type'], $collection_block_restypes)) { ?>
                 <input 
                     type="checkbox" 
                     id="check<?php echo escape($ref); ?>" 
@@ -84,34 +84,9 @@ $thumbs_displayed_fields_height = $resource_panel_height_max = max($thumbs_displ
             }
         }
 
+        include "resource_actions_menu.php";
+
         ?>
-        <div class="resource-card-action-menu" aria-haspopup="menu" aria-expanded="false">
-            <i class="icon-ellipsis-vertical" aria-hidden="true"></i>
-        </div>
-        <div class="flyout-menu" role="menu" aria-hidden="true">
-            <div class="menu-items" role="menu" aria-hidden="true">
-                <div class="menu-item" role="menuitem" data-action="add">
-                    <i class="icon-circle-plus" aria-hidden="true"></i>
-                    <span>Add to current collection</span>
-                </div>
-                <div class="menu-item" role="menuitem" data-action="share">
-                    <i class="icon-share" aria-hidden="true"></i>
-                    <span>Share</span>
-                </div>
-                <div class="menu-item" role="menuitem" data-action="edit">
-                    <i class="icon-pencil" aria-hidden="true"></i>
-                    <span>Edit</span>
-                </div>
-                <div class="menu-item menu-item-danger" role="menuitem" data-action="delete">
-                    <i class="icon-trash" aria-hidden="true"></i>
-                    <span>Delete</span>
-                </div>
-                <div class="menu-confirm" aria-hidden="true">
-                    <p class="menu-confirm-text">Are you sure? This action cannot be reversed.</p>
-                    <button class="menu-confirm-btn" type="button" data-action="confirm-delete">Yes, delete resource</button>
-                </div>
-            </div>
-        </div>
     </div>
     <div class="resource-card-image normal">
         <?php hook("resourcethumbtop"); ?>

@@ -3331,26 +3331,31 @@ div.slide:not([style]) {
 }
 
 .resource-card-action-menu {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-  width: 24px;
-  height: 24px;
+    width: 20px;
+    height: 20px;
+    border-radius: 2px;
 
-  border-radius: 50%;
-  cursor: pointer;
+    cursor: pointer;
 
-  transition: background-color 0.15s ease, transform 0.05s ease;
+    transition: background-color 0.15s ease, transform 0.05s ease;
 }
 
 .resource-card-action-menu:hover {
-  background-color: #e6e6e6;
+    background: var(--Colour-Surface-200, #F5F5F5);
+}
+
+.resource-card-action-menu.is-open {
+    background-color: black;
+    color: white;
 }
 
 
 .resource-card-action-menu i {
-  font-size: 16px;
+  font-size: 20px;
   pointer-events: none; /* ensures the div receives the click */
 }
 
@@ -3445,30 +3450,26 @@ div.slide:not([style]) {
   transition: background-color .15s ease, color .15s ease;
 }
 
-/* icon inherits color from the parent */
 .resource-card-add-remove i{
   color: inherit;
   line-height: 1;
 }
 
-/* default */
 .resource-card-add-remove{
   color: #333;
   background: transparent;
 }
 
-/* “invert” on hover */
 .resource-card-add-remove:hover{
   background-color: #333;
-  color: #fff;   /* ✅ this changes the <i> colour */
+  color: #fff;
 }
 
 
-/* Menu panel */
 .flyout-menu {
-    position: absolute;          /* ✅ scrolls with card */
+    position: absolute;
     display: flex;
-    width: 220px;
+    /* width: 220px; */
     padding: var(--space-4) 0;
     flex-direction: column;
     align-items: flex-start;
@@ -3478,14 +3479,13 @@ div.slide:not([style]) {
     border-radius: var(--space-4);
     background: var(--Colour-Surface-50, #FFF);
 
-    /* Elevation/Level1/Shadow */
     box-shadow: 0 4px 8px 8px rgba(0, 0, 0, 0.10);
 
-    z-index: 1000;
+    /* z-index: 1000; */
 }
 
 .flyout-menu.is-open {
-    display: block;
+    display: flex;
 }
 
 .menu-items {
@@ -3498,22 +3498,27 @@ div.slide:not([style]) {
     background: var(--Form-Form-Divider, #D4D5D2);
 }
 
-/* Menu rows */
 .menu-item {
     display: flex;
-    padding: var(--space-12);
+    width: 196px;
+    padding: var(--space-12, 12px);
     align-items: center;
     gap: 8px;
-    align-self: stretch;
+    cursor: pointer;
 
+    font-size: 16px;
+
+    color: var(--Colour-Typography-900, #0C0D0C);
+    background: var(--Colour-Surface-50, #FFF);
+}
+
+.menu-item span {
     color: var(--Colour-Typography-900, #0C0D0C);
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
     line-height: normal;
 
-    background: var(--Colour-Surface-50, #FFF);
-    transition: background-color 0.15s ease, transform 0.05s ease;
 }
 
 .menu-item:hover{ 
@@ -3524,48 +3529,100 @@ div.slide:not([style]) {
     background: var(--Colour-Surface-300, #EAEBEA);
 }
 
+.menu-item-danger:hover, .menu-item-danger:hover span {  
+    color: var(--Colour-Global-White, #FFF);
+    background: var(--Colour-Feedback-Error-Dark, #990101);
+}
+
+.menu-item-danger:active, .menu-item-danger:active span {
+    color: var(--Colour-Global-White, #FFF);
+    background: var(--Colour-Feedback-Error-Dark, #990101);
+}
+
 .menu-item i {
     width: 15.998px;
     height: 15.998px;
     flex-shrink: 0;
 }
 
-/* Custom focus style */
-.menu-item:focus-visible {
-  background-color: #e9e9e9;
-  outline: none;
+.flyout-menu.is-confirm .menu-item-danger, .flyout-menu.is-confirm .menu-item-danger span {
+    color: var(--Colour-Feedback-Error-Dark, #990101);
+    background: var(--Colour-Feedback-Error-Lighter, #F9E6E6);
 }
 
-.menu-item-danger { color: #b00020; }
-.menu-item-danger:hover { background: #f7e3e6; } /* light red tint */
+.flyout-menu.is-confirm .menu-item-danger:hover, .flyout-menu.is-confirm .menu-item-danger:hover span {
+    color: var(--Colour-Feedback-Error-Dark, #990101);
+    background: var(--Colour-Feedback-Error-Lighter, #F9E6E6);
+}
+
+.flyout-menu.is-confirm .menu-item-danger:active, .flyout-menu.is-confirm .menu-item-danger:active span {
+    color: var(--Colour-Feedback-Error-Dark, #990101);
+    background: var(--Colour-Feedback-Error-Lighter, #F9E6E6);
+}
 
 .menu-confirm {
-  display: none;
-  padding: 12px 14px 14px;
-  border-top: 1px solid rgba(0,0,0,.10);
+    display: grid;
+    width: 220px;
+    padding: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    align-self: stretch;
+
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 200ms ease;
+
+    background: var(--Colour-Surface-50, #FFF);
 }
 
-.menu-confirm-text{
-  margin: 0 0 12px;
-  font-size: 13px;
-  line-height: 1.35;
-  color: #222;
+.menu-confirm-text {
+    color: var(--Colour-Typography-900, #0C0D0C);
+
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%;
+    padding: 0;
 }
 
-/* Confirm button */
 .menu-confirm-btn {
-  width: 100%;
-  padding: 10px 12px;
-  border-radius: 8px;
-  border: 1px solid #b00020;
-  background: #fff;
-  color: #b00020;
-  font-weight: 600;
-  cursor: pointer;
-}
-.menu-confirm-btn:hover { background: #fdecee; } /* subtle tint */
+    width: 100%;
+    padding: 10px 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: var(--space-4, 4px);
 
+    color: var(--Colour-Feedback-Error-Default, #C20101);
+    border: 1px solid var(--Colour-Feedback-Error-Default, #C20101);
+    background: var(--Colour-Feedback-Error-Lightest, #FCF2F2);
+}
 
 .menu-confirm.is-confirm {
-    display: block;
+    grid-template-rows: 1fr;
+}
+
+.menu-confirm-inner{
+
+    min-height: 0;
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    padding: 0 12px;
+
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity 150ms ease, transform 150ms ease, padding 200ms ease;
+}
+
+.flyout-menu.is-confirm .menu-confirm{
+    grid-template-rows: 1fr;
+}
+
+.flyout-menu.is-confirm .menu-confirm-inner {
+    opacity: 1;
+    transform: translateY(0);
+    padding: 12px;
 }
