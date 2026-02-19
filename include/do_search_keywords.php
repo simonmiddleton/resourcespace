@@ -655,10 +655,12 @@ if ($keysearch) {
                                                         WHERE ";
 
                                     if (preg_match('/(a-zA-Z0-9]{3,})/', $keyword, $matches)) {
-                                        foreach( $matches as $match) {
-                                        // Full text matching is used to reduce the rows checked by regex where possible
-                                        $union->parameters = array_merge(['s',$match], $union->parameters);
-                                        $union->sql .= "MATCH(name) AGAINST (? IN BOOLEAN MODE) AND ";
+                                        foreach($matches as $match) {
+                                            if (!in_array($match, $stop_words)) {
+                                                // Full text matching is used to reduce the rows checked by regex where possible
+                                                $union->parameters = array_merge(['s',$match], $union->parameters);
+                                                $union->sql .= "MATCH(name) AGAINST (? IN BOOLEAN MODE) AND ";
+                                            }
                                         }
                                     }
 
