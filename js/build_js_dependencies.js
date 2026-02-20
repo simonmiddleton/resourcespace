@@ -271,6 +271,11 @@ const files = [
             ]
         }
     },
+    {
+        src: 'node_modules/leaflet.markercluster',
+        dest: 'lib/leaflet_plugins/leaflet-markercluster-1.4.1',
+        filter: { patterns: ['dist/leaflet.markercluster.js*', 'dist/*.css', 'MIT-LICENCE.txt'] }
+    },
 
     // { src: '', dest: '', filter: { patterns: ['**/*.min.js*'] } },
     // {

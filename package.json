@@ -31,6 +31,7 @@
     "leaflet-control-geocoder": "1.10.0",
     "leaflet-providers": "1.10.2",
     "leaflet-shades": "^0.1.4",
+    "leaflet.markercluster": "^1.5.3",
     "lightbox2": "^2.11.5",
     "openseadragon": "^2.4.2",
     "tinymce": "^7.3.0",
