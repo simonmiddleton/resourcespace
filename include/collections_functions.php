@@ -705,6 +705,16 @@ function collection_readable($collection)
     global $userref, $usergroup, $ignore_collection_access, $collection_commenting;
 
     $k = getval('k', '');
+    if ($k != '') {
+        # Silent check on access key - not updating lastused in external_access_keys
+        #  *** This check should not replace access checking on load of the page ***
+        if (!isset($GLOBALS['collection_readable_key_check_cache'][$collection . $k])) {
+            $GLOBALS['collection_readable_key_check_cache'][$collection . $k] = check_access_key_collection($collection, $k, false);
+        }
+        $valid_external_access_key = $GLOBALS['collection_readable_key_check_cache'][$collection . $k];
+    } else {
+        $valid_external_access_key = false;
+    }
 
     # Fetch collection details.
     if (!is_numeric($collection)) {
@@ -726,7 +736,7 @@ function collection_readable($collection)
         ($collection_commenting && $collectiondata['request_feedback'] == 1)
         || $collectiondata['type'] == COLLECTION_TYPE_PUBLIC
         || ($collectiondata['type'] == COLLECTION_TYPE_FEATURED && featured_collection_check_access_control($collection))
-        || $k != ""
+        || $valid_external_access_key
         || ($k == "" && $ignore_collection_access)
     ) {
         return true;
@@ -748,7 +758,7 @@ function collection_readable($collection)
             || in_array($userref, $attached)
             || in_array($usergroup, $attached_groups)
             || checkperm("R")
-            || $k != ""
+            || $valid_external_access_key
             || ($k == "" && $ignore_collection_access))
     ) {
         return true;
@@ -3012,6 +3022,8 @@ function swap_collection_order($resource1, $resource2, $collection)
  */
 function update_collection_order($neworder, $collection, $offset = 0)
 {
+    global $pagename, $username;
+
     if (!is_array($neworder)) {
         exit("Error: invalid input to update collection function.");
     }
@@ -3031,6 +3043,22 @@ function update_collection_order($neworder, $collection, $offset = 0)
     }
     $updatesql = "update collection_resource set sortorder=99999 WHERE collection= ? and sortorder is NULL";
     ps_query($updatesql, ['i', $collection]);
+    // Only log reordering if there is something new to log, i.e. different user, ordered from a different page
+    $last_log = get_collection_log($collection, 1);
+    if (
+        (
+            count($last_log['data']) > 0
+            && (
+                $last_log['data'][0]['type'] !== LOG_CODE_COLLECTION_REORDER 
+                || date('Y-m-d', strtotime($last_log['data'][0]['date'])) !== date('Y-m-d')
+                || strpos($last_log['data'][0]['notes'], $pagename) == 0
+                || $last_log['data'][0]['username'] !== $username
+            )
+        )
+        || count($last_log['data']) == 0
+    ) {
+        collection_log($collection, LOG_CODE_COLLECTION_REORDER, null, "Collection reordered via " . $pagename);
+    }
 }
 
 /**

@@ -34,6 +34,7 @@ $noauth_page = in_array(
         "login",
         "user_change_password",
         "user_request",
+        "user_password",
         "done",
     ]
 );
@@ -210,16 +211,15 @@ $page_title = get_page_title($pagename, pluginname());
         <?php } ?>
         <!-- Web app manifest -->
         <link rel="manifest" href="<?php echo $baseurl . escape($web_app_manifest_location); ?>">
+        <!--Leaflet.js files-->
+        <link rel="stylesheet" href="<?php echo $baseurl; ?>/lib/leaflet/leaflet.css?css_reload_key=<?php echo $css_reload_key; ?>"/>
+        <script src="<?php echo $baseurl; ?>/lib/leaflet/leaflet.js?<?php echo $css_reload_key; ?>"></script>
 
         <?php
         if (!$disable_geocoding) {
             // Geocoding & leaflet maps
             // Load Leaflet and plugin files.
             ?>
-            <!--Leaflet.js files-->
-            <link rel="stylesheet" href="<?php echo $baseurl; ?>/lib/leaflet/leaflet.css?css_reload_key=<?php echo $css_reload_key; ?>"/>
-            <script src="<?php echo $baseurl; ?>/lib/leaflet/leaflet.js?<?php echo $css_reload_key; ?>"></script>
-
             <?php
             if ($geo_leaflet_maps_sources) { ?>
                 <!--Leaflet Providers v1.10.2 plugin files-->
@@ -544,6 +544,7 @@ $page_title = get_page_title($pagename, pluginname());
         ) {
             $div = "CentralSpaceLogin";
             $uicenterclass = "NoSearch LoginPage";
+            $uicenterclass .= is_login_slideshow_enabled() ? " slideshow-enabled" : '';
         } else {
             $div = "CentralSpace";
             if (in_array($pagename, $omit_searchbar_pages)) {

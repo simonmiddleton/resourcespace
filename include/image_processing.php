@@ -3139,6 +3139,11 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
             if ($actions["new_height"] > 0) {
                 $cmd_args['%new_height'] = (int) $actions['new_height'];
                 $command .= 'x%new_height';
+
+                // Transform preview generation relies on IM to try to keep aspect ratio, so do not bypass it
+                if (!array_key_exists('preview', $actions) || $actions['preview'] !== true) {
+                    $command .= "!";
+                }
             }
         }
     }
@@ -3890,7 +3895,7 @@ function create_previews_using_im(
                 || !$mpr_edited
             ) {
                 // Only add initial binary path source etc. if not using MPR or if this is the first part of the MPR command
-                $command = $convert_fullpath . ' %%SOURCEFILE%%[0] ' . $addcheckbdpre;
+                $command = $convert_fullpath . " {$addcheckbdpre} %%SOURCEFILE%%[0] ";
                 if ($imagemagick_mpr) {
                     $command .= ' -quiet -depth ' . $GLOBALS['imagemagick_mpr_depth'];
                 }
@@ -4256,7 +4261,7 @@ function create_previews_using_im(
             // Do not run for alternative uploads
             extract_mean_colour($target, $ref);
             // Flag database. If this was run for e.g. a video or PDF it is not the full set of previews
-            $has_image = (($resource_data["file_extension"] ?? "") === $extension && ($generateall || $previewonly)) ? RESOURCE_PREVIEWS_ALL : RESOURCE_PREVIEWS_MINIMAL;
+            $has_image = (!in_array($resource_data["file_extension"], $ffmpeg_supported_extensions) && $resource_data["file_extension"] != "pdf" && ($generateall || $previewonly)) ? RESOURCE_PREVIEWS_ALL : RESOURCE_PREVIEWS_MINIMAL;
 
             ps_query("UPDATE resource SET has_image=?, preview_extension='jpg', preview_attempts=0, file_modified=NOW() WHERE ref = ?", ["i",$has_image, "i", $ref]);
         } else {
