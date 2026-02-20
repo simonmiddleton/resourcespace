@@ -245,6 +245,11 @@ const files = [
     },
     { src: 'node_modules/leaflet/LICENSE', dest: 'documentation/licenses/leaflet.txt' }, 
 
+    {
+        src: 'node_modules/leaflet-providers',
+        dest: 'lib/leaflet_plugins/leaflet-providers-1.10.2',
+        filter: { patterns: ['**/leaflet-providers.js', '**/license.md'] }
+    },
     // { src: '', dest: '', filter: { patterns: ['**/*.min.js*'] } },
     // {
     //     src: '',

@@ -50,6 +50,9 @@ importers:
       leaflet:
         specifier: ^1.9.4
         version: 1.9.4
+      leaflet-providers:
+        specifier: 1.10.2
+        version: 1.10.2
       lightbox2:
         specifier: ^2.11.5
         version: 2.11.5
@@ -407,6 +410,9 @@ packages:
 
   keycode@2.2.1:
     resolution: {integrity: sha512-Rdgz9Hl9Iv4QKi8b0OlCRQEzp4AgVxyCtz5S/+VIHezDmrDhkp2N2TqBWOLz0/gbeREXOOiI9/4b8BY9uw2vFg==}
+
+  leaflet-providers@1.10.2:
+    resolution: {integrity: sha512-1l867LObxwuFBeyPeBewip8PAXKOnvEoujq4/9y2TKTiZNHH76ksBD6dfktGjgUrOF+IdjsGHkpASPE+v2DQLw==}
 
   leaflet@1.9.4:
     resolution: {integrity: sha512-nxS1ynzJOmOlHp+iL3FyWqK89GtNL8U8rvlMOsQdTTssxZwCXh8N2NB3GDQOL+YR3XnWyZAxwQixURb+FA74PA==}
@@ -982,6 +988,8 @@ snapshots:
       jquery: 3.7.1
 
   keycode@2.2.1: {}
+
+  leaflet-providers@1.10.2: {}
 
   leaflet@1.9.4: {}
 
