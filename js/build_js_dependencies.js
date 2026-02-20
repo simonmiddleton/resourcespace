@@ -276,6 +276,11 @@ const files = [
         dest: 'lib/leaflet_plugins/leaflet-markercluster-1.4.1',
         filter: { patterns: ['dist/leaflet.markercluster.js*', 'dist/*.css', 'MIT-LICENCE.txt'] }
     },
+    {
+        src: 'node_modules/jcrop',
+        dest: 'plugins/transform/lib/jcrop',
+        filter: { patterns: ['css/*.gif', 'css/*.min.css', 'js/jquery.Jcrop.min.js', 'MIT-LICENSE.txt'] }
+    },
 
     // { src: '', dest: '', filter: { patterns: ['**/*.min.js*'] } },
     // {

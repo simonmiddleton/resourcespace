@@ -21,6 +21,7 @@
     "date-fns": "^2.30.0",
     "dompurify": "^3.3.1",
     "heatmap.js": "^2.0.5",
+    "jcrop": "github:tapmodo/Jcrop#v0.9.15",
     "jquery": "^3.6.0",
     "jquery-tageditor": "^1.0.1",
     "jquery-ui": "1.13.2",

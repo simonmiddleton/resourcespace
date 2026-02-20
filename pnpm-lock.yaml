@@ -32,6 +32,9 @@ importers:
       heatmap.js:
         specifier: ^2.0.5
         version: 2.0.5
+      jcrop:
+        specifier: github:tapmodo/Jcrop#v0.9.15
+        version: https://codeload.github.com/tapmodo/Jcrop/tar.gz/43c396817f992cbbfd010f35c07e2f1f58d6a7ac
       jquery:
         specifier: ^3.6.0
         version: 3.7.1
@@ -403,6 +406,10 @@ packages:
   is-stream@2.0.1:
     resolution: {integrity: sha512-hFoiJiTl63nn+kstHGBtewWSKnQLpyb155KHheA1l39uvtO9nWIop1p3udqPcUd/xbF1VLMO4n7OI6p7RbngDg==}
     engines: {node: '>=8'}
+
+  jcrop@https://codeload.github.com/tapmodo/Jcrop/tar.gz/43c396817f992cbbfd010f35c07e2f1f58d6a7ac:
+    resolution: {tarball: https://codeload.github.com/tapmodo/Jcrop/tar.gz/43c396817f992cbbfd010f35c07e2f1f58d6a7ac}
+    version: 0.9.15
 
   jquery-tageditor@1.0.1:
     resolution: {integrity: sha512-PrTZ8PlHQvn5s4xRuUrEDMV5Z2whwXcsknNTdc9sNC3UEtqkJt+s1p4/xsu67iZwHwcS7pwDyY0RAlzBzPv6oA==}
@@ -1009,6 +1016,8 @@ snapshots:
   is-shallow-equal@1.0.1: {}
 
   is-stream@2.0.1: {}
+
+  jcrop@https://codeload.github.com/tapmodo/Jcrop/tar.gz/43c396817f992cbbfd010f35c07e2f1f58d6a7ac: {}
 
   jquery-tageditor@1.0.1: {}
 
