@@ -251,9 +251,6 @@ $page_title = get_page_title($pagename, pluginname());
                 <script src="<?php echo $baseurl; ?>/lib/leaflet_plugins/leaflet-omnivore-0.3.4/leaflet-omnivore.min.js"></script>
             <?php } ?>
 
-            <!--Leaflet EasyPrint v2.1.9 plugin file-->
-            <script src="<?php echo $baseurl; ?>/lib/leaflet_plugins/leaflet-easyPrint-2.1.9/dist/bundle.min.js"></script>
-
             <!--Leaflet StyledLayerControl v5/16/2019 plugin files-->
             <link rel="stylesheet" href="<?php echo $baseurl; ?>/lib/leaflet_plugins/leaflet-StyledLayerControl-5-16-2019/css/styledLayerControl.css"/>
             <script src="<?php echo $baseurl; ?>/lib/leaflet_plugins/leaflet-StyledLayerControl-5-16-2019/src/styledLayerControl.min.js"></script>
