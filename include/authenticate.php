@@ -154,7 +154,9 @@ if (!$valid && !isset($system_login)) {
 
     $redirparams = array();
 
-    $redirparams["url"]         = isset($anonymous_login) ? "" : $path;
+    if (!isset($anonymous_login)) {
+        $redirparams["url"] = $path;
+    }
     $redirparams["auto"]        = $autologgedout ? "true" : "";
     $redirparams["nocookies"]   = $nocookies ? "true" : "";
 

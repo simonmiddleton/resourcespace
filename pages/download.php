@@ -167,7 +167,7 @@ if ('' != $userfiledownload) {
     $access        = get_resource_access($ref);
     $use_watermark = check_use_watermark(getval("dl_key", ""), $ref) || $watermarked;
 
-    if (!$allowed || $ref <= 0 || ($access == 1 && $page > 1)) {
+    if (!$allowed || $ref <= 0 || ($access == RESOURCE_ACCESS_RESTRICTED && $page > 1)) {
         $error = $lang['error-permissiondenied'];
         if (getval("ajax", "") != "") {
             error_alert($error, true, 200);
