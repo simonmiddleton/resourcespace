@@ -251,9 +251,8 @@ $page_title = get_page_title($pagename, pluginname());
                 <script src="<?php echo $baseurl; ?>/lib/leaflet_plugins/leaflet-omnivore-0.3.4/leaflet-omnivore.min.js"></script>
             <?php } ?>
 
-            <!--Leaflet StyledLayerControl v5/16/2019 plugin files-->
             <link rel="stylesheet" href="<?php echo $baseurl; ?>/lib/leaflet_plugins/leaflet-StyledLayerControl-5-16-2019/css/styledLayerControl.css"/>
-            <script src="<?php echo $baseurl; ?>/lib/leaflet_plugins/leaflet-StyledLayerControl-5-16-2019/src/styledLayerControl.min.js"></script>
+            <script src="<?php echo $baseurl; ?>/lib/leaflet_plugins/leaflet-StyledLayerControl-5-16-2019/src/styledLayerControl.js"></script>
 
             <!--Leaflet Zoomslider v0.7.1 plugin files-->
             <link rel="stylesheet" href="<?php echo $baseurl; ?>/lib/leaflet_plugins/leaflet-zoomslider-0.7.1/src/L.Control.Zoomslider.css"/>

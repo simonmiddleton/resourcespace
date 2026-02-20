@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const fs = require('fs');
 const path = require('path');
 
@@ -250,6 +252,13 @@ const files = [
         dest: 'lib/leaflet_plugins/leaflet-providers-1.10.2',
         filter: { patterns: ['**/leaflet-providers.js', '**/license.md'] }
     },
+    {
+        src: 'node_modules/Leaflet.StyledLayerControl',
+        dest: 'lib/leaflet_plugins/leaflet-StyledLayerControl-5-16-2019',
+        filter: { patterns: ['src/*.js', 'css/**', 'LICENSE'] }
+    },
+
+
     // { src: '', dest: '', filter: { patterns: ['**/*.min.js*'] } },
     // {
     //     src: '',
