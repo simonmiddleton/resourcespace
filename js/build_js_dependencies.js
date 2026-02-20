@@ -259,6 +259,18 @@ const files = [
     },
     { src: 'node_modules/leaflet-shades/dist/leaflet-shades.js', dest: 'lib/leaflet_plugins/leaflet-shades-1.0.2/leaflet-shades.js' }, 
     { src: 'node_modules/leaflet-shades/src/css/leaflet-shades.css', dest: 'lib/leaflet_plugins/leaflet-shades-1.0.2/src/css/leaflet-shades.css' }, 
+    {
+        src: 'node_modules/leaflet-control-geocoder',
+        dest: 'lib/leaflet_plugins/leaflet-control-geocoder-1.10.0',
+        filter: {
+            patterns: [
+                'dist/*.min.js*',
+                'dist/*.css',
+                'dist/images/**',
+                'LICENSE',
+            ]
+        }
+    },
 
     // { src: '', dest: '', filter: { patterns: ['**/*.min.js*'] } },
     // {

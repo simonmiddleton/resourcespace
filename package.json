@@ -28,6 +28,7 @@
     "jquery-validation": "^1.22.0",
     "jstree": "^3.3.17",
     "leaflet": "^1.9.4",
+    "leaflet-control-geocoder": "1.10.0",
     "leaflet-providers": "1.10.2",
     "leaflet-shades": "^0.1.4",
     "lightbox2": "^2.11.5",
