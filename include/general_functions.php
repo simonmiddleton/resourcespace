@@ -3138,6 +3138,18 @@ function get_slideshow_files_data()
 }
 
 /**
+* Determines if at least one slideshow image is configured for the login page
+*/
+function is_login_slideshow_enabled(): bool
+{
+    return (bool) ps_value("SELECT EXISTS (
+        SELECT 1
+        FROM slideshow
+        WHERE login_show = 1
+    ) AS value", [], 0);
+}
+
+/**
  * Returns a sanitised row from the table in a safe form for use in a form value,
  * suitable overwritten by POSTed data if it has been supplied.
  *
@@ -6079,6 +6091,7 @@ function get_per_page_cookie(): int
  * @param bool   $allow_wildcard If true, an asterisk can be used as a wildcard (e.g * for all, 10-* for 10 and above)
  *
  * @return array ok: bool         True when parsing succeeds, false when any validation error occurs
+ *               numbers: int[]   Sorted list of unique integers when ok is true and allow_wildcard is false, otherwise empty
  *               errors: string[] List of error messages when ok is false, otherwise empty
  */
 function parse_int_ranges(string $input, int $max_val = 0, bool $optional = false, bool $allow_wildcard = false): array
@@ -6086,15 +6099,19 @@ function parse_int_ranges(string $input, int $max_val = 0, bool $optional = fals
     global $lang;
 
     $errors = [];
+    $numbers  = [];
 
     $input = trim($input);
 
     if ($input === '') {
         if ($optional) {
-            return ['ok' => true, 'errors' => []];
+            return ['ok'      => true, 
+                    'numbers' => [],
+                    'errors'  => []];
         }
         return [
             'ok'      => false,
+            'numbers' => [],
             'errors'  => [$lang['int_ranges_empty']],
         ];
     }
@@ -6102,11 +6119,12 @@ function parse_int_ranges(string $input, int $max_val = 0, bool $optional = fals
     // Sole wildcard: "*" is only valid if it is the entire input
     if ($input === '*') {
         if ($allow_wildcard) {
-            return ['ok' => true, 'errors' => []];
+            return ['ok' => true, 'numbers' => [], 'errors' => []];
         }
         return [
-            'ok'     => false,
-            'errors' => [str_replace('%%PART%%', '*', $lang['int_ranges_not_valid'])],
+            'ok'      => false,
+            'numbers' => [],
+            'errors'  => [str_replace('%%PART%%', '*', $lang['int_ranges_not_valid'])],
         ];
     }
 
@@ -6172,6 +6190,7 @@ function parse_int_ranges(string $input, int $max_val = 0, bool $optional = fals
                 continue;
             }
 
+            $numbers = array_merge($numbers, range($start, $end));
             continue;
         }
 
@@ -6189,6 +6208,7 @@ function parse_int_ranges(string $input, int $max_val = 0, bool $optional = fals
                 continue;
             }
 
+            $numbers[] = $num;
             continue;
         }
 
@@ -6199,12 +6219,17 @@ function parse_int_ranges(string $input, int $max_val = 0, bool $optional = fals
     if (!empty($errors)) {
         return [
             'ok'      => false,
+            'numbers' => [],
             'errors'  => $errors,
         ];
     }
 
+    $numbers = array_unique($numbers);
+    sort($numbers);
+
     return [
         'ok'      => true,
+        'numbers' => ($allow_wildcard) ? [] : $numbers,
         'errors'  => [],
     ];
 }
