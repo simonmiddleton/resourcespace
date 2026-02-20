@@ -56,6 +56,9 @@ importers:
       leaflet-providers:
         specifier: 1.10.2
         version: 1.10.2
+      leaflet-shades:
+        specifier: ^0.1.4
+        version: 0.1.4
       lightbox2:
         specifier: ^2.11.5
         version: 2.11.5
@@ -305,6 +308,9 @@ packages:
   buffer-from@1.1.2:
     resolution: {integrity: sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==}
 
+  cached-path-relative@1.1.0:
+    resolution: {integrity: sha512-WF0LihfemtesFcJgO7xfOoOcnWzY/QHR4qeDqV44jPU3HTI54+LnfXK3SA27AVVGCdZFgjjFFaqUA9Jx7dMJZA==}
+
   capslockstate-jquery-plugin#1.2.1@https://codeload.github.com/nosilleg/capslockstate-jquery-plugin/tar.gz/5974328bf43f030474e00f17acf3a557269b9903:
     resolution: {tarball: https://codeload.github.com/nosilleg/capslockstate-jquery-plugin/tar.gz/5974328bf43f030474e00f17acf3a557269b9903}
     version: 0.0.0
@@ -418,8 +424,17 @@ packages:
   keycode@2.2.1:
     resolution: {integrity: sha512-Rdgz9Hl9Iv4QKi8b0OlCRQEzp4AgVxyCtz5S/+VIHezDmrDhkp2N2TqBWOLz0/gbeREXOOiI9/4b8BY9uw2vFg==}
 
+  leaflet-editable@1.3.2:
+    resolution: {integrity: sha512-iDTXR0byKWRiPliNrQrmZtbHHrr/ONZwoFoIzUHP2MQJQwgqzeblc1OKrT0ryOEzf0PFtrClk9SksAbeQpsmXw==}
+
   leaflet-providers@1.10.2:
     resolution: {integrity: sha512-1l867LObxwuFBeyPeBewip8PAXKOnvEoujq4/9y2TKTiZNHH76ksBD6dfktGjgUrOF+IdjsGHkpASPE+v2DQLw==}
+
+  leaflet-shades@0.1.4:
+    resolution: {integrity: sha512-XwB65YWV5dti4bWBcce0A3RVNHzWAP1NTaRCbZ890ePsdmmygg21FAjjfgZae3lgvk6xjvb2PnGwiD8UeWuWug==}
+
+  leaflet.path.drag@0.0.6:
+    resolution: {integrity: sha512-U6jp7sqX4kZss2FCm7bGPltOl8URWd+c4DPcRnEO9mYoZ1hfrteZ3XXVJ6zcEU8zxjnWeu1YywF08EDYbelmFg==}
 
   leaflet@1.9.4:
     resolution: {integrity: sha512-nxS1ynzJOmOlHp+iL3FyWqK89GtNL8U8rvlMOsQdTTssxZwCXh8N2NB3GDQOL+YR3XnWyZAxwQixURb+FA74PA==}
@@ -906,6 +921,8 @@ snapshots:
 
   buffer-from@1.1.2: {}
 
+  cached-path-relative@1.1.0: {}
+
   capslockstate-jquery-plugin#1.2.1@https://codeload.github.com/nosilleg/capslockstate-jquery-plugin/tar.gz/5974328bf43f030474e00f17acf3a557269b9903: {}
 
   chart.js@4.5.1:
@@ -998,7 +1015,17 @@ snapshots:
 
   keycode@2.2.1: {}
 
+  leaflet-editable@1.3.2: {}
+
   leaflet-providers@1.10.2: {}
+
+  leaflet-shades@0.1.4:
+    dependencies:
+      cached-path-relative: 1.1.0
+      leaflet-editable: 1.3.2
+      leaflet.path.drag: 0.0.6
+
+  leaflet.path.drag@0.0.6: {}
 
   leaflet@1.9.4: {}
 

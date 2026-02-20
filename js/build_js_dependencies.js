@@ -257,7 +257,8 @@ const files = [
         dest: 'lib/leaflet_plugins/leaflet-StyledLayerControl-5-16-2019',
         filter: { patterns: ['src/*.js', 'css/**', 'LICENSE'] }
     },
-
+    { src: 'node_modules/leaflet-shades/dist/leaflet-shades.js', dest: 'lib/leaflet_plugins/leaflet-shades-1.0.2/leaflet-shades.js' }, 
+    { src: 'node_modules/leaflet-shades/src/css/leaflet-shades.css', dest: 'lib/leaflet_plugins/leaflet-shades-1.0.2/src/css/leaflet-shades.css' }, 
 
     // { src: '', dest: '', filter: { patterns: ['**/*.min.js*'] } },
     // {
