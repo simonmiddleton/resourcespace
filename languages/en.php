@@ -3199,6 +3199,7 @@ $lang["filter_is_in"]               = "IS ";
 $lang["filter_is_not_in"]           = "IS NOT ";
 $lang["filter_or"]                  = "OR";
 $lang["filter_and"]                 = "AND";
+$lang['error-sessionexpired'] = "Your session has expired or is otherwise invalid";
 
 # Updates to workflow
 $lang["userresources_status_change"]    = "Resources that you have contributed have been moved to the state: ";

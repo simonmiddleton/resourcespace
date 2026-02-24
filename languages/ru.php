@@ -2205,9 +2205,6 @@ $lang["systemconfig_themes_category_split_pages"] = 'Отображать кат
 $lang["systemconfig_theme_category_levels"] = 'Сколько уровней категорий темы показывать?';
 $lang["systemconfig_enable_themes"] = 'Включить Избранные коллекции';
 $lang["systemconfig_modal_default"] = 'Включить модальные окна для стандартных страниц, где это настроено? Пользовательские настройки могут переопределить это.';
-$lang["systemconfig_browse_bar_section"] = 'Панель просмотра';
-$lang["systemconfig_browse_bar_enable"] = 'Включить панель просмотра';
-$lang["systemconfig_browse_bar_workflow"] = 'Отображение состояний рабочего процесса в панели просмотра';
 $lang["systemconfig_user_local_timezone"] = 'Часовой пояс пользователя';
 $lang["systemconfig_show_collection_name"] = 'Показать название и описание коллекции при просмотре ресурсов коллекции';
 $lang["systemconfig_only_show_modified"] = 'Показывать только измененные значения';
@@ -2448,13 +2445,7 @@ $lang["filter_or"] = 'Пожалуйста, переведите: OR
 
 "OR" переводится на русский язык как "ИЛИ".';
 $lang["filter_and"] = 'И';
-$lang["browse_bar_text"] = 'Просмотреть';
-$lang["field_show_in_browse_bar"] = 'Показать в панели просмотра';
 $lang["error-sessionexpired"] = 'Ваша сессия истекла или недействительна';
-$lang["error-invalid_resource_type"] = 'Неверный тип ресурса';
-$lang["error-invalid_browse_action"] = 'Неверное действие. Пожалуйста, проверьте существующие данные ресурса';
-$lang["browse_by_tag"] = 'Просмотр по тегу';
-$lang["browse_by_workflow_state"] = 'Рабочий процесс (Workflow)';
 $lang["userresources_status_change"] = 'Ресурсы, которые вы внесли, были перемещены в состояние:';
 $lang["collection_description"] = 'Описание';
 $lang["replacebatchlocalfolder"] = 'Извлечь файлы из локальной папки на сервере? (это создаст задание оффлайн)';

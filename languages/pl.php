@@ -1903,9 +1903,6 @@ $lang["systemconfig_themes_category_split_pages"] = 'Wyświetlaj kategorie Wyró
 $lang["systemconfig_theme_category_levels"] = 'Ile poziomów kategorii motywu wyświetlić?';
 $lang["systemconfig_enable_themes"] = 'Włącz wybrane kolekcje';
 $lang["systemconfig_modal_default"] = 'Włącz modale dla standardowych stron, gdzie jest skonfigurowane. Preferencje użytkownika mogą to nadpisać.';
-$lang["systemconfig_browse_bar_section"] = 'Przeglądaj pasek';
-$lang["systemconfig_browse_bar_enable"] = 'Włącz pasek przeglądania';
-$lang["systemconfig_browse_bar_workflow"] = 'Wyświetl stany przepływu pracy w pasku przeglądania';
 $lang["systemconfig_user_local_timezone"] = 'Strefa czasowa użytkownika';
 $lang["systemconfig_show_collection_name"] = 'Pokaż nazwę i opis kolekcji podczas przeglądania zasobów kolekcji';
 $lang["systemconfig_only_show_modified"] = 'Tylko pokaż zmodyfikowane wartości';
@@ -2144,13 +2141,7 @@ $lang["filter_or"] = 'Proszę przetłumaczyć: OR
 
 LUB';
 $lang["filter_and"] = 'I w języku polskim "AND" oznacza "ORAZ"';
-$lang["browse_bar_text"] = 'Przeglądaj';
-$lang["field_show_in_browse_bar"] = 'Pokaż w pasku przeglądania';
 $lang["error-sessionexpired"] = 'Twoja sesja wygasła lub jest nieważna';
-$lang["error-invalid_resource_type"] = 'Nieprawidłowy typ zasobu';
-$lang["error-invalid_browse_action"] = 'Nieprawidłowa akcja. Proszę sprawdzić istniejące dane zasobu';
-$lang["browse_by_tag"] = 'Przeglądaj według tagu';
-$lang["browse_by_workflow_state"] = 'Przepływ pracy (Workflow)';
 $lang["userresources_status_change"] = 'Zasoby, do których przyczyniłeś się, zostały przeniesione do stanu:';
 $lang["collection_description"] = 'Opis';
 $lang["replacebatchlocalfolder"] = 'Pobierz pliki z lokalnego folderu na serwerze? (to spowoduje utworzenie zadania offline)';

@@ -2278,9 +2278,6 @@ $lang['systemconfig_themes_category_split_pages'] = 'Zobraziť kategórie odpor�
 $lang['systemconfig_theme_category_levels'] = 'Koľko úrovní kategórie tém sa má zobraziť?';
 $lang['systemconfig_enable_themes'] = 'Povoliť odporúčané zbierky';
 $lang["systemconfig_modal_default"] = "Povoliť modálny dialóg pre štandardné stránky, ak sú nakonfigurované? Nastavenia používateľa môžu toto chovanie zmeniť.";
-$lang['systemconfig_browse_bar_section'] = 'Panel prehľadávania';
-$lang['systemconfig_browse_bar_enable'] = 'Povoliť panel prehľadávania';
-$lang['systemconfig_browse_bar_workflow'] = 'Zobrazte stavy pracovných postupov na paneli paneli prehľadávania';
 $lang['systemconfig_user_local_timezone'] = 'Časové pásmo používateľa';
 $lang['systemconfig_show_collection_name'] = "Zobraziť názov a popis zbierky pri prezeraní zdrojov zbierky";
 
@@ -2546,13 +2543,7 @@ $lang["filter_or"]                  = "OR";
 $lang["filter_and"]                 = "A";
 
 /* Browse bar */
-$lang['browse_bar_text']                = "Prehľadávať";
-$lang['field_show_in_browse_bar']       = "Zobraziť na paneli prehľadávania";
 $lang['error-sessionexpired']           = "Vaša relácia vypršala alebo je inak neplatná";
-$lang['error-invalid_resource_type']    = "Neplatný typ prostriedku";
-$lang['error-invalid_browse_action']    = "Neplatná akcia. Skontrolujte existujúce údaje o zdroji";
-$lang['browse_by_tag']                  = "Prehliadať podľa značiek";
-$lang['browse_by_workflow_state']       = "Pracovný postup";
 
 # Updates to workflow
 $lang["userresources_status_change"] = "Zdroje, ktorými ste prispeli, boli zmenené do stavu:";

@@ -2260,9 +2260,6 @@ $lang["systemconfig_themes_category_split_pages"] = 'Tampilkan kategori Koleksi 
 $lang["systemconfig_theme_category_levels"] = 'Berapa level kategori tema yang ingin ditampilkan?';
 $lang["systemconfig_enable_themes"] = 'Aktifkan Koleksi Unggulan';
 $lang["systemconfig_modal_default"] = 'Aktifkan modals untuk halaman standar yang dikonfigurasi? Preferensi pengguna dapat mengesampingkan ini.';
-$lang["systemconfig_browse_bar_section"] = 'Bar Telusuri';
-$lang["systemconfig_browse_bar_enable"] = 'Aktifkan Bilah Telusuri';
-$lang["systemconfig_browse_bar_workflow"] = 'Tampilkan status alur kerja di Bilah Telusur';
 $lang["systemconfig_user_local_timezone"] = 'Zona waktu lokal pengguna';
 $lang["systemconfig_show_collection_name"] = 'Tampilkan nama dan deskripsi koleksi saat melihat sumber daya koleksi';
 $lang["systemconfig_only_show_modified"] = 'Hanya menampilkan nilai yang telah diubah';
@@ -2498,13 +2495,7 @@ $lang["filter_or"] = 'Silakan diterjemahkan: OR
 
 ATAU';
 $lang["filter_and"] = 'dan';
-$lang["browse_bar_text"] = 'Telusuri';
-$lang["field_show_in_browse_bar"] = 'Tampilkan di Bilah Telusur';
 $lang["error-sessionexpired"] = 'Sesi Anda telah kedaluwarsa atau tidak valid';
-$lang["error-invalid_resource_type"] = 'Jenis sumber daya tidak valid';
-$lang["error-invalid_browse_action"] = 'Tindakan tidak valid. Harap periksa data sumber daya yang ada';
-$lang["browse_by_tag"] = 'Jelajahi berdasarkan tag';
-$lang["browse_by_workflow_state"] = 'Alur Kerja';
 $lang["userresources_status_change"] = 'Sumber daya yang telah Anda kontribusikan telah dipindahkan ke status:';
 $lang["collection_description"] = 'Deskripsi';
 $lang["replacebatchlocalfolder"] = 'Mengambil file dari folder lokal di server? (ini akan membuat pekerjaan luring)';

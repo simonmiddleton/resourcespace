@@ -2192,9 +2192,6 @@ $lang["systemconfig_themes_category_split_pages"] = 'Mostrar les categories de c
 $lang["systemconfig_theme_category_levels"] = 'Quants nivells de categoria de temes vols mostrar?';
 $lang["systemconfig_enable_themes"] = 'Habilitar col·leccions destacades';
 $lang["systemconfig_modal_default"] = 'Habilitar finestres emergents per a pàgines estàndard on estiguin configurades? Les preferències d\'usuari poden anul·lar això.';
-$lang["systemconfig_browse_bar_section"] = 'Barra de navegació';
-$lang["systemconfig_browse_bar_enable"] = 'Habilitar la barra de navegació';
-$lang["systemconfig_browse_bar_workflow"] = 'Mostra els estats del flux de treball a la barra de navegació';
 $lang["systemconfig_user_local_timezone"] = 'Zona horària local de l\'usuari';
 $lang["systemconfig_show_collection_name"] = 'Mostra el nom i la descripció de la col·lecció quan es visualitzen els recursos de la col·lecció';
 $lang["systemconfig_only_show_modified"] = 'Mostra només els valors modificats';
@@ -2435,13 +2432,7 @@ $lang["filter_is_not_in"] = 'No és';
 $lang["filter_or"] = 'Per favor, tradueix: OR
 
 "OR" es pot traduir com "O" en català.';
-$lang["browse_bar_text"] = 'Navegar';
-$lang["field_show_in_browse_bar"] = 'Mostra a la barra de navegació';
 $lang["error-sessionexpired"] = 'La teva sessió ha caducat o no és vàlida';
-$lang["error-invalid_resource_type"] = 'Tipus de recurs no vàlid';
-$lang["error-invalid_browse_action"] = 'Acció no vàlida. Si us plau, comprova les dades del recurs existent';
-$lang["browse_by_tag"] = 'Navegar per etiqueta';
-$lang["browse_by_workflow_state"] = 'Flux de treball';
 $lang["userresources_status_change"] = 'Els recursos que has contribuït han estat moguts a l\'estat:';
 $lang["collection_description"] = 'Descripció';
 $lang["replacebatchlocalfolder"] = 'Recuperar fitxers des de la carpeta local al servidor? (això crearà una tasca fora de línia)';

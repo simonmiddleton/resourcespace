@@ -2168,9 +2168,6 @@ $lang["systemconfig_themes_category_split_pages"] = 'Prikaži kategorije Izdvoje
 $lang["systemconfig_theme_category_levels"] = 'Koliko razina kategorija tema prikazati?';
 $lang["systemconfig_enable_themes"] = 'Omogući istaknute kolekcije';
 $lang["systemconfig_modal_default"] = 'Omogućite modalne prozore za standardne stranice gdje je konfigurirano. Korisničke postavke mogu prebrisati ovo.';
-$lang["systemconfig_browse_bar_section"] = 'Pregledaj traku';
-$lang["systemconfig_browse_bar_enable"] = 'Omogući traku pregledavanja';
-$lang["systemconfig_browse_bar_workflow"] = 'Prikaži stanja radnog tijeka u traci pregledavanja';
 $lang["systemconfig_user_local_timezone"] = 'Vremenska zona korisnika';
 $lang["systemconfig_show_collection_name"] = 'Prikaži naziv i opis kolekcije prilikom pregledavanja resursa u kolekciji';
 $lang["systemconfig_only_show_modified"] = 'Prikaži samo izmijenjene vrijednosti';
@@ -2412,13 +2409,7 @@ $lang["filter_or"] = 'ILI';
 $lang["filter_and"] = 'I: I
 
 AND: I';
-$lang["browse_bar_text"] = 'Pregledaj';
-$lang["field_show_in_browse_bar"] = 'Prikaži u traci pregledavanja';
 $lang["error-sessionexpired"] = 'Vaša sesija je istekla ili je na drugi način nevažeća';
-$lang["error-invalid_resource_type"] = 'Nevažeći tip resursa';
-$lang["error-invalid_browse_action"] = 'Nevažeća radnja. Molimo provjerite postojeće podatke resursa';
-$lang["browse_by_tag"] = 'Pregledaj po oznaci';
-$lang["browse_by_workflow_state"] = 'Radni tijek';
 $lang["userresources_status_change"] = 'Resursi koje ste doprinijeli su premješteni u stanje:';
 $lang["collection_description"] = 'Opis';
 $lang["replacebatchlocalfolder"] = 'Dohvati datoteke iz lokalne mape na poslužitelju? (ovo će stvoriti posao izvan mreže)';
