@@ -586,12 +586,6 @@ function CentralSpacePost (form, scrolltop, modal, update_history, container_id)
         });
     ajaxinprogress=false;
 
-    // Reload Browse bar item if required
-    if (typeof browsereload !== "undefined")
-        {
-        toggleBrowseElements(browsereload, true);
-        }
-
     return false;
     }
 

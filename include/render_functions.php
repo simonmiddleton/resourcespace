@@ -3381,89 +3381,6 @@ function render_trash($type, $deletetext,$forjs=false)
     }
 
 /**
-* Renders the browse bar
-*  
-* @return void
-*/ 
-
-function render_browse_bar()
-    {
-    global $lang, $browse_bar_workflow, $enable_themes;
-    $bb_html = '<div id="BrowseBarContainer" style="display:none;">';
-    $bb_html .= '<div id="BrowseBar" class="BrowseBar">';
-    $bb_html .= '<div id="BrowseBarContent" >'; 
-    
-    //Browse row template
-    // script will replace %BROWSE_TYPE%, %BROWSE_EXPAND_CLASS%, %BROWSE_CLASS% %BROWSE_LEVEL%, %BROWSE_EXPAND%, %BROWSE_NAME%, %BROWSE_TEXT%, %BROWSE_ID%
-    $bb_html .= "
-            <div id='BrowseBarTemplate' style='display: none;'>
-            <div class='BrowseBarItem BrowseRowOuter %BROWSE_DROP%' data-browse-id='%BROWSE_ID%' data-browse-parent='%BROWSE_PARENT%'  data-browse-loaded='0' data-browse-status='closed' data-browse-level='%BROWSE_LEVEL%' style='display: none;'>
-                <div class='BrowseRowInner' >
-                    %BROWSE_INDENT%
-                    %BROWSE_EXPAND%
-                    %BROWSE_TEXT%
-                    %BROWSE_REFRESH%
-                </div><!-- End of BrowseRowInner -->
-            </div><!-- End of BrowseRowOuter -->
-            </div><!-- End of BrowseBarTemplate -->
-            ";
-
-    // Add root elements
-    $bb_html .= generate_browse_bar_item("R", $lang['browse_by_tag']);
-    if($enable_themes)
-        {
-        $bb_html .= generate_browse_bar_item("FC", $lang["themes"]);
-        }
-    if(!checkperm('b'))
-        {
-        $bb_html .= generate_browse_bar_item("C", $lang["mycollections"]);
-        }
-        
-    if($browse_bar_workflow)
-        {
-        $bb_html .= generate_browse_bar_item("WF", $lang['browse_by_workflow_state']);
-        }
-
-    $bb_html .= '</div><!-- End of BrowseBarContent -->
-                </div><!-- End of BrowseBar -->
-                </div><!-- End of BrowseBarContainer -->';
-    echo $bb_html;
-    
-    echo '<script>
-        b_loading = new Array();
-        // Expand tree to previous state based on stored cookie
-        jQuery(document).ready(function()
-            {
-            ReloadBrowseBar();
-            });
-        </script>';
-    }
-
-
-/**
-* Generates a root row item for the browse bar
-*  
-* @return string  $html
-*/    
-function generate_browse_bar_item($id, $text)
-    {
-    global $lang;
-    $html = '<div class="BrowseBarItem BrowseRowOuter BrowseBarRoot" data-browse-id="' . $id . '" data-browse-parent="root" data-browse-loaded="0" data-browse-status="closed" data-browse-level="0" >';
-    $html .= '<div class="BrowseRowInner" >';
-    
-    $html .= '<div class="BrowseBarStructure">
-            <a href="#" class="browse_expand browse_closed" onclick="toggleBrowseElements(\'' . $id . '\',false,true);" alt="' . escape($lang["expand"]) . '"></a>
-            </div><!-- End of BrowseBarStructure -->';  
-    $html .= '<div onclick="toggleBrowseElements(\'' . $id . '\',false,true);" class="BrowseBarLink" >' . $text . '</div>';
-    
-    $html .= '<a href="#" class="BrowseRefresh " onclick="toggleBrowseElements(\'' . $id . '\',true, true);" ><i class="icon-refresh-cw"></i></a>';  
-    
-    $html .= "</div><!-- End of BrowseRowInner -->
-            </div><!-- End of BrowseRowOuter -->";
-    return $html;
-    }
-    
-/**
 * Generates a help icon that opens the relevant Knowledge Base article in a modal
 * 
 * @param string  $page              Knowledge Base article to display, leave blank to show the Knowledge Base homepage
@@ -4231,22 +4148,6 @@ function check_display_condition($n, array $field, array $fields, $render_js, in
         }
 
     return $displaycondition;
-    }
-
-
-/**
-* Utility to check if browse bar should be rendered
-*  
-* @return boolean
-*/   
-function has_browsebar()
-    {
-    global $username, $pagename, $loginterms, $not_authenticated_pages, $k, $internal_share_access, $browse_bar;
-    return isset($username)
-    && is_array($not_authenticated_pages) && !in_array($pagename, $not_authenticated_pages)
-    && ('' == $k || $internal_share_access)
-    && $browse_bar;
-    //   && false == $loginterms ?
     }
 
 /**

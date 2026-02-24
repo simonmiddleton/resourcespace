@@ -92,7 +92,7 @@ tr[id^="ResourceShell"].Selected { background-color: #d5eafa; /* Used a tint of 
 
 /* Collection Bar */
 .CollectBack {color:#E0E0E0;background: #2b2b2b;}
-.CollectBack a:link, .CollectBack a:visited, .CollectBack a:active,.CollectBack h2,.BrowseBar a:link,.BrowseBar a:hover, .BrowseBar a:visited, .BrowseBar a:active,.BrowseBar h2 {color:#E0E0E0;}
+.CollectBack a:link, .CollectBack a:visited, .CollectBack a:active,.CollectBack h2 {color:#E0E0E0;}
 .CollectBack a:hover{color:#FFF;}
 .CollectBack h2 a:link, .CollectBack h2 a:visited, .CollectBack h2 a:active, .CollectBack h2 a:hover {color:white;}
 #CollectionMinRightNav li {border-left:1px solid #E0E0E0;}
@@ -401,11 +401,6 @@ input:checked + .customFieldLabel, .keywordselected {
 #SearchResultFound .Selected {
     font-weight: bold;
 }
-
-/* Browse bar */
-#BrowseBar a {color: #fff;}
-.BrowseBarText {color: #fff;}
-.BrowseBarItem.ui-droppable-hover a .BrowseBarLink{border: 2px solid #FFF;}
 
 /* Firefox on macOS optgroup background styling fix */
 @supports (-moz-osx-font-smoothing: auto) {
@@ -733,10 +728,6 @@ a.HomePanel:hover {
     background: #737373;
 }
 .CommentEntry { border: 1px solid lightgray; background: white;}
-
-.BrowseBarRoot {
-    background: rgba(255, 255, 255, 0.1);
-}
 
 #iconpicker-container {
     background: white;

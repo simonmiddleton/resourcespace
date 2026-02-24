@@ -2969,12 +2969,6 @@ $ghostscript_extensions = array('ps', 'pdf');
 // extensions found in a merge of $non_image_types, $ffmpeg_supported_extensions, $unoconv_extensions and $ghostscript_extensions list
 $non_image_types_generate_preview_only = true;
 
-// Browse bar
-// Enable/Disable browse bar - in system config
-$browse_bar = true;
-// Show workflow (archive) states in browse bar?
-$browse_bar_workflow = true;
-
 // Batch replace from local folder
 $batch_replace_local_folder = ""; // e.g. "/upload";
 

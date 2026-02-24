@@ -1359,7 +1359,7 @@ $lang["more-information"] = "More information";
 $lang["setup-structuralplugins"] = "System templates";
 $lang["setup-headercolourstyleoverride"] = "Custom header background colour";
 $lang["setup-headerlinkstyleoverride"] = "Custom header link colour";
-$lang["setup-homecolourstyleoverride"] = "Custom intro text, dash tile, browse bar and simple search colour";
+$lang["setup-homecolourstyleoverride"] = "Custom intro text, dash tile and simple search colour";
 $lang["setup-collectionbarbackground"] = "Custom collection bar primary colour";
 $lang["setup-collectionbarforeground"] = "Custom collection bar secondary colour";
 $lang["setup-buttoncolouroverride"] = "Custom button colour";
@@ -2854,9 +2854,6 @@ $lang['systemconfig_theme_category_levels'] = 'How many levels of theme category
 $lang['systemconfig_enable_themes'] = 'Enable Featured Collections';
 $lang["systemconfig_modal_default"] = "Enable modals for standard pages where configured? User preferences may override this.";
 $lang["systemconfig_slideshow_photo_delay"] = "Number of seconds for slideshow to wait before changing image";
-$lang['systemconfig_browse_bar_section'] = 'Browse Bar';
-$lang['systemconfig_browse_bar_enable'] = 'Enable Browse Bar';
-$lang['systemconfig_browse_bar_workflow'] = 'Display workflow states in Browse Bar';
 $lang['systemconfig_user_local_timezone'] = 'User local time zone';
 $lang['systemconfig_show_collection_name'] = "Show collection name and description when viewing collection resources";
 $lang['systemconfig_only_show_modified'] = 'Only show modified values';
@@ -3202,15 +3199,6 @@ $lang["filter_is_in"]               = "IS ";
 $lang["filter_is_not_in"]           = "IS NOT ";
 $lang["filter_or"]                  = "OR";
 $lang["filter_and"]                 = "AND";
-
-/* Browse bar */
-$lang['browse_bar_text']                = "Browse";
-$lang['field_show_in_browse_bar']       = "Show in Browse Bar";
-$lang['error-sessionexpired']           = "Your session has expired or is otherwise invalid";
-$lang['error-invalid_resource_type']    = "Invalid resource type";
-$lang['error-invalid_browse_action']    = "Invalid action. Please check existing resource data";
-$lang['browse_by_tag']                  = "Browse by tag";
-$lang['browse_by_workflow_state']       = "Workflow";
 
 # Updates to workflow
 $lang["userresources_status_change"]    = "Resources that you have contributed have been moved to the state: ";

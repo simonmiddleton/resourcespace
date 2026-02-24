@@ -112,7 +112,7 @@ $page_def[] = config_add_colouroverride_input(
     '',
     null,
     true,
-    "jQuery('#SearchBox').css('background',value); jQuery('#HomeSiteText.dashtext').css('background',value); jQuery('.HomePanelIN').css('background',value); jQuery('#BrowseBar').css('background',value); jQuery('.SearchBarTab.SearchBarTabSelected').css('background', value);"
+    "jQuery('#SearchBox').css('background',value); jQuery('#HomeSiteText.dashtext').css('background',value); jQuery('.HomePanelIN').css('background',value); jQuery('.SearchBarTab.SearchBarTabSelected').css('background', value);"
 );
 $page_def[] = config_add_colouroverride_input(
     'collection_bar_background_override',
@@ -318,12 +318,6 @@ $page_def[] = config_add_boolean_select('research_link', $lang['systemconfig_res
 $page_def[] = config_add_boolean_select('themes_navlink', $lang['systemconfig_themes_navlink_label'], $yes_no_options, 420, null, true);
 $page_def[] = config_add_boolean_select('use_theme_as_home', $lang['systemconfig_use_theme_as_home_label'], $yes_no_options, 420, null, true);
 $page_def[] = config_add_boolean_select('use_recent_as_home', $lang['systemconfig_use_recent_as_home_label'], $yes_no_options, 420, null, true);
-$page_def[] = config_add_html('</div>');
-
-// Browse Bar section
-$page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed"><i class="icon-list-tree"></i>&nbsp;' . $lang['systemconfig_browse_bar_section'] . '</h3><div id="SystemConfigFeaturedCollectionSection" class="CollapsibleSection">');
-$page_def[] = config_add_boolean_select('browse_bar', $lang['systemconfig_browse_bar_enable'], $yes_no_options, 420, null, true);
-$page_def[] = config_add_boolean_select('browse_bar_workflow', $lang['systemconfig_browse_bar_workflow'], $yes_no_options, 420, null, true);
 $page_def[] = config_add_html('</div>');
 
 // Collection section

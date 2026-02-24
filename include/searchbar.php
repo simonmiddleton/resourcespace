@@ -219,14 +219,6 @@ $selected_search_tab = getval("selected_search_tab", "search");
                 <?php echo escape($lang["searchbutton"]); ?>
             </div>
         </a>
-        <?php if ($browse_bar) { ?>
-            <a href="#" onclick="selectSearchBarTab('browse');" >
-                <div class="SearchBarTab BrowseTab <?php echo ($selected_search_tab === "browse") ? "SearchBarTabSelected" : ""; ?>">
-                    <i class="icon-list "></i>
-                    <?php echo escape($lang["browse_bar_text"]); ?>
-                </div>
-            </a>
-        <?php } ?>
     </div>
 
     <?php if (checkperm("s") && (!isset($k) || $k == "" || $internal_share_access)) { ?>
@@ -1057,10 +1049,7 @@ $selected_search_tab = getval("selected_search_tab", "search");
             <?php } ?>
         </div>
     <?php }
-    
-    if ($browse_bar && checkperm("s") === true) {
-        render_browse_bar();
-    } ?>
+?>
 </div>
 
 <?php

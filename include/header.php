@@ -146,12 +146,6 @@ $page_title = get_page_title($pagename, pluginname());
             $not_authenticated_pages = array_filter($GLOBALS['modify_header_not_authenticated_pages']);
         }
 
-        $browse_on = has_browsebar();
-        if ($browse_on) {
-            ?>
-            <script src="<?php echo $baseurl_short; ?>js/browsebar_js.php" type="text/javascript"></script>
-            <?php
-        }
         $selected_search_tab = getval("selected_search_tab", "");
         ?>
 
@@ -176,11 +170,6 @@ $page_title = get_page_title($pagename, pluginname());
             var scrolltopElementContainer='body';
             var scrolltopElementCollection='#CollectionDiv';
             var scrolltopElementModal='#modal';
-            <?php
-            if ($browse_on) {
-                echo "browse_clicked = false;";
-            }
-            ?>
         </script>
 
         <script src="<?php echo $baseurl_short?>js/global.js?css_reload_key=<?php echo $css_reload_key?>" type="text/javascript"></script>

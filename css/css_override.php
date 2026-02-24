@@ -421,7 +421,7 @@ if (isset($header_link_style_override) && $header_link_style_override != '') { ?
 
 # Override home UI elements colour (intro text, dash tiles, simple search)
 if (isset($home_colour_style_override) && $home_colour_style_override != '') { ?>
-    #SearchBox, #HomeSiteText.dashtext, .HomePanelIN, #BrowseBar, #NewsPanel.BasicsBox, #remote_assist #SearchBoxPanel,
+    #SearchBox, #HomeSiteText.dashtext, .HomePanelIN, #NewsPanel.BasicsBox, #remote_assist #SearchBoxPanel,
     .SearchBarTab.SearchBarTabSelected {
         background: <?php echo $home_colour_style_override; ?>;
     } <?php
@@ -520,7 +520,7 @@ if (isset($high_contrast_mode) && $high_contrast_mode) { ?>
     .Listview tr:last-child {
         border-bottom: 0;
     }
-    #SearchBox, #HomeSiteText.dashtext, .HomePanelIN, .PopupCategoryTree, #BrowseBar {
+    #SearchBox, #HomeSiteText.dashtext, .HomePanelIN, .PopupCategoryTree {
         background: black;
     }
     .SearchBarTab.SearchBarTabSelected {
