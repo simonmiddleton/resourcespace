@@ -1878,163 +1878,169 @@ if($display != 'map')
     }
     ?>
 <script>
-    jQuery(function () {
-        const GAP = 1;
+jQuery(document).ready(function() {
 
-        let lastInteraction = "mouse";
+    console.debug("Menu bind test");
+    console.log("found buttons:", jQuery(".resource-card-action-menu").length);
 
-        jQuery(document).on("pointerdown mousedown", function () {
-            lastInteraction = "mouse";
-        });
+    const GAP = 1;
 
-        jQuery(document).on("keydown", function (e) {
-            // any key press implies keyboard intent
-            lastInteraction = "keyboard";
-        });
+    let lastInteraction = "mouse";
 
-        function closeAllMenus() {
-            jQuery('.flyout-menu.is-open').each(function(){
-                const $m = jQuery(this);
-                $m.removeClass('is-open is-confirm').attr('aria-hidden', 'true');
-                $m.css({ display: '' });
-            });
-            jQuery('.resource-card-action-menu').removeClass("is-open");
-            jQuery('.resource-card-action-bar[aria-expanded="true"]').attr('aria-expanded', 'false');
-        }
-
-
-
-function positionMenu($btn, $menu) {
-  const GAP = 0;
-  const PAD = 0;
-
-  const $bar = $btn.closest('.resource-card-action-bar');
-  const $container = $btn.closest('#CentralSpaceResources');
-  if (!$bar.length || !$container.length) return;
-
-  const barRect = $bar[0].getBoundingClientRect();
-  const btnRect = $btn[0].getBoundingClientRect();
-  const contRect = $container[0].getBoundingClientRect();
-
-  // Measure menu
-  const el = $menu[0];
-  const prev = { display: el.style.display, visibility: el.style.visibility };
-  $menu.css({ visibility: 'hidden', display: 'block' });
-  const menuW = $menu.outerWidth();
-  const menuH = $menu.outerHeight();
-  $menu.css(prev);
-
-  const contLeft   = contRect.left + PAD;
-  const contRight  = contRect.right - PAD;
-  const contTop    = contRect.top + PAD;
-  const contBottom = contRect.bottom - PAD;
-
-  // Decide horizontal direction by space (not by the initial guess)
-  const spaceRight = contRight - btnRect.left;   // if left-aligned to button
-  const spaceLeft  = btnRect.right - contLeft;   // if right-aligned to button
-
-  const openRight = spaceRight >= menuW || spaceRight >= spaceLeft;
-
-  // Horizontal: ALIGN EDGE with button
-  let leftVp = openRight
-    ? btnRect.left                      // menu left aligns with button left
-    : (btnRect.right - menuW);          // menu right aligns with button right
-
-  // Vertical: keep your original “below, else above”
-  let topVp = btnRect.bottom + GAP;
-  if (topVp + menuH > contBottom) topVp = btnRect.top - GAP - menuH;
-
-  // Clamp inside container viewport
-  leftVp = Math.max(contLeft, Math.min(leftVp, contRight - menuW));
-  topVp  = Math.max(contTop,  Math.min(topVp,  contBottom - menuH));
-
-  // Convert viewport -> bar-relative
-  const left = leftVp - barRect.left;
-  const top  = topVp  - barRect.top;
-
-  $menu.css({ left: Math.round(left), top: Math.round(top) });
-}
-
-
-
-        jQuery(document).on('click', '.flyout-menu .menu-item[data-action="delete"]', function (e) {
-
-            e.preventDefault();
-            e.stopPropagation();
-            
-            const $menuitem = jQuery(this);
-            $menuitem.addClass("is-selected");
-
-
-            const $flyout = $menuitem.closest('.flyout-menu');
-
-            $flyout.addClass('is-confirm');
-            $flyout.find('.menu-confirm').attr('aria-hidden', 'false');
-
-        });
-
-        /* Confirm delete */
-        jQuery(document).on('click', '.flyout-menu [data-action="confirm-delete"]', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            const $flyout = jQuery(this).closest('.flyout-menu');
-            const $card = $flyout.closest('.resource-card');
-
-            // TODO: your delete logic
-            // const id = $card.data('id');
-            // deleteResource(id);
-
-            closeAllMenus();
-        });
-
-        // Toggle on kebab click
-        jQuery(document).on('click', '.resource-card-action-menu', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            const $btn = jQuery(this);
-            const $bar = $btn.closest('.resource-card-action-bar');
-            const $menu = $bar.find('.flyout-menu').first();
-
-            const isOpen = $menu.hasClass('is-open');
-
-            closeAllMenus();
-
-            if (!isOpen) {
-                $btn.addClass("is-open");
-                $menu.addClass('is-open').attr('aria-hidden', 'false');
-                $btn.attr('aria-expanded', 'true');
-                positionMenu($btn, $menu);
-                if (lastInteraction === "keyboard") {
-                    $menu.find(".menu-item").first().trigger("focus");
-                }
-            }
-        });
-
-
-        // Click outside closes
-        jQuery(document).on('click', function (e) {
-            if (jQuery(e.target).closest('.flyout-menu, .resource-card-action-menu').length) return;
-            closeAllMenus();
-        });
-
-        // ESC closes
-        jQuery(document).on('keydown', function (e) {
-            if (e.key === 'Escape') {
-                closeAllMenus();
-            }
-        });
-
-        // Optional: close when clicking an item
-        // jQuery(document).on('click', '.menu-item', function () {
-        //     closeAllMenus();
-        // });
-
-        
-
-        
+    jQuery(document).on("pointerdown mousedown", function () {
+        lastInteraction = "mouse";
     });
+
+    jQuery(document).on("keydown", function (e) {
+        // any key press implies keyboard intent
+        lastInteraction = "keyboard";
+    });
+
+    function closeAllMenus() {
+        jQuery('.flyout-menu.is-open').each(function(){
+            const $m = jQuery(this);
+            $m.removeClass('is-open is-confirm').attr('aria-hidden', 'true');
+            $m.css({ display: '' });
+        });
+        jQuery('.resource-card-action-menu').removeClass("is-open");
+        jQuery('.resource-card-action-bar[aria-expanded="true"]').attr('aria-expanded', 'false');
+    }
+
+    function positionMenu($btn, $menu) {
+        const GAP = 0;
+        const PAD = 0;
+
+        const $bar = $btn.closest('.resource-card-action-bar');
+        const $container = $btn.closest('#CentralSpaceResources');
+        if (!$bar.length || !$container.length) return;
+
+        const barRect = $bar[0].getBoundingClientRect();
+        const btnRect = $btn[0].getBoundingClientRect();
+        const contRect = $container[0].getBoundingClientRect();
+
+        // Measure menu
+        const el = $menu[0];
+        const prev = { display: el.style.display, visibility: el.style.visibility };
+        $menu.css({ visibility: 'hidden', display: 'block' });
+        const menuW = $menu.outerWidth();
+        const menuH = $menu.outerHeight();
+        $menu.css(prev);
+
+        const contLeft   = contRect.left + PAD;
+        const contRight  = contRect.right - PAD;
+        const contTop    = contRect.top + PAD;
+        const contBottom = contRect.bottom - PAD;
+
+        // Decide horizontal direction by space (not by the initial guess)
+        const spaceRight = contRight - btnRect.left;   // if left-aligned to button
+        const spaceLeft  = btnRect.right - contLeft;   // if right-aligned to button
+
+        const openRight = spaceRight >= menuW || spaceRight >= spaceLeft;
+
+        // Horizontal: ALIGN EDGE with button
+        let leftVp = openRight
+        ? btnRect.left                      // menu left aligns with button left
+        : (btnRect.right - menuW);          // menu right aligns with button right
+
+        // Vertical: keep your original “below, else above”
+        let topVp = btnRect.bottom + GAP;
+        if (topVp + menuH > contBottom) topVp = btnRect.top - GAP - menuH;
+
+        // Clamp inside container viewport
+        leftVp = Math.max(contLeft, Math.min(leftVp, contRight - menuW));
+        topVp  = Math.max(contTop,  Math.min(topVp,  contBottom - menuH));
+
+        // Convert viewport -> bar-relative
+        const left = leftVp - barRect.left;
+        const top  = topVp  - barRect.top;
+
+        $menu.css({ left: Math.round(left), top: Math.round(top) });
+    }
+
+    jQuery(document).on('click', '.flyout-menu .menu-item[data-action="delete"]', function (e) {
+
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const $menuitem = jQuery(this);
+        $menuitem.addClass("is-selected");
+
+
+        const $flyout = $menuitem.closest('.flyout-menu');
+
+        $flyout.addClass('is-confirm');
+        $flyout.find('.menu-confirm').attr('aria-hidden', 'false');
+
+    });
+
+    /* Confirm delete */
+    jQuery(document).on('click', '.flyout-menu [data-action="confirm-delete"]', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const $flyout = jQuery(this).closest('.flyout-menu');
+        const $card = $flyout.closest('.resource-card');
+
+        // TODO: your delete logic
+        // const id = $card.data('id');
+        // deleteResource(id);
+
+        closeAllMenus();
+    });
+
+    // Toggle on kebab click
+    jQuery(document).off("click.resource-card-menu", ".resource-card-action-menu")
+                    .on('click.resource-card-menu', '.resource-card-action-menu', function (e) {
+
+        console.debug("Menu click test");
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        const $btn = jQuery(this);
+        const $bar = $btn.closest('.resource-card-action-bar');
+        const $menu = $bar.find('.flyout-menu').first();
+
+        const isOpen = $menu.hasClass('is-open');
+
+        closeAllMenus();
+
+        if (!isOpen) {
+            $btn.addClass("is-open");
+            $menu.addClass('is-open').attr('aria-hidden', 'false');
+            $btn.attr('aria-expanded', 'true');
+            positionMenu($btn, $menu);
+            if (lastInteraction === "keyboard") {
+                $menu.find(".menu-item").first().trigger("focus");
+            }
+        }
+    });
+
+
+    // Click outside closes
+    jQuery(document).on('click', function (e) {
+        if (jQuery(e.target).closest('.flyout-menu, .resource-card-action-menu').length) return;
+        closeAllMenus();
+    });
+
+    // ESC closes
+    jQuery(document).on('keydown', function (e) {
+        if (e.key === 'Escape') {
+            closeAllMenus();
+        }
+    });
+
+    // Optional: close when clicking an item
+    // jQuery(document).on('click', '.menu-item', function () {
+    //     closeAllMenus();
+    // });
+    jQuery(document).on("dragstart sortstart", function() {
+        closeAllMenus();
+    });
+    
+
+    
+});
 
 function toggle_addremove_to_collection_icon(plus_minus_link)
     {

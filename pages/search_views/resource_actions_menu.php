@@ -16,6 +16,7 @@ $share_item = false;
 $collection_comment_item = false;
 $edit_item = false;
 $delete_item = false;
+$delete_perm_item = false;
 
 // Remove from collection
 if (!checkperm('b') && ($k == '' || $internal_share_access)) {
@@ -92,12 +93,17 @@ if (
     $draw_menu = true;
 }
 
-
-
-
-
-
-
+if (!checkperm("D") || hook('check_single_delete')) {
+    if (isset($resource_deletion_state) && $result[$n]["archive"] == $resource_deletion_state) {
+        $delete_perm_item = true;
+        $draw_menu = true;
+    } else {
+        $delete_item = true;
+        $draw_menu = true;
+    }
+}
+                                                    
+    
 
 //hook('add_to_resource_tools', '', array($ref));
 
@@ -115,7 +121,7 @@ if ($draw_menu) { ?>
 <div class="resource-card-action-menu" aria-haspopup="menu" aria-expanded="false">
     <i class="icon-ellipsis-vertical" aria-hidden="true"></i>
 </div>
-<div class="flyout-menu" role="menu" aria-hidden="true">
+<div class="flyout-menu effect-style-elevation-level-1-shadow" role="menu" aria-hidden="true">
     <div class="menu-items" role="menu" aria-hidden="true">
         <?php if ($add_collection_item) { ?>
         <div class="menu-item <?php echo $add_collection_item_hidden ? "DisplayNone" : ""; ?>" role="menuitem" data-action="add">
@@ -129,10 +135,26 @@ if ($draw_menu) { ?>
             <span>Remove from current collection</span>
         </div>
         <?php } ?>
+        <?php if ($collection_comment_item) { ?>
+        <div class="menu-item" 
+            role="menuitem" 
+            data-action="collection-comment"
+            data-url="<?php echo generateURL($baseurl_short . 'pages/collection_comment.php', ['ref' => $ref, 'collection' => trim(substr($search, 11))]); ?>"
+            onclick="return ModalLoad(this.dataset.url, true);" 
+            title="<?php echo escape($lang["addorviewcomments"] . (($resource_view_title != "") ? " - " . $resource_view_title : "")) ?>">
+                <i class="icon-message-circle"></i>
+                <span>Collection comment</span>
+        </div>
+        <?php } ?>
         <?php if ($share_item) { ?>
-        <div class="menu-item" role="menuitem" data-action="share">
-            <i class="icon-share"></i>
-            <span>Share</span>
+        <div class="menu-item" 
+            role="menuitem" 
+            data-action="share"
+            data-url="<?php echo generateURL($baseurl_short . 'pages/resource_share.php', ['ref' => $ref,'search' => $search,'offset' => $offset,'order_by' => $order_by,'sort' => $sort,'archive' => $archive,'k' => $k]); ?>"
+            onclick="return CentralSpaceLoad(this.dataset.url, true);"
+            title="<?php echo escape($lang["share-resource"] . (($resource_view_title != "") ? " - " . $resource_view_title : "")) ?>">
+                <i class="icon-share"></i>
+                <span>Share</span>
         </div>
         <?php } ?>
         <?php if ($edit_item) { ?>
@@ -146,15 +168,32 @@ if ($draw_menu) { ?>
                 <span>Edit</span>
         </div>
         <?php } ?>
-        <?php if ($delete_item) { ?>
+        <?php if ($delete_item || $delete_perm_item) { ?>
         <div class="menu-item menu-item-danger" role="menuitem" data-action="delete">
             <i class="icon-trash-2"></i>
-            <span>Delete</span>
+            <span><?php echo $delete_perm_item ? "Delete permanently" : "Delete"; ?></span>
         </div>
-        <div class="menu-confirm">
+        <div class="menu-confirm <?php echo $delete_perm_item ? "is-permanent" : ""; ?>">
             <div class="menu-confirm-inner">
-                <p class="menu-confirm-text">Are you sure? This action cannot be reversed.</p>
-                <button class="menu-confirm-btn" type="button" data-action="confirm-delete">Yes, delete resource</button>
+                <p class="menu-confirm-text"><?php echo $delete_perm_item ? "Are you sure? This action cannot be reversed." : "Are you sure you wish to delete this resource?"; ?></p>
+                <?php                
+                $urlparams = array_merge($searchparams, ['text' => 'deleted', 'refreshcollection' => 'true']);
+                $redirect_url = generateURL($baseurl_short . "pages/done.php", $urlparams); 
+                ?>                
+                <button 
+                    class="menu-confirm-btn" 
+                    type="button" 
+                    data-action="confirm-delete"
+                    onclick="api(
+                            'delete_resource',
+                            {'resource':'<?php echo (int) $ref?>'},
+                            function(response){
+                                ModalLoad('<?php echo $redirect_url ?>',true);
+                            },
+                            <?php echo escape(generate_csrf_js_object('delete_resource')); ?>
+                        );">
+                    <?php echo $delete_perm_item ? "Yes, delete permanently" : "Yes, delete resource"; ?>
+                </button>
             </div>
         </div>
         <?php } ?>
@@ -164,14 +203,3 @@ if ($draw_menu) { ?>
 <?php
 }
 ?>
-
-
-
-
-
-
-
-
-
-
-
