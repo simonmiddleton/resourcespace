@@ -69,10 +69,11 @@ function get_reports()
  * @param  mixed $foremail          Sending as email?
  * @param  array $search_params     Search parameters - {@see get_search_params()} - will run the report on the search
  *                                  results and replace the '[non_correlated_sql]' placeholder with the search query.
+ * @param  bool  $results_as_array  Output is an array containing report rows. Will override other output modes. Useful for the API.
  *
- * @return void | string | array    Outputs CSV file, returns HTML table or returns an array with path to the CSV file, rows and filename
+ * @return void | string | array    Outputs CSV file, array of report data, returns HTML table or returns an array with path to the CSV file, rows and filename
  */
-function do_report($ref, $from_y, $from_m, $from_d, $to_y, $to_m, $to_d, $download = true, $add_border = false, $foremail = false, array $search_params = array())
+function do_report($ref, $from_y, $from_m, $from_d, $to_y, $to_m, $to_d, $download = true, $add_border = false, $foremail = false, array $search_params = array(), bool $results_as_array = false)
 {
     # Run report with id $ref for the date range specified. Returns a result array.
     global $lang, $baseurl, $report_rows_attachment_limit;
@@ -161,6 +162,10 @@ function do_report($ref, $from_y, $from_m, $from_d, $to_y, $to_m, $to_d, $downlo
         unset($value);
     }
     unset($result);
+
+    if ($results_as_array) {
+        return $results;
+    }
 
     if ($download) {
         header("Content-type: application/octet-stream");
