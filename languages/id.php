@@ -1290,7 +1290,6 @@ $lang["more-information"] = 'Informasi lebih lanjut';
 $lang["setup-structuralplugins"] = 'Template sistem';
 $lang["setup-headercolourstyleoverride"] = 'Warna latar belakang header kustom';
 $lang["setup-headerlinkstyleoverride"] = 'Warna tautan header kustom';
-$lang["setup-homecolourstyleoverride"] = 'Teks intro kustom, ubin dash, bilah jelajah, dan warna pencarian sederhana';
 $lang["setup-collectionbarbackground"] = 'Warna primer bilah koleksi kustom';
 $lang["setup-collectionbarforeground"] = 'Warna sekunder bilah koleksi kustom';
 $lang["setup-buttoncolouroverride"] = 'Warna tombol kustom';
@@ -3238,3 +3237,5 @@ $lang["week_ago"] = '%TIME% minggu yang lalu';
 $lang["weeks_ago"] = '%TIME% minggu yang lalu';
 $lang["month_ago"] = '%TIME% bulan yang lalu';
 $lang["months_ago"] = '%TIME% bulan yang lalu';
+
+$lang["setup-homecolourstyleoverride"] = 'Teks pengantar kustom, ubin dasbor, dan warna pencarian sederhana';

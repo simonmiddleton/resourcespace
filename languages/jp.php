@@ -1307,7 +1307,6 @@ $lang["more-information"] = '詳細情報';
 $lang["setup-structuralplugins"] = 'システムテンプレート';
 $lang["setup-headercolourstyleoverride"] = 'カスタムヘッダーの背景色';
 $lang["setup-headerlinkstyleoverride"] = 'カスタムヘッダーリンクの色';
-$lang["setup-homecolourstyleoverride"] = 'カスタムイントロテキスト、ダッシュタイル、ブラウズバー、およびシンプル検索の色';
 $lang["setup-collectionbarbackground"] = 'カスタムコレクションバーのプライマリカラー';
 $lang["setup-collectionbarforeground"] = 'カスタムコレクションバーのセカンダリカラー';
 $lang["setup-buttoncolouroverride"] = 'カスタムボタンの色';
@@ -3226,3 +3225,5 @@ $lang["week_ago"] = '%TIME% 週間前';
 $lang["weeks_ago"] = '%TIME% 週間前';
 $lang["month_ago"] = '%TIME% ヶ月前';
 $lang["months_ago"] = '%TIME%ヶ月前';
+
+$lang["setup-homecolourstyleoverride"] = 'カスタムイントロテキスト、ダッシュタイル、シンプル検索の色';

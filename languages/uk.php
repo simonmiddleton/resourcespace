@@ -1209,7 +1209,6 @@ $lang["more-information"] = 'Більше інформації';
 $lang["setup-structuralplugins"] = 'Системні шаблони';
 $lang["setup-headercolourstyleoverride"] = 'Користувацький колір фону заголовка';
 $lang["setup-headerlinkstyleoverride"] = 'Колір посилання заголовка на замовлення';
-$lang["setup-homecolourstyleoverride"] = 'Спеціальний вступний текст, плитка панелі, панель перегляду та колір простого пошуку';
 $lang["setup-collectionbarbackground"] = 'Основний колір панелі користувацької колекції';
 $lang["setup-collectionbarforeground"] = 'Вторинний колір панелі користувацької колекції';
 $lang["setup-buttoncolouroverride"] = 'Користувацький колір кнопки';
@@ -3091,3 +3090,5 @@ $lang["week_ago"] = '%TIME% тиждень тому';
 $lang["weeks_ago"] = '%TIME% тижнів тому';
 $lang["month_ago"] = '%TIME% місяць тому';
 $lang["months_ago"] = '%TIME% місяців тому';
+
+$lang["setup-homecolourstyleoverride"] = 'Користувацький текст вступу, колір плитки дашборду та простого пошуку';

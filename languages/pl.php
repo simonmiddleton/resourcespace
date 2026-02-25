@@ -995,7 +995,6 @@ $lang["more-information"] = 'Więcej informacji';
 $lang["setup-structuralplugins"] = 'Szablony systemowe';
 $lang["setup-headercolourstyleoverride"] = 'Niestandardowy kolor tła nagłówka';
 $lang["setup-headerlinkstyleoverride"] = 'Kolor niestandardowego linku nagłówka';
-$lang["setup-homecolourstyleoverride"] = 'Niestandardowy tekst wprowadzenia, kafelek paska narzędzi, pasek przeglądania i kolor prostego wyszukiwania';
 $lang["setup-collectionbarbackground"] = 'Kolor podstawowy paska niestandardowej kolekcji';
 $lang["setup-collectionbarforeground"] = 'Niestandardowy kolor drugoplanowy paska kolekcji';
 $lang["setup-buttoncolouroverride"] = 'Niestandardowy kolor przycisku';
@@ -3208,3 +3207,5 @@ $lang["week_ago"] = '%TIME% tydzień temu';
 $lang["weeks_ago"] = '%TIME% tygodni temu';
 $lang["month_ago"] = '%TIME% miesiąc temu';
 $lang["months_ago"] = '%TIME% miesięcy temu';
+
+$lang["setup-homecolourstyleoverride"] = 'Niestandardowy tekst wprowadzający, kafelek z myślnikiem i kolor prostego wyszukiwania';

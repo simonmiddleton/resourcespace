@@ -2063,7 +2063,6 @@ $lang["more-information"] = 'Mehr Informationen';
 $lang["setup-structuralplugins"] = 'Systemvorlagen';
 $lang["setup-headercolourstyleoverride"] = 'Benutzerdefinierte Kopfhintergrundfarbe';
 $lang["setup-headerlinkstyleoverride"] = 'Benutzerdefinierte Kopfzeilen-Linkfarbe';
-$lang["setup-homecolourstyleoverride"] = 'Benutzerdefinierter Einführungstext, Kachel für das Dashboard, Suchleiste und Farbe für die einfache Suche';
 $lang["setup-collectionbarbackground"] = 'Benutzerdefinierte Sammlungsleiste Primärfarbe';
 $lang["setup-collectionbarforeground"] = 'Benutzerdefinierte Sammlungsleiste Sekundärfarbe';
 $lang["setup-buttoncolouroverride"] = 'Benutzerdefinierte Schaltflächenfarbe';
@@ -3384,3 +3383,5 @@ $lang["week_ago"] = '%TIME% Woche her';
 $lang["weeks_ago"] = '%TIME% Wochen zuvor';
 $lang["month_ago"] = '%TIME% Monat her';
 $lang["months_ago"] = '%TIME% Monate her';
+
+$lang["setup-homecolourstyleoverride"] = 'Benutzerdefinierter Einführungstext, Dash-Kachel und einfache Suchfarbe';

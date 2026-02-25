@@ -1343,7 +1343,6 @@ $lang["more-information"] = 'مزيد من المعلومات';
 $lang["setup-structuralplugins"] = 'قوالب النظام';
 $lang["setup-headercolourstyleoverride"] = 'لون خلفية العنوان المخصص';
 $lang["setup-headerlinkstyleoverride"] = 'لون رابط رأس مخصص';
-$lang["setup-homecolourstyleoverride"] = 'نص تقديمي مخصص، بلاطة الشريط، شريط التصفح ولون البحث البسيط';
 $lang["setup-collectionbarbackground"] = 'لون شريط المجموعة المخصصة الأساسي';
 $lang["setup-collectionbarforeground"] = 'لون الشريط الثانوي لمجموعة مخصصة';
 $lang["setup-buttoncolouroverride"] = 'لون الزر المخصص';
@@ -3307,3 +3306,5 @@ $lang["week_ago"] = 'منذ %TIME% أسبوع';
 $lang["weeks_ago"] = 'منذ %TIME% أسابيع';
 $lang["month_ago"] = 'منذ %TIME% شهر';
 $lang["months_ago"] = 'منذ %TIME% شهور';
+
+$lang["setup-homecolourstyleoverride"] = 'نص تقديمي مخصص، لون بلاطة الشريط ولون البحث البسيط';

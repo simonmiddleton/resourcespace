@@ -1213,7 +1213,6 @@ $lang["more-information"] = 'আরও তথ্য';
 $lang["setup-structuralplugins"] = 'সিস্টেম টেমপ্লেটসমূহ';
 $lang["setup-headercolourstyleoverride"] = 'কাস্টম হেডার ব্যাকগ্রাউন্ড রঙ';
 $lang["setup-headerlinkstyleoverride"] = 'কাস্টম হেডার লিঙ্কের রঙ';
-$lang["setup-homecolourstyleoverride"] = 'কাস্টম পরিচিতি পাঠ্য, ড্যাশ টাইল, ব্রাউজ বার এবং সহজ অনুসন্ধান রঙ';
 $lang["setup-collectionbarbackground"] = 'কাস্টম সংগ্রহ বার প্রাথমিক রঙ';
 $lang["setup-collectionbarforeground"] = 'কাস্টম সংগ্রহ বার মাধ্যমিক রঙ';
 $lang["setup-buttoncolouroverride"] = 'কাস্টম বোতামের রং';
@@ -3092,3 +3091,5 @@ $lang["week_ago"] = '%TIME% সপ্তাহ আগে';
 $lang["weeks_ago"] = '%TIME% সপ্তাহ আগে';
 $lang["month_ago"] = '%TIME% মাস আগে';
 $lang["months_ago"] = '%TIME% মাস আগে';
+
+$lang["setup-homecolourstyleoverride"] = 'কাস্টম পরিচিতি টেক্সট, ড্যাশ টাইল এবং সাধারণ অনুসন্ধান রঙ';

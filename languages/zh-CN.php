@@ -1385,7 +1385,6 @@ $lang["more-information"] = '更多信息';
 $lang["setup-structuralplugins"] = '系统模板';
 $lang["setup-headercolourstyleoverride"] = '自定义标题背景颜色。';
 $lang["setup-headerlinkstyleoverride"] = '自定义页眉链接颜色';
-$lang["setup-homecolourstyleoverride"] = '自定义介绍文本、破折号瓷砖、浏览栏和简单搜索颜色。';
 $lang["setup-collectionbarbackground"] = '自定义集合栏主要颜色';
 $lang["setup-collectionbarforeground"] = '自定义集合栏次要颜色';
 $lang["setup-buttoncolouroverride"] = '自定义按钮颜色';
@@ -3294,3 +3293,5 @@ $lang["week_ago"] = '%TIME% 周前';
 $lang["weeks_ago"] = '%TIME% 周前';
 $lang["month_ago"] = '%TIME% 个月前';
 $lang["months_ago"] = '%TIME% 个月前';
+
+$lang["setup-homecolourstyleoverride"] = '自定义介绍文本，仪表板图块和简单搜索颜色';

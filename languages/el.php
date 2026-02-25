@@ -1183,7 +1183,6 @@ $lang["more-information"] = 'Περισσότερες πληροφορίες';
 $lang["setup-structuralplugins"] = 'Πρότυπα συστήματος';
 $lang["setup-headercolourstyleoverride"] = 'Προσαρμοσμένο χρώμα φόντου κεφαλίδας';
 $lang["setup-headerlinkstyleoverride"] = 'Προσαρμοσμένο χρώμα συνδέσμου κεφαλίδας';
-$lang["setup-homecolourstyleoverride"] = 'Προσαρμοσμένο κείμενο εισαγωγής, πλακίδιο παύλας, μπάρα περιήγησης και χρώμα απλής αναζήτησης';
 $lang["setup-collectionbarbackground"] = 'Πρωτεύον χρώμα προσαρμοσμένης μπάρας συλλογής';
 $lang["setup-collectionbarforeground"] = 'Δευτερεύουσα χρωματική απόχρωση προσαρμοσμένης μπάρας συλλογής';
 $lang["setup-buttoncolouroverride"] = 'Προσαρμοσμένο χρώμα κουμπιού';
@@ -3167,3 +3166,5 @@ $lang["week_ago"] = '%TIME% εβδομάδα πριν';
 $lang["weeks_ago"] = '%TIME% εβδομάδες πριν';
 $lang["month_ago"] = '%TIME% μήνα πριν';
 $lang["months_ago"] = '%TIME% μήνες πριν';
+
+$lang["setup-homecolourstyleoverride"] = 'Προσαρμοσμένο κείμενο εισαγωγής, πλακίδιο ταμπλό και χρώμα απλής αναζήτησης';

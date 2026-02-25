@@ -1173,7 +1173,6 @@ $lang["more-information"] = 'Mai multe informații';
 $lang["setup-structuralplugins"] = 'Șabloane de sistem';
 $lang["setup-headercolourstyleoverride"] = 'Culoarea de fundal a antetului personalizat';
 $lang["setup-headerlinkstyleoverride"] = 'Culoarea personalizată a linkului din antet';
-$lang["setup-homecolourstyleoverride"] = 'Text personalizat de introducere, căsuță de selecție cu linie, bară de navigare și culoare de căutare simplă';
 $lang["setup-collectionbarbackground"] = 'Culoarea primară a barei de colecție personalizată';
 $lang["setup-collectionbarforeground"] = 'Vă rugăm să traduceți: Culoarea secundară a barei de colecție personalizată';
 $lang["setup-buttoncolouroverride"] = 'Culoare buton personalizată';
@@ -3174,3 +3173,5 @@ $lang["week_ago"] = '%TIME% săptămână în urmă';
 $lang["weeks_ago"] = 'cu %TIME% săptămâni în urmă';
 $lang["month_ago"] = 'cu %TIME% lună în urmă';
 $lang["months_ago"] = 'cu %TIME% luni în urmă';
+
+$lang["setup-homecolourstyleoverride"] = 'Text personalizat de introducere, culoare tile dash și culoare căutare simplă';

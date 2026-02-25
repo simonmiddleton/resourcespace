@@ -1187,7 +1187,6 @@ $lang["more-information"] = "Viac informácií";
 $lang["setup-structuralplugins"] = "Šablóny systému";
 $lang["setup-headercolourstyleoverride"] = "Vlastná farba pozadia hlavičky";
 $lang["setup-headerlinkstyleoverride"] = "Vlastná farba odkazu v hlavičke";
-$lang["setup-homecolourstyleoverride"] = "Vlastná farba úvodného textu, dlaždíc na palubovke, panelu prehľadávania a jednoduchého vyhľadávania";
 $lang["setup-collectionbarbackground"] = "Základná farba lišty vlastnej kolekcie";
 $lang["setup-collectionbarforeground"] = "Sekundárna farba lišty vlastnej kolekcie";
 
@@ -3489,3 +3488,5 @@ $lang["week_ago"] = '%TIME% pred týždňom';
 $lang["weeks_ago"] = '%TIME% týždňov dozadu';
 $lang["month_ago"] = '%TIME% mesiac dozadu';
 $lang["months_ago"] = '%TIME% mesiacov dozadu';
+
+$lang["setup-homecolourstyleoverride"] = 'Vlastný úvodný text, dlaždica s pomlčkou a farba jednoduchého vyhľadávania';

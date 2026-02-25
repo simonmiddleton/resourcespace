@@ -1197,7 +1197,6 @@ $lang["more-information"] = 'ข้อมูลเพิ่มเติม';
 $lang["setup-structuralplugins"] = 'แม่แบบระบบ';
 $lang["setup-headercolourstyleoverride"] = 'สีพื้นหลังหัวข้อที่กำหนดเอง';
 $lang["setup-headerlinkstyleoverride"] = 'สีลิงก์หัวข้อที่กำหนดเอง';
-$lang["setup-homecolourstyleoverride"] = 'ข้อความแนะนำที่กำหนดเอง, แผ่นกระดาน, แถบเรียกดูและสีการค้นหาง่าย';
 $lang["setup-collectionbarbackground"] = 'สีหลักของแถบคอลเลกชันที่กำหนดเอง';
 $lang["setup-collectionbarforeground"] = 'สีรองของแถบคอลเลกชันที่กำหนดเอง';
 $lang["setup-buttoncolouroverride"] = 'สีปุ่มที่กำหนดเอง';
@@ -3085,3 +3084,5 @@ $lang["week_ago"] = '%TIME% สัปดาห์ที่แล้ว';
 $lang["weeks_ago"] = '%TIME% สัปดาห์ที่แล้ว';
 $lang["month_ago"] = '%TIME% เดือนที่แล้ว';
 $lang["months_ago"] = '%TIME% เดือนที่แล้ว';
+
+$lang["setup-homecolourstyleoverride"] = 'ข้อความแนะนำที่กำหนดเอง, สีของกระเบื้องแดชและการค้นหาง่าย';

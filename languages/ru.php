@@ -1300,7 +1300,6 @@ $lang["more-information"] = 'Больше информации';
 $lang["setup-structuralplugins"] = 'Шаблоны системы';
 $lang["setup-headercolourstyleoverride"] = 'Пользовательский цвет фона заголовка';
 $lang["setup-headerlinkstyleoverride"] = 'Цвет ссылки на пользовательском заголовке';
-$lang["setup-homecolourstyleoverride"] = 'Пользовательский текст введения, плитка-разделитель, строка браузера и цвет простого поиска';
 $lang["setup-collectionbarbackground"] = 'Цвет основной панели настраиваемой коллекции';
 $lang["setup-collectionbarforeground"] = 'Цвет вторичной панели настраиваемой коллекции';
 $lang["setup-buttoncolouroverride"] = 'Цвет настраиваемой кнопки';
@@ -3182,3 +3181,5 @@ $lang["week_ago"] = '%TIME% неделю назад';
 $lang["weeks_ago"] = '%TIME% недель назад';
 $lang["month_ago"] = '%TIME% месяц назад';
 $lang["months_ago"] = '%TIME% месяцев назад';
+
+$lang["setup-homecolourstyleoverride"] = 'Пользовательский текст введения, цвет плитки панели и простой поиск';

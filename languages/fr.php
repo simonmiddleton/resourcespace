@@ -1291,7 +1291,6 @@ $lang["more-information"] = 'Plus d\'informations';
 $lang["setup-structuralplugins"] = 'Modèles système';
 $lang["setup-headercolourstyleoverride"] = 'Couleur de fond d\'en-tête personnalisée';
 $lang["setup-headerlinkstyleoverride"] = 'Couleur de lien d\'en-tête personnalisé';
-$lang["setup-homecolourstyleoverride"] = 'Texte d\'introduction personnalisé, tuile de tableau de bord, barre de navigation et couleur de recherche simple';
 $lang["setup-collectionbarbackground"] = 'Couleur primaire de la barre de collection personnalisée';
 $lang["setup-collectionbarforeground"] = 'Couleur secondaire de la barre de collection personnalisée';
 $lang["setup-buttoncolouroverride"] = 'Couleur de bouton personnalisée';
@@ -3218,3 +3217,5 @@ $lang["week_ago"] = '%TIME% semaine précédente';
 $lang["weeks_ago"] = '%TIME% semaines auparavant';
 $lang["month_ago"] = '%TIME% mois auparavant';
 $lang["months_ago"] = '%TIME% mois auparavant';
+
+$lang["setup-homecolourstyleoverride"] = 'Texte d\'introduction personnalisé, couleur de la tuile du tableau de bord et couleur de recherche simple';

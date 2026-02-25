@@ -1207,7 +1207,6 @@ $lang["more-information"] = 'Maelezo zaidi';
 $lang["setup-structuralplugins"] = 'Violezo vya mfumo';
 $lang["setup-headercolourstyleoverride"] = 'Rangi ya mandharinyuma ya kichwa maalum';
 $lang["setup-headerlinkstyleoverride"] = 'Rangi ya kiungo cha kichwa maalum';
-$lang["setup-homecolourstyleoverride"] = 'Maandishi ya utangulizi maalum, tile ya dash, bar ya kuvinjari na rangi ya utafutaji rahisi';
 $lang["setup-collectionbarbackground"] = 'Rangi ya msingi ya upau wa mkusanyiko maalum';
 $lang["setup-collectionbarforeground"] = 'Rangi ya pili ya upau wa mkusanyiko maalum';
 $lang["setup-buttoncolouroverride"] = 'Rangi ya kitufe maalum';
@@ -3097,3 +3096,5 @@ $lang["week_ago"] = '%TIME% wiki iliyopita';
 $lang["weeks_ago"] = '%TIME% wiki zilizopita';
 $lang["month_ago"] = '%TIME% mwezi uliopita';
 $lang["months_ago"] = '%TIME% miezi iliyopita';
+
+$lang["setup-homecolourstyleoverride"] = 'Maandishi ya utangulizi ya kawaida, rangi ya tile ya dash na rangi ya utafutaji rahisi';

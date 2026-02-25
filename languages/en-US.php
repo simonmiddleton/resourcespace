@@ -28,6 +28,5 @@ $lang['userpreference_colourtheme'] = 'Color theme';
 $lang["setup-headercolourstyleoverride"] = "Custom header color";
 $lang["maximise"] = "Maximize";
 
-$lang["setup-homecolourstyleoverride"] = "Custom intro text, dash tile and simple search color";
 $lang["setup-collectionbarbackground"] = "Custom collection bar primary color";
 $lang["setup-collectionbarforeground"] = "Custom collection bar secondary color";

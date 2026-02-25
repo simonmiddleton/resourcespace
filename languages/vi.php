@@ -1193,7 +1193,6 @@ $lang["more-information"] = 'Thêm thông tin';
 $lang["setup-structuralplugins"] = 'Mẫu hệ thống';
 $lang["setup-headercolourstyleoverride"] = 'Màu nền tiêu đề tùy chỉnh';
 $lang["setup-headerlinkstyleoverride"] = 'Màu liên kết tiêu đề tùy chỉnh';
-$lang["setup-homecolourstyleoverride"] = 'Văn bản giới thiệu tùy chỉnh, ô dash, thanh duyệt và màu tìm kiếm đơn giản';
 $lang["setup-collectionbarbackground"] = 'Màu chính của thanh bộ sưu tập tùy chỉnh';
 $lang["setup-collectionbarforeground"] = 'Màu phụ của thanh bộ sưu tập tùy chỉnh';
 $lang["setup-buttoncolouroverride"] = 'Màu nút tùy chỉnh';
@@ -3090,3 +3089,5 @@ $lang["week_ago"] = '%TIME% tuần trước';
 $lang["weeks_ago"] = '%TIME% tuần trước';
 $lang["month_ago"] = '%TIME% tháng trước';
 $lang["months_ago"] = '%TIME% tháng trước';
+
+$lang["setup-homecolourstyleoverride"] = 'Văn bản giới thiệu tùy chỉnh, ô dash và màu tìm kiếm đơn giản';

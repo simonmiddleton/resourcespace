@@ -1197,7 +1197,6 @@ $lang["more-information"] = 'További információ';
 $lang["setup-structuralplugins"] = 'Rendszer sablonok';
 $lang["setup-headercolourstyleoverride"] = 'Egyedi fejléc háttérszín';
 $lang["setup-headerlinkstyleoverride"] = 'Egyedi fejléc hivatkozás szín';
-$lang["setup-homecolourstyleoverride"] = 'Egyedi bevezető szöveg, dash csempe, böngészősáv és egyszerű keresési szín';
 $lang["setup-collectionbarbackground"] = 'Egyedi gyűjtemény sáv elsődleges színe';
 $lang["setup-collectionbarforeground"] = 'Egyedi gyűjtemény sáv másodlagos színe';
 $lang["setup-buttoncolouroverride"] = 'Egyedi gomb szín';
@@ -3095,3 +3094,5 @@ $lang["week_ago"] = '%TIME% héttel ezelőtt';
 $lang["weeks_ago"] = '%TIME% héttel ezelőtt';
 $lang["month_ago"] = '%TIME% hónapja';
 $lang["months_ago"] = '%TIME% hónappal ezelőtt';
+
+$lang["setup-homecolourstyleoverride"] = 'Egyedi bevezető szöveg, dash csempe és egyszerű keresési szín';

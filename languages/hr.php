@@ -1194,7 +1194,6 @@ $lang["more-information"] = 'Više informacija';
 $lang["setup-structuralplugins"] = 'Sustavni predlošci';
 $lang["setup-headercolourstyleoverride"] = 'Prilagođena boja pozadine zaglavlja';
 $lang["setup-headerlinkstyleoverride"] = 'Prilagođena boja veze zaglavlja';
-$lang["setup-homecolourstyleoverride"] = 'Prilagođeni uvodni tekst, pločica s crticom, traka za pregledavanje i boja jednostavnog pretraživanja';
 $lang["setup-collectionbarbackground"] = 'Prilagođena boja primarnog trake zbirke';
 $lang["setup-collectionbarforeground"] = 'Prilagođena boja sekundarne trake kolekcije';
 $lang["setup-buttoncolouroverride"] = 'Prilagođena boja gumba';
@@ -3167,3 +3166,5 @@ $lang["week_ago"] = '%TIME% tjedan prije';
 $lang["weeks_ago"] = '%TIME% tjedana prije';
 $lang["month_ago"] = '%TIME% mjesec prije';
 $lang["months_ago"] = '%TIME% mjeseci prije';
+
+$lang["setup-homecolourstyleoverride"] = 'Prilagođeni uvodni tekst, pločica s crticom i boja jednostavnog pretraživanja';

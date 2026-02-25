@@ -1198,7 +1198,6 @@ $lang["more-information"] = 'Més informació';
 $lang["setup-structuralplugins"] = 'Plantilles del sistema';
 $lang["setup-headercolourstyleoverride"] = 'Color de fons personalitzat de la capçalera';
 $lang["setup-headerlinkstyleoverride"] = 'Color personalitzat de l\'enllaç de la capçalera';
-$lang["setup-homecolourstyleoverride"] = 'Text d\'introducció personalitzat, icona de taula de comandament, barra de navegació i color de cerca simple';
 $lang["setup-collectionbarbackground"] = 'Color primari de la barra de col·lecció personalitzada';
 $lang["setup-collectionbarforeground"] = 'Barra de col·lecció personalitzada: color secundari';
 $lang["setup-buttoncolouroverride"] = 'Color del botó personalitzat';
@@ -3183,3 +3182,5 @@ $lang["week_ago"] = 'fa %TIME% setmanes';
 $lang["weeks_ago"] = 'fa %TIME% setmanes';
 $lang["month_ago"] = 'fa %TIME% mesos';
 $lang["months_ago"] = 'fa %TIME% mesos';
+
+$lang["setup-homecolourstyleoverride"] = 'Text d\'introducció personalitzat, color del taulell de guió i color de cerca simple';

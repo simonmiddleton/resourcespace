@@ -1209,7 +1209,6 @@ $lang["more-information"] = 'अधिक जानकारी';
 $lang["setup-structuralplugins"] = 'सिस्टम टेम्पलेट्स';
 $lang["setup-headercolourstyleoverride"] = 'कस्टम हेडर पृष्ठभूमि रंग';
 $lang["setup-headerlinkstyleoverride"] = 'कस्टम हेडर लिंक रंग';
-$lang["setup-homecolourstyleoverride"] = 'कस्टम परिचय पाठ, डैश टाइल, ब्राउज़ बार और सरल खोज रंग';
 $lang["setup-collectionbarbackground"] = 'कस्टम संग्रह पट्टी प्राथमिक रंग';
 $lang["setup-collectionbarforeground"] = 'कस्टम संग्रह पट्टी द्वितीयक रंग';
 $lang["setup-buttoncolouroverride"] = 'कस्टम बटन रंग';
@@ -3106,3 +3105,5 @@ $lang["week_ago"] = '%TIME% सप्ताह पहले';
 $lang["weeks_ago"] = '%TIME% सप्ताह पहले';
 $lang["month_ago"] = '%TIME% महीने पहले';
 $lang["months_ago"] = '%TIME% महीने पहले';
+
+$lang["setup-homecolourstyleoverride"] = 'कस्टम परिचय पाठ, डैश टाइल और सरल खोज रंग';

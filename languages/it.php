@@ -1226,7 +1226,6 @@ $lang["more-information"] = 'Maggiori informazioni';
 $lang["setup-structuralplugins"] = 'Modelli di sistema';
 $lang["setup-headercolourstyleoverride"] = 'Colore di sfondo dell\'intestazione personalizzata';
 $lang["setup-headerlinkstyleoverride"] = 'Colore del link dell\'intestazione personalizzato';
-$lang["setup-homecolourstyleoverride"] = 'Testo introduttivo personalizzato, riquadro tratteggiato, barra di navigazione e colore della ricerca semplice';
 $lang["setup-collectionbarbackground"] = 'Colore primario della barra di raccolta personalizzata';
 $lang["setup-collectionbarforeground"] = 'Colore secondario della barra di raccolta personalizzata';
 $lang["setup-buttoncolouroverride"] = 'Colore personalizzato del pulsante';
@@ -3164,3 +3163,5 @@ $lang["week_ago"] = '%TIME% settimana fa';
 $lang["weeks_ago"] = '%TIME% settimane fa';
 $lang["month_ago"] = '%TIME% mese fa';
 $lang["months_ago"] = '%TIME% mesi fa';
+
+$lang["setup-homecolourstyleoverride"] = 'Testo introduttivo personalizzato, colore della piastrella dash e colore della ricerca semplice';

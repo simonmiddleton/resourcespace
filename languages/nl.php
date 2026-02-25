@@ -1221,7 +1221,6 @@ $lang["more-information"] = 'Meer informatie';
 $lang["setup-structuralplugins"] = 'Systeemsjablonen';
 $lang["setup-headercolourstyleoverride"] = 'Aangepaste achtergrondkleur van de koptekst';
 $lang["setup-headerlinkstyleoverride"] = 'Aangepaste koptekst link kleur';
-$lang["setup-homecolourstyleoverride"] = 'Aangepaste introductietekst, dashboardtegel, browsebalk en kleur voor eenvoudig zoeken';
 $lang["setup-collectionbarbackground"] = 'Aangepaste kleur van de primaire balk van de collectie';
 $lang["setup-collectionbarforeground"] = 'Aangepaste kleur van de secundaire balk van de collectie';
 $lang["setup-buttoncolouroverride"] = 'Aangepaste knopkleur';
@@ -3192,3 +3191,5 @@ $lang["week_ago"] = '%TIME% week geleden';
 $lang["weeks_ago"] = '%TIME% weken geleden';
 $lang["month_ago"] = '%TIME% maand geleden';
 $lang["months_ago"] = '%TIME% maanden geleden';
+
+$lang["setup-homecolourstyleoverride"] = 'Aangepaste inleidingstekst, dash-tegel en kleur voor eenvoudige zoekopdracht';

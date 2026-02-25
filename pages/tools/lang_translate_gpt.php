@@ -3,27 +3,35 @@
 include dirname(__DIR__, 2) . '/include/boot.php';
 command_line_only();
 
-$restrict = $argv[1] ?? false;
+// Default options
+$lang_str_names = [];
+
+// CLI options check
+$options = getopt('f:', ['filter-name:'], $opt_rest_index);
+foreach ($options as $option_name => $option_value) {
+    /** @example php lang_translate_gpt.php -f "setup-homecolourstyleoverride" -f "setup-structuralplugins" */
+    if (in_array($option_name, ['f', 'filter-name'])) {
+        if (!is_array($option_value)) {
+            $lang_str_names[] = $option_value;
+            continue;
+        }
+
+        $lang_str_names = $option_value;
+    }
+}
+
 // Models to use in the order to try them in. The same model can be attempted twice as results often differ between requests.
 $models = ["gpt-4o-mini","gpt-4o-mini","gpt-4o","gpt-3.5-turbo"];
 
-// Try the below to clear any that couldn't be translated by the default model
-//$model="gpt-3.5-turbo";
-
+$restrict = $argv[$opt_rest_index] ?? false;
 if (substr($restrict, 0, 6) == "model:") {
     $model = substr($restrict, 6);
     $restrict = false;
-} // Option to set model
+}
 
 function generateChatCompletions($apiKey, $model, $temperature = 0, $max_tokens = 2048, $messages = array(), $uid = "")
 {
-    // Set the endpoint URL
     $endpoint = "https://api.openai.com/v1/chat/completions";
-
-    // Encode the completion options as JSON
-    // $completion_options_json = json_encode($completion_options);
-
-    // Set the headers for the request
     $headers = [
         "Content-Type: application/json",
         "Authorization: Bearer $apiKey",
@@ -38,10 +46,7 @@ function generateChatCompletions($apiKey, $model, $temperature = 0, $max_tokens 
         "user" => $uid,
     ];
 
-    // Initialize cURL
     $ch = curl_init($endpoint);
-
-    // Set the options for the request
     curl_setopt_array($ch, [
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_POST => true,
@@ -54,13 +59,9 @@ function generateChatCompletions($apiKey, $model, $temperature = 0, $max_tokens 
 
     // Send the request and get the response
     $response = curl_exec($ch);
-
-
-    // Decode the response as JSON
     $response_data = json_decode($response, true);
 
     // Return the completions
-    //return print_r($response_data,true);
     if (isset($response_data["choices"][0]["message"]["content"])) {
         return $response_data["choices"][0]["message"]["content"];
     }
@@ -137,11 +138,16 @@ foreach ($plugins as $plugin) {
             }
         }
 
+        // Filter language string names
+        if ($lang_str_names !== []) {
+            $lang_en_extended = array_intersect_key($lang_en_extended, array_flip($lang_str_names));
+        }
+
         // Work out what we're missing.
         $missing = array_diff(array_keys($lang_en_extended), array_keys($lang));
 
         // Filter out things we won't process
-        $missing = array_filter($missing, function ($mkey) use ($lang_en_extended, $ignore) {
+        $missing = array_filter($missing, static function ($mkey) use ($lang_en_extended, $ignore) {
             if (is_array($lang_en_extended[$mkey])) {
                 return true; // keep, will be json_encoded later
             }

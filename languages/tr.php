@@ -1207,7 +1207,6 @@ $lang["more-information"] = 'Daha fazla bilgi';
 $lang["setup-structuralplugins"] = 'Sistem şablonları';
 $lang["setup-headercolourstyleoverride"] = 'Özel başlık arka plan rengi';
 $lang["setup-headerlinkstyleoverride"] = 'Özel başlık bağlantı rengi';
-$lang["setup-homecolourstyleoverride"] = 'Özel giriş metni, gösterge paneli kutucuğu, göz atma çubuğu ve basit arama rengi';
 $lang["setup-collectionbarbackground"] = 'Özel koleksiyon çubuğu birincil rengi';
 $lang["setup-collectionbarforeground"] = 'Özel koleksiyon çubuğu ikincil rengi';
 $lang["setup-buttoncolouroverride"] = 'Özel düğme rengi';
@@ -3098,3 +3097,5 @@ $lang["week_ago"] = '%TIME% hafta önce';
 $lang["weeks_ago"] = '%TIME% hafta önce';
 $lang["month_ago"] = '%TIME% ay önce';
 $lang["months_ago"] = '%TIME% ay önce';
+
+$lang["setup-homecolourstyleoverride"] = 'Özel tanıtım metni, gösterge kutusu ve basit arama rengi';

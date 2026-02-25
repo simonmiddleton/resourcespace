@@ -1205,7 +1205,6 @@ $lang["more-information"] = 'Více informací';
 $lang["setup-structuralplugins"] = 'Systémové šablony';
 $lang["setup-headercolourstyleoverride"] = 'Vlastní barva pozadí záhlaví';
 $lang["setup-headerlinkstyleoverride"] = 'Barva vlastního odkazu záhlaví';
-$lang["setup-homecolourstyleoverride"] = 'Vlastní úvodní text, dlaždice panelu, prohlížecí lišta a barva jednoduchého vyhledávání';
 $lang["setup-collectionbarbackground"] = 'Primární barva vlastní kolekční lišty';
 $lang["setup-collectionbarforeground"] = 'Vlastní sekundární barva panelu kolekce';
 $lang["setup-buttoncolouroverride"] = 'Vlastní barva tlačítka';
@@ -3091,3 +3090,5 @@ $lang["week_ago"] = 'před %TIME% týdnem';
 $lang["weeks_ago"] = 'před %TIME% týdny';
 $lang["month_ago"] = 'před %TIME% měsícem';
 $lang["months_ago"] = 'před %TIME% měsíci';
+
+$lang["setup-homecolourstyleoverride"] = 'Vlastní úvodní text, dlaždice s pomlčkou a barva jednoduchého vyhledávání';

@@ -1212,7 +1212,6 @@ $lang["more-information"] = 'اطلاعات بیشتر';
 $lang["setup-structuralplugins"] = 'قالب‌های سیستم';
 $lang["setup-headercolourstyleoverride"] = 'رنگ پس‌زمینه سربرگ سفارشی';
 $lang["setup-headerlinkstyleoverride"] = 'رنگ لینک هدر سفارشی';
-$lang["setup-homecolourstyleoverride"] = 'متن معرفی سفارشی، کاشی داشبورد، نوار مرور و رنگ جستجوی ساده';
 $lang["setup-collectionbarbackground"] = 'رنگ اصلی نوار مجموعه سفارشی';
 $lang["setup-collectionbarforeground"] = 'رنگ ثانویه نوار مجموعه سفارشی';
 $lang["setup-buttoncolouroverride"] = 'رنگ دکمه سفارشی';
@@ -3100,3 +3099,5 @@ $lang["week_ago"] = '%TIME% هفته پیش';
 $lang["weeks_ago"] = '%TIME% هفته پیش';
 $lang["month_ago"] = '%TIME% ماه پیش';
 $lang["months_ago"] = '%TIME% ماه پیش';
+
+$lang["setup-homecolourstyleoverride"] = 'متن معرفی سفارشی، کاشی داش و رنگ جستجوی ساده';

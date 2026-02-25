@@ -1189,7 +1189,6 @@ $lang["more-information"] = 'Mere information';
 $lang["setup-structuralplugins"] = 'Systemskabeloner';
 $lang["setup-headercolourstyleoverride"] = 'Tilpasset baggrundsfarve til overskrift';
 $lang["setup-headerlinkstyleoverride"] = 'Tilpasset farve på overskriftslink';
-$lang["setup-homecolourstyleoverride"] = 'Tilpasset introduktionstekst, dash-flise, gennemse bjælke og farve til enkel søgning';
 $lang["setup-collectionbarbackground"] = 'Tilpasset samling bjælke primær farve';
 $lang["setup-collectionbarforeground"] = 'Tilpasset samling bjælke sekundær farve';
 $lang["setup-buttoncolouroverride"] = 'Tilpasset knapfarve';
@@ -3149,3 +3148,5 @@ $lang["week_ago"] = '%TIME% uge siden';
 $lang["weeks_ago"] = '%TIME% uger siden';
 $lang["month_ago"] = '%TIME% måned siden';
 $lang["months_ago"] = '%TIME% måneder siden';
+
+$lang["setup-homecolourstyleoverride"] = 'Brugerdefineret introtekst, dash-flise og simpel søgefarve';

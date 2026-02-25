@@ -1223,7 +1223,6 @@ $lang["more-information"] = 'Karagdagang impormasyon';
 $lang["setup-structuralplugins"] = 'Mga template ng sistema';
 $lang["setup-headercolourstyleoverride"] = 'Pasadyang kulay ng background ng header';
 $lang["setup-headerlinkstyleoverride"] = 'Kulay ng link ng pasadyang header';
-$lang["setup-homecolourstyleoverride"] = 'Pasadyang teksto ng panimula, tile ng dash, bar ng pag-browse at kulay ng simpleng paghahanap';
 $lang["setup-collectionbarbackground"] = 'Pasadyang kulay ng pangunahing bar ng koleksyon';
 $lang["setup-collectionbarforeground"] = 'Pasadyang kulay ng pangalawang bar ng koleksyon';
 $lang["setup-buttoncolouroverride"] = 'Kulay ng pasadyang pindutan';
@@ -3087,3 +3086,5 @@ $lang["week_ago"] = '%TIME% linggo na ang nakalipas';
 $lang["weeks_ago"] = '%TIME% linggo na ang nakalipas';
 $lang["month_ago"] = '%TIME% buwan na ang nakalipas';
 $lang["months_ago"] = '%TIME% buwan na ang nakalipas';
+
+$lang["setup-homecolourstyleoverride"] = 'Pasadyang teksto ng panimula, tile ng dash at kulay ng simpleng paghahanap';

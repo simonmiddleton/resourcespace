@@ -1932,7 +1932,6 @@ $lang["more-information"] = 'Mer information';
 $lang["setup-structuralplugins"] = 'Systemmallar';
 $lang["setup-headercolourstyleoverride"] = 'Anpassad bakgrundsfärg för sidhuvudet';
 $lang["setup-headerlinkstyleoverride"] = 'Anpassad färg för länk i sidhuvudet';
-$lang["setup-homecolourstyleoverride"] = 'Anpassad introduktionstext, panelruta med streck, sökfält och färg för enkel sökning';
 $lang["setup-collectionbarbackground"] = 'Anpassad primärfärg för samlingens navigeringsfält';
 $lang["setup-collectionbarforeground"] = 'Anpassad samlingstabs sekundärfärg';
 $lang["setup-buttoncolouroverride"] = 'Anpassad knappfärg';
@@ -3364,3 +3363,5 @@ $lang["week_ago"] = '%TIME% vecka sedan';
 $lang["weeks_ago"] = '%TIME% veckor sedan';
 $lang["month_ago"] = '%TIME% månad sedan';
 $lang["months_ago"] = '%TIME% månader sedan';
+
+$lang["setup-homecolourstyleoverride"] = 'Anpassad introduktionstext, dash-tile och färg för enkel sökning';

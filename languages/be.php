@@ -1226,7 +1226,6 @@ $lang["more-information"] = 'Большая інфармацыя';
 $lang["setup-structuralplugins"] = 'Сістэмныя шаблоны';
 $lang["setup-headercolourstyleoverride"] = 'Кастомны колер фону загалоўка';
 $lang["setup-headerlinkstyleoverride"] = 'Колер спасылкі карыстацкай загалоўкі';
-$lang["setup-homecolourstyleoverride"] = 'Карыстальніцкі ўводны тэкст, плітка панэлі, панэль прагляду і колер простага пошуку';
 $lang["setup-collectionbarbackground"] = 'Кастомны колекцыйны бар асноўны колер';
 $lang["setup-collectionbarforeground"] = 'Кастомная калекцыя бар другі колер';
 $lang["setup-buttoncolouroverride"] = 'Кастомны колер кнопкі';
@@ -3087,3 +3086,5 @@ $lang["week_ago"] = '%TIME% тыдняў таму';
 $lang["weeks_ago"] = '%TIME% тыдняў таму';
 $lang["month_ago"] = '%TIME% месяц таму';
 $lang["months_ago"] = '%TIME% месяца таму';
+
+$lang["setup-homecolourstyleoverride"] = 'Карыстальніцкі ўводны тэкст, плітка панэлі і колер простага пошуку';

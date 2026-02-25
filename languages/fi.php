@@ -1773,7 +1773,6 @@ $lang["more-information"] = 'Lisätietoja';
 $lang["setup-structuralplugins"] = 'Järjestelmän mallipohjat';
 $lang["setup-headercolourstyleoverride"] = 'Mukautetun otsikon taustaväri';
 $lang["setup-headerlinkstyleoverride"] = 'Mukautetun otsikkolinkin väri';
-$lang["setup-homecolourstyleoverride"] = 'Mukautettu aloitusteksti, viivakuvake, selainpalkki ja yksinkertaisen haun väri';
 $lang["setup-collectionbarbackground"] = 'Mukautetun kokoelman palkin ensisijainen väri';
 $lang["setup-collectionbarforeground"] = 'Mukautetun kokoelman palkin toissijainen väri';
 $lang["setup-buttoncolouroverride"] = 'Mukautetun painikkeen väri';
@@ -3325,3 +3324,5 @@ $lang["week_ago"] = '%TIME% viikko sitten';
 $lang["weeks_ago"] = '%TIME% viikkoa sitten';
 $lang["month_ago"] = '%TIME% kuukausi sitten';
 $lang["months_ago"] = '%TIME% kuukautta sitten';
+
+$lang["setup-homecolourstyleoverride"] = 'Mukautettu aloitusteksti, dash-laatta ja yksinkertaisen haun väri';

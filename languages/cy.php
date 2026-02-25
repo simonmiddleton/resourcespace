@@ -1191,7 +1191,6 @@ $lang["more-information"] = 'Mwy o wybodaeth';
 $lang["setup-structuralplugins"] = 'Templedi system';
 $lang["setup-headercolourstyleoverride"] = 'Lliw cefndir penawd arferol';
 $lang["setup-headerlinkstyleoverride"] = 'Lliw cyswllt penawd wedi\'i deilwra';
-$lang["setup-homecolourstyleoverride"] = 'Testun cychwyn wedi\'i deilwra, teilsen dash, bar pori a lliw chwilio syml';
 $lang["setup-collectionbarbackground"] = 'Lliw prif y bar casgliad arferol';
 $lang["setup-collectionbarforeground"] = 'Lliw eilaidd bar casgliad arferol';
 $lang["setup-buttoncolouroverride"] = 'Lliw botwm wedi\'i deilwra';
@@ -3087,3 +3086,5 @@ $lang["week_ago"] = '%TIME% wythnos yn ôl';
 $lang["weeks_ago"] = '%TIME% wythnosau yn ôl';
 $lang["month_ago"] = '%TIME% mis yn ôl';
 $lang["months_ago"] = '%TIME% mis yn ôl';
+
+$lang["setup-homecolourstyleoverride"] = 'Testun cychwynol wedi\'i deilwra, teilsen dash a lliw chwilio syml';

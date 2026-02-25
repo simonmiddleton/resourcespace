@@ -1207,7 +1207,6 @@ $lang["more-information"] = 'ਹੋਰ ਜਾਣਕਾਰੀ';
 $lang["setup-structuralplugins"] = 'ਸਿਸਟਮ ਟੈਂਪਲੇਟਸ';
 $lang["setup-headercolourstyleoverride"] = 'ਕਸਟਮ ਹੈਡਰ ਪਿਛੋਕੜ ਰੰਗ';
 $lang["setup-headerlinkstyleoverride"] = 'ਕਸਟਮ ਹੈਡਰ ਲਿੰਕ ਰੰਗ';
-$lang["setup-homecolourstyleoverride"] = 'ਕਸਟਮ ਇੰਟਰੋ ਟੈਕਸਟ, ਡੈਸ਼ ਟਾਈਲ, ਬ੍ਰਾਊਜ਼ ਬਾਰ ਅਤੇ ਸਧਾਰਨ ਖੋਜ ਦਾ ਰੰਗ';
 $lang["setup-collectionbarbackground"] = 'ਕਸਟਮ ਕਲੈਕਸ਼ਨ ਬਾਰ ਪ੍ਰਾਇਮਰੀ ਰੰਗ';
 $lang["setup-collectionbarforeground"] = 'ਕਸਟਮ ਕਲੈਕਸ਼ਨ ਬਾਰ ਸੈਕੰਡਰੀ ਰੰਗ';
 $lang["setup-buttoncolouroverride"] = 'ਕਸਟਮ ਬਟਨ ਰੰਗ';
@@ -3101,3 +3100,5 @@ $lang["week_ago"] = '%TIME% ਹਫ਼ਤਾ ਪਹਿਲਾਂ';
 $lang["weeks_ago"] = '%TIME% ਹਫਤੇ ਪਹਿਲਾਂ';
 $lang["month_ago"] = '%TIME% ਮਹੀਨੇ ਪਹਿਲਾਂ';
 $lang["months_ago"] = '%TIME% ਮਹੀਨੇ ਪਹਿਲਾਂ';
+
+$lang["setup-homecolourstyleoverride"] = 'ਕਸਟਮ ਇੰਟਰੋ ਟੈਕਸਟ, ਡੈਸ਼ ਟਾਈਲ ਅਤੇ ਸਧਾਰਣ ਖੋਜ ਰੰਗ';

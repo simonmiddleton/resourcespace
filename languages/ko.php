@@ -1208,7 +1208,6 @@ $lang["more-information"] = '자세한 정보';
 $lang["setup-structuralplugins"] = '시스템 템플릿';
 $lang["setup-headercolourstyleoverride"] = '맞춤 헤더 배경 색상';
 $lang["setup-headerlinkstyleoverride"] = '맞춤 헤더 링크 색상';
-$lang["setup-homecolourstyleoverride"] = '맞춤 소개 텍스트, 대시 타일, 탐색 막대 및 간단한 검색 색상';
 $lang["setup-collectionbarbackground"] = '사용자 정의 컬렉션 바 기본 색상';
 $lang["setup-collectionbarforeground"] = '사용자 지정 컬렉션 바 보조 색상';
 $lang["setup-buttoncolouroverride"] = '사용자 정의 버튼 색상';
@@ -3101,3 +3100,5 @@ $lang["week_ago"] = '%TIME% 주 전';
 $lang["weeks_ago"] = '%TIME% 주 전';
 $lang["month_ago"] = '%TIME% 달 전';
 $lang["months_ago"] = '%TIME%개월 전';
+
+$lang["setup-homecolourstyleoverride"] = '사용자 정의 소개 텍스트, 대시 타일 및 간단한 검색 색상';

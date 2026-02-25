@@ -1212,7 +1212,6 @@ $lang["more-information"] = 'مزید معلومات';
 $lang["setup-structuralplugins"] = 'سسٹم ٹیمپلیٹس';
 $lang["setup-headercolourstyleoverride"] = 'حسب ضرورت ہیڈر پس منظر کا رنگ';
 $lang["setup-headerlinkstyleoverride"] = 'حسب ضرورت ہیڈر لنک کا رنگ';
-$lang["setup-homecolourstyleoverride"] = 'حسب ضرورت تعارفی متن، ڈیش ٹائل، براؤز بار اور سادہ تلاش کا رنگ';
 $lang["setup-collectionbarbackground"] = 'حسب ضرورت مجموعہ بار کا بنیادی رنگ';
 $lang["setup-collectionbarforeground"] = 'حسب ضرورت مجموعہ بار ثانوی رنگ';
 $lang["setup-buttoncolouroverride"] = 'حسب ضرورت بٹن کا رنگ';
@@ -3099,3 +3098,5 @@ $lang["week_ago"] = '%TIME% ہفتہ پہلے';
 $lang["weeks_ago"] = '%TIME% ہفتے پہلے';
 $lang["month_ago"] = '%TIME% مہینہ پہلے';
 $lang["months_ago"] = '%TIME% مہینے پہلے';
+
+$lang["setup-homecolourstyleoverride"] = 'حسب ضرورت تعارفی متن، ڈیش ٹائل اور سادہ تلاش کا رنگ';
