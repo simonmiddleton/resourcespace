@@ -164,6 +164,27 @@ function do_report($ref, $from_y, $from_m, $from_d, $to_y, $to_m, $to_d, $downlo
     unset($result);
 
     if ($results_as_array) {
+        for ($n = 0; $n < count($results); $n++) {
+            foreach ($results[$n] as $key => $value) {
+                if ($key == "thumbnail") {
+                        $thm_path = get_resource_path($value, true, "thm", false, "", -1, 1, false);
+                        if (!file_exists($thm_path)) {
+                            $thm_path = dirname(__DIR__) . "/gfx/no_preview/default_thm.png";
+                        } else {
+                            $thm_path = get_resource_path($value, true, "col", false, "", -1, 1, false);
+                        }
+                    $results[$n]['thumbnail'] = base64_encode(file_get_contents($thm_path));
+                    $results[$n]['thumbnail_view_resource'] =  sprintf('%s/?r=%s', $baseurl, $value);
+                } else {
+                    $custom = hook('customreportfield', '', array($results[$n], $key, $value, $download));
+                    if ($custom !== false) {
+                        $results[$n][$key] = $custom;
+                    } else {
+                        $results[$n][$key] = strip_tags_and_attributes(lang_or_i18n_get_translated($value, "usergroup-"), array("a"), ['href', 'target', 'rel', 'title']);
+                    }
+                }
+            }
+        }
         return $results;
     }
 

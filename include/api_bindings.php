@@ -1717,6 +1717,8 @@ function api_get_reports(): array|bool
 
 /**
  * Run report via the API.
+ * Where report includes a "thumbnail" column which would normally display an image on the report, the thumbnail key will contain
+ * a base64 encoded thumbnail image in jpg format. A "thumbnail_view_link" key will also be added containing a link to the resource.
  *
  * @param  int     $report_ref   ID of the report to run.
  * @param  string  $from_date    Start date for the report period in format YYYY-MM-DD.

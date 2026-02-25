@@ -516,7 +516,6 @@ function comments_notify_tagged($comment, $from_user, $resource = null, $collect
  */
 function get_comments_by_ref(int $ref, bool $collection_mode = false): array
 {
-    $access = get_resource_access($ref);
     if (get_resource_access($ref) === RESOURCE_ACCESS_CONFIDENTIAL) {
         return array();
     }
