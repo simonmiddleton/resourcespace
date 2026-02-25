@@ -230,85 +230,85 @@ $thumbs_displayed_fields_height = $resource_panel_height_max = max($thumbs_displ
     ?>  
         <div class="resource-card-extra-fields">
         </div>
-        <div class="resource-card-status-bar">
-            <?php
-            if ($display_resource_id_in_thumbnail && $ref > 0) {
-            ?>
-                <span class="resource-card-pill resource-card-id"># <?php echo escape($ref); ?></span>
-            <?php } 
-            
-            if ($thumbs_display_archive_state) {
-            ?>
-                <span class="resource-card-pill resource-card-status"><?php echo isset($lang["status" . $result[$n]['archive']]) ? (escape($lang["status" . $result[$n]['archive']])) : ($lang["status"] . "&nbsp;" . $result[$n]['archive']); ?></span>
-            <?php
-            }
-            if (isset($show_annotation_count) && $show_annotation_count) {
-                $annotations_count = $result[$n]["annotation_count"] ?? getResourceAnnotationsCount($ref);
-
-                if ($annotations_count > 0) {
-                    ?>
-                    <span class="resource-card-pill resource-card-annotations"><i class="icon-captions"></i><?php echo (int) $annotations_count; ?></span>
-                    <?php
-                }
-                
-            } ?>
-        </div>
-        </div>
-        <div class="resource-card-type-bar">
-                    <?php
-        echo '<div class="resource-card-type">';
-        foreach ($types as $type) {
-            if (($type["ref"] == $result[$n]['resource_type']) && isset($type["icon"]) && $type["icon"] != "") {
-                echo '<i title="' . escape($type["name"]) . '" class="icon-' . escape($type["icon"]) . '"></i>';
-                }
-            }
-        if (isset($result[$n]['file_extension']) && $result[$n]['file_extension'] != "") { ?>
-            <?php echo strtoupper(escape($result[$n]['file_extension'])); ?>
-            <?php
+    </div>
+    <div class="resource-card-status-bar">
+        <?php
+        if ($display_resource_id_in_thumbnail && $ref > 0) {
+        ?>
+            <span class="resource-card-pill resource-card-id"># <?php echo escape($ref); ?></span>
+        <?php } 
+        
+        if ($thumbs_display_archive_state) {
+        ?>
+            <span class="resource-card-pill resource-card-status"><?php echo isset($lang["status" . $result[$n]['archive']]) ? (escape($lang["status" . $result[$n]['archive']])) : ($lang["status"] . "&nbsp;" . $result[$n]['archive']); ?></span>
+        <?php
         }
-        echo '</div>'; 
-            ?>
-            <div class="resource-card-tools">
-                <div class="resource-card-add-remove">
-                <?php
-                // Remove from collection icon
-                if (!checkperm('b') && ($k == '' || $internal_share_access)) {
-                    $col_link_class = ['icon-circle-minus'];
+        if (isset($show_annotation_count) && $show_annotation_count) {
+            $annotations_count = $result[$n]["annotation_count"] ?? getResourceAnnotationsCount($ref);
 
-                    if (
-                        isset($usercollection_resources)
-                        && is_array($usercollection_resources)
-                        && !in_array($ref, $usercollection_resources)
-                    ) {
-                        $col_link_class[] = 'DisplayNone';
-                    }
-
-                    $onclick = 'toggle_addremove_to_collection_icon(this);';
-                    echo remove_from_collection_link($ref, implode(' ', $col_link_class), $onclick, 0, $resource_view_title) . '</a>';
-                }
-
-                // Add to collection icon
-                if (
-                    $pagename != "collections"
-                    && !checkperm('b')
-                    && !in_array($result[$n]['resource_type'], $collection_block_restypes)
-                    && ('' == $k || $internal_share_access)
-                ) {
-                    $col_link_class = ['icon-circle-plus'];
-
-                    if (
-                        isset($usercollection_resources)
-                        && is_array($usercollection_resources)
-                        && in_array($ref, $usercollection_resources)
-                    ) {
-                        $col_link_class[] = 'DisplayNone';
-                    }
-
-                    $onclick = 'toggle_addremove_to_collection_icon(this);';
-                    echo add_to_collection_link($ref, $onclick, '', implode(' ', $col_link_class), $resource_view_title) . '</a>';
-                }
+            if ($annotations_count > 0) {
                 ?>
-                </div>
+                <span class="resource-card-pill resource-card-annotations"><i class="icon-captions"></i><?php echo (int) $annotations_count; ?></span>
+                <?php
+            }
+            
+        } ?>
+    </div>
+    <div class="resource-card-type-bar">
+                <?php
+    echo '<div class="resource-card-type">';
+    foreach ($types as $type) {
+        if (($type["ref"] == $result[$n]['resource_type']) && isset($type["icon"]) && $type["icon"] != "") {
+            echo '<i title="' . escape($type["name"]) . '" class="icon-' . escape($type["icon"]) . '"></i>';
+            }
+        }
+    if (isset($result[$n]['file_extension']) && $result[$n]['file_extension'] != "") { ?>
+        <?php echo strtoupper(escape($result[$n]['file_extension'])); ?>
+        <?php
+    }
+    echo '</div>'; 
+        ?>
+        <div class="resource-card-tools">
+            <div class="resource-card-add-remove">
+            <?php
+            // Remove from collection icon
+            if (!checkperm('b') && ($k == '' || $internal_share_access)) {
+                $col_link_class = ['icon-circle-minus'];
+
+                if (
+                    isset($usercollection_resources)
+                    && is_array($usercollection_resources)
+                    && !in_array($ref, $usercollection_resources)
+                ) {
+                    $col_link_class[] = 'DisplayNone';
+                }
+
+                $onclick = 'toggle_addremove_to_collection_icon(this);';
+                echo remove_from_collection_link($ref, implode(' ', $col_link_class), $onclick, 0, $resource_view_title) . '</a>';
+            }
+
+            // Add to collection icon
+            if (
+                $pagename != "collections"
+                && !checkperm('b')
+                && !in_array($result[$n]['resource_type'], $collection_block_restypes)
+                && ('' == $k || $internal_share_access)
+            ) {
+                $col_link_class = ['icon-circle-plus'];
+
+                if (
+                    isset($usercollection_resources)
+                    && is_array($usercollection_resources)
+                    && in_array($ref, $usercollection_resources)
+                ) {
+                    $col_link_class[] = 'DisplayNone';
+                }
+
+                $onclick = 'toggle_addremove_to_collection_icon(this);';
+                echo add_to_collection_link($ref, $onclick, '', implode(' ', $col_link_class), $resource_view_title) . '</a>';
+            }
+            ?>
             </div>
         </div>
+    </div>
 </div>

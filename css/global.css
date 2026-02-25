@@ -3720,7 +3720,8 @@ a.text-link:visited {
     align-items: flex-start;
     gap: var(--space-4);
     align-self: stretch;
-    /* background-color: red; */
+    flex-wrap: wrap;
+    background-color: red;
 }
 
 .resource-card-pill {
@@ -3809,23 +3810,35 @@ a.text-link:visited {
 }
 
 .resource-card-add-remove {
-  color: var(--colour-surface-900);
-  background: transparent;
+    color: var(--colour-surface-900);
+    background: transparent;
 }
 
 .resource-card-add-remove:hover {
-  background-color: var(--colour-surface-900);
-  color: var(--colour-surface-50);
+    background-color: var(--colour-surface-900);
+    color: var(--colour-surface-50);
+}
+
+.resource-card-add-remove a:is(:active, :link, :visited) {
+    color: var(--colour-surface-900);
+}
+
+.resource-card-add-remove a:hover {
+    color: var(--colour-surface-50);
 }
 
 .resource-card-add-remove:has(.removeFromCollection:not(.DisplayNone)) {
-  background-color: var(--colour-surface-900);
-  color: var(--colour-surface-50);
+    background-color: var(--colour-surface-900);
+    color: var(--colour-surface-50);
 }
 
 .resource-card-add-remove:has(.removeFromCollection:not(.DisplayNone)):hover {
-  background-color: var(--colour-feedback-error-dark);
-  color: var(--colour-surface-50);
+    background-color: var(--colour-feedback-error-dark);
+    color: var(--colour-surface-50);
+}
+
+.resource-card-add-remove:has(.removeFromCollection:not(.DisplayNone)) a {
+    color: var(--colour-surface-50);
 }
 
 .resource-card-add-remove i {
@@ -3833,12 +3846,9 @@ a.text-link:visited {
   line-height: 1;
 }
 
-.resource-card-add-remove a:active,
-.resource-card-add-remove a:hover,
-.resource-card-add-remove a:visited {
-    text-decoration: inherit;
-    color: inherit;
-    opacity: inherit;
+.resource-card-add-remove a:is(:active, :hover, :link, :visited ) {
+    text-decoration: none;
+    opacity: 1;
 }
 
 .flyout-menu {
