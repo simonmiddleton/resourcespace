@@ -178,9 +178,6 @@ $originals_separate_storage = false;
 $applicationname = "ResourceSpace"; // The name of your implementation / installation (e.g. 'MyCompany Resource System')
 $header_favicon = "gfx/interface/favicon.png";
 
-// Is the logo a link to the home page?
-$header_link = true;
-
 // Header includes username to right of user menu icon
 $header_include_username = false;
 

@@ -1,4 +1,7 @@
 <?php
+
+use Montala\ResourceSpace\UserInterfaceComponents\IconSize;
+
 hook("preheaderoutput");
 
 $k = getval("k", "");
@@ -264,6 +267,10 @@ $page_title = get_page_title($pagename, pluginname());
         ?>
 
         <script>jQuery('.plugincss').attr('class','plugincss0');</script>
+        
+        <!-- ResourceSpace front-end bootstrap -->
+        <script src="<?php echo $baseurl_short?>js/app.js?css_reload_key=<?php echo (int) $css_reload_key; ?>"></script>
+        <script src="<?php echo $baseurl_short?>js/header.js?css_reload_key=<?php echo (int) $css_reload_key; ?>"></script>
     </head>
 
     <body lang="<?php echo escape($language); ?>">
@@ -314,30 +321,45 @@ $page_title = get_page_title($pagename, pluginname());
 
             $linkUrl = isset($header_link_url) ? $header_link_url : $homepage_url;
             ?>
+            <!-- NEW HEADER -->
+            <header>
+                <div id="header-container">
+                    <div class="logo">
+                        <a href="<?php echo sanitise_url($linkUrl); ?>" class="HeaderImgLink" onclick="return CentralSpaceLoad(this, true);">
+                            <img src="<?php echo sanitise_url(get_header_image(false, true)); ?>" alt="<?php echo escape($applicationname); ?>">
+                        </a>
+                    </div>
+
+                    <div class="header-search-field">
+                        <form id="search-form" action="/search.php" method="get">
+                            <div class="input-wrapper">
+                                <?php render_icon_wrapper_component('icon-search', IconSize::Default, []); ?>
+                                <input type="text" name="search" placeholder="<?php echo escape($lang["searchbutton"]); ?>" aria-label="<?php echo escape($lang["simplesearch"]); ?>">
+                                <button type="button" class="icon-sliders-horizontal"></button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <nav class="primary-navigation">
+                        <ul>
+                            <li><a href="/search.php">Collections</a></li>
+                            <li><a href="/search.php">Recent</a></li>
+                            <li><a href="/help.php">Help</a></li>
+                        </ul>
+                    </nav>
+
+                    <div class="actions">
+                        <img src="/images/avatar.jpg" alt="User" class="avatar">
+                        <span class="username">John</span>
+                    </div>
+                </div>
+            </header>
+            <!-- End of NEW HEADER -->
 
             <div id="Header" class="<?php
                 echo in_array($pagename, $not_authenticated_pages) ? ' LoginHeader ' : '';
                 echo isset($slimheader_darken) && $slimheader_darken ? 'slimheader_darken' : ''; ?>"
             >
-                <div id="HeaderResponsive">
-                    <?php
-                    $header_img_src = get_header_image(false, true);
-
-                    if ($header_link && ($k == "" || $internal_share_access)) { ?>
-                        <a href="<?php echo $linkUrl; ?>" onclick="return CentralSpaceLoad(this,true);" class="HeaderImgLink">
-                            <img src="<?php echo $header_img_src; ?>" id="HeaderImg" alt="<?php echo $applicationname; ?>">
-                        </a>
-                        <?php
-                    } else {
-                        ?>
-                        <div class="HeaderImgLink">
-                            <img src="<?php echo $header_img_src; ?>" id="HeaderImg" alt="<?php echo $applicationname; ?>">
-                        </div>
-                        <?php
-                    }
-                    ?>
-                </div>
-
                 <?php
                 hook("headertop");
 

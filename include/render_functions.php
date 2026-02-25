@@ -4,6 +4,7 @@
 *
 */
 
+use Montala\ResourceSpace\UserInterfaceComponents\IconSize;
 
 /**
 * Renders the HTML for the provided $field for inclusion in a search form, for example the
@@ -7627,3 +7628,14 @@ enum ToastNotificationType
     case Error;
 }
 // phpcs:enable
+
+function render_icon_wrapper_component(string $name, IconSize $size = IconSize::Default): void
+{
+    $class = [
+        $name,
+        "{$size->value}-icon-size",
+    ];
+
+    printf('<i class="%s" aria-hidden="true"></i>', escape(join(' ', $class)));
+}
+// function render_(){}

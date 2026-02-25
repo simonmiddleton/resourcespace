@@ -461,16 +461,9 @@ select::-ms-expand
     overflow: visible;
     float: left;
 }
-.HeaderImgLink{
-    float: left;
-    height: 50px;
-    width: auto;
-    margin-right: 20px;
-}
-#HeaderImg{margin:0; max-height: 50px;  margin-top: 3px;}
 .HorizontalNav li a {display: inline-block;zoom: 1;}
 h2#CollectionsPanelHeader {display:none;}
-.HeaderLink a {
+/* .HeaderLink a {
     border-radius: 8px;
     padding: 0 8px;
     margin: 2px;
@@ -478,7 +471,7 @@ h2#CollectionsPanelHeader {display:none;}
 }
 .HeaderLink a.current {
     background: #00000012;
-}
+} */
 .HorizontalNav li.HeaderLink {
     padding: 0;
 }
@@ -3175,6 +3168,17 @@ div.slide:not([style]) {
 
 /* ===== New UI elements ===== */
 
+.default-icon-size {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+.small-icon-size {
+    width: 16px;
+    height: 16px;
+}
+
 /* Input fields */
 .field-input,
 .field-text-only {
@@ -3406,6 +3410,92 @@ a.text-link:visited {
     margin-right: var(--space-4);
     width: 16px;
     height: 16px;
+}
+
+/* Header */
+header {
+    background: var(--colour-surface-header-background, #FFF);
+}
+
+#header-container {
+    display: flex;
+    margin: 0 auto;
+    /* width: 1920px; */
+    max-width: 1376px;
+    padding: var(--space-16, 16px) var(--space-272, 272px);
+    align-items: center;
+    gap: var(--space--32, 32px);
+}
+
+#header-container .logo {
+    display: flex;
+    width: 200px;
+    max-height: 48px;
+    align-items: center;
+    line-height: initial;
+}
+
+#header-container .logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.header-search-field .input-wrapper {
+    display: flex;
+    /* min-height: var(--form-field-min-height, 48px); */
+    max-height: var(--form-field-min-height, 48px);
+    align-items: center;
+    border-radius: var(--space-4, 4px);
+    background: var(--Colour-Surface-50, #FFF);
+    border: 1px solid var(--form-field-border, #4A4C48);
+    padding-left: var(--space-12, 12px);
+    gap: var(--space-8, 8px);
+}
+
+.header-search-field .input-wrapper i, .header-search-field .input-wrapper > button {
+    font-size: 24px;
+}
+
+.header-search-field .input-wrapper > input {
+    margin: 0px;
+    padding: 0px;
+    width: 200px;
+    height: 24px;
+    min-height: unset;
+    border: unset;
+    box-shadow: none;
+}
+
+.header-search-field .input-wrapper > input:focus {
+    outline: none;
+}
+
+.header-search-field .input-wrapper > button {
+    display: flex;
+    margin: unset;
+    padding: 11.5px;
+    width: 46px;
+    height: 46px;
+    box-shadow: none;
+    border-radius: 0 3px 3px 0;
+    border-left: 1px solid var(--form-field-border, #4A4C48);
+    background: var(--colour-surface-200, #F5F5F5);
+    color: var(--colour-surface-900, #0C0D0C);
+    justify-content: center;
+    align-items: center;
+    font-weight: unset;
+}
+
+.header-search-field .input-wrapper > button:hover {
+    padding: 11px;
+    background: var(--colour-surface-700, #4A4C48);
+    color: var(--colour-surface-50, #FFF);
+}
+
+.header-search-field .input-wrapper > button:active {
+    background: var(--colour-surface-900, #0C0D0C);
+    color: var(--colour-surface-50, #FFF);
 }
 
 /* ===== Responsive layouts ===== */
