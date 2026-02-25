@@ -124,15 +124,25 @@ if ($draw_menu) { ?>
 <div class="flyout-menu effect-style-elevation-level-1-shadow" role="menu" aria-hidden="true">
     <div class="menu-items" role="menu" aria-hidden="true">
         <?php if ($add_collection_item) { ?>
-        <div class="menu-item <?php echo $add_collection_item_hidden ? "DisplayNone" : ""; ?>" role="menuitem" data-action="add">
-            <i class="icon-circle-plus"></i>
-            <span>Add to current collection</span>
+        <div class="menu-item <?php echo $add_collection_item_hidden ? "DisplayNone" : ""; ?>" 
+             role="menuitem" 
+             data-action="add"
+             data-resource-ref="<?php echo (int) $ref; ?>"
+             onClick="AddResourceToCollection(event, {draggable: jQuery('div#ResourceShell<?php echo (int) $ref; ?>')},'<?php echo (int) $ref; ?>',''); toggle_addremove_to_collection_icon(this); return false;"
+             <?php echo generate_csrf_data_for_api_native_authmode('add_resource_to_collection'); ?>>
+                <i class="icon-circle-plus"></i>
+                Add to current collection
         </div>
         <?php } ?>
         <?php if ($remove_collection_item) { ?>
-        <div class="menu-item <?php echo $remove_collection_item_hidden ? "DisplayNone" : ""; ?>" role="menuitem" data-action="remove">
-            <i class="icon-circle-minus"></i>
-            <span>Remove from current collection</span>
+        <div class="menu-item <?php echo $remove_collection_item_hidden ? "DisplayNone" : ""; ?>" 
+             role="menuitem" 
+             data-action="remove"
+             data-resource-ref="<?php echo (int) $ref; ?>"
+             onClick="RemoveResourceFromCollection(event, '<?php echo (int) $ref; ?>','',''); toggle_addremove_to_collection_icon(this); return false;"
+             <?php echo generate_csrf_data_for_api_native_authmode('remove_resource_from_collection'); ?>>
+                <i class="icon-circle-minus"></i>
+                Remove from current collection
         </div>
         <?php } ?>
         <?php if ($collection_comment_item) { ?>
@@ -143,7 +153,7 @@ if ($draw_menu) { ?>
             onclick="return ModalLoad(this.dataset.url, true);" 
             title="<?php echo escape($lang["addorviewcomments"] . (($resource_view_title != "") ? " - " . $resource_view_title : "")) ?>">
                 <i class="icon-message-circle"></i>
-                <span>Collection comment</span>
+                Collection comment
         </div>
         <?php } ?>
         <?php if ($share_item) { ?>
@@ -154,7 +164,7 @@ if ($draw_menu) { ?>
             onclick="return CentralSpaceLoad(this.dataset.url, true);"
             title="<?php echo escape($lang["share-resource"] . (($resource_view_title != "") ? " - " . $resource_view_title : "")) ?>">
                 <i class="icon-share"></i>
-                <span>Share</span>
+                Share
         </div>
         <?php } ?>
         <?php if ($edit_item) { ?>
@@ -165,13 +175,13 @@ if ($draw_menu) { ?>
             onclick='return <?php echo $resource_view_modal ? "Modal" : "CentralSpace"; ?>Load(this.dataset.url, true);'
             title="<?php echo escape($lang["action-editmetadata"] . (($resource_view_title != "") ? " - " . $resource_view_title : "")) ?>">
                 <i class="icon-pencil"></i>
-                <span>Edit</span>
+                Edit
         </div>
         <?php } ?>
         <?php if ($delete_item || $delete_perm_item) { ?>
         <div class="menu-item menu-item-danger" role="menuitem" data-action="delete">
             <i class="icon-trash-2"></i>
-            <span><?php echo $delete_perm_item ? "Delete permanently" : "Delete"; ?></span>
+            <?php echo $delete_perm_item ? "Delete permanently" : "Delete"; ?>
         </div>
         <div class="menu-confirm <?php echo $delete_perm_item ? "is-permanent" : ""; ?>">
             <div class="menu-confirm-inner">
@@ -186,9 +196,9 @@ if ($draw_menu) { ?>
                     data-action="confirm-delete"
                     onclick="api(
                             'delete_resource',
-                            {'resource':'<?php echo (int) $ref?>'},
+                            {'resource':'<?php echo (int) $ref;  ?>'},
                             function(response){
-                                ModalLoad('<?php echo $redirect_url ?>',true);
+                                ModalLoad('<?php echo $redirect_url; ?>',true);
                             },
                             <?php echo escape(generate_csrf_js_object('delete_resource')); ?>
                         );">

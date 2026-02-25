@@ -3889,14 +3889,11 @@ a.text-link:visited {
     gap: 8px;
     cursor: pointer;
 
-    font-size: 16px;
+    
 
     color: var(--colour-typography-900);
     background: var(--colour-surface-50);
-}
 
-.menu-item span {
-    color: var(--colour-typography-900);
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
@@ -3912,12 +3909,12 @@ a.text-link:visited {
     background: var(--colour-surface-300);
 }
 
-.menu-item-danger:hover, .menu-item-danger:hover span {  
+.menu-item-danger:hover {  
     color: var(--colour-global-white);
     background: var(--colour-feedback-error-dark);
 }
 
-.menu-item-danger:active, .menu-item-danger:active span {
+.menu-item-danger:active {
     color: var(--colour-global-white);
     background: var(--colour-feedback-error-dark);
 }
@@ -3926,19 +3923,20 @@ a.text-link:visited {
     width: 15.998px;
     height: 15.998px;
     flex-shrink: 0;
+    font-size: 16px;
 }
 
-.flyout-menu.is-confirm .menu-item-danger, .flyout-menu.is-confirm .menu-item-danger span {
+.flyout-menu.is-confirm .menu-item-danger {
     color: var(--colour-feedback-error-dark);
     background: var(--colour-feedback-error-lighter);
 }
 
-.flyout-menu.is-confirm .menu-item-danger:hover, .flyout-menu.is-confirm .menu-item-danger:hover span {
+.flyout-menu.is-confirm .menu-item-danger:hover {
     color: var(--colour-feedback-error-dark);
     background: var(--colour-feedback-error-lighter);
 }
 
-.flyout-menu.is-confirm .menu-item-danger:active, .flyout-menu.is-confirm .menu-item-danger:active span {
+.flyout-menu.is-confirm .menu-item-danger:active {
     color: var(--colour-feedback-error-dark);
     background: var(--colour-feedback-error-lighter);
 }

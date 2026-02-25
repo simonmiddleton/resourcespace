@@ -2031,9 +2031,9 @@ jQuery(document).ready(function() {
     });
 
     // Optional: close when clicking an item
-    // jQuery(document).on('click', '.menu-item', function () {
-    //     closeAllMenus();
-    // });
+    jQuery(document).on('click', '.menu-item[data-action!="delete"]', function () {
+        closeAllMenus();
+    });
     jQuery(document).on("dragstart sortstart", function() {
         closeAllMenus();
     });
@@ -2042,39 +2042,56 @@ jQuery(document).ready(function() {
     
 });
 
-function toggle_addremove_to_collection_icon(plus_minus_link)
-    {
+function toggle_addremove_to_collection_icon(plus_minus_link) {
     // The plus minus link can be from the collection bar or from the resource shell in centralspace  
     var icon = jQuery(plus_minus_link);
 
     // Use the link to locate the resource shell in centralspace  
     var resource_shell = jQuery('#ResourceShell' + icon.data('resource-ref') + ".ResourcePanel");
 
+    var resource_card = jQuery('#ResourceShell' + icon.data('resource-ref') + ".resource-card");
+
     // Each resource shell has one plus icon for addition and one minus icon for removal
     // Each collection bar resource has only one minus icon for removal
 
     // If its a plus icon then it must be from centralspace, so hide it and then show its minus icon sibling
-    if(icon.hasClass('addToCollection'))
-        {
-        icon.addClass('DisplayNone');
-        var rfc = icon.siblings('.removeFromCollection');
-        if(rfc.length > 0)
-            {
-            jQuery(rfc[0]).removeClass('DisplayNone');
-            }
-        }
+    if (icon.hasClass('addToCollection') || icon.data("action") === "add") {
+        //icon.addClass('DisplayNone');
+        // var rfc = icon.siblings('.removeFromCollection');
+        // if(rfc.length > 0) {
+        //     jQuery(rfc[0]).removeClass('DisplayNone');
+        // }
+
+        resource_card.find('div.resource-card-add-remove > a.addToCollection').addClass('DisplayNone');
+        resource_card.find('div.resource-card-add-remove > a.removeFromCollection').removeClass('DisplayNone');
+
+        resource_shell.find('div.ResourcePanelIcons > a.addToCollection').addClass('DisplayNone');
+        resource_shell.find('div.ResourcePanelIcons > a.removeFromCollection').removeClass('DisplayNone');
+
+        resource_card.find('div.menu-item[data-action="add"]').addClass('DisplayNone');
+        resource_card.find('div.menu-item[data-action="remove"]').removeClass("DisplayNone");
+    }
     // If its a minus icon then it can be from the collection bar or centralspace
-    else if(icon.hasClass('removeFromCollection'))
+    else if(icon.hasClass('removeFromCollection') || icon.data("action") === "remove")
         {
         // If there is a plus icon then it must be in centralspace and so show it
         resource_shell.find('div.ResourcePanelIcons > a.addToCollection').removeClass('DisplayNone');
+        
+        resource_card.find('div.resource-card-add-remove > a.addToCollection').removeClass('DisplayNone');
+        resource_card.find('div.menu-item[data-action="add"]').removeClass('DisplayNone');
 
         // Now hide the minus icon in centralspace
         resource_shell.find('div.ResourcePanelIcons > a.removeFromCollection').addClass('DisplayNone');
+        
+        resource_card.find('div.resource-card-add-remove > a.removeFromCollection').addClass('DisplayNone');
+        resource_card.find('div.menu-item[data-action="remove"]').addClass('DisplayNone');
         }
 
     return;
-    }
+}
+    
+
+    
 
 
 <?php
