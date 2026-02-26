@@ -3499,7 +3499,58 @@ header {
 #header-container .primary-navigation {
     display: flex;
     align-items: center;
-    gap: var(----space-12, 12px);
+    gap: var(--space-12, 12px);
+}
+
+#header-container .primary-navigation ul {
+    display: flex;
+    align-items: center;
+    gap: var(--space-12, 12px);
+    color: var(--colour-typography-900, #0C0D0C);
+    font-size: 0;
+    list-style: none;
+}
+
+#header-container .primary-navigation ul > li {
+    margin: unset;
+    padding: unset;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 140%; /* 22.4px */
+}
+
+#header-container .primary-navigation ul > li > a {
+    color: var(--colour-typography-900, #0C0D0C);
+}
+
+#header-container .primary-navigation ul > li > a:hover {
+    color: var(--colour-typography-900, #0C0D0C);
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-skip-ink: none;
+    text-decoration-thickness: auto;
+    text-underline-offset: auto;
+    text-underline-position: from-font;
+}
+
+#header-container .primary-navigation > button {
+    display: flex;
+    width: 48px;
+    height: 48px;
+    padding: 12px;
+    margin: unset;
+    justify-content: center;
+    align-items: center;
+    border-radius: var(--space-4, 4px);
+    font-size: 24px;
+    color: var(--colour-surface-800, #30322F);
+    background-color: unset;
+    box-shadow: none;
+}
+
+#header-container .primary-navigation > button:hover {
+    background: var(--colour-surface-400, #D4D5D2);
 }
 
 #header-container .actions {
@@ -3532,6 +3583,7 @@ header {
 #header-container a.UploadButton i {
     display: flex;
     align-items: center;
+    font-size: 18px;
 }
 
 #header-container a.UploadButton span {

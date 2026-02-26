@@ -341,12 +341,13 @@ $page_title = get_page_title($pagename, pluginname());
                         </form>
                     </div>
 
-                    <nav class="primary-navigation HorizontalNav">
-                        <ul id="HeaderLinksContainer">
-                            <li class="HeaderLink"><a href="/search.php">Collections</a></li>
-                            <li class="HeaderLink"><a href="/search.php">Recent</a></li>
-                            <li class="HeaderLink"><a href="/help.php">Help</a></li>
+                    <nav class="primary-navigation">
+                        <ul>
+                            <li><a href="/search.php">Collections</a></li>
+                            <li><a href="/search.php">Recent</a></li>
+                            <li><a href="/help.php">Help</a></li>
                         </ul>
+                        <button type="button" class="icon-ellipsis-vertical"></button>
                     </nav>
 
                     <div class="actions">
