@@ -9,10 +9,6 @@ ResourceSpace.Modules.Header = (function () {
     }
 
     function bindEvents(header) {
-        // header.on('click', function () {
-        //     alert('Clicked header!');
-        // });
-
         jQuery('.header-search-field .input-wrapper > button').on('click', function (event) {
             alert('Clicked header-search-field button!');
             // event.stopPropagation();
@@ -23,6 +19,13 @@ ResourceSpace.Modules.Header = (function () {
             // event.stopPropagation();
             alert('Clicked primary-navigation button to reveal more links!');
         });
+
+        // todo: see if we can abstract this for settings, messages and user profile
+        // header.find('#header-action-settings').on('click', function (event) {
+        //     // event.stopPropagation();
+        //     // alert('Clicked header-action-settings!');
+        //     ModalClose();return ModalLoad(this,true,true,'right');
+        // });
     }
 
     return {

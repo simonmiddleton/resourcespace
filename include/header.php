@@ -351,10 +351,30 @@ $page_title = get_page_title($pagename, pluginname());
                     </nav>
 
                     <div class="actions">
-                        <img src="/images/avatar.jpg" alt="User" class="avatar">
-                        <span class="username">John</span>
-
                         <?php
+                        if (checkperm("t") && ($useracceptedterms == 1 || !$terms_login)) { ?>
+                            <a class="get-menu-content" href="<?php echo $baseurl; ?>/pages/team/team_home.php" onclick="ModalClose();return ModalLoad(this,true,true,'right');" alt="<?php echo escape($lang['teamcentre']); ?>" title="<?php echo escape($lang['teamcentre']); ?>">
+                                <?php
+                                render_icon_wrapper_component(Icon::Settings);
+
+                                if (!$actions_on && (checkperm("R") || checkperm("r"))) {
+                                    # Show pill count if there are any pending requests
+                                    $pending = ps_value("select sum(thecount) value from (select count(*) thecount from request where status = 0 union select count(*) thecount from research_request where status = 0) as theunion", array(), 0);
+                                    ?>
+                                    <span id="TeamMessages" class="Pill" <?php echo $pending > 0 ? 'data-value="' . $pending . '"' : 'style="display:none"'?>>
+                                        <?php echo $pending > 0 ? $pending : ''; ?>
+                                    </span>
+                                    <?php
+                                } else {
+                                    ?>
+                                    <span class="AdminMenuCountPill Pill" style="display:none"></span>
+                                    <?php
+                                }
+                                ?>
+                            </a>
+                            <?php
+                        }
+
                         if (
                             (
                                 ($top_nav_upload && checkperm("c"))
@@ -481,32 +501,6 @@ $page_title = get_page_title($pagename, pluginname());
                                     </a>
                                     <div id="MessageContainer" style="position:absolute; "></div>
                                 </li>
-
-                                <!-- Admin menu link -->
-                                <?php if (checkperm("t") && ($useracceptedterms == 1 || !$terms_login)) { ?>
-                                    <li>
-                                        <a href="<?php echo $baseurl; ?>/pages/team/team_home.php" onclick="ModalClose();return ModalLoad(this,true,true,'right');" alt="<?php echo escape($lang['teamcentre']); ?>" title="<?php echo escape($lang['teamcentre']); ?>">
-                                            <i aria-hidden="true" class="icon-menu lucide-lg"></i>
-                                            <?php
-                                            if (!$actions_on && (checkperm("R") || checkperm("r"))) {
-                                                # Show pill count if there are any pending requests
-                                                $pending = ps_value("select sum(thecount) value from (select count(*) thecount from request where status = 0 union select count(*) thecount from research_request where status = 0) as theunion", array(), 0);
-                                                ?>
-                                                <span id="TeamMessages" class="Pill" <?php echo $pending > 0 ? 'data-value="' . $pending . '"' : 'style="display:none"'?>>
-                                                    <?php echo $pending > 0 ? $pending : ''; ?>
-                                                </span>
-                                                <?php
-                                            } else {
-                                                ?>
-                                                <span class="AdminMenuCountPill Pill" style="display:none"></span>
-                                                <?php
-                                            }
-                                            ?>
-                                        </a>
-                                    </li>
-                                    <?php
-                                } ?>
-                                <!-- End of Admin link -->
                             </ul>
                             <?php
                         }

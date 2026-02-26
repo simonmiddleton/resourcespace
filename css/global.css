@@ -3559,6 +3559,31 @@ header {
     gap: var(--space--24, 24px);
 }
 
+#header-container .actions .get-menu-content {
+    display: flex;
+    max-width: 48px;
+    max-height: 48px;
+    padding: 12px;
+    justify-content: center;
+    align-items: center;
+    border-radius: var(--space-4, 4px);
+    background: var(--colour-surface-200, #F5F5F5);
+    color: var(--colour-surface-800, #30322F);
+    font-size: 24px;
+    text-decoration: none;
+}
+
+#header-container .actions .get-menu-content:hover {
+    background: var(--colour-surface-700, #4A4C48);
+    color: var(--colour-surface-50, #FFF);
+}
+
+#header-container .actions .get-menu-content:active {
+    background: var(--colour-surface-900, #0C0D0C);
+    color: var(--colour-surface-50, #FFF);
+    opacity: unset;
+}
+
 #header-container a.UploadButton {
     display: flex;
     height: var(--space-48, 48px);
