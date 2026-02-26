@@ -1,5 +1,6 @@
 <?php
 
+use Montala\ResourceSpace\UserInterfaceComponents\Icon;
 use Montala\ResourceSpace\UserInterfaceComponents\IconSize;
 
 hook("preheaderoutput");
@@ -333,24 +334,41 @@ $page_title = get_page_title($pagename, pluginname());
                     <div class="header-search-field">
                         <form id="search-form" action="/search.php" method="get">
                             <div class="input-wrapper">
-                                <?php render_icon_wrapper_component('icon-search', IconSize::Default, []); ?>
-                                <input type="text" name="search" placeholder="<?php echo escape($lang["searchbutton"]); ?>" aria-label="<?php echo escape($lang["simplesearch"]); ?>">
+                                <?php render_icon_wrapper_component(Icon::Search); ?>
+                                <input type="text" name="search" aria-label="<?php echo escape($lang["simplesearch"]); ?>">
                                 <button type="button" class="icon-sliders-horizontal"></button>
                             </div>
                         </form>
                     </div>
 
-                    <nav class="primary-navigation">
-                        <ul>
-                            <li><a href="/search.php">Collections</a></li>
-                            <li><a href="/search.php">Recent</a></li>
-                            <li><a href="/help.php">Help</a></li>
+                    <nav class="primary-navigation HorizontalNav">
+                        <ul id="HeaderLinksContainer">
+                            <li class="HeaderLink"><a href="/search.php">Collections</a></li>
+                            <li class="HeaderLink"><a href="/search.php">Recent</a></li>
+                            <li class="HeaderLink"><a href="/help.php">Help</a></li>
                         </ul>
                     </nav>
 
                     <div class="actions">
                         <img src="/images/avatar.jpg" alt="User" class="avatar">
                         <span class="username">John</span>
+
+                        <?php
+                        if (
+                            (
+                                ($top_nav_upload && checkperm("c"))
+                                || ($top_nav_upload_user && checkperm("d"))
+                            )
+                            && ($useracceptedterms == 1 || !$terms_login)
+                        ) {
+                            ?>
+                            <a class="UploadButton" href="<?php echo sanitise_url(get_upload_url('', $k)); ?>" onclick="return CentralSpaceLoad(this, true);"><?php
+                                render_icon_wrapper_component(Icon::Upload);
+                                printf('<span>%s</span>', escape($lang['upload']));
+                            ?></a>
+                            <?php
+                        }
+                        ?>
                     </div>
                 </div>
             </header>

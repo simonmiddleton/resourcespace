@@ -4,6 +4,7 @@
 *
 */
 
+use Montala\ResourceSpace\UserInterfaceComponents\Icon;
 use Montala\ResourceSpace\UserInterfaceComponents\IconSize;
 
 /**
@@ -7629,10 +7630,10 @@ enum ToastNotificationType
 }
 // phpcs:enable
 
-function render_icon_wrapper_component(string $name, IconSize $size = IconSize::Default): void
+function render_icon_wrapper_component(Icon $name, IconSize $size = IconSize::Default): void
 {
     $class = [
-        $name,
+        $name->value,
         "{$size->value}-icon-size",
     ];
 

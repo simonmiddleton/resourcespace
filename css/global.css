@@ -3420,7 +3420,6 @@ header {
 #header-container {
     display: flex;
     margin: 0 auto;
-    /* width: 1920px; */
     max-width: 1376px;
     padding: var(--space-16, 16px) var(--space-272, 272px);
     align-items: center;
@@ -3429,7 +3428,7 @@ header {
 
 #header-container .logo {
     display: flex;
-    width: 200px;
+    max-width: 200px;
     max-height: 48px;
     align-items: center;
     line-height: initial;
@@ -3443,7 +3442,6 @@ header {
 
 .header-search-field .input-wrapper {
     display: flex;
-    /* min-height: var(--form-field-min-height, 48px); */
     max-height: var(--form-field-min-height, 48px);
     align-items: center;
     border-radius: var(--space-4, 4px);
@@ -3496,6 +3494,52 @@ header {
 .header-search-field .input-wrapper > button:active {
     background: var(--colour-surface-900, #0C0D0C);
     color: var(--colour-surface-50, #FFF);
+}
+
+#header-container .primary-navigation {
+    display: flex;
+    align-items: center;
+    gap: var(----space-12, 12px);
+}
+
+#header-container .actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space--24, 24px);
+}
+
+#header-container a.UploadButton {
+    display: flex;
+    height: var(--space-48, 48px);
+    padding: 0 var(--space-16, 16px);
+    justify-content: center;
+    align-items: center;
+    border-radius: var(--space-4, 4px);
+    background: var(--colour-brand-primary-default, #0E6DD9);
+    color: var(--colour-global-white, #FFF);
+    text-decoration: none;
+}
+
+#header-container a.UploadButton:hover {
+    background: var(--colour-brand-primary-hover, #0A73EB);
+}
+
+#header-container a.UploadButton:active {
+    background: var(--colour-brand-primary-dark, #053D7D);
+    opacity: unset;
+}
+
+#header-container a.UploadButton i {
+    display: flex;
+    align-items: center;
+}
+
+#header-container a.UploadButton span {
+    text-align: center;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 100%; /* 18px */
 }
 
 /* ===== Responsive layouts ===== */
