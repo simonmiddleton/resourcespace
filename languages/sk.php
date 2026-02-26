@@ -2211,7 +2211,6 @@ $lang["modifyuserpreferencesintro"] = "Možnosti na tejto stránke Vám umožňu
 /* User preferences*/
 $lang['userpreference_colourtheme'] = 'Farebná téma';
 $lang["userpreferencecolourtheme"] = "Farebná téma rozhrania";
-$lang['userpreference_user_interface'] = 'Požívateľské rozhranie';
 $lang['userpreference_enable_option'] = 'Umožniť';
 $lang['userpreference_disable_option'] = 'Zakázať';
 $lang['userpreference_default_sort_label'] = 'Predvolené zoradenie';
@@ -2254,7 +2253,6 @@ $lang['systemconfig_use_theme_as_home_label'] = 'Použiť stránku „Odporúča
 $lang['systemconfig_use_recent_as_home_label'] = 'Použiť stránku „Naposledy pridané“ ako domovskú stránku?';
 $lang['systemconfig_workflow'] = 'Pracovný postup';
 $lang['systemconfig_minyear_label'] = 'Najstarší zdroj z roku';
-$lang['systemconfig_user_accounts'] = 'Používateľské účty';
 $lang['systemconfig_allow_account_request_label'] = 'Povoliť používateľom požadovať účty';
 $lang['systemconfig_terms_download_label'] = 'Podmienky sťahovania';
 $lang['systemconfig_terms_login_label'] = 'Podmienky použítia aplikácie pri prvom prihlásení';
@@ -2643,7 +2641,6 @@ $lang["locked_resource_search"]             = "Uzamknuté zdroje";
 $lang["autocomplete_log_note"]              = "(Autocomplete)";
 $lang["posted-file-not-found"]              = "Nahraný súbor nebol nájdený";
 $lang["error-theme-missing"]                = "Odporúčaná zbierka chýba alebo nebola vytvorená.";
-$lang["system_config_search_engines"]       = "Webové vyhľadávače";
 $lang["search_engine_noindex"] = "Odmietnutie indexovania obsahu tohto webu webovými vyhľadávačmi";
 $lang["search_engine_noindex_external_shares"] = "Odmietnutie indexovania obsahu externých zdieľaní webovými vyhľadávačmi";
 
