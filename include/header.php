@@ -353,7 +353,7 @@ $page_title = get_page_title($pagename, pluginname());
                     <div class="actions">
                         <?php
                         if (checkperm("t") && ($useracceptedterms == 1 || !$terms_login)) { ?>
-                            <a class="get-menu-content" href="<?php echo $baseurl; ?>/pages/team/team_home.php" onclick="ModalClose();return ModalLoad(this,true,true,'right');" alt="<?php echo escape($lang['teamcentre']); ?>" title="<?php echo escape($lang['teamcentre']); ?>">
+                            <a class="get-menu-content" href="<?php echo $baseurl; ?>/pages/team/team_home.php" onclick="ModalClose();return ModalLoad(this,true,true,'right');" title="<?php echo escape($lang['teamcentre']); ?>">
                                 <?php
                                 render_icon_wrapper_component(Icon::Settings);
 
@@ -374,7 +374,13 @@ $page_title = get_page_title($pagename, pluginname());
                             </a>
                             <?php
                         }
+                        ?>
+                        <a class="get-menu-content" href="<?php echo $baseurl; ?>/pages/user/user_messages_quick.php" onclick="ModalClose(); return ModalLoad(this, true, false, 'rightnarrow');" title="<?php echo escape(text('mymessages-tooltip')); ?>">
+                            <?php render_icon_wrapper_component(Icon::Mail); ?>
+                            <span class="MessageCountPill Pill" style="display: none;"></span>
+                        </a>
 
+                        <?php
                         if (
                             (
                                 ($top_nav_upload && checkperm("c"))

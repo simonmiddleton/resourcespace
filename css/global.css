@@ -3584,6 +3584,27 @@ header {
     opacity: unset;
 }
 
+#header-container .actions .get-menu-content > .Pill {
+    display: flex;
+    width: 20px;
+    height: 20px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: var(--space-60, 60px);
+    background: var(--colour-feedback-error-default, #C20101);
+
+    color: var(--colour-global-white, #FFF);
+    text-align: center;
+    /* leading-trim: both; */
+    /* text-edge: cap; */
+    /* font-family: "Atkinson Hyperlegible Next"; */
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 100%; /* 12px */
+}
+
 #header-container a.UploadButton {
     display: flex;
     height: var(--space-48, 48px);
