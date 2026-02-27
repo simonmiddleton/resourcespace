@@ -10,4 +10,5 @@ enum Icon: string
     case Search = 'icon-search';
     case Settings = 'icon-settings';
     case Mail = 'icon-mail';
+    case User = 'icon-user';
 }

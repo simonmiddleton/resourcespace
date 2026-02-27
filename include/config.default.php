@@ -178,9 +178,6 @@ $originals_separate_storage = false;
 $applicationname = "ResourceSpace"; // The name of your implementation / installation (e.g. 'MyCompany Resource System')
 $header_favicon = "gfx/interface/favicon.png";
 
-// Header includes username to right of user menu icon
-$header_include_username = false;
-
 // Custom source location for the header image (includes baseurl, requires leading "/"). Will default to the resourcespace logo if left blank. Recommended image size: 350px(X) x 80px(Y)
 $linkedheaderimgsrc = "";
 

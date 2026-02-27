@@ -383,6 +383,22 @@ $page_title = get_page_title($pagename, pluginname());
                                 <span class="MessageCountPill Pill" style="display: none;"></span>
                             </span>
                         </a>
+                        <a class="get-menu-content" href="<?php echo $baseurl; ?>/pages/user/user_home.php" onclick="ModalClose(); return ModalLoad(this, true, true, 'right');" alt="<?php echo escape($lang['myaccount']); ?>" title="<?php echo escape($lang['myaccount']); ?>">
+                            <span class="wrap-icon" aria-hidden="true">
+                                <?php
+                                $user_profile_image = get_profile_image($userref, false);
+
+                                if ($user_profile_image != "") {
+                                    ?>
+                                    <img src="<?php echo sanitise_url($user_profile_image); ?>" id="UserProfileImage" class="ProfileImage" alt="<?php echo escape(text('profile_image')); ?>">
+                                    <?php
+                                } else {
+                                    render_icon_wrapper_component(Icon::User);
+                                }
+                                ?> 
+                                <span class="UserMenuCountPill Pill" style="display: none;"></span>
+                            </span>
+                        </a>
 
                         <?php
                         if (
@@ -482,34 +498,7 @@ $page_title = get_page_title($pagename, pluginname());
                                 </li>
 
                                 <li>
-                                    <a href="<?php echo $baseurl; ?>/pages/user/user_home.php" onclick="ModalClose(); return ModalLoad(this, true, true, 'right');" alt="<?php echo escape($lang['myaccount']); ?>" title="<?php echo escape($lang['myaccount']); ?>">
-                                        <?php
-                                        $user_profile_image = get_profile_image($userref, false);
-
-                                        if (isset($header_include_username) && $header_include_username) {
-                                            if ($user_profile_image != "") {
-                                                ?>
-                                                <img src='<?php echo $user_profile_image; ?>' alt='Profile icon' class="ProfileImage" id='UserProfileImage'> &nbsp;<?php echo escape($userfullname == "" ? $username : $userfullname); ?>
-                                                <?php
-                                            } else {
-                                                ?>
-                                                <i aria-hidden="true" class="icon-user-round lucide-lg"></i>&nbsp;<?php echo escape($userfullname == "" ? $username : $userfullname) ?>
-                                                <?php
-                                            }
-                                        } else {
-                                            if ($user_profile_image != "") {
-                                                ?>
-                                                <img src='<?php echo $user_profile_image; ?>' alt='Profile icon' class="ProfileImage" id='UserProfileImage'>
-                                                <?php
-                                            } else {
-                                                ?>
-                                                <i aria-hidden="true" class="icon-user-round lucide-lg"></i>                                                
-                                                <?php
-                                            }
-                                        }
-                                        ?> 
-                                        <span class="UserMenuCountPill Pill" style="display: none;"></span>
-                                    </a>
+                                    <!-- todo: determine what this is used for and if it really needs to be placed in the header -->
                                     <div id="MessageContainer" style="position:absolute; "></div>
                                 </li>
                             </ul>

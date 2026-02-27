@@ -3608,6 +3608,23 @@ header {
     line-height: 100%; /* 12px */
 }
 
+#header-container .actions .get-menu-content .ProfileImage {
+    vertical-align: top;
+    width: var(--space-48, 48px);
+    height: var(--space-48, 48px);
+    border-radius: var(--space-4, 4px);
+    filter: brightness(0.95);
+}
+
+#header-container .actions .get-menu-content .ProfileImage:hover {
+    filter: brightness(1);
+}
+
+#header-container .actions .get-menu-content .wrap-icon:has(img.ProfileImage) > .Pill {
+    top: -12px;
+    right: -12px;
+}
+
 #header-container a.UploadButton {
     display: flex;
     height: var(--space-48, 48px);
