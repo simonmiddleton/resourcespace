@@ -3123,19 +3123,19 @@ label {
 }
 
 .collection-bar--minimised #UICenter {
-    height: calc(100% - 40px - 66px)
+    height: calc(100% - 40px - 80px)
 }
 
 .collection-bar--maximised #UICenter {
-    height: calc(100% - 160px - 66px)
+    height: calc(100% - 160px - 80px)
 }
 
 .collection-bar--maximised #SearchBarContainer {
-    height: calc(100% - 160px - 66px);
+    height: calc(100% - 160px - 80px);
 }
 
 .collection-bar--minimised #SearchBarContainer {
-    height: calc(100% - 40px - 66px);
+    height: calc(100% - 40px - 80px);
 }
 
 #toggleThumbsLink i {
