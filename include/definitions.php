@@ -203,7 +203,6 @@ define('LINK_PLUS_CIRCLE', '<i aria-hidden="true" class="icon-circle-plus"></i>&
 define('LINK_CHEVRON_RIGHT', '<i aria-hidden="true" class="icon-chevron-right"></i>&nbsp;');
 define('UPLOAD_ICON', '<i aria-hidden="true" class="icon-upload"></i>&nbsp;');
 define('CONTRIBUTIONS_ICON', '<i aria-hidden="true" class="icon-user-round-plus"></i>&nbsp;');
-define('DASH_ICON', '<i aria-hidden="true" class="icon-layout-dashboard"></i>&nbsp;');
 define('FEATURED_COLLECTION_ICON', '<i aria-hidden="true" class="icon-folder"></i>&nbsp;');
 define('RECENT_ICON', '<i aria-hidden="true" class="icon-clock"></i>&nbsp;');
 define('HELP_ICON', '<i aria-hidden="true" class="icon-book-marked"></i>&nbsp;');

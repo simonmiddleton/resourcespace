@@ -1,14 +1,6 @@
 
 <nav aria-label="<?php echo escape($lang['mainmenu']) ?>">
     <ul id="HeaderLinksContainer">
-        <?php if (!$use_theme_as_home && !$use_recent_as_home) { ?>
-            <li class="HeaderLink">
-                <a href="<?php echo $baseurl?>/pages/home.php" onClick="return CentralSpaceLoad(this,true);">
-                    <?php echo  DASH_ICON . escape($lang["dash"]); ?>
-                </a>
-            </li>
-        <?php } ?>
-
         <?php hook("topnavlinksafterhome"); ?>
 
         <?php if ($advanced_search_nav) { ?>
