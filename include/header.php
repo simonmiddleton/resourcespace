@@ -354,6 +354,7 @@ $page_title = get_page_title($pagename, pluginname());
                         <?php
                         if (checkperm("t") && ($useracceptedterms == 1 || !$terms_login)) { ?>
                             <a class="get-menu-content" href="<?php echo $baseurl; ?>/pages/team/team_home.php" onclick="ModalClose();return ModalLoad(this,true,true,'right');" title="<?php echo escape($lang['teamcentre']); ?>">
+                                <span class="wrap-icon" aria-hidden="true">
                                 <?php
                                 render_icon_wrapper_component(Icon::Settings);
 
@@ -371,13 +372,16 @@ $page_title = get_page_title($pagename, pluginname());
                                     <?php
                                 }
                                 ?>
+                                </span>
                             </a>
                             <?php
                         }
                         ?>
                         <a class="get-menu-content" href="<?php echo $baseurl; ?>/pages/user/user_messages_quick.php" onclick="ModalClose(); return ModalLoad(this, true, false, 'rightnarrow');" title="<?php echo escape(text('mymessages-tooltip')); ?>">
-                            <?php render_icon_wrapper_component(Icon::Mail); ?>
-                            <span class="MessageCountPill Pill" style="display: none;"></span>
+                            <span class="wrap-icon" aria-hidden="true">
+                                <?php render_icon_wrapper_component(Icon::Mail); ?>
+                                <span class="MessageCountPill Pill" style="display: none;"></span>
+                            </span>
                         </a>
 
                         <?php
@@ -469,6 +473,7 @@ $page_title = get_page_title($pagename, pluginname());
                                 }
                                 ?>
 
+                                <!-- todo: delete once done -->
                                 <li title="<?php echo escape($lang["mymessages-tooltip"]); ?>">
                                     <a href="<?php echo $baseurl; ?>/pages/user/user_messages_quick.php" onclick="ModalClose(); return ModalLoad(this, true, false, 'rightnarrow');">
                                         <i aria-hidden="true" class="icon-mail lucide-lg"></i>
