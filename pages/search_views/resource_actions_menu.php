@@ -121,7 +121,7 @@ if ($draw_menu) { ?>
 <div class="resource-card-action-menu" aria-haspopup="menu" aria-expanded="false">
     <i class="icon-ellipsis-vertical" aria-hidden="true"></i>
 </div>
-<div class="flyout-menu effect-style-elevation-level-1-shadow" role="menu" aria-hidden="true">
+<div class="flyout-menu" role="menu" aria-hidden="true">
     <div class="menu-items" role="menu" aria-hidden="true">
         <?php if ($add_collection_item) { ?>
         <div class="menu-item <?php echo $add_collection_item_hidden ? "DisplayNone" : ""; ?>" 

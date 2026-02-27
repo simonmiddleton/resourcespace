@@ -1804,7 +1804,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
                 if ($display=="thumbs")
                     {
                     #  ---------------------------- Thumbnails view ----------------------------
-                    include 'search_views/thumbs2.php';
+                    include 'search_views/thumbs.php';
                     } 
 
                 if ($display=="strip")

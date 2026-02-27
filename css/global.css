@@ -143,6 +143,9 @@
     --form-field-margin-bottom: var(--space-24);
     --form-field-min-height: var(--space-48);
     --form-padding-desktop: var(--space-32);
+
+    /* Box Shadow */
+    --effect-style-elevation-level-1-shadow: 0px 2px 4px 4px rgba(0,0,0,0.100);
 }
 
 /* Text Styles */
@@ -3593,7 +3596,6 @@ a.text-link:visited {
 
 
 .resource-card {
-    width: 202px;
     border-radius: var(--space-4);
     display: flex;
     flex-direction: column;
@@ -3603,8 +3605,39 @@ a.text-link:visited {
     background-color: var(--colour-surface-card-content-background);
 }
 
+.resource-card.normal {
+    width: 202px;
+}
+
+.resource-card.xl {
+    width: 320px;
+}
+
+@media(max-width: 768px) {
+    #CentralSpaceResources {
+        display: flex;
+        padding: var(----space--24, 24px) var(----space-16, 16px) 0 var(----space-16, 16px);
+        justify-content: space-between;
+        align-items: flex-start;
+        align-content: flex-start;
+        row-gap: var(----space-16, 16px);
+        align-self: stretch;
+        flex-wrap: wrap;
+    }
+
+    .resource-card.normal, .resource-card.xl {
+        width: 360px;
+    }
+}
+
+
+.resource-card.Selected {
+    outline: 1px solid var(--form-field-border, #4A4C48);
+}
+
+
 .resource-card:hover {
-    box-shadow: 0 1px 10px 0 rgba(0,0,0,0.3);
+    box-shadow: var(--effect-style-elevation-level-1-shadow);
 }
 
 .resource-card-action-bar {
@@ -3657,9 +3690,10 @@ a.text-link:visited {
 
 .resource-card-image {
     display: flex;
-    flex-direction: column;
+    /*flex-direction: column;*/
     justify-content: center;
     align-items: center;
+    background-color: cyan;
 }
 
 .resource-card-image.normal {
@@ -3667,9 +3701,19 @@ a.text-link:visited {
     height: 202px;
 }
 
+.resource-card-image.xl {
+    width: 320px;
+    height: 320px;
+}
+
 .resource-card-image.normal .nopreview {
     font-size: 94px;
     margin-top: 0.5em;
+}
+
+.resource-card-image.xl .nopreview {
+    font-size: 140px;
+    /* margin-top: 0.5em; */
 }
 
 .resource-card-image.normal a {
@@ -3688,7 +3732,7 @@ a.text-link:visited {
     flex-direction: column;
     align-items: flex-start;
     align-self: stretch;
-    /* background-color: yellow; */
+    background-color: yellow;
 }
 
 .resource-card-content label, .resource-card-content div {
@@ -3721,7 +3765,7 @@ a.text-link:visited {
     gap: var(--space-4);
     align-self: stretch;
     flex-wrap: wrap;
-    background-color: red;
+    /* background-color: red; */
 }
 
 .resource-card-pill {
@@ -3746,9 +3790,29 @@ a.text-link:visited {
     background: var(--colour-surface-600);
 }
 
-.resource-card-status {
+.resource-card-status.active {
     color: var(--colour-feedback-success-dark);
     background: var(--colour-feedback-success-lighter);
+}
+
+.resource-card-status.pending {
+    color: var(--colour-feedback-warning-dark);
+    background: var(--colour-feedback-warning-lighter);
+}
+
+.resource-card-status.archive {
+    color: #053D7D;
+    background: #EDF4FC;
+}
+
+.resource-card-status.deleted {
+    color: var(--colour-feedback-error-dark);
+    background: var(--colour-feedback-error-lightest);
+}
+
+.resource-card-status.custom {
+    color: var(--colour-typography-600);
+    background: var(--colour-surface-200);
 }
 
 .resource-card-annotations {
@@ -3863,6 +3927,7 @@ a.text-link:visited {
 
     border-radius: var(--space-4);
     background: var(--colour-surface-50);
+    box-shadow: var(--effect-style-elevation-level-1-shadow);
 
     /* z-index: 1000; */
 }
@@ -3884,7 +3949,7 @@ a.text-link:visited {
 .menu-item {
     display: flex;
     width: 196px;
-    padding: var(--space-12, 12px);
+    padding: var(--space-12);
     align-items: center;
     gap: 8px;
     cursor: pointer;
@@ -3951,7 +4016,7 @@ a.text-link:visited {
     align-self: stretch;
 
     grid-template-rows: 0fr;
-    transition: grid-template-rows 200ms ease;
+    transition: grid-template-rows 250ms ease;
 
     background: var(--colour-surface-50);
 }
@@ -4004,7 +4069,7 @@ a.text-link:visited {
     padding: 0 12px;
 
     opacity: 0;
-    transition: opacity 150ms ease, padding 200ms ease;
+    transition: opacity 250ms ease;
 }
 
 .flyout-menu.is-confirm {
