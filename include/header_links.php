@@ -149,18 +149,6 @@
             }
         } ?>
 
-        <?php if ($help_link) { ?>
-            <li class="HeaderLink">
-                <a href="<?php echo $baseurl?>/pages/help.php" onClick="return <?php if (!$help_modal) {
-                    ?>CentralSpaceLoad(this,true);<?php
-                        } else {
-                                ?>ModalLoad(this,true);<?php
-                        } ?>">
-                    <?php echo HELP_ICON . escape($lang["helpandadvice"]); ?>
-                </a>
-            </li>
-        <?php } ?>
-
         <?php global $nav2contact_link; if ($nav2contact_link) { ?>
             <li class="HeaderLink">
                 <a href="<?php echo $baseurl?>/pages/contact.php" onClick="return CentralSpaceLoad(this,true);">
