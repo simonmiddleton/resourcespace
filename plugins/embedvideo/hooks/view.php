@@ -52,12 +52,12 @@ function HookEmbedvideoViewAfterresourceactions()
         <script src="' . $baseurl . '/lib/videojs/video.min.js"></script>
         <script src="' . $baseurl . '/js/videojs-extras.js"></script>
         <!-- START VIDEOJS -->
+        <div style="max-width:' . escape($ffmpeg_preview_max_width) . 'px;aspect-ratio:' . escape($ffmpeg_preview_max_width) . '/' . escape($ffmpeg_preview_max_height) . ';">
         <video id="introvideo' .  (int) $ref . '"
             controls
             data-setup="{}"
             preload="' . escape((string) $preload)  . '"
-            width="' . escape($ffmpeg_preview_max_width) . '" 
-            height="' . escape($ffmpeg_preview_max_height) . '" 
+            style="width:100%;height:100%;"
             class="video-js vjs-default-skin vjs-big-play-centered"
             poster="' . escape($thumb) . '">
             <source src="' . escape($video_path) . '" type="video/' . escape($ffmpeg_preview_extension) . '" >
@@ -76,7 +76,7 @@ function HookEmbedvideoViewAfterresourceactions()
                 <?php
             }
         }
-        echo "</video>";
+        echo "</video></div>";
     ?>
     </textarea>
     <?php
