@@ -3440,6 +3440,11 @@ header {
     object-fit: contain;
 }
 
+#header-container .header-search-field {
+    flex: 0 1 clamp(320px, 38vw, 640px);
+    min-width: 0;
+}
+
 .header-search-field .input-wrapper {
     display: flex;
     max-height: var(--form-field-min-height, 48px);
@@ -3451,18 +3456,21 @@ header {
     gap: var(--space-8, 8px);
 }
 
-.header-search-field .input-wrapper i, .header-search-field .input-wrapper > button {
+.header-search-field .input-wrapper i,
+.header-search-field .input-wrapper > button {
     font-size: 24px;
 }
 
 .header-search-field .input-wrapper > input {
     margin: 0px;
     padding: 0px;
-    width: 200px;
+    width: auto;
     height: 24px;
+    min-width: 200;
     min-height: unset;
     border: unset;
     box-shadow: none;
+    flex: 1 1 auto;
 }
 
 .header-search-field .input-wrapper > input:focus {
@@ -3498,8 +3506,10 @@ header {
 
 #header-container .primary-navigation {
     display: flex;
+    flex: 0 0 auto;
     align-items: center;
     gap: var(--space-12, 12px);
+    white-space: nowrap;
 }
 
 #header-container .primary-navigation ul {
