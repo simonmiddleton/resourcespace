@@ -33,7 +33,7 @@ function HookAction_datesCronCron()
         if ('cli' == PHP_SAPI) {
             echo " - Skipping action date cron - last run: " . $last_action_dates_cron . PHP_EOL;
         }
-        return false;
+        //return false;
     }
 
     # Store time to update last run date/time after completion
@@ -272,7 +272,8 @@ function HookAction_datesCronCron()
                 LEFT JOIN node n ON n.ref=rn.node
             WHERE r.ref > 0 
                 AND n.resource_type_field = ?
-                AND r.archive<> ?";
+                AND r.archive<> ?
+            GROUP BY rn.resource";
 
             $sql_params = array(
                 "i",$field,
@@ -301,6 +302,9 @@ function HookAction_datesCronCron()
                     }
                     update_archive_status($ref, $newstatus);
                 } elseif ($action_dates_extra_config_setting["email_admin_days"] > 0) {
+                    if (in_array($ref, $email_state_refs)) {
+                        continue;
+                    }
                     $restrict_date_target = date_create($resource["value"]);
                     $restrict_interval = date_diff($action_date_current, $restrict_date_target);
                     $days_before_action = (int) $restrict_interval->format('%R%a');
@@ -392,8 +396,13 @@ function HookAction_datesCronCron()
         $notification_state = $message_state;
 
         # Reconstruct combined message for purposes of emailing
-        $message_combined = $message_restrict . $baseurl . "?r=" . implode("\r\n" . $baseurl . "?r=", $email_restrict_refs) . "\r\n";
-        $message_combined .= $message_state . $baseurl . "?r=" . implode("\r\n" . $baseurl . "?r=", $email_state_refs) . "\r\n";
+        if (!empty($email_restrict_refs)) {
+            $message_combined = $message_restrict . "\r\n" . $baseurl . "?r=" . implode("\r\n" . $baseurl . "?r=", $email_restrict_refs) . "\r\n";
+        }
+        if (!empty(array_diff($email_state_refs, $email_restrict_refs))) {
+            $message_combined .= $message_state . "\r\n" . $baseurl . "?r=";
+            $message_combined .= implode("\r\n" . $baseurl . "?r=", array_diff($email_state_refs, $email_restrict_refs)) . "\r\n";
+        }
         $templatevars['message'] = $message_combined;
 
         # Construct url lists for message_add function
