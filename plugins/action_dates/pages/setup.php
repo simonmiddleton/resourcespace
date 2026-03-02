@@ -138,7 +138,7 @@ foreach ($action_dates_extra_config as $action_dates_extra_config) {
     $page_def_extra .= "</select>
         </td>
             <td>
-                <input name='action_dates_extra_email_admin_days[]' type='number' value=$value>
+                <input name='action_dates_extra_email_admin_days[]' type='number' min=0 value=$value>
             </td>
         </tr>";
 }
