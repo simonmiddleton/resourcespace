@@ -138,7 +138,13 @@ foreach ($action_dates_extra_config as $action_dates_extra_config) {
     $page_def_extra .= "</select>
         </td>
             <td>
-                <input name='action_dates_extra_email_admin_days[]' type='number' min=0 value=$value>
+                <input
+                    class='Question action_dates_extra_email_admin_days stdwidth'
+                    name='action_dates_extra_email_admin_days[]'
+                    type='number'
+                    min=0
+                    value=$value
+                >
             </td>
         </tr>";
 }
@@ -191,6 +197,19 @@ jQuery(document).ready(function() {
         // The new state is not eligible
         jQuery('#action_dates_eligible_states'+action_dates_new_state).prop('checked', false);
         jQuery('#action_dates_eligible_states> #archivestate'+action_dates_new_state).hide();
+    });
+
+    jQuery(document).ready(function() {
+
+        function updateActionDateFields() {
+            var enable = jQuery('#action_dates_email_for_state').val() === '1';
+            jQuery('.action_dates_extra_email_admin_days').prop('disabled', !enable);
+            jQuery('.action_dates_extra_email_admin_days').toggleClass('is-disabled', !enable);
+        }
+
+        jQuery('#action_dates_email_for_state').on('change', updateActionDateFields);
+
+        updateActionDateFields(); // run once on load
     });
 });
 

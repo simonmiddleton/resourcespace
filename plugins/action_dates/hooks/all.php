@@ -315,7 +315,6 @@ function HookAction_datesCronCron()
                         }
                         $email_state_refs[] = $ref;
                         $email_state_days[] = $days_before_action;
-                        $action_dates_email_for_state = 1;
                     }
                 }
             }
