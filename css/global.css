@@ -463,18 +463,6 @@ select::-ms-expand
 }
 .HorizontalNav li a {display: inline-block;zoom: 1;}
 h2#CollectionsPanelHeader {display:none;}
-/* .HeaderLink a {
-    border-radius: 8px;
-    padding: 0 8px;
-    margin: 2px;
-    font-weight: 500;
-}
-.HeaderLink a.current {
-    background: #00000012;
-} */
-.HorizontalNav li.HeaderLink {
-    padding: 0;
-}
 
 .ProfileImage { vertical-align:top; width:36px; height:36px; border-radius:36px}
 
@@ -3051,10 +3039,6 @@ label {
     transform-origin: 50% 50%;
 }
 
-.HeaderLink i {
-    transform: translateY(-0.08em);
-}
-
 .ListTools i {
     line-height: 1.4; /* Default body value */
 }
@@ -3158,9 +3142,6 @@ div.slide:not([style]) {
 
 /* Temporary responsive styling */
 @media(max-width:1200px) {
-    .HeaderLink i {
-        display: none;
-    }
     .HeaderImgLink img {
         max-width: 160px;
     }
