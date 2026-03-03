@@ -1,24 +1,21 @@
-<nav aria-label="<?php echo escape($lang['mainmenu']) ?>">
-    <ul id="HeaderLinksContainer">
+<nav class="primary-navigation" aria-label="<?php echo escape(text('mainmenu')); ?>">
+    <ul>
         <?php if ($advanced_search_nav) { ?>
-            <li class="HeaderLink">
+            <li>
                 <a href="<?php echo $baseurl?>/pages/search_advanced.php" onClick="return CentralSpaceLoad(this,true);">
-                    <i aria-hidden="true" class="icon-zoom-in"></i>
                     <?php echo escape($lang["advancedsearch"]); ?>
                 </a>
             </li>
         <?php } ?>
 
         <?php if ($search_results_link) { ?>
-            <li class="HeaderLink">
+            <li>
             <?php if ((checkperm("s")) &&  ((isset($_COOKIE["search_form_submit"]) )   || (isset($_COOKIE["search"]) && strlen($_COOKIE["search"]) > 0) || (isset($search) && (strlen($search) > 0) && (strpos($search, "!") === false)))) { # active search present ?>
                     <a href="<?php echo $baseurl?>/pages/search.php" onClick="return CentralSpaceLoad(this,true);">
-                        <i aria-hidden="true" class="icon-search"></i>
                         <?php echo escape($lang["searchresults"]); ?>
                     </a>
             <?php } else { ?>
                 <a class="SearchResultsDisabled">
-                    <i aria-hidden="true" class="icon-search"></i>
                     <?php echo escape($lang["searchresults"]); ?>
                 </a>
             <?php } ?>
@@ -26,26 +23,24 @@
         <?php } ?>
 
         <?php if (checkperm("s") && $enable_themes && !$theme_direct_jump && $themes_navlink) { ?>
-            <li class="HeaderLink">
-                <a href="<?php echo $baseurl?>/pages/collections_featured.php" onClick="return CentralSpaceLoad(this,true);">
-                    <?php echo FEATURED_COLLECTION_ICON . escape($lang["themes"]); ?>
-                </a>
+            <li>
+                <a href="<?php echo $baseurl?>/pages/collections_featured.php" onClick="return CentralSpaceLoad(this,true);"><?php
+                    echo escape($lang["themes"]);
+                ?></a>
             </li>
         <?php } ?>
 
         <?php if (checkperm("s") && ($public_collections_top_nav)) { ?>
-            <li class="HeaderLink">
+            <li>
                 <a href="<?php echo $baseurl?>/pages/collection_public.php" onClick="return CentralSpaceLoad(this,true);">
-                    <i class="icon-shopping-bag"></i>
                     <?php echo escape($lang["publiccollections"]); ?>
                 </a>
             </li>
         <?php } ?>
 
         <?php if (checkperm("s") && $mycollections_link && !checkperm("b")) { ?>
-            <li class="HeaderLink">
+            <li>
                 <a href="<?php echo $baseurl?>/pages/collection_manage.php" onClick="return CentralSpaceLoad(this,true);">
-                    <i class="icon-shopping-bag"></i>
                     <?php echo escape($lang["mycollections"]); ?>
                 </a>
             </li>
@@ -66,32 +61,32 @@
             $recent_url_params["sort"]      = "desc";
             $recenturl = generateURL("$baseurl/pages/search.php", $recent_url_params);
             ?>
-            <li class="HeaderLink">
-                <a href="<?php echo $recenturl ?>" onClick="return CentralSpaceLoad(this,true);">
-                    <?php echo RECENT_ICON . escape($lang["recent"]); ?>
-                </a>
+            <li>
+                <a href="<?php echo $recenturl ?>" onClick="return CentralSpaceLoad(this,true);"><?php
+                    echo escape(text('recent'));
+                ?></a>
             </li>
         <?php } ?>
 
         <?php if (checkperm("s") && $myrequests_link && checkperm("q")) { ?>
-            <li class="HeaderLink">
+            <li>
                 <a href="<?php echo $baseurl?>/pages/requests.php" onClick="return CentralSpaceLoad(this,true);">
                     <i aria-hidden="true" class="icon-shopping-cart"></i>
-                    <?php echo escape($lang["myrequests"]); ?>
+                    <?php echo escape(text('myrequests')); ?>
                 </a>
             </li>
         <?php } ?>
 
         <?php if (checkperm("d") || ($mycontributions_link && checkperm("c"))) { ?>
-            <li class="HeaderLink">
-                <a href="<?php echo $baseurl?>/pages/contribute.php" onClick="return CentralSpaceLoad(this,true);">
-                    <?php echo CONTRIBUTIONS_ICON . escape($lang["mycontributions"]); ?>
-                </a>
+            <li>
+                <a href="<?php echo $baseurl?>/pages/contribute.php" onClick="return CentralSpaceLoad(this,true);"><?php
+                    echo escape(text('mycontributions'));
+                ?></a>
             </li>
         <?php } ?>
 
         <?php if (($research_request) && ($research_link) && (checkperm("s")) && (checkperm("q"))) { ?>
-            <li class="HeaderLink">
+            <li>
                 <a href="<?php echo $baseurl?>/pages/research_request.php" onClick="return CentralSpaceLoad(this,true);">
                     <i aria-hidden="true" class="icon-circle-question-mark"></i>
                     <?php echo escape($lang["researchrequest"]); ?>
@@ -128,10 +123,9 @@
                     $custom_top_nav[$n]["title"] = $lang[$custom_top_nav_title];
                 }
                 ?>
-                <li class="HeaderLink">
+                <li>
                     <a href="<?php echo $custom_top_nav[$n]["link"]; ?>"<?php echo $target . $on_click; ?>><?php
-                        // Not escaping to allow links to have an icon (if applicable)
-                        echo strip_tags_and_attributes(i18n_get_translated($custom_top_nav[$n]["title"]));
+                        echo escape(i18n_get_translated($custom_top_nav[$n]["title"]));
                     ?></a>
                 </li>
                 <?php
@@ -139,20 +133,12 @@
         } ?>
 
         <?php global $nav2contact_link; if ($nav2contact_link) { ?>
-            <li class="HeaderLink">
-                <a href="<?php echo $baseurl?>/pages/contact.php" onClick="return CentralSpaceLoad(this,true);">
-                    <?php echo escape($lang["contactus"]); ?>
-                </a>
+            <li>
+                <a href="<?php echo $baseurl?>/pages/contact.php" onClick="return CentralSpaceLoad(this,true);"><?php
+                    echo escape($lang["contactus"]);
+                ?></a>
             </li>
-        <?php }
-
-        hook("toptoolbaradder"); ?>
-
-    </ul><!-- close HeaderLinksContainer -->
+        <?php } ?>
+    </ul>
+    <button type="button" class="icon-ellipsis-vertical"></button>
 </nav>
-
-<script>
-    jQuery(document).ready(function() {
-        headerLinksDropdown();
-    });
-</script>

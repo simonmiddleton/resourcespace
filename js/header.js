@@ -6,6 +6,8 @@ ResourceSpace.Modules.Header = (function () {
         }
 
         bindEvents(header);
+
+        headerLinksDropdown(); // moved from header_links.php
     }
 
     function bindEvents(header) {

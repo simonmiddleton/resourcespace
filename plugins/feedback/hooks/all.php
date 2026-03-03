@@ -1,15 +1,11 @@
 <?php
 
-function HookFeedbackAllToptoolbaradder()
+function HookFeedbackAllHandleuserref()
 {
-    global $target,$baseurl,$lang;
-    ?>
-    <li>
-        <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/plugins/feedback/pages/feedback.php">
-            <?php echo escape($lang["feedback_user_survey"]); ?>
-        </a>
-    </li>
-    <?php
+    $GLOBALS['custom_top_nav'][] = [
+        'title' => '(lang)feedback_user_survey',
+        'link' => "{$GLOBALS['baseurl']}/plugins/feedback/pages/feedback.php",
+    ];
 }
 
 function HookFeedbackAllHeadertop()

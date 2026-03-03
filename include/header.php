@@ -341,14 +341,11 @@ $page_title = get_page_title($pagename, pluginname());
                         </form>
                     </div>
 
-                    <nav class="primary-navigation">
-                        <ul>
-                            <li><a href="/search.php">Collections</a></li>
-                            <li><a href="/search.php">Recent</a></li>
-                            <li><a href="/help.php">Help</a></li>
-                        </ul>
-                        <button type="button" class="icon-ellipsis-vertical"></button>
-                    </nav>
+                    <?php
+                    if (!($pagename == "terms" && isset($_SERVER["HTTP_REFERER"]) && strpos($_SERVER["HTTP_REFERER"], "login") !== false && $terms_login)) {
+                        include __DIR__ . "/header_links.php";
+                    }
+                    ?>
 
                     <div class="actions">
                         <?php
@@ -436,9 +433,10 @@ $page_title = get_page_title($pagename, pluginname());
                     ?>
                     <div id="HeaderNav2" class="HorizontalNav HorizontalWhiteNav">
                         <?php
-                        if (!($pagename == "terms" && isset($_SERVER["HTTP_REFERER"]) && strpos($_SERVER["HTTP_REFERER"], "login") !== false && $terms_login)) {
-                            include __DIR__ . "/header_links.php";
-                        }
+                        // todo: replace with new header section
+                        // if (!($pagename == "terms" && isset($_SERVER["HTTP_REFERER"]) && strpos($_SERVER["HTTP_REFERER"], "login") !== false && $terms_login)) {
+                        //     include __DIR__ . "/header_links.php";
+                        // }
                         ?>
                     </div>
 
