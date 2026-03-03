@@ -51,7 +51,6 @@ if ($use_selection_collection && in_array($ref, $selection_collection_resources)
     $class[] = "Selected";
 }
 
-// $thumbs_displayed_fields_height = $resource_panel_height_max = max($thumbs_displayed_fields_height, $resource_panel_height_max);
 ?>
 
 <div class="resource-card <?php echo implode(" ", $class) . " "; echo $display == "xlthumbs" ? "xl" : "normal" ?>"
@@ -89,58 +88,60 @@ if ($use_selection_collection && in_array($ref, $selection_collection_resources)
 
         ?>
     </div>
-    <div class="resource-card-image <?php echo $display == "xlthumbs" ? "xl" : "normal" ?>">
+        
+    <a
+        class="resource-card-image <?php echo $display == "xlthumbs" ? "xl" : "normal" ?>"
+        href="<?php echo $url; ?>"  
+        onclick="return <?php echo $resource_view_modal ? 'Modal' : 'CentralSpace'; ?>Load(this,true);" 
+        title="<?php echo str_replace(array("\"","'"), "", escape($resource_view_title)); ?>"
+    >
         <?php hook("resourcethumbtop"); ?>
-        <a
-            class=""
-            href="<?php echo $url; ?>"  
-            onclick="return <?php echo $resource_view_modal ? 'Modal' : 'CentralSpace'; ?>Load(this,true);" 
-            title="<?php echo str_replace(array("\"","'"), "", escape($resource_view_title)); ?>"
-        >
-            <?php
-            $usesize = $GLOBALS['retina_mode'] ? "pre" : "thm";
-            $arrsizes = array_unique([$usesize,"pre","thm"]);
-            $thumbnail = get_resource_preview($result[$n], $arrsizes, $access, $watermark);
+        
+        <?php
+        $usesize = $GLOBALS['retina_mode'] ? "pre" : "thm";
+        $arrsizes = array_unique([$usesize,"pre","thm"]);
+        $thumbnail = get_resource_preview($result[$n], $arrsizes, $access, $watermark);
 
-            if ($thumbnail !== false) {
-                // Use standard preview image
-                if ($result[$n]["thumb_height"] !== $thumbnail["height"] || $result[$n]["thumb_width"] !== $thumbnail["width"]) {
-                    // Preview image dimensions differ from the size data stored for the current resource
-                    $result[$n]["thumb_height"] = $thumbnail["height"];
-                    $result[$n]["thumb_width"]  = $thumbnail["width"];
-                }
-                render_resource_image($result[$n], $thumbnail["url"], $display);
-                // For videos ($ffmpeg_supported_extensions), if we have snapshots set, add code to fetch them from the server
-                // when user hovers over the preview thumbnail
-                if (1 < $ffmpeg_snapshot_frames && (in_array($result[$n]['file_extension'], $ffmpeg_supported_extensions) || ($result[$n]['file_extension'] == 'gif' && $ffmpeg_preview_gif)) && 0 < get_video_snapshots($ref, false, true)) {
-                    ?>
-                    <script>
-                        jQuery('#CentralSpace #ResourceShell<?php echo $ref; ?> a img').mousemove(function(event) {
-                            var x_coord             = event.pageX - jQuery(this).offset().left;
-                            var video_snapshots     = <?php echo json_encode(get_video_snapshots($ref, false, false, true)); ?>;
-                            var snapshot_segment_px = Math.ceil(jQuery(this).width() / Object.keys(video_snapshots).length);
-                            var snapshot_number     = x_coord == 0 ? 1 : Math.ceil(x_coord / snapshot_segment_px);
-                            if (typeof(ss_img_<?php echo $ref; ?>) === "undefined") {
-                                ss_img_<?php echo $ref; ?> = new Array();
-                            }
-                            ss_img_<?php echo $ref; ?>[snapshot_number] = new Image();
-                            ss_img_<?php echo $ref; ?>[snapshot_number].src = video_snapshots[snapshot_number];
-                            jQuery(this).attr('src', ss_img_<?php echo $ref; ?>[snapshot_number].src);
-                        }).mouseout(function(event) {
-                            jQuery(this).attr('src', "<?php echo $thumbnail["url"]; ?>");
-                        });
-                    </script>
-                    <?php
-                }
-            } else {
-                echo get_nopreview_html((string) $result[$n]["file_extension"],$result[$n]['resource_type']);
+        if ($thumbnail !== false) {
+            // Use standard preview image
+            if ($result[$n]["thumb_height"] !== $thumbnail["height"] || $result[$n]["thumb_width"] !== $thumbnail["width"]) {
+                // Preview image dimensions differ from the size data stored for the current resource
+                $result[$n]["thumb_height"] = $thumbnail["height"];
+                $result[$n]["thumb_width"]  = $thumbnail["width"];
             }
+            render_resource_image($result[$n], $thumbnail["url"], $display);
+            // For videos ($ffmpeg_supported_extensions), if we have snapshots set, add code to fetch them from the server
+            // when user hovers over the preview thumbnail
+            if (1 < $ffmpeg_snapshot_frames && (in_array($result[$n]['file_extension'], $ffmpeg_supported_extensions) || ($result[$n]['file_extension'] == 'gif' && $ffmpeg_preview_gif)) && 0 < get_video_snapshots($ref, false, true)) {
+                ?>
+                <script>
+                    jQuery('#CentralSpace #ResourceShell<?php echo $ref; ?> a img').mousemove(function(event) {
+                        var x_coord             = event.pageX - jQuery(this).offset().left;
+                        var video_snapshots     = <?php echo json_encode(get_video_snapshots($ref, false, false, true)); ?>;
+                        var snapshot_segment_px = Math.ceil(jQuery(this).width() / Object.keys(video_snapshots).length);
+                        var snapshot_number     = x_coord == 0 ? 1 : Math.ceil(x_coord / snapshot_segment_px);
+                        if (typeof(ss_img_<?php echo $ref; ?>) === "undefined") {
+                            ss_img_<?php echo $ref; ?> = new Array();
+                        }
+                        ss_img_<?php echo $ref; ?>[snapshot_number] = new Image();
+                        ss_img_<?php echo $ref; ?>[snapshot_number].src = video_snapshots[snapshot_number];
+                        jQuery(this).attr('src', ss_img_<?php echo $ref; ?>[snapshot_number].src);
+                    }).mouseout(function(event) {
+                        jQuery(this).attr('src', "<?php echo $thumbnail["url"]; ?>");
+                    });
+                </script>
+                <?php
+            }
+        } else {
+            echo get_nopreview_html((string) $result[$n]["file_extension"],$result[$n]['resource_type']);
+        }
 
-            hook("aftersearchimg", "", array($result[$n], $thumbnail["url"] ?? "", $display))
-            ?>
-        </a>
-    </div>
+        hook("aftersearchimg", "", array($result[$n], $thumbnail["url"] ?? "", $display))
+        ?>
+    </a>
     <div class="resource-card-content">
+        <div class="resource-card-content-top">
+
     <?php
 
     $df_alt = hook("displayfieldsalt");
@@ -176,7 +177,7 @@ if ($use_selection_collection && in_array($ref, $selection_collection_resources)
         ) {
             ?>
             <div
-                class="ResourceTypeField<?php echo $df[$x]['ref']; echo $x == 0 ? ' heading-text' : ''; ?>"
+                class="ResourceTypeField<?php echo $df[$x]['ref']; echo $x == 0 ? ' resource-card-title ' : ''; ?>"
                 title="<?php echo str_replace(array("\"","'"), "", escape(i18n_get_translated($value))); ?>"
             >
                 <div class="extended">
@@ -202,7 +203,7 @@ if ($use_selection_collection && in_array($ref, $selection_collection_resources)
         } elseif ((isset($metadata_template_title_field) && $df[$x]['ref'] != $metadata_template_title_field) || !isset($metadata_template_title_field)) {
             ?>
             <div
-                class="ResourceTypeField<?php echo $df[$x]['ref']; echo $x == 0 ? ' heading-text' : ''; ?>"
+                class="ResourceTypeField<?php echo $df[$x]['ref']; echo $x == 0 ? ' resource-card-title' : ''; ?>"
                 title="<?php echo str_replace(array("\"","'"), "", escape(i18n_get_translated($value))); ?>"
             >
                 <?php
@@ -226,111 +227,113 @@ if ($use_selection_collection && in_array($ref, $selection_collection_resources)
     }
         hook("icons");
     ?>  
-        <div class="resource-card-extra-fields">
+
         </div>
-    </div>
-    <div class="resource-card-status-bar">
-        <?php
-        if ($display_resource_id_in_thumbnail && $ref > 0) {
-        ?>
-            <span class="resource-card-pill resource-card-id"># <?php echo escape($ref); ?></span>
-        <?php } 
-        
-        if ($thumbs_display_archive_state) {
-
-            switch($result[$n]['archive']) {
-                case -2:
-                case -1:
-                    $status_css = "pending";
-                    break;
-                case 0:
-                    $status_css = "active";
-                    break;
-                case 1:
-                case 2:
-                    $status_css = "archive";
-                    break;
-                case 3:
-                    $status_css = "deleted";
-                    break;
-                default:
-                    $status_css = "custom";
-            }
-
-            $icon = $workflowicons[$result[$n]['archive']] ?? (WORKFLOW_DEFAULT_ICONS[$result[$n]['archive']] ?? WORKFLOW_DEFAULT_ICON);
-            $workflow_html = "<i class='icon-" . escape($icon) . "'></i>";
-        ?>
-            <span class="resource-card-pill resource-card-status <?php echo escape($status_css); ?>">
-                <?php echo $workflow_html; ?>
-                <?php echo isset($lang["status" . $result[$n]['archive']]) ? (escape($lang["status" . $result[$n]['archive']])) : ($lang["status"] . "&nbsp;" . $result[$n]['archive']); ?>
-            </span>
-        <?php
-        }
-        if (isset($show_annotation_count) && $show_annotation_count) {
-            $annotations_count = $result[$n]["annotation_count"] ?? getResourceAnnotationsCount($ref);
-
-            if ($annotations_count > 0) {
+        <div class="resource-card-content-bottom">
+            <div class="resource-card-pill-bar">
+                <?php
+                if ($display_resource_id_in_thumbnail && $ref > 0) {
                 ?>
-                <span class="resource-card-pill resource-card-annotations"><i class="icon-captions"></i><?php echo (int) $annotations_count; ?></span>
+                    <span class="resource-card-pill resource-card-id"># <?php echo escape($ref); ?></span>
+                <?php } 
+                
+                if ($thumbs_display_archive_state) {
+
+                    switch($result[$n]['archive']) {
+                        case -2:
+                        case -1:
+                            $status_css = "pending";
+                            break;
+                        case 0:
+                            $status_css = "active";
+                            break;
+                        case 1:
+                        case 2:
+                            $status_css = "archive";
+                            break;
+                        case 3:
+                            $status_css = "deleted";
+                            break;
+                        default:
+                            $status_css = "custom";
+                    }
+
+                    $icon = $workflowicons[$result[$n]['archive']] ?? (WORKFLOW_DEFAULT_ICONS[$result[$n]['archive']] ?? WORKFLOW_DEFAULT_ICON);
+                    $workflow_html = "<i class='icon-" . escape($icon) . "'></i>";
+                ?>
+                    <span class="resource-card-pill resource-card-status <?php echo escape($status_css); ?>">
+                        <?php echo $workflow_html; ?>
+                        <?php echo isset($lang["status" . $result[$n]['archive']]) ? (escape($lang["status" . $result[$n]['archive']])) : ($lang["status"] . "&nbsp;" . $result[$n]['archive']); ?>
+                    </span>
                 <?php
-            }
-            
-        } ?>
-    </div>
-    <div class="resource-card-type-bar">
+                }
+                if (isset($show_annotation_count) && $show_annotation_count) {
+                    $annotations_count = $result[$n]["annotation_count"] ?? getResourceAnnotationsCount($ref);
+
+                    if ($annotations_count > 0) {
+                        ?>
+                        <span class="resource-card-pill resource-card-annotations"><i class="icon-captions"></i><?php echo (int) $annotations_count; ?></span>
+                        <?php
+                    }
+                    
+                } ?>
+            </div>
+            <div class="resource-card-type-bar">
                 <?php
-    echo '<div class="resource-card-type">';
-    foreach ($types as $type) {
-        if (($type["ref"] == $result[$n]['resource_type']) && isset($type["icon"]) && $type["icon"] != "") {
-            echo '<i title="' . escape($type["name"]) . '" class="icon-' . escape($type["icon"]) . '"></i>';
-            }
-        }
-    if (isset($result[$n]['file_extension']) && $result[$n]['file_extension'] != "") { ?>
-        <?php echo strtoupper(escape($result[$n]['file_extension'])); ?>
-        <?php
-    }
-    echo '</div>'; 
-        ?>
-        <div class="resource-card-tools">
-            <div class="resource-card-add-remove">
-            <?php
-            // Remove from collection icon
-            if (!checkperm('b') && ($k == '' || $internal_share_access)) {
-                $col_link_class = ['icon-circle-minus'];
-
-                if (
-                    isset($usercollection_resources)
-                    && is_array($usercollection_resources)
-                    && !in_array($ref, $usercollection_resources)
-                ) {
-                    $col_link_class[] = 'DisplayNone';
+                echo '<div class="resource-card-type">';
+                foreach ($types as $type) {
+                    if (($type["ref"] == $result[$n]['resource_type']) && isset($type["icon"]) && $type["icon"] != "") {
+                        echo '<i title="' . escape($type["name"]) . '" class="icon-' . escape($type["icon"]) . '"></i>';
+                        }
+                    }
+                if (isset($result[$n]['file_extension']) && $result[$n]['file_extension'] != "") { ?>
+                    <?php echo "<span>" . strtoupper(escape($result[$n]['file_extension'])) . "</span>"; ?>
+                    <?php
                 }
+                echo '</div>'; 
+                 ?>
+                <div class="resource-card-tools">
+                    <div class="resource-card-add-remove">
+                        <?php
+                        // Remove from collection icon
+                        if (!checkperm('b') && ($k == '' || $internal_share_access)) {
+                            $col_link_class = ['icon-minus'];
 
-                $onclick = 'toggle_addremove_to_collection_icon(this);';
-                echo remove_from_collection_link($ref, implode(' ', $col_link_class), $onclick, 0, $resource_view_title) . '</a>';
-            }
+                            if (
+                                isset($usercollection_resources)
+                                && is_array($usercollection_resources)
+                                && !in_array($ref, $usercollection_resources)
+                            ) {
+                                $col_link_class[] = 'DisplayNone';
+                            }
 
-            // Add to collection icon
-            if (
-                $pagename != "collections"
-                && !checkperm('b')
-                && !in_array($result[$n]['resource_type'], $collection_block_restypes)
-                && ('' == $k || $internal_share_access)
-            ) {
-                $col_link_class = ['icon-circle-plus'];
+                            $onclick = 'toggle_addremove_to_collection_icon(this);';
+                            echo remove_from_collection_link($ref, implode(' ', $col_link_class), $onclick, 0, $resource_view_title) . '</a>';
+                        }
 
-                if (
-                    isset($usercollection_resources)
-                    && is_array($usercollection_resources)
-                    && in_array($ref, $usercollection_resources)
-                ) {
-                    $col_link_class[] = 'DisplayNone';
-                }
+                        // Add to collection icon
+                        if (
+                            $pagename != "collections"
+                            && !checkperm('b')
+                            && !in_array($result[$n]['resource_type'], $collection_block_restypes)
+                            && ('' == $k || $internal_share_access)
+                        ) {
+                            $col_link_class = ['icon-plus'];
 
-                $onclick = 'toggle_addremove_to_collection_icon(this);';
-                echo add_to_collection_link($ref, $onclick, '', implode(' ', $col_link_class), $resource_view_title) . '</a>';
-            }
-            ?>
+                            if (
+                                isset($usercollection_resources)
+                                && is_array($usercollection_resources)
+                                && in_array($ref, $usercollection_resources)
+                            ) {
+                                $col_link_class[] = 'DisplayNone';
+                            }
+
+                            $onclick = 'toggle_addremove_to_collection_icon(this);';
+                            echo add_to_collection_link($ref, $onclick, '', implode(' ', $col_link_class), $resource_view_title) . '</a>';
+                        }
+                        ?>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
