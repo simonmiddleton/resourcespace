@@ -1,8 +1,5 @@
-
 <nav aria-label="<?php echo escape($lang['mainmenu']) ?>">
     <ul id="HeaderLinksContainer">
-        <?php hook("topnavlinksafterhome"); ?>
-
         <?php if ($advanced_search_nav) { ?>
             <li class="HeaderLink">
                 <a href="<?php echo $baseurl?>/pages/search_advanced.php" onClick="return CentralSpaceLoad(this,true);">

@@ -76,7 +76,7 @@ function HookLicensemanagerAllRender_actions_add_collection_option($top_actions,
     return $options;
 }
 
-function HookLicensemanagerAllTopnavlinksafterhome()
+function HookLicensemanagerAllToptoolbaradder()
 {
     global $baseurl, $lang;
     if (!checkperm("a") && checkperm("lm")) {

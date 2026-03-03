@@ -74,7 +74,7 @@ function HookConsentmanagerAllRender_actions_add_collection_option($top_actions,
     return $options;
 }
 
-function HookConsentmanagerAllTopnavlinksafterhome()
+function HookConsentmanagerAllToptoolbaradder()
 {
     global $baseurl, $lang;
     if (!checkperm("t") && checkperm("cm")) {
