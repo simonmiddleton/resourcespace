@@ -411,6 +411,8 @@ if ($saveaction != '' && enforcePostRequest(false))
             }
         elseif ($saveaction == "original" && $cropper_transform_original && $edit_access && !$cropperestricted)
             {
+            // Disable offline job queue so that the new resource previews are generated immediately 
+            $offline_job_queue = false;
             // Replace the original file with the cropped file in newpath
             // By default keep original as alternative file. To prevent this $replace_resource_preserve_option must be enabled and the user select not to.
             $keep_original = true;
