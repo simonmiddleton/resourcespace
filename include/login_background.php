@@ -43,7 +43,7 @@ jQuery(document).ready(function() {
         slides[index].classList.remove("active");
         index = (index + 1) % slides.length;
         slides[index].classList.add("active");
-    }, <?php echo $slideshow_photo_delay * 1000; ?>);
+    }, <?php echo (int) $slideshow_photo_delay * 1000; ?>);
 });
 
 </script>
