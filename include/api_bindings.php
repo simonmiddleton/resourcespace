@@ -1692,12 +1692,12 @@ function api_delete_comment(int $comment_ref): bool
 /**
  * Return a list of reports using the API.
  *
- * @return array|bool   Reports (name and ID) ordered by name asc. False if user has insufficient permissions.
+ * @return array   Reports (name and ID) ordered by name asc. The array will be empty if user has insufficient permissions.
  */
-function api_get_reports(): array|bool
+function api_get_reports(): array
 {
     if (!checkperm("t")) {
-        return false;
+        return array();
     }
     
     include_once "../include/reporting_functions.php";
