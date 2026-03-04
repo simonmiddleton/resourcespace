@@ -47,7 +47,7 @@ if (isset($argv[1]) && strtolower($argv[1]) == "collection" && isset($argv[2]) &
     echo "- this will start at resource 110 and recreate previews for resource types 1 and 2\n\n";
     echo "php recreate_previews.php collection 247 -delete\n";
     echo "- this will remove all existing previews before recreating all preview sizes for all resources in collection #247\n";
-    echo "- the -delete option cannot be used with options -videoupdate, -previewbased, sizes, or types\n\n";
+    echo "- the -delete option cannot be used with options -videoupdate, -previewbased, sizes\n\n";
     exit();
 }
 

@@ -1640,3 +1640,140 @@ function api_save_user(int $ref, string $data): array
     http_response_code(409);
     return ajax_response_fail(ajax_build_message($save_status));
 }
+
+/**
+ * Make resource comments available to the API.
+ *
+ * @param  int    $resource_ref   ID of resource to get comments for.
+ * @param  bool   $flat_view      Provide comments as nested tree view (this is the default mode) or a flat list most recent first.
+ *                                See config: $comments_flat_view
+ * 
+ * @return array   Array of resource comment data. Array will be empty if comments are not enabled on the system or user
+ *                 has insufficient permissions to view comments.
+ */
+function api_get_resource_comments(int $resource_ref, bool $flat_view = false): array
+{
+    if (!$GLOBALS['comments_resource_enable']) {
+        return array();
+    }
+
+    $comments_flat_view_cache = $GLOBALS['comments_flat_view'];
+    $GLOBALS['comments_flat_view'] = $flat_view;
+
+    include_once "../include/comment_functions.php";
+    
+    $comments = get_comments_by_ref($resource_ref);
+
+    $GLOBALS['comments_flat_view'] = $comments_flat_view_cache;
+
+    return $comments;
+}
+
+/**
+ * Allow comment to be deleted via the API.
+ * Not for comments linked to annotations.
+ *
+ * @param  int   $comment_ref   ID of the comment to be deleted.
+ * 
+ * @return bool  False if comments are not enabled on the system, user has insufficient permissions or the comment being deleted
+ *               is linked to an annotation - this will delete only standard comments.
+ */
+function api_delete_comment(int $comment_ref): bool
+{
+    if (!$GLOBALS['comments_resource_enable']) {
+        return false;
+    }
+
+    include_once "../include/comment_functions.php";
+    
+    return hide_delete_comment($comment_ref, false);
+}
+
+/**
+ * Return a list of reports using the API.
+ *
+ * @return array   Reports (name and ID) ordered by name asc. The array will be empty if user has insufficient permissions.
+ */
+function api_get_reports(): array
+{
+    if (!checkperm("t")) {
+        return array();
+    }
+    
+    include_once "../include/reporting_functions.php";
+    $reports = get_reports();
+    $reports_list = array();
+
+    foreach ($reports as $report) {
+        if ((int) $report['support_non_correlated_sql'] === 1) {
+            # Report runs against search results - internal only so skip.
+            continue;
+        }
+        $reports_list[] = array('name' => $report['name'], 'ref' => $report['ref']);
+    }
+
+    return $reports_list;
+}
+
+/**
+ * Run report via the API.
+ * Where report includes a "thumbnail" column which would normally display an image on the report, the thumbnail key will contain
+ * a base64 encoded thumbnail image in jpg format. A "thumbnail_view_link" key will also be added containing a link to the resource.
+ *
+ * @param  int     $report_ref   ID of the report to run.
+ * @param  string  $from_date    Start date for the report period in format YYYY-MM-DD.
+ *                               * Optional here - not all reports use a date range but some may need it. Check report SQL.
+ *                               If not set $from_date will default to 7 days ago as when running a report in RS.
+ * @param  string  $to_date      End date for the report period in format YYYY-MM-DD.
+ *                               * Optional here - not all reports use a date range but some may need it. Check report SQL.
+ *                               If not set $to_date will default to today as when running a report in RS.
+ * 
+ * @return array|bool   Array of report data on success or false if user has insufficient permissions or there was an input error.
+ */
+function api_do_report(int $report_ref, string $from_date = '', string $to_date = ''): array|bool
+{
+    if (!checkperm("t")) {
+        return false;
+    }
+
+    # Basic check on date format to prevent later errors. Accepts only "YYYY-MM-DD".
+    $date_input_format_regex = '/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/';
+    if (($from_date != '' && !preg_match($date_input_format_regex, $from_date)) || ($to_date != '' && !preg_match($date_input_format_regex, $to_date))) {
+        return false;
+    }
+
+    if ($from_date == '') {
+        $from_date = date('Y-m-d', strtotime('-7 days'));
+    }
+
+    if ($to_date == '') {
+        $to_date = date('Y-m-d');
+    }
+
+    $from_date = new DateTime($from_date);
+    $from_year  = $from_date->format('Y');
+    $from_month = $from_date->format('m');
+    $from_day   = $from_date->format('d');
+
+    $to_date = new DateTime($to_date);
+    $to_year  = $to_date->format('Y');
+    $to_month = $to_date->format('m');
+    $to_day   = $to_date->format('d');
+
+    include_once RESOURCESPACE_BASE_PATH . "/include/reporting_functions.php";
+
+    return do_report(
+        ref: $report_ref,
+        from_y: $from_year,
+        from_m: $from_month,
+        from_d: $from_day,
+        to_y: $to_year,
+        to_m: $to_month,
+        to_d: $to_day,
+        download: true,
+        add_border: false,
+        foremail: false,
+        search_params: [],
+        results_as_array: true
+    );
+}

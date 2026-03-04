@@ -17,7 +17,7 @@ include "../include/login_background.php";
 <?php $header_img_src = get_header_image(); ?>
 
 <div id="LoginHeader">
-    <img src="<?php echo $header_img_src; ?>" class="LoginHeaderImg" alt="<?php echo $applicationname; ?>">
+    <img src="<?php echo $header_img_src; ?>" class="LoginHeaderImg" alt="<?php echo escape($applicationname); ?>">
 </div>
 
 <a class="text-link" href="<?php echo $baseurl_short; ?>login.php">

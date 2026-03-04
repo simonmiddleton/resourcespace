@@ -2444,22 +2444,22 @@ function config_check_valid_option(array $def, mixed $value): bool
 {
     $result = false;
     switch ($def[0]) {
-            case 'integer_input':
-                $range_start = $def[3];
-                $range_end = $def[4];
-                $result = (is_int_loose($value) && (int) $value >= $range_start && (int) $value <= $range_end);
-                break;
-            case 'single_select':
-                $valid_options = $def[3];
-                $result = in_array($value, $valid_options);
-                break;
-            case 'boolean_select':
-                $valid_options = array('0', '1');
-                $result = in_array($value, $valid_options);
-                break;
-            default:
-                $result = true;
-                break;
-        }
+        case 'integer_input':
+            $range_start = $def[3];
+            $range_end = $def[4];
+            $result = (is_int_loose($value) && (int) $value >= $range_start && (int) $value <= $range_end);
+            break;
+        case 'single_select':
+            $valid_options = array_keys($def[3]);
+            $result = in_array($value, $valid_options);
+            break;
+        case 'boolean_select':
+            $valid_options = array('0', '1');
+            $result = in_array($value, $valid_options);
+            break;
+        default:
+            $result = true;
+            break;
+    }
     return $result;
 }

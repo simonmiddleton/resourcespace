@@ -21,31 +21,8 @@ function comments_submit()
 
     $comment_to_hide = getval("comment_to_hide", 0, true);
 
-    if (($comment_to_hide != 0) && (checkPerm("o"))) {
-        $root = find_root_comment($comment_to_hide);
-        $linked_annotation = getAnnotation(ps_value(
-            'SELECT annotation AS `value` FROM `comment` WHERE ref = ?',
-            ['i', $comment_to_hide],
-            0
-        ));
-
-        // $request_ctx originates from pages/ajax/annotations.php
-        if ($linked_annotation !== [] && deleteAnnotation($linked_annotation, $GLOBALS['request_ctx'] ?? [])) {
-            $comment_update_extra_cols = ', annotation = null';
-        } else {
-            $comment_update_extra_cols = '';
-        }
-
-        // Does this comment have any child comments?
-        if (ps_value("SELECT ref AS value FROM comment WHERE ref_parent = ?", array("i",$comment_to_hide), '') != '') {
-            ps_query("UPDATE `comment` SET hide = 1{$comment_update_extra_cols} WHERE ref = ?", ['i', $comment_to_hide]);
-        } else {
-            ps_query("DELETE FROM comment WHERE ref = ?", array("i",$comment_to_hide));
-        }
-        if (!is_null($root)) {
-            clean_comment_tree($root);
-        }
-
+    if ($comment_to_hide != 0) {
+        hide_delete_comment($comment_to_hide);
         return;
     }
 
@@ -233,14 +210,12 @@ function comments_tags_to_links($text): string
 /**
  * Display all comments for a resource or collection
  *
- * @param  integer $ref                 The reference of the resource, collection or the comment (if called from itself recursively)
+ * @param  integer $ref                 The reference of the resource or collection
  * @param  boolean $bcollection_mode    false == show comments for resources, true == show comments for collection
- * @param  boolean $bRecursive          Recursively show comments, defaults to true, will be set to false if depth limit reached
- * @param  integer $level               Used for recursion for display indentation etc.
  *
  * @return void
  */
-function comments_show($ref, $bcollection_mode = false, $bRecursive = true, $level = 1)
+function comments_show($ref, $bcollection_mode = false)
 {
     if (!is_numeric($ref)) {
         return false;
@@ -250,28 +225,11 @@ function comments_show($ref, $bcollection_mode = false, $bRecursive = true, $lev
 
     $anonymous_mode = (empty($username) || $username == $anonymous_login);     // show extra fields if commenting anonymously
 
-    if ($comments_flat_view) {
-        $bRecursive = false;
-    }
-
-    $bRecursive = $bRecursive && ($level < $GLOBALS['comments_responses_max_level']);
-
-    // set 'name' to either user.fullname, comment.fullname or default 'Anonymous'
-
-    $sql =  "select c.ref thisref, c.ref_parent, c.annotation, c.hide, c.created, c.body, c.website_url, c.email, u.username, u.ref, u.profile_image, parent.created 'responseToDateTime', " .
-            "IFNULL(IFNULL(c.fullname, u.fullname), ?) 'name' ," .
-            "IFNULL(IFNULL(parent.fullname, uparent.fullname), ?) 'responseToName' " .
-            "from comment c left join (user u) on (c.user_ref = u.ref) left join (comment parent) on (c.ref_parent = parent.ref) left join (user uparent) on (parent.user_ref = uparent.ref) ";
-    $sql_values = [
-        's', $lang['comments_anonymous-user'],
-        's', $lang['comments_anonymous-user'],
-    ];
     $collection_ref = ($bcollection_mode) ? $ref : "";
     $resource_ref = ($bcollection_mode) ? "" : $ref;
 
     $collection_mode = $bcollection_mode ? "collection_mode=true" : "";
 
-    if ($level == 1) {
         // pass this JS function the "this" from the submit button in a form to post it via AJAX call, then refresh the "comments_container"
 
         echo<<<EOT
@@ -351,23 +309,12 @@ EOT;
 
 EOT;
 
-        $sql .= $bcollection_mode ? "where c.collection_ref=?" : "where c.resource_ref=?";  // first level will look for either collection or resource comments
-        $sql_values = array_merge($sql_values, array("i",$ref));
-        if (!$comments_flat_view) {
-            $sql .= " and c.ref_parent is NULL";
-        }
-    } else {
-        $sql .= "where c.ref_parent=?";  // look for child comments, regardless of what type of comment
-        $sql_values = array_merge($sql_values, array("i",$ref));
-    }
-
-    $sql .= " order by c.created desc";
-    $found_comments = ps_query($sql, $sql_values);
+    $found_comments = get_comments_by_ref($ref, $bcollection_mode);
 
     foreach ($found_comments as $comment) {
-            $thisRef = $comment['thisref'];
+            $thisRef = $comment['ref'];
 
-            echo "<div class='CommentEntry' id='comment{$thisRef}' style='margin-left: " . ($level - 1) * 50 . "px;'>"; // indent for levels - this will always be zero if config $comments_flat_view=true
+            echo "<div class='CommentEntry' id='comment{$thisRef}' style='margin-left: " . $comment['level'] * 50 . "px;'>"; // indent for levels - this will always be zero if config $comments_flat_view=true
 
             # ----- Information line
             hook("beforecommentinfo", "all", array("ref" => $comment["ref"]));
@@ -474,7 +421,7 @@ EOT;
 
             echo "<div id='{$respond_button_id}' class='CommentRespond'>";      // start respond div
             echo "<a href='javascript:void(0)' onClick='
-                    jQuery(\"#comment_form\").clone().attr(\"id\",\"{$respond_div_id}\").css(\"margin-left\",\"" . ($level * 50) . 'px")' . ".insertAfter(\"#comment$thisRef\");
+                    jQuery(\"#comment_form\").clone().attr(\"id\",\"{$respond_div_id}\").css(\"margin-left\",\"" . (($comment['level'] + 1) * 50) . 'px")' . ".insertAfter(\"#comment$thisRef\");
                     jQuery(\"<input>\").attr({type: \"hidden\", name: \"ref_parent\", value: \"$thisRef\"}).appendTo(\"#{$respond_div_id} .comment_form\");
                     jQuery(\"#{$respond_button_id} a\").removeAttr(\"onclick\");
                 '>" . '<i aria-hidden="true" class="icon-reply"></i>&nbsp;' . $lang['comments_respond-to-this-comment'] . "</a>";
@@ -508,14 +455,8 @@ EOT;
         }
 
             echo "</div>";      // end of CommentEntry
-
-        if ($bRecursive) {
-            comments_show($thisRef, $bcollection_mode, true, $level + 1);
-        }
     }
-    if ($level == 1) {
-        echo "</div>";  // end of comments_container
-    }
+    echo "</div>";  // end of comments_container
 }
 
 /**
@@ -555,5 +496,113 @@ function comments_notify_tagged($comment, $from_user, $resource = null, $collect
             message_add(array($user), $lang["tagged_notification"] . " " . $comment, $url, $userref);
         }
     }
+    return true;
+}
+
+
+/**
+ * Return comments for a resource or collection. There are two options for the output:
+ *   1. A flat list of comments ordered by creation date, newest first. Config $comments_flat_view = true
+ *   2. A tree view of comments, top level ordered most recent first with lower levels also most recent first while
+ *      respecting a hierarchy of nested comments. Config $comments_flat_view = false (default)
+ * User permissions are also checked to ensure users can view comments. $comments_responses_max_level limits the
+ * number of levels returned in the comments tree (only applies when $comments_flat_view = false).
+ *
+ * @param  int    $ref               Resource or collection ID.
+ * @param  bool   $collection_mode   True if the $ref provided is a collection ID. False if $ref providing resource ID (default)
+ * 
+ * @return array  Array of comments sorted per $comments_flat_view. Empty array if user doesn't have permission to
+ *                to view comments.
+ */
+function get_comments_by_ref(int $ref, bool $collection_mode = false): array
+{
+    if (get_resource_access($ref) === RESOURCE_ACCESS_CONFIDENTIAL) {
+        return array();
+    }
+
+    global $lang, $comments_flat_view, $comments_responses_max_level;
+
+    $sql_columns = "c.ref, c.ref_parent, c.annotation, c.hide, c.created, c.body, c.website_url, c.email, u.username, u.ref AS 'user_ref', u.profile_image, parent.created AS 'responseToDateTime',";
+    $sql_columns .= " IFNULL(IFNULL(c.fullname, u.fullname), ?) AS 'name', IFNULL(IFNULL(parent.fullname, uparent.fullname), ?) AS 'responseToName'";
+    $sql_columns_values = array('s', $lang['comments_anonymous-user'], 's', $lang['comments_anonymous-user']);
+
+    $sql_from = "comment c LEFT JOIN (user u) ON (c.user_ref = u.ref) LEFT JOIN (comment parent) ON (c.ref_parent = parent.ref) LEFT JOIN (user uparent) ON (parent.user_ref = uparent.ref)";
+
+    // first level will look for either collection or resource comments
+    $sql_where = $collection_mode ? "c.collection_ref = ?" : "c.resource_ref = ?";
+    $sql_values_where = array("i", $ref);
+
+    if ($comments_flat_view) {
+        return ps_query("SELECT {$sql_columns}, 0 AS 'level' FROM {$sql_from} WHERE {$sql_where} ORDER BY c.created DESC", array_merge($sql_columns_values, $sql_values_where));
+    }
+
+    $comments_cte = "WITH RECURSIVE tree AS (
+        SELECT
+            {$sql_columns},
+            0 AS 'level',
+            CAST(CONCAT(LPAD(9999999999 - UNIX_TIMESTAMP(c.created), 10, 0), '-', LPAD(c.ref, 10, 0)) AS CHAR(220)) AS `path`
+        FROM {$sql_from}
+        WHERE {$sql_where} AND c.ref_parent IS NULL
+        UNION ALL
+        SELECT
+            {$sql_columns},
+            tree.`level` + 1,
+            CONCAT(tree.path, '/', LPAD(9999999999 - UNIX_TIMESTAMP(c.created), 10, 0), '', LPAD(c.ref, 10, 0))
+        FROM {$sql_from}
+        JOIN tree ON c.ref_parent = tree.ref
+        WHERE tree.`level` + 1 < ?
+    )
+
+    SELECT ref, ref_parent, annotation, hide, created, body, website_url, email, username, user_ref, profile_image, responseToDateTime, `name`, responseToName, `level`
+    FROM tree ORDER BY `path` ASC, ref ASC;";
+
+    return ps_query($comments_cte, array_merge($sql_columns_values, $sql_values_where, $sql_columns_values, array('i', $comments_responses_max_level)));
+}
+
+
+/**
+ * Hide or delete a comment or annotation. Comments will be hidden where they have comments below them.
+ * If the comment has no comments below it will be deleted. Trees with all hidden comments will also be deleted.
+ * Option to disable deletion / hiding of comments created as annotations e.g. to prevent API use.
+ *
+ * @param  int    $comment_to_hide     Reference of the comment to be deleted / hidden.
+ * @param  bool   $allow_annotations   Should comments created by annotations be deleted / hidden.
+ * 
+ * @return bool   True if successful else false.
+ */
+function hide_delete_comment(int $comment_to_hide, $allow_annotations = true): bool
+{
+    if (!checkPerm("o")) {
+        return false;
+    }
+
+    $root = find_root_comment($comment_to_hide);
+    $linked_annotation = getAnnotation(ps_value(
+        'SELECT annotation AS `value` FROM `comment` WHERE ref = ?',
+        ['i', $comment_to_hide],
+        0
+    ));
+
+    if ($linked_annotation !== [] && !$allow_annotations) {
+        return false;
+    }
+
+    // $request_ctx originates from pages/ajax/annotations.php
+    if ($linked_annotation !== [] && deleteAnnotation($linked_annotation, $GLOBALS['request_ctx'] ?? [])) {
+        $comment_update_extra_cols = ', annotation = null';
+    } else {
+        $comment_update_extra_cols = '';
+    }
+
+    // Does this comment have any child comments?
+    if (ps_value("SELECT ref AS value FROM comment WHERE ref_parent = ?", array("i",$comment_to_hide), '') != '') {
+        ps_query("UPDATE `comment` SET hide = 1{$comment_update_extra_cols} WHERE ref = ?", ['i', $comment_to_hide]);
+    } else {
+        ps_query("DELETE FROM comment WHERE ref = ?", array("i",$comment_to_hide));
+    }
+    if (!is_null($root)) {
+        clean_comment_tree($root);
+    }
+
     return true;
 }

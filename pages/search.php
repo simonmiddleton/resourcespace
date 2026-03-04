@@ -1225,6 +1225,9 @@ if (!hook("replacesearchheader")) # Always show search header now.
         if ($order_by_resource_id) {
             $orderFields['resourceid'] = $lang['resourceid'];
         }
+        if ($random_sort) {
+            $sort_order_fields['random'] = $lang['random'];
+        }
         $orderFields['resourcetype'] = $lang['type'];
         
         $orderFields['modified'] = $lang['modified'];
