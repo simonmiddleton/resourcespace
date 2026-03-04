@@ -514,7 +514,6 @@ input:focus, textarea:focus, select:focus, .RecordPanel .RecordDownloadSpace .Do
 .RecordPanel .item h3, .RecordPanel .itemNarrow h3, th {color: #767676;}
 
 .uppy-StatusBar-actionBtn,
-.uppy-Dashboard-browse,
 .uppy-StatusBar.is-waiting .uppy-StatusBar-actionBtn--upload,
 .uppy-StatusBar.is-waiting .uppy-StatusBar-actionBtn--upload:hover,
 .uppy-DashboardContent-back, .uppy-DashboardContent-back:focus,
@@ -522,7 +521,7 @@ input:focus, textarea:focus, select:focus, .RecordPanel .RecordDownloadSpace .Do
     background-color: #1988d7;
     color: #fff;
 }
-.uppy-Dashboard-browse:focus, .uppy-Dashboard-browse:hover {
+.uppy-Dashboard-browse {
     border: 1px solid transparent;
 }
 .uppy-DashboardContent-back:hover,
