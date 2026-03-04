@@ -3730,10 +3730,30 @@ a.text-link:visited {
     align-self: stretch;
 }
 
-.resource-card-title a:is(:active, a:hover, :link, :visited) {
-    color: red;
+.resource-card-title {
+    color: var(--colour-typography-900);
+    font-family: "Atkinson Hyperlegible Next";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 125%;
+    letter-spacing: -0.25px;
 }
 
+.resource-card-field {
+    color: var(--colour-typography-600);
+    font-family: "Atkinson Hyperlegible Next";
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 125%;
+}
+
+.resource-card-title a:is(:active, a:hover, :link, :visited) {
+    color: var(--colour-typography-900);
+    text-decoration: none;
+    opacity: 1;
+}
 
 .resource-card-content-bottom {
     display: flex;
@@ -3831,20 +3851,25 @@ a.text-link:visited {
 
 .resource-card-add-remove {
     display: flex;
-    cursor: pointer;
-    height: 20px;
-    width: 20px;
-    font-size: 20px;
-    border-radius: 50%;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 10px;
-}
-
-.resource-card-add-remove {
+    gap: 10px; 
+    cursor: pointer;
+    height: 16px;
+    width: 16px;
     color: var(--colour-surface-900);
     background: transparent;
+    font-size: 13px;
+    font-weight: bold;
+    border: 2px solid var(--colour-surface-900);
+    border-radius: 50%;
+}
+
+.resource-card-add-remove:is(:active, :hover, :link, :visited ) {
+    color: var(--colour-surface-900);
+    text-decoration: none;
+    opacity: 1;
 }
 
 .resource-card-add-remove:hover {
@@ -3852,7 +3877,19 @@ a.text-link:visited {
     color: var(--colour-surface-50);
 }
 
-.resource-card-add-remove a:is(:active, :link, :visited) {
+.resource-card-add-remove.removeFromCollection:not(.DisplayNone) {
+    background-color: var(--colour-surface-900);
+    color: var(--colour-surface-50);
+}
+
+.resource-card-add-remove.removeFromCollection:not(.DisplayNone):hover {
+    background-color: var(--colour-feedback-error-dark);
+    border-color: var(--colour-feedback-error-dark);
+    color: var(--colour-surface-50);
+}
+
+
+/*.resource-card-add-remove a:is(:active, :link, :visited) {
     color: var(--colour-surface-900);
 }
 
@@ -3860,29 +3897,20 @@ a.text-link:visited {
     color: var(--colour-surface-50);
 }
 
-.resource-card-add-remove:has(.removeFromCollection:not(.DisplayNone)) {
-    background-color: var(--colour-surface-900);
-    color: var(--colour-surface-50);
-}
+ */
 
-.resource-card-add-remove:has(.removeFromCollection:not(.DisplayNone)):hover {
-    background-color: var(--colour-feedback-error-dark);
-    color: var(--colour-surface-50);
-}
+/*  */
 
-.resource-card-add-remove:has(.removeFromCollection:not(.DisplayNone)) a {
+/* .resource-card-add-remove:has(.removeFromCollection:not(.DisplayNone)) a {
     color: var(--colour-surface-50);
-}
+} */
 
-.resource-card-add-remove i {
+/* .resource-card-add-remove i {
   color: inherit;
   line-height: 1;
-}
+} */
 
-.resource-card-add-remove a:is(:active, :hover, :link, :visited ) {
-    text-decoration: none;
-    opacity: 1;
-}
+
 
 
 

@@ -2,51 +2,13 @@
 
 $resource_view_title = i18n_get_translated($result[$n]["field" . $view_title_field]);
 
-// # Establish various metrics for use in thumbnail rendering
-// $resolved_title_trim = 0;
-// $field_height = 24;
-// $workflow_state_height = 24;
-
 if ($display == "xlthumbs") {
     $resolved_title_trim = $xl_search_results_title_trim;
-    $resource_panel_height = 352;
 } else {
     $resolved_title_trim = $search_results_title_trim;
-    $resource_panel_height = 232;
 }
-
-// $thumbs_displayed_fields_height = $resource_panel_height + ($field_height * (count($thumbs_display_fields))) + 2;
-
-// # Add space for number of annotations
-// if ($annotate_enabled || (isset($annotate_enabled_adjust_size_all) && $annotate_enabled_adjust_size_all)) {
-//     $thumbs_displayed_fields_height += $field_height;
-// }
-
-// # Increase height of search panel for each extended field
-// if (isset($search_result_title_height)) {
-//     for ($i = 0; $i < count($df); $i++) {
-//         if (in_array($df[$i]['ref'], $thumbs_display_fields) && in_array($df[$i]['ref'], $thumbs_display_extended_fields)) {
-//             if ($df[$i]['ref'] == $thumbs_display_fields[0]) {
-//                 # If extending the taller first field take off more height
-//                 $thumbs_displayed_fields_height -= 2;
-//             }
-//             $thumbs_displayed_fields_height += ($search_result_title_height - 19);
-//         }
-//     }
-// }
-
-// # Increase height if resource ID is displayed
-// if ($display_resource_id_in_thumbnail) {
-//     $thumbs_displayed_fields_height += 25;
-// }
-
-// //hook('thumbs_resourceshell_height');
-
-// if ($thumbs_display_archive_state) {
-//     $thumbs_displayed_fields_height += $workflow_state_height;
-// }
-
 $class = array();
+
 if ($use_selection_collection && in_array($ref, $selection_collection_resources)) {
     $class[] = "Selected";
 }
@@ -64,7 +26,6 @@ if ($use_selection_collection && in_array($ref, $selection_collection_resources)
                     type="checkbox" 
                     id="check<?php echo escape($ref); ?>" 
                     class="checkselect checkselectmedium"
-                    title="<?php echo escape($lang['action-selectresource'] . (($resource_view_title != "") ? " - " . $resource_view_title : "")) ?>"
                     data-resource="<?php echo escape($result[$n]["ref"]); ?>"
                     aria-label="<?php echo escape($lang["action-selectresource"]); ?>"
                     <?php
@@ -76,7 +37,7 @@ if ($use_selection_collection && in_array($ref, $selection_collection_resources)
                     }
                     ?>
                 >
-                <span class="check" aria-hidden="true"></span>
+                <span class="check" aria-hidden="true" title="<?php echo escape($lang['action-selectresource'] . (($resource_view_title != "") ? " - " . $resource_view_title : "")) ?>"></span>
                 </label>
             <?php } else { ?>
                 <input type="checkbox" class="checkselect" style="opacity: 0;">
@@ -177,7 +138,7 @@ if ($use_selection_collection && in_array($ref, $selection_collection_resources)
         ) {
             ?>
             <div
-                class="ResourceTypeField<?php echo $df[$x]['ref']; echo $x == 0 ? ' resource-card-title ' : ''; ?>"
+                class="ResourceTypeField<?php echo $df[$x]['ref']; echo $x == 0 ? ' resource-card-title ' : ' resource-card-field'; ?>"
                 title="<?php echo str_replace(array("\"","'"), "", escape(i18n_get_translated($value))); ?>"
             >
                 <div class="extended">
@@ -203,7 +164,7 @@ if ($use_selection_collection && in_array($ref, $selection_collection_resources)
         } elseif ((isset($metadata_template_title_field) && $df[$x]['ref'] != $metadata_template_title_field) || !isset($metadata_template_title_field)) {
             ?>
             <div
-                class="ResourceTypeField<?php echo $df[$x]['ref']; echo $x == 0 ? ' resource-card-title' : ''; ?>"
+                class="ResourceTypeField<?php echo $df[$x]['ref']; echo $x == 0 ? ' resource-card-title' : ' resource-card-field '; ?>"
                 title="<?php echo str_replace(array("\"","'"), "", escape(i18n_get_translated($value))); ?>"
             >
                 <?php
@@ -293,46 +254,43 @@ if ($use_selection_collection && in_array($ref, $selection_collection_resources)
                 echo '</div>'; 
                  ?>
                 <div class="resource-card-tools">
-                    <div class="resource-card-add-remove">
-                        <?php
-                        // Remove from collection icon
-                        if (!checkperm('b') && ($k == '' || $internal_share_access)) {
-                            $col_link_class = ['icon-minus'];
-
-                            if (
-                                isset($usercollection_resources)
-                                && is_array($usercollection_resources)
-                                && !in_array($ref, $usercollection_resources)
-                            ) {
-                                $col_link_class[] = 'DisplayNone';
-                            }
-
-                            $onclick = 'toggle_addremove_to_collection_icon(this);';
-                            echo remove_from_collection_link($ref, implode(' ', $col_link_class), $onclick, 0, $resource_view_title) . '</a>';
-                        }
-
-                        // Add to collection icon
+                    <?php
+                    // Remove from collection icon
+                    if (!checkperm('b') && ($k == '' || $internal_share_access)) {
+                        $col_link_class = ['resource-card-add-remove', 'icon-minus'];
                         if (
-                            $pagename != "collections"
-                            && !checkperm('b')
-                            && !in_array($result[$n]['resource_type'], $collection_block_restypes)
-                            && ('' == $k || $internal_share_access)
+                            isset($usercollection_resources)
+                            && is_array($usercollection_resources)
+                            && !in_array($ref, $usercollection_resources)
                         ) {
-                            $col_link_class = ['icon-plus'];
-
-                            if (
-                                isset($usercollection_resources)
-                                && is_array($usercollection_resources)
-                                && in_array($ref, $usercollection_resources)
-                            ) {
-                                $col_link_class[] = 'DisplayNone';
-                            }
-
-                            $onclick = 'toggle_addremove_to_collection_icon(this);';
-                            echo add_to_collection_link($ref, $onclick, '', implode(' ', $col_link_class), $resource_view_title) . '</a>';
+                            $col_link_class[] = 'DisplayNone';
                         }
-                        ?>
-                    </div>
+
+                        $onclick = 'toggle_addremove_to_collection_icon(this);';
+                        echo remove_from_collection_link($ref, implode(' ', $col_link_class), $onclick, 0, $resource_view_title) . '</a>';
+                    }
+
+                    // Add to collection icon
+                    if (
+                        $pagename != "collections"
+                        && !checkperm('b')
+                        && !in_array($result[$n]['resource_type'], $collection_block_restypes)
+                        && ('' == $k || $internal_share_access)
+                    ) {
+                        $col_link_class = ['resource-card-add-remove', 'icon-plus'];
+
+                        if (
+                            isset($usercollection_resources)
+                            && is_array($usercollection_resources)
+                            && in_array($ref, $usercollection_resources)
+                        ) {
+                            $col_link_class[] = 'DisplayNone';
+                        }
+
+                        $onclick = 'toggle_addremove_to_collection_icon(this);';
+                        echo add_to_collection_link($ref, $onclick, '', implode(' ', $col_link_class), $resource_view_title) . '</a>';
+                    }
+                    ?>
                 </div>
             </div>
         </div>

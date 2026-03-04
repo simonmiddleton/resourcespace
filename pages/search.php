@@ -1880,9 +1880,6 @@ if($display != 'map')
 <script>
 jQuery(document).ready(function() {
 
-    console.debug("Menu bind test");
-    console.log("found buttons:", jQuery(".resource-card-action-menu").length);
-
     const GAP = 1;
 
     let lastInteraction = "mouse";
@@ -1942,7 +1939,7 @@ jQuery(document).ready(function() {
         ? btnRect.left                      // menu left aligns with button left
         : (btnRect.right - menuW);          // menu right aligns with button right
 
-        // Vertical: keep your original “below, else above”
+        // Vertical
         let topVp = btnRect.bottom + GAP;
         if (topVp + menuH > contBottom) topVp = btnRect.top - GAP - menuH;
 
@@ -1981,18 +1978,12 @@ jQuery(document).ready(function() {
         const $flyout = jQuery(this).closest('.flyout-menu');
         const $card = $flyout.closest('.resource-card');
 
-        // TODO: your delete logic
-        // const id = $card.data('id');
-        // deleteResource(id);
-
         closeAllMenus();
     });
 
     // Toggle on kebab click
     jQuery(document).off("click.resource-card-menu", ".resource-card-action-menu")
                     .on('click.resource-card-menu', '.resource-card-action-menu', function (e) {
-
-        console.debug("Menu click test");
 
         e.preventDefault();
         e.stopPropagation();
@@ -2030,16 +2021,13 @@ jQuery(document).ready(function() {
         }
     });
 
-    // Optional: close when clicking an item
+    // close when clicking an item except delete
     jQuery(document).on('click', '.menu-item[data-action!="delete"]', function () {
         closeAllMenus();
     });
     jQuery(document).on("dragstart sortstart", function() {
         closeAllMenus();
-    });
-    
-
-    
+    });    
 });
 
 function toggle_addremove_to_collection_icon(plus_minus_link) {
@@ -2056,14 +2044,9 @@ function toggle_addremove_to_collection_icon(plus_minus_link) {
 
     // If its a plus icon then it must be from centralspace, so hide it and then show its minus icon sibling
     if (icon.hasClass('addToCollection') || icon.data("action") === "add") {
-        //icon.addClass('DisplayNone');
-        // var rfc = icon.siblings('.removeFromCollection');
-        // if(rfc.length > 0) {
-        //     jQuery(rfc[0]).removeClass('DisplayNone');
-        // }
 
-        resource_card.find('div.resource-card-add-remove > a.addToCollection').addClass('DisplayNone');
-        resource_card.find('div.resource-card-add-remove > a.removeFromCollection').removeClass('DisplayNone');
+        resource_card.find('.resource-card-add-remove.addToCollection').addClass('DisplayNone');
+        resource_card.find('.resource-card-add-remove.removeFromCollection').removeClass('DisplayNone');
 
         resource_shell.find('div.ResourcePanelIcons > a.addToCollection').addClass('DisplayNone');
         resource_shell.find('div.ResourcePanelIcons > a.removeFromCollection').removeClass('DisplayNone');
@@ -2077,23 +2060,19 @@ function toggle_addremove_to_collection_icon(plus_minus_link) {
         // If there is a plus icon then it must be in centralspace and so show it
         resource_shell.find('div.ResourcePanelIcons > a.addToCollection').removeClass('DisplayNone');
         
-        resource_card.find('div.resource-card-add-remove > a.addToCollection').removeClass('DisplayNone');
+        resource_card.find('.resource-card-add-remove.addToCollection').removeClass('DisplayNone');
         resource_card.find('div.menu-item[data-action="add"]').removeClass('DisplayNone');
 
         // Now hide the minus icon in centralspace
         resource_shell.find('div.ResourcePanelIcons > a.removeFromCollection').addClass('DisplayNone');
         
-        resource_card.find('div.resource-card-add-remove > a.removeFromCollection').addClass('DisplayNone');
+        resource_card.find('.resource-card-add-remove.removeFromCollection').addClass('DisplayNone');
         resource_card.find('div.menu-item[data-action="remove"]').addClass('DisplayNone');
         }
 
     return;
 }
     
-
-    
-
-
 <?php
 if($use_selection_collection)
     {
