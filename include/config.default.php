@@ -581,6 +581,7 @@ $show_powered_by_logo = true;
 // Enable sorting resources in other ways:
 $colour_sort = true;
 $popularity_sort = true;
+$random_sort = false; 
 
 // What is the default sort order?
 // Options are date, colour, relevance, popularity, country
