@@ -164,6 +164,7 @@ $setarchivestate                        = getval('status', '', true);
 $setarchivestate                        = get_default_archive_state($setarchivestate);
 $alternative                            = getval('alternative', ''); # Batch upload alternative files
 $replace                                = getval('replace', ''); # Replace Resource Batch
+$replace_alternatives                   = getval('replace_alternatives', ""); # Option to replace alternative files
 $batch_replace_min                      = getval("batch_replace_min",0,true); # Replace Resource Batch - minimum ID of resource to replace
 $batch_replace_max                      = getval("batch_replace_max",0,true); # Replace Resource Batch - maximum ID
 $batch_replace_col                      = getval("batch_replace_col",0,true); # Replace Resource Batch - collection to replace
@@ -352,6 +353,7 @@ $uploadparams= array(
     'no_exif'                                => $no_exif,
     'autorotate'                             => $autorotate,
     'replace_resource'                       => $replace_resource,
+    'replace_alternatives'                   => $replace_alternatives,
     'archive'                                => $archive,
     'relateto'                               => getval('relateto', ''),
     'filename_field'                         => getval('filename_field', ''),
@@ -584,7 +586,7 @@ if ($processupload)
         }
     elseif(!hook("initialuploadprocessing"))
         {
-        if ($alternative!="")
+        if ($alternative!="" || $replace_alternatives)
             {
             # Determine whether to autorotate for alternative upload
             $autorotate = false;
@@ -607,8 +609,39 @@ if ($processupload)
                 }
             else
                 {
-                # Add a new alternative file
-                $aref=add_alternative_file($alternative,$upfilename);
+                if ($replace_alternatives) {
+                    # Add to an existing alternative file record
+                    $alternatives = get_alternative_files_by_filename(
+                        $upfilename,
+                        $batch_replace_col,
+                        $batch_replace_min,
+                        $batch_replace_min
+                        );
+                    if (count($alternatives) == 1) {
+                        $aref = $alternatives[0]['ref'];
+                        $alternative = $alternatives[0]['resource'];
+                        $extension = $alternatives[0]['extension'];
+                    } elseif (count($alternatives) > 1) {
+                        $result["status"] = false;
+                        $result["message"] = str_replace(
+                            '[filename]',
+                            $upfilename,
+                            $lang["error_upload_replace_alternative_multiple_found"]
+                        );
+                        $result["error"] = 113;
+                    } else {
+                        $result["status"] = false;
+                                                $result["message"] = str_replace(
+                            '[filename]',
+                            $upfilename,
+                            $lang["error_upload_replace_alternative_file_not_found"]
+                        );
+                        $result["error"] = 114;
+                    }
+                } else {
+                    # Add a new alternative file
+                    $aref=add_alternative_file($alternative,$upfilename);
+                }
 
                 # Find the path for this resource.
                 $path=get_resource_path($alternative, true, "", true, $extension, -1, 1, false, "", $aref);
@@ -633,8 +666,12 @@ if ($processupload)
                         AutoRotateImage($path);
                     }
 
-                    # Save alternative file data.
-                    ps_query("update resource_alt_files set file_name=?,file_extension=?,file_size=?,creation_date=now() where resource=? and ref=?",array("s",$upfilename,"s",$extension,"i",$file_size,"i",$alternative,"i",$aref));
+                    if ($replace_alternatives) {
+                        ps_query("UPDATE resource_alt_files SET file_size=?,creation_date=NOW() WHERE resource=? AND ref=?",array("i",$file_size,"i",$alternative,"i",$aref));
+                    } else {
+                        # Save alternative file data.
+                        ps_query("UPDATE resource_alt_files SET file_name=?,file_extension=?,file_size=?,creation_date=NOW() WHERE resource=? AND ref=?",array("s",$upfilename,"s",$extension,"i",$file_size,"i",$alternative,"i",$aref));
+                    }
 
                     if ($alternative_file_previews)
                         {
