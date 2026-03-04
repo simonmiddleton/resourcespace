@@ -12,6 +12,4 @@ window.ResourceSpace = {
 };
 
 // todo: determine if this is really the best place to initialise. We might need to do this routine on each page load instead
-jQuery(document).ready(function () {
-    ResourceSpace.init();
-});
+jQuery(() => ResourceSpace.init());

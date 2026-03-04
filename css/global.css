@@ -3160,6 +3160,13 @@ div.slide:not([style]) {
     height: 16px;
 }
 
+#menu-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--colour-transparency-black-40, rgba(0, 0, 0, 0.40));
+    z-index: 1000;
+}
+
 /* Input fields */
 .field-input,
 .field-text-only {
@@ -3544,6 +3551,12 @@ header {
 
 #header-container .primary-navigation > button:hover {
     background: var(--colour-surface-400, #D4D5D2);
+}
+
+/* Hide the button when not overflowing nav links */
+#header-container .primary-navigation ul:not(:has(span)) + button,
+#header-container .primary-navigation ul > span {
+    display: none;
 }
 
 #header-container .actions {

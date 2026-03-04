@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Nav link list. Each link follows the $custom_top_nav structure for consistency reasons.
+ *
+ * @var list<array{title: string, link: string, modal?: bool}>
+ */
 $nav_links = [];
 $contact_us_link = $nav2contact_link ? [['title' => '(lang)contactus', 'link' => "{$baseurl}/pages/contact.php"]] : [];
 
@@ -91,43 +96,57 @@ if ($research_request && $research_link && checkperm("s") && checkperm("q")) {
 }
 
 $nav_links = array_merge($nav_links, $custom_top_nav ?? [], $contact_us_link);
+
+if (count($nav_links) > 3) {
+    // $overflow_menu_btn = '<button type="button" class="icon-ellipsis-vertical"></button>';
+
+}
+
+// Group links into primary and overflown
+$nav_groupings = count($nav_links) > 3 ? [array_slice($nav_links, 0, 3), array_slice($nav_links, 3)] : [$nav_links];
+// $nav_groupings = [array_slice($nav_links, 0, 3)];
 ?>
 <nav class="primary-navigation" aria-label="<?php echo escape(text('mainmenu')); ?>">
     <ul>
     <?php
-        foreach ($nav_links as $nav) {
-            if (!is_safe_url($nav['link'])) {
-                debug("Unsafe link detected in configuration - {$nav['link']}");
-                continue;
+        foreach ($nav_groupings as $idx => $nav_group_links) {
+            $overflow = $idx === 1;
+
+            if ($overflow) {
+                echo '<span>';
             }
 
-            // External links should open in a new tab
-            if (!url_starts_with($baseurl, $nav['link'])) {
-                $on_click = '';
-                $target   = ' target="_blank"';
-            }
-            //Internal links can still open in the same tab
-            else {
-                if (isset($nav['modal']) && $nav['modal']) {
-                    $on_click = ' onClick="return ModalLoad(this, true);"';
-                    $target   = '';
-                } elseif (!isset($nav['modal']) || (isset($nav['modal']) && !$nav['modal'])) {
-                    $on_click = ' onClick="return CentralSpaceLoad(this, true);"';
-                    $target   = '';
+            foreach ($nav_group_links as $nav) {
+                if (!url_starts_with($baseurl, $nav['link'])) {
+                    // External links always open in a new tab
+                    $on_click = '';
+                    $target   = ' target="_blank" rel="noopener noreferrer"';
+                } else {
+                    if (isset($nav['modal']) && $nav['modal']) {
+                        $on_click = ' onClick="return ModalLoad(this, true);"';
+                        $target   = '';
+                    } elseif (!isset($nav['modal']) || (isset($nav['modal']) && !$nav['modal'])) {
+                        $on_click = ' onClick="return CentralSpaceLoad(this, true);"';
+                        $target   = '';
+                    }
                 }
+
+                if (strpos($nav['title'], '(lang)') !== false) {
+                    $custom_top_nav_title = str_replace("(lang)", "", $nav["title"]);
+                    $nav["title"] = $lang[$custom_top_nav_title];
+                }
+                ?>
+                <li>
+                    <a href="<?php echo sanitise_url($nav["link"]); ?>"<?php echo $target . $on_click; ?>><?php
+                        echo escape(i18n_get_translated($nav["title"]));
+                    ?></a>
+                </li>
+                <?php
             }
 
-            if (strpos($nav['title'], '(lang)') !== false) {
-                $custom_top_nav_title = str_replace("(lang)", "", $nav["title"]);
-                $nav["title"] = $lang[$custom_top_nav_title];
+            if ($overflow) {
+                echo '</span>';
             }
-            ?>
-            <li>
-                <a href="<?php echo $nav["link"]; ?>"<?php echo $target . $on_click; ?>><?php
-                    echo escape(i18n_get_translated($nav["title"]));
-                ?></a>
-            </li>
-            <?php
         }
     ?>
     </ul>

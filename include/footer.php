@@ -319,6 +319,8 @@ if (getval("ajax", "") == "") {
     </script>
     <!-- End of modal support -->
 
+    <div id="menu-overlay" hidden></div>
+
     <script>
 
     try
