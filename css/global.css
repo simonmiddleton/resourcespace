@@ -3429,7 +3429,7 @@ header {
 }
 
 #header-container .header-search-field {
-    flex: 0 1 clamp(320px, 38vw, 640px);
+    flex: 0 1 clamp(320px, 38vw, 490px);
     min-width: 0;
 }
 
@@ -3676,6 +3676,18 @@ header {
 
     .login-slide {
         inset: 0 0 0 498px;
+    }
+
+    #header-container {
+        padding: var(--space-16, 16px);
+    }
+
+    #header-container .header-search-field {
+        flex: 0 1 clamp(320px, 38vw, 399px);
+    }
+
+    #header-container .primary-navigation ul > li {
+        max-width: 125px;
     }
 }
 
