@@ -38,7 +38,7 @@ if ($search_results_link) {
 
 if (checkperm("s") && $enable_themes && !$theme_direct_jump && $themes_navlink) {
     $nav_links[] = [
-        'title' => '(lang)themes',
+        'title' => '(lang)collections',
         'link' => "{$baseurl}/pages/collections_featured.php",
     ];
 }
@@ -69,7 +69,7 @@ if (checkperm("s") && $recent_link) {
     $recenturl = generateURL("$baseurl/pages/search.php", $recent_url_params);
 
     $nav_links[] = [
-        'title' => '(lang)recent',
+        'title' => '(lang)browse',
         'link' => $recenturl,
     ];
 }
@@ -96,11 +96,6 @@ if ($research_request && $research_link && checkperm("s") && checkperm("q")) {
 }
 
 $nav_links = array_merge($nav_links, $custom_top_nav ?? [], $contact_us_link);
-
-if (count($nav_links) > 3) {
-    // $overflow_menu_btn = '<button type="button" class="icon-ellipsis-vertical"></button>';
-
-}
 
 // Group links into primary and overflown
 $nav_groupings = count($nav_links) > 3 ? [array_slice($nav_links, 0, 3), array_slice($nav_links, 3)] : [$nav_links];

@@ -3685,10 +3685,6 @@ header {
     #header-container .header-search-field {
         flex: 0 1 clamp(320px, 38vw, 399px);
     }
-
-    #header-container .primary-navigation ul > li {
-        max-width: 125px;
-    }
 }
 
 /* Login page tablet/mobile layout */

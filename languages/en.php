@@ -1084,6 +1084,7 @@ $lang['deleteallselectedsure'] = 'Are you sure you wish to DELETE the selected r
 $lang["batchdonotaddcollection"] = "(do not add to a collection)";
 $lang["collectionsthemes"] = "Related featured and public collections";
 $lang["recent"] = "Recent";
+$lang['browse'] = 'Browse';
 
 $lang["batchcopyfrom"] = "Copy the data below from resource with ID";
 $lang["copy"] = "Copy";
