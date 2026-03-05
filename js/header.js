@@ -1,4 +1,4 @@
-ResourceSpace.Modules.Header = (function () {
+ResourceSpace.Modules.Header = (() => {
     function init() {
         const header = jQuery('#header-container');
         if (!header.length) {
@@ -6,8 +6,6 @@ ResourceSpace.Modules.Header = (function () {
         }
 
         bindEvents(header);
-
-        headerLinksDropdown(); // moved from header_links.php
     }
 
     function bindEvents(header) {
@@ -15,11 +13,6 @@ ResourceSpace.Modules.Header = (function () {
             alert('Clicked header-search-field button!');
             // event.stopPropagation();
             // todo: show filter menu (note: in responsive, change button class to "icon-circle-x")
-        });
-
-        header.find('nav.primary-navigation > button').on('click', function (event) {
-            // event.stopPropagation();
-            alert('Clicked primary-navigation button to reveal more links!');
         });
 
         // todo: see if we can abstract this for settings, messages and user profile

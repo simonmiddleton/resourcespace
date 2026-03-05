@@ -708,7 +708,6 @@ function ReloadLinks()
             }
         });
 
-    headerLinksDropdown();
     return false;
     }
 
@@ -1413,75 +1412,6 @@ function toggleFieldLock(field)
 
     return true;
 }
-
-/*
-*
-* Places overflowing header links into a dropdown
-*
-*/
-function headerLinksDropdown() {
-
-    if (jQuery(window).width() < 1200) {
-        return;
-    }
-
-    var menuBox = jQuery("#HeaderNav2");
-    var mb_offset = menuBox.offset();
-    var mb_width = menuBox.outerWidth(true);
-    var mb_rightedge = mb_offset.left + mb_width;
-    
-    var uploadBox = jQuery("#HeaderNav1");
-    var ub_offset = uploadBox.offset();
-    var ub_leftedge = ub_offset.left;
-
-    var containerTarget = jQuery("#HeaderLinksContainer");
-    var containerWidth = containerTarget.innerWidth();
-
-    var containerOverlap = mb_rightedge - ub_leftedge;
-    
-    var links =  jQuery("#HeaderLinksContainer").find(".HeaderLink"); // get elements that are links in the header bar
-    var linksWidth = 0;
-    var caretCreated = false;
-
-    jQuery("#OverFlowLinks").remove(); // remove the drop-down menu div
-
-    if (jQuery('#OverflowListElement').is(':visible'))
-        {
-        caretCreated = true;
-        }
-
-    for (var i = 0; i < links.length; i++)
-        {
-        linksWidth += jQuery(links[i]).outerWidth();
-
-        if (linksWidth > containerWidth-containerOverlap)
-            {
-            if (!caretCreated)
-                {
-                jQuery(links[i- 1]).after('<li id="OverflowListElement"><a href="#" id="DropdownCaret" onclick="showHideLinks();"><span class="icon-chevron-down"></span></a></li>');
-                // append a div to the document.body element that will contain the drop-down menu items
-                jQuery(document.body).append('<div id="OverFlowLinks"><ul id="HiddenLinks"></ul></div>');
-                caretCreated = true;
-                }
-            // remove the li element from header links and append it to drop-down link list
-            jQuery(links[i]).remove();
-            jQuery(links[i]).appendTo('#HiddenLinks');
-            }
-        }
-}
-
-/*
-*
-* Show or hide the header overflow drop down links
-*
-*/
-function showHideLinks()
-    {
-    jQuery('div#OverFlowLinks').toggle();
-    jQuery('div#OverFlowLinks').css('right', 290);
-    jQuery('div#OverFlowLinks').css('z-index', 1000);
-    jQuery('div#OverFlowLinks').css('top', 60);
-    }
 
 /*
 *

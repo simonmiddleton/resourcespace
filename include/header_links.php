@@ -97,18 +97,21 @@ if ($research_request && $research_link && checkperm("s") && checkperm("q")) {
 
 $nav_links = array_merge($nav_links, $custom_top_nav ?? [], $contact_us_link);
 
-// Group links into primary and overflown
+// Group links into primary and overflown (note: the overflow menu logic is handled by the MenuOverlay module in JS)
 $nav_groupings = count($nav_links) > 3 ? [array_slice($nav_links, 0, 3), array_slice($nav_links, 3)] : [$nav_links];
-// $nav_groupings = [array_slice($nav_links, 0, 3)];
 ?>
-<nav class="primary-navigation" aria-label="<?php echo escape(text('mainmenu')); ?>">
+<nav class="primary-navigation menu" aria-label="<?php echo escape(text('mainmenu')); ?>" data-menu>
     <ul>
     <?php
         foreach ($nav_groupings as $idx => $nav_group_links) {
             $overflow = $idx === 1;
+            $li_class = '';
+            $role_menuitem = '';
 
             if ($overflow) {
-                echo '<span>';
+                echo '<ul class="menu-panel" data-menu-panel role="menu" hidden>';
+                $li_class = 'menu-item';
+                $role_menuitem = ' role="menuitem"';
             }
 
             foreach ($nav_group_links as $nav) {
@@ -131,8 +134,8 @@ $nav_groupings = count($nav_links) > 3 ? [array_slice($nav_links, 0, 3), array_s
                     $nav["title"] = $lang[$custom_top_nav_title];
                 }
                 ?>
-                <li>
-                    <a href="<?php echo sanitise_url($nav["link"]); ?>"<?php echo $target . $on_click; ?>><?php
+                <li class="<?php echo $li_class; ?>">
+                    <a href="<?php echo sanitise_url($nav["link"]); ?>"<?php echo $target . $on_click . $role_menuitem; ?>><?php
                         echo escape(i18n_get_translated($nav["title"]));
                     ?></a>
                 </li>
@@ -140,10 +143,10 @@ $nav_groupings = count($nav_links) > 3 ? [array_slice($nav_links, 0, 3), array_s
             }
 
             if ($overflow) {
-                echo '</span>';
+                echo '</ul>';
             }
         }
     ?>
     </ul>
-    <button type="button" class="icon-ellipsis-vertical"></button>
+    <button type="button" class="icon-ellipsis-vertical" data-menu-trigger aria-haspopup="menu" aria-expanded="false"></button>
 </nav>

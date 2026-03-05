@@ -3160,11 +3160,43 @@ div.slide:not([style]) {
     height: 16px;
 }
 
+/* Menu overlay */
 #menu-overlay {
     position: fixed;
     inset: 0;
     background: var(--colour-transparency-black-40, rgba(0, 0, 0, 0.40));
     z-index: 1000;
+}
+
+.menu-panel {
+    position: fixed; /* IMPORTANT: we actually position with JS using viewport coords */
+    z-index: 1001; /* On top of the #menu-overlay */
+    min-width: 15rem;
+    padding: var(--space-8, 8px) 0;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    background: var(--colour-surface-200, #F5F5F5);
+    border: 1px solid rgba(0,0,0,.12);
+    border-radius: var(--space-4, 4px);
+    box-shadow: 0 4px 8px 8px rgba(0, 0, 0, 0.10);
+    transform: translateY(-2px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .12s ease, transform .12s ease;
+}
+
+/* JS will toggle .is-open on the .menu */
+.menu.is-open .menu-panel {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.menu-item:hover,
+.menu-item:focus {
+    outline: none;
+    background: var(--colour-surface-300, #EAEBEA);
 }
 
 /* Input fields */
@@ -3520,8 +3552,30 @@ header {
     text-wrap: auto;
 }
 
-#header-container .primary-navigation ul:has(span) > li {
+#header-container .primary-navigation ul:has(ul) > li {
     max-width: 123px;
+}
+
+#header-container .primary-navigation ul.menu-panel {
+    gap: unset;
+}
+
+#header-container .primary-navigation ul.menu-panel > li {
+    max-width: unset;
+    height: var(--space--36, 36px);
+    padding: 0 var(--space-12, 12px);
+    display: flex;
+    gap: var(--space-12, 12px);
+    align-items: center;
+    align-self: stretch;
+}
+
+#header-container .primary-navigation ul.menu-panel > li > a {
+    width: 100%;
+}
+
+#header-container .primary-navigation ul.menu-panel > li > a:hover {
+    text-decoration: unset;
 }
 
 #header-container .primary-navigation ul > li > a {
@@ -3557,9 +3611,14 @@ header {
     background: var(--colour-surface-400, #D4D5D2);
 }
 
+#header-container .primary-navigation > button:active,
+#header-container .primary-navigation > button[aria-expanded="true"] {
+    background: var(--colour-surface-900, #0C0D0C);
+    color: var(--colour-surface-50, #FFF);
+}
+
 /* Hide the button when not overflowing nav links */
-#header-container .primary-navigation ul:not(:has(span)) + button,
-#header-container .primary-navigation ul > span {
+#header-container .primary-navigation ul:not(:has(ul)) + button {
     display: none;
 }
 
