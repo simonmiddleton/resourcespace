@@ -3409,7 +3409,7 @@ header {
     display: flex;
     margin: 0 auto;
     max-width: 1376px;
-    padding: var(--space-16, 16px) var(--space-272, 272px);
+    padding: var(--space-16, 16px);
     align-items: center;
     gap: var(--space--32, 32px);
 }
@@ -3429,7 +3429,7 @@ header {
 }
 
 #header-container .header-search-field {
-    flex: 0 1 clamp(320px, 38vw, 490px);
+    flex: 0 1 clamp(320px, 38vw, 450px);
     min-width: 0;
 }
 
@@ -3518,6 +3518,10 @@ header {
     font-weight: 600;
     line-height: 100%;
     text-wrap: auto;
+}
+
+#header-container .primary-navigation ul:has(span) > li {
+    max-width: 123px;
 }
 
 #header-container .primary-navigation ul > li > a {
@@ -3676,10 +3680,6 @@ header {
 
     .login-slide {
         inset: 0 0 0 498px;
-    }
-
-    #header-container {
-        padding: var(--space-16, 16px);
     }
 
     #header-container .header-search-field {
