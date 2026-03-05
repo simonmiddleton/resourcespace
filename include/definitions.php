@@ -204,8 +204,6 @@ define('LINK_CHEVRON_RIGHT', '<i aria-hidden="true" class="icon-chevron-right"><
 define('UPLOAD_ICON', '<i aria-hidden="true" class="icon-upload"></i>&nbsp;');
 define('CONTRIBUTIONS_ICON', '<i aria-hidden="true" class="icon-user-round-plus"></i>&nbsp;');
 define('HELP_ICON', '<i aria-hidden="true" class="icon-book-marked"></i>&nbsp;');
-define('HOME_ICON', '<i aria-hidden="true" class="icon-house"></i>&nbsp;');
-define('SEARCH_ICON', '<i class="icon-search" aria-hidden="true"></i>&nbsp;');
 define('ICON_EDIT', '<i class="icon-pencil" aria-hidden="true"></i>&nbsp;');
 define('ICON_REMOVE', '<i class="icon-circle-minus" aria-hidden="true"></i>&nbsp;');
 define('ICON_FOLDER', '<i class="icon-folder" aria-hidden="true"></i>&nbsp;');
