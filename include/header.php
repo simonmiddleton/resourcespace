@@ -449,7 +449,7 @@ $page_title = get_page_title($pagename, pluginname());
         }
 
         # if config set to display search form in header or (usergroup search permission omitted and anonymous login panel not to be displayed, then do not show simple search bar
-        if (checkperm("s") || (is_anonymous_user() && $show_anonymous_login_panel)) {
+        if (checkperm("s") || is_anonymous_user()) {
             # Include simple search sidebar?
 
             if (isset($GLOBALS['modify_header_omit_searchbar_pages']) && is_array($GLOBALS['modify_header_omit_searchbar_pages'])) {

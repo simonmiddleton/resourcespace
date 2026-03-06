@@ -979,51 +979,7 @@ $selected_search_tab = getval("selected_search_tab", "search");
                 }
                 ?>
             </div>
-
-            <?php if ($show_anonymous_login_panel && isset($anonymous_login) && (isset($username)) && ($username == $anonymous_login)) {
-                # For anonymous access, display the login panel ?>
-                <div id="LoginBoxPanel" class="LoginBoxPanel">
-                    <div class="SearchSpace">
-                        <h2><?php echo escape($lang["login"]); ?></h2>
-                        <form id="anonymous_login_form" method="post" action="<?php echo $baseurl; ?>/login.php">
-                            <div class="SearchItem">
-                                <?php echo escape($lang["username"]); ?>
-                                <br/>
-                                <input type="text" name="username" id="name" class="SearchWidth" />
-                            </div>
-                            <div class="SearchItem">
-                                <?php echo escape($lang["password"]); ?>
-                                <br/>
-                                <input type="password" name="password" id="password" class="SearchWidth" />
-                            </div>
-                            <div class="SearchItem">
-                                <input name="Submit" type="submit" value="<?php echo escape($lang["login"]); ?>" />
-                            </div>
-                        </form>
-
-                        <?php if ($allow_account_request) { ?>
-                            <p>
-                                <br/>
-                                <a href="<?php echo $baseurl_short; ?>pages/user_request.php">
-                                    <?php echo LINK_CARET . escape($lang["nopassword"]); ?>
-                                </a>
-                            </p>
-                        <?php }
-
-                        if ($allow_password_reset) { ?>
-                            <p>
-                                <a href="<?php echo $baseurl_short; ?>pages/user_password.php">
-                                    <?php echo LINK_CARET . escape($lang["forgottenpassword"]); ?>
-                                </a>
-                            </p>
-                        <?php } ?>
-
-                        <br/>
-                        <?php hook("loginformlink") ?>
-                    </div>
-                </div>
-            <?php }
-            
+            <?php
             if (($research_request) && (!isset($k) || $k == "") && (checkperm("q"))) { ?>
                 <div id="ResearchBoxPanel">
                     <div class="SearchSpace">

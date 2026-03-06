@@ -2321,9 +2321,6 @@ $comments_policy_enable = false;                  // show a Comments Policy link
 $comments_policy_external_url = "";               // if specified, will popup a new window fulfilled by URL (when clicking on "comment policy" link)
 $comments_view_panel_show_marker = true;          // show an asterisk by the comment view panel title if comments exist
 
-// Show the login panel for anonymous users
-$show_anonymous_login_panel = true;
-
 $do_not_add_to_new_collection_default = false; // will set "do not add to a collection" as the default option for upload option
 $no_metadata_read_default = false; // If set to true and $metadata_read is false then metadata will be imported by default
 $removenever = false; // Remove 'never' option for resource request access expiration and sets default expiry date to 7 days
