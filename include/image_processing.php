@@ -2701,11 +2701,8 @@ function getSvgSize($file_path)
 
     // This information should be available in either width and height attributes and/ or viewBox
     if (isset($attributes->width) && isset($attributes->height)) {
-        $svg_size[0] = (string) $attributes->width;
-        $svg_size[1] = (string) $attributes->height;
-        // Remove non numeric unit values if present
-        $svg_size[0] = preg_replace("/[^.0-9]/", "", $svg_size[0]);
-        $svg_size[1] = preg_replace("/[^.0-9]/", "", $svg_size[1]);
+        $svg_size[0] = (string) convertSvgLengthToPx($attributes->width) ;
+        $svg_size[1] = (string) convertSvgLengthToPx($attributes->height);
     } elseif (isset($attributes->viewBox) && trim($attributes->viewBox) !== '') {
         // Note: viewBox coordinates can be separated by either space and/ or a comma
         list($min_x, $min_y, $width, $height) = preg_split("/(\s|,)/", $attributes->viewBox);
@@ -2717,6 +2714,50 @@ function getSvgSize($file_path)
     }
 
     return $svg_size;
+}
+
+/**
+* Convert SVG length/width dimension to px size at 96DPI
+*
+* @param string $length dimension to be converted
+*
+* @return ?int dimension in pixels, or null if cannot be converted
+*/
+function convertSvgLengthToPx(string $length): ?int
+{
+    $length = trim($length);
+
+    if (!preg_match('/^([0-9.+-eE]+?)\s*([a-z%]*)$/i', $length, $matches)) {
+        return null;
+    }
+
+    $value = (float) $matches[1];
+    $unit  = strtolower($matches[2] ?? 'px');
+
+    switch ($unit) {
+        case '':
+        case 'px':
+            return round($value);
+
+        case 'in':
+            return round($value * 96);
+
+        case 'cm':
+            return round($value * (96 / 2.54));
+
+        case 'mm':
+            return round($value * (96 / 25.4));
+
+        case 'pt':
+            return round($value * (96 / 72));
+
+        case 'pc':
+            return round($value * 16);
+
+        default:
+            // em, rem, vh, etc. require layout context
+            return null;
+    }
 }
 
 /**

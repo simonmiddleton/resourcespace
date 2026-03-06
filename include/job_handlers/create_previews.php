@@ -37,13 +37,26 @@ if (!$resdata) {
     return;
 }
 
-if ($resource > 0) {
+// Check to make sure that there is a valid file that we can generate previews for
+$source_file = get_preview_source_file(
+    $resource, 
+    in_array($extension, NON_PREVIEW_EXTENSIONS) ? 'jpg' : $extension, 
+    $previewonly,
+    in_array($extension, NON_PREVIEW_EXTENSIONS) || $previewbased, 
+    $alternative,
+    $ingested
+);
+$valid_source = file_exists($source_file);
+
+// Only delete the existing previews if there is something that we can generate more from
+if ($resource > 0 && $valid_source) {
     delete_previews($resource);
 }
 
 logScript("[create_previews] Creating previews", $log_file);
 
-$success = create_previews(
+// Only run create_previews if there is a valid source file otherwise we consider the process completed
+$success = !$valid_source || create_previews(
     $resource, 
     $thumbonly, 
     in_array($extension, NON_PREVIEW_EXTENSIONS) ? 'jpg' : $extension, 
@@ -91,5 +104,7 @@ unset(
     $alternative,
     $ignoremaxsize,
     $ingested,
-    $checksum_required
+    $checksum_required,
+    $source_file,
+    $valid_source
 );

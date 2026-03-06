@@ -199,7 +199,7 @@ include "include/login_background.php";
 ?>
 
 <div id="LoginHeader">
-    <img src="<?php echo $login_header_img_src; ?>" class="LoginHeaderImg" alt="<?php echo $applicationname; ?>">
+    <img src="<?php echo $login_header_img_src; ?>" class="LoginHeaderImg" alt="<?php echo escape($applicationname); ?>">
 </div>
 
 <?php if ($error != "" || !empty($error_fields)) { ?>

@@ -189,7 +189,7 @@ print_r($results);</pre>
         <p><?php echo escape($lang["api-curl-help"]); ?></p>
 
         <pre class="codeexample">
-private_key="<?php echo get_api_key($userref) ?>"; user=<?php echo escape(escapeshellarg($username)); ?>; query=<?php echo escape(escapeshellarg("user=" . $username . "&" . $original_query)); ?>; sign=$(echo -n "${private_key}${query}" | openssl dgst -sha256); curl -X POST "<?php echo $baseurl ?>/api/?${query}&sign=$(echo ${sign} | sed 's/^.* //')"</pre>
+private_key="<?php echo get_api_key($userref) ?>"; user=<?php echo escape(escapeshellarg($username)); ?>; request=<?php echo escape(escapeshellarg($original_query)); ?>; query="user=${user}&${request}"; sign=$(echo -n "${private_key}${query}" | openssl dgst -sha256); curl -X POST "<?php echo $baseurl ?>/api/?${query}&sign=$(echo ${sign} | sed 's/^.* //')"</pre>
 
     <?php } ?>
 </div>

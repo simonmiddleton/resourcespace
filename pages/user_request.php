@@ -124,7 +124,7 @@ include "../include/login_background.php";
 <?php $header_img_src = get_header_image(); ?>
 
 <div id="LoginHeader">
-    <img src="<?php echo $header_img_src; ?>" class="LoginHeaderImg" alt="<?php echo $applicationname; ?>">
+    <img src="<?php echo $header_img_src; ?>" class="LoginHeaderImg" alt="<?php echo escape($applicationname); ?>">
 </div>
 
 <a class="text-link" href="<?php echo $baseurl_short; ?>login.php">
@@ -141,7 +141,7 @@ include "../include/login_background.php";
                 foreach ($missing_fields as $missing_field) {
                     ?>
                     <div>
-                        <a href="#<?php echo $missing_field[1]; ?>"><?php echo $missing_field[0]; ?></a>
+                        <a href="#<?php echo escape($missing_field[1]); ?>"><?php echo escape($missing_field[0]); ?></a>
                     </div>
                     <?php
                 }

@@ -548,6 +548,7 @@ $lang["popularity"] = "Popularity";
 $lang["rating"] = "Rating";
 $lang["colour"] = "Colour";
 $lang["modified"] = "Modified";
+$lang["random"] = "Random";
 $lang["jumptopage"] = "Page";
 $lang["jump"] = "Jump";
 $lang["titleandcountry"] = "Title / country";

@@ -789,6 +789,6 @@ function get_geo_maps_scripts()
 {
     global $baseurl;
     ?>
-    <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-markercluster-1.4.1/dist/leaflet.markercluster.min.js"></script>
+    <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-markercluster-1.4.1/dist/leaflet.markercluster.js"></script>
     <?php
 }

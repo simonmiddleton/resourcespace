@@ -3255,7 +3255,8 @@ function set_search_order_by(string $search, string $order_by, string $sort): st
         "resourcetype"    => "order_by $sort, resource_type $sort, r.ref $sort",
         "extension"       => "file_extension $sort, r.ref $sort",
         "status"          => "archive $sort, r.ref $sort",
-        "modified"        => "modified $sort, r.ref $sort"
+        "modified"        => "modified $sort, r.ref $sort",
+        "random"          => "RAND()"
     ];
 
     // Used for collection sort order as sortorder is ASC, date is DESC
