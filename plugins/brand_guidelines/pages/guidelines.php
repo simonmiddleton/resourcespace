@@ -248,7 +248,7 @@ render_content_menu();
         hideOptionsMenu();
         const is_responsive = window.matchMedia("(max-width: 600px)").matches;
         const uicenter_el = document.getElementById('UICenter');
-        const header_bb = document.getElementById('Header').getBoundingClientRect();
+        const header_bb = document.querySelector('header').getBoundingClientRect();
         const container_bb = document.querySelector('.guidelines-container').getBoundingClientRect();
         const btn_bb = e.getBoundingClientRect();
         const btn_el = jQuery(e);
