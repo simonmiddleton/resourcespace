@@ -428,17 +428,6 @@ select::-ms-expand
     display: none;
     }
 /*General layout*/
-#Header {
-    padding: 5px 25px 5px 25px;
-    margin:0;
-    text-align:left;
-    background-image:none;
-    /* z-index and overflow are required for MessageBox to appear */
-    z-index: 1 !important;
-    overflow: visible;
-    min-height: 47px;
-    }
-
 #TextHeader{font-size:25px;float:left;}
 #TextHeader a {text-decoration:none;}
 #TextDesc{font-size:1em;float:left;display:block;clear:left;}
@@ -446,21 +435,6 @@ select::-ms-expand
 .headerlink {margin:20px 25px; position: absolute; display: block; width: 400px; height: 55px;  top: 0; left: 0;}
 .TeamCentreAlertIcon { position: relative; top: 3px;}
 
-#HeaderNav1, #HeaderNav2 {
-    padding: 5px;
-    margin: auto 0;
-}
-#HeaderNav1 {
-    position: absolute;
-    top: 7px;
-    right: 10px;
-}
-#HeaderNav2 {
-    padding-top: 8px;
-    padding-bottom: 8px;
-    overflow: visible;
-    float: left;
-}
 .HorizontalNav li a {display: inline-block;zoom: 1;}
 h2#CollectionsPanelHeader {display:none;}
 
@@ -471,22 +445,6 @@ img[src$=".svg"]
     {
     height: 100% !important; 
     }
-
-/* Slim header with fixed top bar */
-div#Header.SlimHeaderFixedPosition { width: 100%; position:fixed; top: 0; z-index: 1100; }
-div#Header.SlimHeaderFixedPosition #HeaderNav1 { margin-right: 25px; }
-div#Header.SlimHeaderFixedPosition #HeaderNav2 li:last-child { margin-right: 40px; }
-div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
-
-/* Hide Header on Login page */
-#Header.LoginHeader {display: none !important;}
-
-.LoginHeaderImg {
-    max-width: 360px;
-    max-height: 60px;
-    display: block;
-    margin: 0 auto;
-}
 
 #Footer {clear: both;padding:0;text-align:left;}
 #FooterNavRight {float:right;text-align:right;margin-top: 10px;clear: right;}
@@ -2333,11 +2291,6 @@ a.Enabled, a:visited.Enabled {
     margin: 0;
 }
 
-#Header #ssearchbox {
-    margin-top: 0;
-    width: 250px;
-}
-
 #previewimage {
     max-height: 500px;
 }
@@ -3140,13 +3093,6 @@ div.slide:not([style]) {
     display: none;
 }
 
-/* Temporary responsive styling */
-@media(max-width:1200px) {
-    .HeaderImgLink img {
-        max-width: 160px;
-    }
-}
-
 /* ===== New UI elements ===== */
 
 .default-icon-size {
@@ -3437,6 +3383,11 @@ header {
     background: var(--colour-surface-header-background, #FFF);
 }
 
+header.LoginHeader {
+    /* Hide Header on Login page */
+    display: none !important;
+}
+
 #header-container {
     display: flex;
     margin: 0 auto;
@@ -3694,7 +3645,8 @@ header {
     right: -12px;
 }
 
-#header-container a.UploadButton {
+#header-container a.UploadButton,
+#header-container a.LoginButton {
     display: flex;
     height: var(--space-48, 48px);
     padding: 0 var(--space-16, 16px);
@@ -3706,11 +3658,13 @@ header {
     text-decoration: none;
 }
 
-#header-container a.UploadButton:hover {
+#header-container a.UploadButton:hover,
+#header-container a.LoginButton:hover {
     background: var(--colour-brand-primary-hover, #0A73EB);
 }
 
-#header-container a.UploadButton:active {
+#header-container a.UploadButton:active,
+#header-container a.LoginButton:active {
     background: var(--colour-brand-primary-dark, #053D7D);
     opacity: unset;
 }
@@ -3721,7 +3675,8 @@ header {
     font-size: 18px;
 }
 
-#header-container a.UploadButton span {
+#header-container a.UploadButton span,
+#header-container a.LoginButton span {
     text-align: center;
     font-size: 18px;
     font-style: normal;

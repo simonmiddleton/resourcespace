@@ -656,20 +656,9 @@ function HookSimplesamlAllReplaceheadernav1anon()
     }
 
     ?>
-    <ul>
-        <li>
-            <a href="<?php echo $baseurl; ?>/?usesso=true"><?php echo escape($lang['login']); ?></a>
-        </li>
-    <?php
-    if ($contact_link) {
-        ?>
-        <li>
-            <a href="<?php echo $baseurl?>/pages/contact.php" onClick="return CentralSpaceLoad(this, true);"><?php echo escape($lang['contactus']); ?></a>
-        </li>
-        <?php
-    }
-    ?>
-    </ul>
+    <a class="LoginButton" href="<?php echo "{$baseurl}/?usesso=true"; ?>">
+        <span><?php echo escape(text('login')); ?></span>
+    </a>
     <?php
 
     return true;

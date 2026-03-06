@@ -318,15 +318,19 @@ $page_title = get_page_title($pagename, pluginname());
 
             $linkUrl = isset($header_link_url) ? $header_link_url : $homepage_url;
             ?>
-            <!-- NEW HEADER -->
-            <header>
+            <header class="<?php echo in_array($pagename, $not_authenticated_pages) ? 'LoginHeader' : ''; ?>">
+                <?php 
+                hook("headertop"); # drop IF the feedback plugin is removed! We don't want a hook here.
+                ?>
                 <div id="header-container">
                     <div class="logo">
-                        <a href="<?php echo sanitise_url($linkUrl); ?>" class="HeaderImgLink" onclick="return CentralSpaceLoad(this, true);">
+                        <a href="<?php echo sanitise_url($linkUrl); ?>" onclick="return CentralSpaceLoad(this, true);">
                             <img src="<?php echo sanitise_url(get_header_image(false, true)); ?>" alt="<?php echo escape($applicationname); ?>">
                         </a>
                     </div>
 
+                <?php
+                if (isset($username) && !in_array($pagename, $not_authenticated_pages) && !$loginterms && '' == $k || $internal_share_access) { ?>
                     <div class="header-search-field">
                         <form id="search-form" action="/search.php" method="get">
                             <div class="input-wrapper">
@@ -345,180 +349,88 @@ $page_title = get_page_title($pagename, pluginname());
 
                     <div class="actions">
                         <?php
-                        if (checkperm("t") && ($useracceptedterms == 1 || !$terms_login)) { ?>
-                            <a class="get-menu-content" href="<?php echo $baseurl; ?>/pages/team/team_home.php" onclick="ModalClose();return ModalLoad(this,true,true,'right');" title="<?php echo escape($lang['teamcentre']); ?>">
-                                <span class="wrap-icon" aria-hidden="true">
-                                <?php
-                                render_icon_wrapper_component(Icon::Settings);
-
-                                if (!$actions_on && (checkperm("R") || checkperm("r"))) {
-                                    # Show pill count if there are any pending requests
-                                    $pending = ps_value("select sum(thecount) value from (select count(*) thecount from request where status = 0 union select count(*) thecount from research_request where status = 0) as theunion", array(), 0);
-                                    ?>
-                                    <span id="TeamMessages" class="Pill" <?php echo $pending > 0 ? 'data-value="' . $pending . '"' : 'style="display:none"'?>>
-                                        <?php echo $pending > 0 ? $pending : ''; ?>
-                                    </span>
-                                    <?php
-                                } else {
-                                    ?>
-                                    <span class="AdminMenuCountPill Pill" style="display:none"></span>
-                                    <?php
-                                }
-                                ?>
-                                </span>
-                            </a>
-                            <?php
-                        }
-                        ?>
-                        <a class="get-menu-content" href="<?php echo $baseurl; ?>/pages/user/user_messages_quick.php" onclick="ModalClose(); return ModalLoad(this, true, false, 'rightnarrow');" title="<?php echo escape(text('mymessages-tooltip')); ?>">
-                            <span class="wrap-icon" aria-hidden="true">
-                                <?php render_icon_wrapper_component(Icon::Mail); ?>
-                                <span class="MessageCountPill Pill" style="display: none;"></span>
-                            </span>
-                        </a>
-                        <a class="get-menu-content" href="<?php echo $baseurl; ?>/pages/user/user_home.php" onclick="ModalClose(); return ModalLoad(this, true, true, 'right');" alt="<?php echo escape($lang['myaccount']); ?>" title="<?php echo escape($lang['myaccount']); ?>">
-                            <span class="wrap-icon" aria-hidden="true">
-                                <?php
-                                $user_profile_image = get_profile_image($userref, false);
-
-                                if ($user_profile_image != "") {
-                                    ?>
-                                    <img src="<?php echo sanitise_url($user_profile_image); ?>" id="UserProfileImage" class="ProfileImage" alt="<?php echo escape(text('profile_image')); ?>">
-                                    <?php
-                                } else {
-                                    render_icon_wrapper_component(Icon::User);
-                                }
-                                ?> 
-                                <span class="UserMenuCountPill Pill" style="display: none;"></span>
-                            </span>
-                        </a>
-
-                        <?php
-                        if (
-                            (
-                                ($top_nav_upload && checkperm("c"))
-                                || ($top_nav_upload_user && checkperm("d"))
-                            )
-                            && ($useracceptedterms == 1 || !$terms_login)
-                        ) {
-                            ?>
-                            <a class="UploadButton" href="<?php echo sanitise_url(get_upload_url('', $k)); ?>" onclick="return CentralSpaceLoad(this, true);"><?php
-                                render_icon_wrapper_component(Icon::Upload);
-                                printf('<span>%s</span>', escape($lang['upload']));
-                            ?></a>
-                            <?php
-                        }
-                        ?>
-                    </div>
-                </div>
-            </header>
-            <!-- End of NEW HEADER -->
-
-            <div id="Header" class="<?php
-                echo in_array($pagename, $not_authenticated_pages) ? ' LoginHeader ' : '';
-                echo isset($slimheader_darken) && $slimheader_darken ? 'slimheader_darken' : ''; ?>"
-            >
-                <?php
-                hook("headertop");
-
-                if (!isset($allow_password_change)) {
-                    $allow_password_change = true;
-                }
-
-                if (isset($username) && !in_array($pagename, $not_authenticated_pages) && !$loginterms && '' == $k || $internal_share_access) {
-                    ?>
-                    <div id="HeaderNav2" class="HorizontalNav HorizontalWhiteNav">
-                        <?php
-                        // todo: replace with new header section
-                        // if (!($pagename == "terms" && isset($_SERVER["HTTP_REFERER"]) && strpos($_SERVER["HTTP_REFERER"], "login") !== false && $terms_login)) {
-                        //     include __DIR__ . "/header_links.php";
-                        // }
-                        ?>
-                    </div>
-
-                    <div id="HeaderNav1" class="HorizontalNav">
-                        <?php
                         if (checkPermission_anonymoususer()) {
                             if (!hook("replaceheadernav1anon")) {
                                 ?>
-                                <ul>
-                                    <li>
-                                        <a href="<?php echo $baseurl; ?>/login.php"><?php echo escape($lang["login"]); ?></a>
-                                    </li>
+                                <a class="LoginButton" href="<?php echo "{$baseurl}/login.php"; ?>">
+                                    <span><?php echo escape(text('login')); ?></span>
+                                </a>
+                                <?php
+                            }
+                        } else {
+                            if (checkperm("t") && ($useracceptedterms == 1 || !$terms_login)) { ?>
+                                <a class="get-menu-content" href="<?php echo $baseurl; ?>/pages/team/team_home.php" onclick="ModalClose();return ModalLoad(this,true,true,'right');" title="<?php echo escape($lang['teamcentre']); ?>">
+                                    <span class="wrap-icon" aria-hidden="true">
                                     <?php
-                                    hook("addtoplinksanon");
-                                    
-                                    if ($contact_link) {
+                                    render_icon_wrapper_component(Icon::Settings);
+
+                                    if (!$actions_on && (checkperm("R") || checkperm("r"))) {
+                                        # Show pill count if there are any pending requests
+                                        $pending = ps_value("select sum(thecount) value from (select count(*) thecount from request where status = 0 union select count(*) thecount from research_request where status = 0) as theunion", array(), 0);
                                         ?>
-                                        <li>
-                                            <a href="<?php echo $baseurl; ?>/pages/contact.php" onclick="return CentralSpaceLoad(this,true);">
-                                                <?php echo escape($lang["contactus"]); ?>
-                                            </a>
-                                        </li>
+                                        <span id="TeamMessages" class="Pill" <?php echo $pending > 0 ? 'data-value="' . $pending . '"' : 'style="display:none"'?>>
+                                            <?php echo $pending > 0 ? $pending : ''; ?>
+                                        </span>
+                                        <?php
+                                    } else {
+                                        ?>
+                                        <span class="AdminMenuCountPill Pill" style="display:none"></span>
                                         <?php
                                     }
                                     ?>
-                                </ul>
+                                    </span>
+                                </a>
                                 <?php
-                            } /* end replaceheadernav1anon */
-                        } else {
+                            }
                             ?>
-                            <ul>
-                                <?php
-                                if (
-                                    (
-                                        ($top_nav_upload && checkperm("c"))
-                                        || ($top_nav_upload_user && checkperm("d"))
-                                    )
-                                    && ($useracceptedterms == 1 || !$terms_login)
-                                ) {
-                                    $topuploadurl = get_upload_url("", $k);
-                                    ?>
-                                    <li class="HeaderLink UploadButton">
-                                        <a href="<?php echo $topuploadurl; ?>" onclick="return CentralSpaceLoad(this,true);">
-                                            <?php echo UPLOAD_ICON . escape($lang["upload"]); ?>
-                                        </a>
-                                    </li>
+                            <a class="get-menu-content" href="<?php echo $baseurl; ?>/pages/user/user_messages_quick.php" onclick="ModalClose(); return ModalLoad(this, true, false, 'rightnarrow');" title="<?php echo escape(text('mymessages-tooltip')); ?>">
+                                <span class="wrap-icon" aria-hidden="true">
+                                    <?php render_icon_wrapper_component(Icon::Mail); ?>
+                                    <span class="MessageCountPill Pill" style="display: none;"></span>
+                                </span>
+                            </a>
+                            <a class="get-menu-content" href="<?php echo $baseurl; ?>/pages/user/user_home.php" onclick="ModalClose(); return ModalLoad(this, true, true, 'right');" alt="<?php echo escape($lang['myaccount']); ?>" title="<?php echo escape($lang['myaccount']); ?>">
+                                <span class="wrap-icon" aria-hidden="true">
                                     <?php
-                                }
-                                ?>
+                                    $user_profile_image = get_profile_image($userref, false);
 
-                                <!-- todo: delete once done -->
-                                <li title="<?php echo escape($lang["mymessages-tooltip"]); ?>">
-                                    <a href="<?php echo $baseurl; ?>/pages/user/user_messages_quick.php" onclick="ModalClose(); return ModalLoad(this, true, false, 'rightnarrow');">
-                                        <i aria-hidden="true" class="icon-mail lucide-lg"></i>
-                                        <span class="MessageCountPill Pill" style="display: none;"></span>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <!-- todo: determine what this is used for and if it really needs to be placed in the header -->
-                                    <div id="MessageContainer" style="position:absolute; "></div>
-                                </li>
-                            </ul>
+                                    if ($user_profile_image != "") {
+                                        ?>
+                                        <img src="<?php echo sanitise_url($user_profile_image); ?>" id="UserProfileImage" class="ProfileImage" alt="<?php echo escape(text('profile_image')); ?>">
+                                        <?php
+                                    } else {
+                                        render_icon_wrapper_component(Icon::User);
+                                    }
+                                    ?> 
+                                    <span class="UserMenuCountPill Pill" style="display: none;"></span>
+                                </span>
+                            </a>
                             <?php
+                            if (
+                                (
+                                    ($top_nav_upload && checkperm("c"))
+                                    || ($top_nav_upload_user && checkperm("d"))
+                                )
+                                && ($useracceptedterms == 1 || !$terms_login)
+                            ) {
+                                ?>
+                                <a class="UploadButton" href="<?php echo sanitise_url(get_upload_url('', $k)); ?>" onclick="return CentralSpaceLoad(this, true);"><?php
+                                    render_icon_wrapper_component(Icon::Upload);
+                                    printf('<span>%s</span>', escape($lang['upload']));
+                                ?></a>
+                                <?php
+                            }
                         }
 
                         include_once __DIR__ . '/../pages/ajax/message.php';
                         ?>
                     </div>
-
-                    <?php
-                } else {
-                    # Empty Header
-                    ?>
-                    <div id="HeaderNav1" class="HorizontalNav ">&nbsp;</div>
-                    <div id="HeaderNav2" class="HorizontalNav HorizontalWhiteNav">&nbsp;</div>
-                    <?php
-                }
+                <?php } ?>
+                </div>
+            </header>
+            <div id="MessageContainer" style="position:absolute; "></div>
+        <?php
         }
-        ?>
-
-        <div class="clearer"></div>
-
-        <?php if ($pagename != "preview") { ?>
-            </div>
-        <?php } # End of header
 
         $omit_searchbar_pages = array(
             'index',
