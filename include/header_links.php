@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Nav link list. Each link follows the $custom_top_nav structure for consistency reasons.
  *
