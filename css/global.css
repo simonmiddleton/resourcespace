@@ -3625,17 +3625,36 @@ a.text-link:visited {
     position: relative;
 }
 
+.resource-card-action-bar .check {
+    width: 20px;
+    height: 20px;
+    border: 1px solid var(--form-field-border);
+    border-radius: var(--space-4);
+    display: grid;
+    place-items: center;
+    font-family: "Lucide";
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer; 
+    flex: 0 0 auto; 
+}
+
+.resource-card-action-bar input:checked+.check::before {
+    content: "\e06c"; /* Lucide check icon */
+}
+
+.resource-card-action-bar input:checked+.check {
+    color: var(--colour-surface-900);
+}
+
 .resource-card-action-menu {
     display: flex;
     align-items: center;
     justify-content: center;
-
     width: 20px;
     height: 20px;
     border-radius: 2px;
-
     cursor: pointer;
-
     transition: background-color 0.15s ease, transform 0.05s ease;
 }
 
@@ -3761,7 +3780,7 @@ a.text-link:visited {
     font-size: 13px;
     font-style: normal;
     font-weight: 400;
-    line-height: 100%;    
+    line-height: 100%;
 }
 
 .resource-card-id {
@@ -4008,28 +4027,6 @@ a.text-link:visited {
 
 .resource-card-action-bar input {
     display: none;
-}
-
-.resource-card-action-bar .check {
-    width: 20px;
-    height: 20px;
-    border: 1px solid var(--form-field-border);
-    border-radius: var(--space-4);
-    display: grid;
-    place-items: center;
-    font-family: "Lucide";
-    font-size: 20px;
-    line-height: 1;
-    cursor: pointer; 
-    flex: 0 0 auto; 
-}
-
-.resource-card-action-bar input:checked+.check::before {
-    content: "\e06c"; /* Lucide check icon */
-}
-
-.resource-card-action-bar input:checked+.check {
-    color: var(--colour-surface-900);
 }
 
 /* ===== Responsive layouts ===== */

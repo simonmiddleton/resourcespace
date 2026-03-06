@@ -1,11 +1,5 @@
 <?php
 
-//Add to/Remove from collection
-//Share
-//Collection comment
-//Edit
-//Delete
-
 $draw_menu = false;
 
 $add_collection_item = false;

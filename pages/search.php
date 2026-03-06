@@ -1970,7 +1970,7 @@ jQuery(document).ready(function() {
 
     });
 
-    /* Confirm delete */
+    // Confirm delete
     jQuery(document).on('click', '.flyout-menu [data-action="confirm-delete"]', function (e) {
         e.preventDefault();
         e.stopPropagation();
