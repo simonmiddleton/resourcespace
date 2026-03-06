@@ -597,6 +597,40 @@ if ($processupload)
                 }
             }
 
+            if ($replace_alternatives) {
+                # Add to an existing alternative file record
+                $alternatives = get_alternative_files_by_filename(
+                    $upfilename,
+                    $batch_replace_col,
+                    $batch_replace_min,
+                    $batch_replace_max
+                    );
+                if (count($alternatives) == 1) {
+                    $aref = (string) $alternatives[0]['ref'];
+                    $alternative = (string) $alternatives[0]['resource'];
+                    $extension = $alternatives[0]['file_extension'];
+                    $name = $alternatives[0]['name'];
+                } elseif (count($alternatives) > 1) {
+                    $result["status"] = false;
+                    $result["message"] = str_replace(
+                        '[filename]',
+                        $upfilename,
+                        $lang["error_upload_replace_alternative_multiple_found"]
+                    );
+                    $result["error"] = 113;
+                    die(json_encode($result));
+                } else {
+                    $result["status"] = false;
+                    $result["message"] = str_replace(
+                        '[filename]',
+                        $upfilename,
+                        $lang["error_upload_replace_alternative_file_not_found"]
+                    );
+                    $result["error"] = 114;
+                    die(json_encode($result));
+                }
+            }
+
             # Upload an alternative file
             $resource_data = get_resource_data($alternative);
             if($resource_data["lock_user"] > 0 && $resource_data["lock_user"] != $userref)
@@ -609,36 +643,7 @@ if ($processupload)
                 }
             else
                 {
-                if ($replace_alternatives) {
-                    # Add to an existing alternative file record
-                    $alternatives = get_alternative_files_by_filename(
-                        $upfilename,
-                        $batch_replace_col,
-                        $batch_replace_min,
-                        $batch_replace_min
-                        );
-                    if (count($alternatives) == 1) {
-                        $aref = $alternatives[0]['ref'];
-                        $alternative = $alternatives[0]['resource'];
-                        $extension = $alternatives[0]['extension'];
-                    } elseif (count($alternatives) > 1) {
-                        $result["status"] = false;
-                        $result["message"] = str_replace(
-                            '[filename]',
-                            $upfilename,
-                            $lang["error_upload_replace_alternative_multiple_found"]
-                        );
-                        $result["error"] = 113;
-                    } else {
-                        $result["status"] = false;
-                                                $result["message"] = str_replace(
-                            '[filename]',
-                            $upfilename,
-                            $lang["error_upload_replace_alternative_file_not_found"]
-                        );
-                        $result["error"] = 114;
-                    }
-                } else {
+                if ($replace_alternatives != 1) {
                     # Add a new alternative file
                     $aref=add_alternative_file($alternative,$upfilename);
                 }
@@ -667,16 +672,45 @@ if ($processupload)
                     }
 
                     if ($replace_alternatives) {
-                        ps_query("UPDATE resource_alt_files SET file_size=?,creation_date=NOW() WHERE resource=? AND ref=?",array("i",$file_size,"i",$alternative,"i",$aref));
+                        $sql = new PreparedStatementQuery();
+                        $sql->sql = "UPDATE resource_alt_files SET file_size=?,creation_date=NOW()";
+                        $sql->parameters = ["i",$file_size];
+                        if ($name != "") {
+                            $sql->sql .= ", name=?";
+                            $sql->parameters = array_merge($sql->parameters, ['s', $name]);
+                        }
+                        $sql->sql .= " WHERE resource=? AND ref=?";
+                        $sql->parameters = array_merge($sql->parameters, ["i",$alternative,"i",$aref]);
+
+                        ps_query($sql->sql, $sql->parameters);
                     } else {
                         # Save alternative file data.
                         ps_query("UPDATE resource_alt_files SET file_name=?,file_extension=?,file_size=?,creation_date=NOW() WHERE resource=? AND ref=?",array("s",$upfilename,"s",$extension,"i",$file_size,"i",$alternative,"i",$aref));
                     }
 
-                    if ($alternative_file_previews)
-                        {
-                        create_previews($alternative,false,$extension,false,false,$aref);
+                    if ($alternative_file_previews) {
+                        if ($GLOBALS["offline_job_queue"]) {
+                            $create_alt_previews_job_data = [
+                                'resource' => $alternative,
+                                'thumbonly' => false,
+                                'extension' => $extension,
+                                'previewonly' => false,
+                                'previewbased' => false,
+                                'alternative' => $aref
+                            ];
+                            $create_alt_previews_job_failure_text = str_replace('%ALTFILE', $aref, $lang['jq_create_previews_failure_text']);
+                            job_queue_add(
+                                'create_previews',
+                                $create_alt_previews_job_data,
+                                '',
+                                '',
+                                '',
+                                $create_alt_previews_job_failure_text
+                                );
+                        } else {
+                            create_previews($alternative,false,$extension,false,false,$aref);
                         }
+                    }
 
                     hook('after_alt_upload','',array($alternative,array("ref"=>$aref,"file_size"=>$file_size,"extension"=>$extension,"name"=>$upfilename,"altdescription"=>"","path"=>$path,"basefilename"=>str_ireplace("." . $extension, '', $upfilename))));
 
@@ -693,9 +727,10 @@ if ($processupload)
                     hook('upload_alternative_extra', '', array($path));
 
                     $result["status"] = true;
-                    $result["message"] = $lang["alternative_file_created"];
+                    $result["message"] = $replace_alternatives ? $lang["alternative_file_replaced"] : $lang["alternative_file_created"];
                     $result["id"] = $alternative;
                     $result["alternative"] = $aref;
+                    set_processing_message("");
                     }
                 }
             }

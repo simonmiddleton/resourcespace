@@ -4699,12 +4699,12 @@ function get_alternative_files($resource, $order_by = "", $sort = "", $type = ""
 function get_alternative_files_by_filename(string $filename, int $collection, int $min, int $max) : array
 {
     $sql = new PreparedStatementQuery(
-        "SELECT ref, resource, filename, file_size FROM resource_alt_files WHERE file_name = ?",
+        "SELECT ref, resource, file_name, file_size, file_extension, name, description FROM resource_alt_files WHERE file_name = ?",
         ["s", $filename]
     );
 
     if ($collection) {
-        $sql->sql .= " AND resource IN (SELECT resource FROM collection_resource WHERE collection = ?";
+        $sql->sql .= " AND resource IN (SELECT resource FROM collection_resource WHERE collection = ?)";
         $sql->parameters[] = "i";
         $sql->parameters[] = $collection;
     } elseif ($min || $max) {
@@ -4719,7 +4719,7 @@ function get_alternative_files_by_filename(string $filename, int $collection, in
             $sql->parameters[] = $max;
         }
     }
-    
+
     return ps_query($sql->sql, $sql->parameters);
 }
 

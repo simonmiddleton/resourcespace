@@ -75,7 +75,11 @@ if ($resource > 0 && $success) {
         job_queue_update($jobref, $job_data, STATUS_ERROR);
         get_config_option(['user' => $job['user']], 'user_pref_resource_notifications', $send_notifications, false);
         if ($send_notifications) {
-            $create_previews_job_failure_text = str_replace('%RESOURCE', $resource, $lang['jq_create_previews_failure_text']);
+            if ($alternative == -1) {
+                $create_previews_job_failure_text = str_replace('%RESOURCE', $resource, $lang['jq_create_previews_failure_text']);
+            } else {
+                $create_previews_job_failure_text = str_replace('%ALTFILE', $alternative, $lang['jq_create_alt_previews_failure_text']);
+            }
             $message = $job["failure_text"] != '' ? $job["failure_text"] : $create_previews_job_failure_text;
             message_add($job['user'], $message, $url, 0);
         }

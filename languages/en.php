@@ -2967,6 +2967,7 @@ $lang["job_queue_type"] = "Job type";
 $lang["job_queue_duplicate_message"] = "Job creation failed. There is already a matching job in the queue.";
 $lang["alternative_file_created"] = "Alternative file successfully created.";
 $lang["alternative_file_creation_failed"] = "Alternative file creation failed";
+$lang["alternative_file_replaced"] = "Alternative file successfully replaced";
 $lang["download_file_created"] = "Your file is ready for download.";
 $lang["download_file_creation_failed"] = "Your file download request failed.";
 $lang["replace_resource_preserve_original"] = "Keep the existing file as an alternative?";
@@ -2974,6 +2975,8 @@ $lang["replace_resource_original_description"] = "Original %EXTENSION file"; // 
 $lang['replace_resource_original_alt_filename'] = 'Alternative filename';
 $lang['jq_create_previews_success_text'] = 'Previews created for resource #%RESOURCE successfully';
 $lang['jq_create_previews_failure_text'] = 'Failed to create previews for resource #%RESOURCE';
+$lang['jq_create_alt_previews_success_text'] = 'Previews created for alternative file #%ALTFILE successfully';
+$lang['jq_create_alt_previews_failure_text'] = 'Falied to create previews for alternative file #%ALTFILE';
 $lang['jq_notify_user_preparing_archive'] = 'Preparing archive for collection download. You can safely navigate away from this page and will receive a notification once the archive is ready for download.';
 
 /* Manage external shares */

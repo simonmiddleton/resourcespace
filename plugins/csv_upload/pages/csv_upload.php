@@ -52,9 +52,9 @@ $csv_default_settings = array(
     "fieldmapping" => array(),
     "csvchecksum" => "",
     "csv_filename" => "",
-    "alternative_file_filename_column" => 0,
-    "alternative_file_name_column" => 0,
-    "alternative_file_description_column" => 0,
+    "alternative_file_filename_column" => -1,
+    "alternative_file_name_column" => -1,
+    "alternative_file_description_column" => -1,
     );
 
 if ($csv_saved_options != "" && getval("resetconfig", "") == "") {
@@ -714,11 +714,10 @@ if (!checkperm("c")) {
                                 foreach ($csv_info as $csv_column => $csv_field_data) {
                                     echo "<option value=\"" . $csv_column . "\" ";
                                     if (
-                                        (($csv_set_options["alternative_file_filename_column"] ?? "") != "" && $csv_set_options["alternative_file_filename_column"] == $csv_column)
-                                        ||
-                                        strtolower($csv_field_data["header"]) == strtolower($lang["resourceids"])
+                                        (($csv_set_options["alternative_file_filename_column"] ?? "") != ""
+                                        && $csv_set_options["alternative_file_filename_column"] == $csv_column)
                                     ) {
-                                        echo " selected ";
+                                        //echo " selected ";
                                     }
                                     echo  ">" . escape($csv_field_data["header"]) . "</option>\n";
                                 }

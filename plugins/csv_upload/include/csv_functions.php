@@ -813,7 +813,7 @@ function csv_upload_process($filename, &$meta, $resource_types, &$messages, $csv
             }
             // Create alternative file record
             if ($processcsv) {
-                add_alternative_file($resource_id, $name ?? "", $description ?? "", $filename, $extension);
+                add_alternative_file($resource_id, $name ?? $filename, $description ?? "", $filename, $extension);
             }
         } // end of loop through lines
     }
