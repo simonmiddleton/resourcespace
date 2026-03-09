@@ -1023,10 +1023,10 @@ function save_resource_data($ref, $multi, $autosave_field = "")
                 }
             }
 
-            // Populate empty field with the default if necessary
-            if ($field_has_default_for_user && strlen((string) $val) == 0) {
-                $val = $field_default_value;
+            // Set empty field with default to be populated if necessary
+            if ($field_has_default_for_user && strlen((string) $val) == 0 && ($nodes_to_remove != [] || in_array($fields[$n]['type'], NON_FIXED_LIST_SINGULAR_RESOURCE_VALUE_FIELD_TYPES))) {
                 $new_checksums[$fields[$n]['ref']] = md5(trim(preg_replace('/\s\s+/', ' ', $val)));
+                $default_fields[] = $fields[$n]['ref'];
             }
 
             if (
@@ -1171,6 +1171,12 @@ function save_resource_data($ref, $multi, $autosave_field = "")
     if (count($nodes_to_add) > 0) {
         add_resource_nodes($ref, $nodes_to_add, false, false);
     }
+
+    // Populate empty fields with the default if necessary
+    if (!empty($default_fields)) {
+        set_resource_defaults($ref, $default_fields);
+    }
+    
     log_node_changes($ref, $new_node_values, $all_current_field_nodes, "", $oldnodenames);
 
     if (count($nodes_check_delete) > 0) {
