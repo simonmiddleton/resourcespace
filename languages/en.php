@@ -3163,6 +3163,7 @@ $lang["share-password-not-set"] = "External shares must be protected by a passwo
 $lang["oj-collection-download-success-text"] = "Collection ready for download";
 $lang["oj-collection-download-failure-text"] = "Unable to prepare collection archive for download";
 $lang["oj-batch-replace-local-success-text"] = "Batch replace has successfully replaced %TOTALRESOURCES resources";
+$lang["oj-batch-replace-local-alternatives-success-text"] = "Batch replace has successfully replaced %TOTALFILES alternative files";
 $lang["oj-batch-replace-local-failure-text"] = "Batch replace failed. Please check logs for errors";
 $lang["oj-creation-failure-text"]            = "An error occurred. Failed to create offline job";
 $lang["oj-creation-success"]                 = "Offline job [jobnumber] created. You will be notified when it has completed";

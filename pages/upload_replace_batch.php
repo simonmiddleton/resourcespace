@@ -41,17 +41,15 @@ if ($submitted) {
             'filename_field'        => $filename_field,
             'batch_replace_col'     => $batch_replace_col,
             'batch_replace_min'     => $batch_replace_min,
-            'batch_replace_max'     => $batch_replace_max,
-            'no_exif'               => $no_exif,
-            'replace_alternatives'  => $batch_replace_alternatives
+            'batch_replace_max'     => $batch_replace_max
         );
 
         job_queue_add(
-            'replace_batch_local',
+            'replace_batch_local_alternatives',
             $replace_batch_local_data,
             '',
             '',
-            $lang["oj-batch-replace-local-success-text"],
+            $lang["oj-batch-replace-local-alternatives-success-text"],
             $lang["oj-batch-replace-local-failure-text"]
         );
 
