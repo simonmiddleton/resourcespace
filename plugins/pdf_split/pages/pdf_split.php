@@ -5,7 +5,10 @@ include_once '../../../include/image_processing.php';
 
 use Montala\ResourceSpace\CommandPlaceholderArg;
 
-$ref=getval("ref","");
+$ref = (int) getval("ref", 0, true, 'is_positive_int_loose');
+if ($ref === 0) {
+    exit(escape($lang["resourcenotfound"]));
+}
 
 # Decide which size we are looking for
 $size=$resource_view_use_pre?"pre":"scr";
