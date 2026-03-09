@@ -503,3 +503,12 @@ function update_archive_required_fields_check(int|array $resource, int $archive_
     $GLOBALS['update_archive_required_fields_check'][$resource_ref] = $result;
     return $result;
 }
+
+
+enum FIELD_GEO_LOCATION: int 
+{
+    case none = 0;
+    case latitude = 1;
+    case longitude = 2;
+    case both = 3;
+}
