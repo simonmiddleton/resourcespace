@@ -430,7 +430,8 @@ if ($saveaction != '' && enforcePostRequest(false))
             else
                 {
                 // Original file has been updated so remove original_copy as invalid now
-                if (file_exists($org)) 
+                $is_original_copy_file = ($org != $originalpath && mb_strpos($org, 'original_copy', mb_strrpos($org, '/')) !== false);
+                if ($is_original_copy_file && file_exists($org)) 
                     {
                     unlink($org);
                     }
