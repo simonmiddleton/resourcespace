@@ -59,7 +59,13 @@ if ($use_selection_collection && in_array($ref, $selection_collection_resources)
         <?php hook("resourcethumbtop"); ?>
         
         <?php
-        $usesize = $GLOBALS['retina_mode'] ? "pre" : "thm";
+        // Render preview image
+        if ($display == "xlthumbs") {
+            $usesize = $GLOBALS['retina_mode'] && resource_download_allowed($result[$n]['ref'], 'scr', $result[$n]['resource_type']) ? "scr" : "pre";
+        } else {	
+            $usesize = $GLOBALS['retina_mode'] ? "pre" : "thm";
+        }
+        
         $arrsizes = array_unique([$usesize,"pre","thm"]);
         $thumbnail = get_resource_preview($result[$n], $arrsizes, $access, $watermark);
 
@@ -134,7 +140,8 @@ if ($use_selection_collection && in_array($ref, $selection_collection_resources)
         // extended css behavior
         if (
             in_array($df[$x]['ref'], $thumbs_display_extended_fields) &&
-            ((isset($metadata_template_title_field) && $df[$x]['ref'] != $metadata_template_title_field) || !isset($metadata_template_title_field))
+            ((isset($metadata_template_title_field) && $df[$x]['ref'] != $metadata_template_title_field) || !isset($metadata_template_title_field)) && 
+            $value !== ""
         ) {
             ?>
             <div
@@ -161,7 +168,7 @@ if ($use_selection_collection && in_array($ref, $selection_collection_resources)
             </div>
             <?php
             // normal behavior
-        } elseif ((isset($metadata_template_title_field) && $df[$x]['ref'] != $metadata_template_title_field) || !isset($metadata_template_title_field)) {
+        } elseif ((isset($metadata_template_title_field) && $df[$x]['ref'] != $metadata_template_title_field) || !isset($metadata_template_title_field) && $value !== "") {
             ?>
             <div
                 class="ResourceTypeField<?php echo $df[$x]['ref']; echo $x == 0 ? ' resource-card-title' : ' resource-card-field'; ?>"
@@ -180,9 +187,7 @@ if ($use_selection_collection && in_array($ref, $selection_collection_resources)
                     </a>
                     <?php
                 } //end link ?>
-                <!-- &nbsp; -->
             </div>
-            <div class="clearer"></div>
             <?php
         }
     }

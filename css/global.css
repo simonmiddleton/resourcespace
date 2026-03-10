@@ -1653,8 +1653,14 @@ div.video-js {margin:auto;}
 }
 
 /* Drag & Drop */
-#CentralSpaceResourceClone, #CollectionSpaceClone {
+#CentralSpaceResourceClone {
+    display: flex;
+    opacity: 0.5 !important;
+}
+
+#CollectionSpaceClone {
     text-align: left;
+    background-color: none;
     opacity: 0.5 !important;
 }
 
@@ -3626,14 +3632,14 @@ a.text-link:visited {
 }
 
 .resource-card-action-bar .check {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     border: 1px solid var(--form-field-border);
-    border-radius: var(--space-4);
+    border-radius: 2px;
     display: grid;
     place-items: center;
     font-family: "Lucide";
-    font-size: 20px;
+    font-size: 18px;
     line-height: 1;
     cursor: pointer; 
     flex: 0 0 auto; 
@@ -3645,6 +3651,7 @@ a.text-link:visited {
 
 .resource-card-action-bar input:checked+.check {
     color: var(--colour-surface-900);
+    background-color: var(--colour-surface-200);
 }
 
 .resource-card-action-menu {
@@ -3704,10 +3711,17 @@ a.text-link:visited {
 
 .resource-card-content {
     display: flex;
-    padding: var(--space-16);
     flex-direction: column;
     align-items: flex-start;
     flex: 1 0 0;
+}
+
+.resource-card.normal .resource-card-content {
+    padding: var(--space-8);
+}
+
+.resource-card.xl .resource-card-content {
+    padding: var(--space-16);
 }
 
 .resource-card-content-top {
@@ -3716,6 +3730,7 @@ a.text-link:visited {
     flex-direction: column;
     align-items: flex-start;
     align-self: stretch;
+    row-gap: var(--space-8);
 }
 
 .resource-card-title {
@@ -3983,12 +3998,19 @@ a.text-link:visited {
 .menu-confirm-btn {
     width: 100%;
     padding: 10px var(--space-12);
+    box-shadow: none;
     font-weight: 600;
     cursor: pointer;
     border-radius: var(--space-4);
     color: var(--colour-feedback-error-default);
     border: 1px solid var(--colour-feedback-error-default);
     background: var(--colour-feedback-error-lightest);
+    opacity: 0;
+    transform: translateY(-4px);
+    pointer-events: none;
+    transition:
+        opacity 200ms ease 150ms,
+        transform 200ms ease 100ms;
 }
 
 .menu-confirm.is-permanent .menu-confirm-btn {
@@ -3997,8 +4019,10 @@ a.text-link:visited {
     background: var(--colour-feedback-error-default)
 }
 
-.menu-confirm.is-confirm {
-    grid-template-rows: 1fr;
+.flyout-menu.is-confirm .menu-confirm-btn {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
 }
 
 .menu-confirm-inner {

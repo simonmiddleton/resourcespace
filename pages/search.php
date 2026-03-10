@@ -177,7 +177,6 @@ switch ($display)
         $display_fields = $thumbs_display_fields;  
         if (isset($search_result_title_height)) { $result_title_height = $search_result_title_height; }
         $results_title_trim = $search_results_title_trim;
-        $results_title_wordwrap = $search_results_title_wordwrap;
         break;      
     }
 
@@ -836,10 +835,15 @@ if ($collectionsearch && $display!="list") {
             
             start: function (event, ui)
                 {
-                InfoBoxEnabled=false;
+
+                ui.placeholder.css({
+                    width: ui.item.outerWidth(),
+                    height: ui.item.outerHeight()
+                });
+
                 if (jQuery('#InfoBox')) {jQuery('#InfoBox').hide();}
                 if (jQuery('#InfoBoxCollection')) {jQuery('#InfoBoxCollection').hide();}
-                if(is_special_search('!collection', 11))
+                if (is_special_search('!collection', 11))
                     {
                     // get the current collection from the search page (ie. CentralSpace)
                     var query_strings = getQueryStrings();
@@ -905,6 +909,7 @@ if ($collectionsearch && $display!="list") {
         jQuery('.ResourcePanelShell').disableSelection();
         jQuery('.ResourcePanelShellLarge').disableSelection();
         jQuery('.ResourcePanelShellSmall').disableSelection();
+        jQuery('.resource-card').disableSelection();
 
     });
     </script>
@@ -917,6 +922,7 @@ if ($collectionsearch && $display!="list") {
             jQuery('.ResourcePanelShell').enableSelection();
             jQuery('.ResourcePanelShellLarge').enableSelection();
             jQuery('.ResourcePanelShellSmall').enableSelection();
+            jQuery('.resource-card').enableSelection();
         });
     
     </script>
