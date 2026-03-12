@@ -1171,14 +1171,14 @@ function save_resource_data($ref, $multi, $autosave_field = "")
     if (count($nodes_to_add) > 0) {
         add_resource_nodes($ref, $nodes_to_add, false, false);
     }
+    db_end_transaction("update_resource_node");
+
     log_node_changes($ref, $new_node_values, $all_current_field_nodes, "", $oldnodenames);
 
     if (count($nodes_check_delete) > 0) {
         // This has to be after call to log_node_changes() or nodes cannot be resolved
         check_delete_nodes($nodes_check_delete);
     }
-
-    db_end_transaction("update_resource_node");
 
     // Autocomplete any blank fields without overwriting any existing metadata
     $autocomplete_fields = autocomplete_blank_fields($ref, false, true);
@@ -2614,6 +2614,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log 
             if (count($nodes_to_add) > 0) {
                 add_resource_nodes($resource, $nodes_to_add, false, false);
             }
+            db_end_transaction("update_field_{$field}");
 
             // Update log
             if ($log && (count($nodes_to_add) > 0 || count($nodes_to_remove) > 0)) {
@@ -2621,8 +2622,6 @@ function update_field($resource, $field, $value, array &$errors = array(), $log 
                 // Don't need to log this later
                 $log = false;
             }
-
-            db_end_transaction("update_field_{$field}");
 
             if ($fieldinfo['type'] == FIELD_TYPE_CATEGORY_TREE) {
                 $all_treenodes = get_cattree_nodes_ordered($field, $resource, false); # True means get all nodes; False means get selected nodes
