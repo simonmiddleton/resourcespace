@@ -1067,6 +1067,7 @@ $lang["externalshareexpired"] = "Sorry, this share has expired and is no longer 
 $lang["notapprovedsharecollection"] = "One or more resources in this collection are not active and therefore sharing is prohibited.";
 $lang["notapprovedsharetheme"] = "Sharing is prohibited for at least one collection, because one or more resources is not active.";
 $lang["notapprovedresources"] = "The following resources are not active and cannot be added to a shared collection: ";
+$lang["notsharableresources"] = "The following resources are not shareable by this user and cannot be added to a shared collection: ";
 $lang['error_generating_access_key'] = 'Could not generate an access key';
 $lang['access_key_deleted'] = "Access key '%access_key' deleted";
 $lang['email_error_user_list_not_valid'] = 'No valid notifications to send (users might not be approved)';

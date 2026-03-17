@@ -531,10 +531,19 @@ if ($addsearch != -1) {
                         unset($resourcesnotadded["blockedtypes"]);
                     }
 
+                    if (isset($resourcesnotadded["blockedshares"])) {
+                        // There are resource blocked from being added due to share permissions
+                        if ($warningtext != "") {
+                            $warningtext .= "<br />";
+                        }
+                        $warningtext .= $lang["notsharableresources"] . implode(", ", $resourcesnotadded["blockedshares"]) . "<br />";
+                        unset($resourcesnotadded["blockedshares"]);
+                    }
+                    
                     if (!empty($resourcesnotadded)) {
                         // There are resources blocked from being added due to archive state
-                        if ($warningtext == "") {
-                            $warningtext .= "<br /><br />";
+                        if ($warningtext != "") {
+                            $warningtext .= "<br />";
                         }
                         $warningtext .= $lang["notapprovedresources"] . implode(", ", $resourcesnotadded);
                     }
