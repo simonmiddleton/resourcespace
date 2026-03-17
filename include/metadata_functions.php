@@ -511,4 +511,10 @@ enum FIELD_GEO_LOCATION: int
     case latitude = 1;
     case longitude = 2;
     case both = 3;
+
+    public function i18n(array $lang): string
+    {
+        return $lang["geo_location-{$this->name}"] ?? "BANG" . $this->name;
+    }
+
 }

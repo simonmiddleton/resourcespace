@@ -85,6 +85,7 @@ $lang["fieldtype-dynamic_keywords_list"] = "Dynamic keywords list";
 $lang["fieldtype-radio_buttons"] = "Radio buttons";
 $lang["fieldtype-warning_message"] = "Warning message";
 $lang["fieldtype-date_range"] = "Date Range";
+$lang["fieldtype-geo_location"] = "Geo Location";
 
 # Property labels (for the default properties)
 $lang["property-reference"] = "Reference";
@@ -180,6 +181,12 @@ $lang["information-derestrict_filter"] = "Derestrict filter. Intended for use in
 $lang["information-push_metadata"] = "If set, the metadata for this resource will be displayed on the resource view page for any related resources. For example, you may relate several photos to a person resource. If this property is set on the person resource, then the person metadata will appear on all related photo resource records, avoiding duplication of data in the system.";
 $lang["property-sort_method"] = "Sort Method";
 $lang["information-sort_method"] = "Ordering to use when displaying search results ordered by this field.";
+$lang["property-geomapping"] = "Geo location type";
+$lang["information-geomapping"] = "Store the geo location in this field as either latitude, longitude, or both (only available for singe line text fields).";
+$lang["geo_location-none"] = "None";
+$lang["geo_location-latitude"] = "Latitude";
+$lang["geo_location-longitude"] = "Longitude";
+$lang["geo_location-both"] = "Both";
 $lang["property-query"] = "Query";
 
 $lang["information-id"] = "Note: 'Id' below MUST be set to a three character unique code.";

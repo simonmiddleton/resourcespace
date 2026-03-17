@@ -6847,6 +6847,37 @@ function admin_resource_type_field_option(string $propertyname,string $propertyt
             ?>
             </select>
             <?php
+        } elseif ($propertyname == 'geomapping') {
+            ?>
+            <select 
+                class="stdwidth"
+                id="field_edit_<?php echo escape((string) $propertyname); ?>"
+                name="<?php echo escape($propertyname); ?>"
+                >
+            <?php 
+            foreach(FIELD_GEO_LOCATION::cases() as $case) {
+                $selected = $case->value === $currentvalue ? 'selected' : '';
+                ?>
+                <option
+                    value="<?php echo $case->value; ?>" <?php echo $selected; ?>
+                    ><?php echo escape($case->i18n($lang)); ?>
+                </option>
+            <?php }
+            ?>
+            </select>
+            <script>
+                jQuery(document).ready(function()  {
+                    var selectedValue = jQuery('#field_edit_type').val();
+                    var geoSelect = jQuery('#field_edit_<?php echo escape((string) $propertyname); ?>');
+
+                    if (selectedValue === '<?php echo FIELD_TYPE_TEXT_BOX_SINGLE_LINE; ?>') {
+                        geoSelect.prop('disabled', false);
+                    } else {
+                        geoSelect.prop('disabled', true).val(0);
+                    }
+                });
+            </script>
+            <?php
         }
         elseif($type==1)
             {
