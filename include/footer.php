@@ -1,4 +1,7 @@
 <?php
+
+use Montala\ResourceSpace\UserInterfaceComponents\Icon;
+
 hook("before_footer_always");
 
 if (getval("loginmodal", "")) {
@@ -320,6 +323,9 @@ if (getval("ajax", "") == "") {
     <!-- End of modal support -->
 
     <div id="menu-overlay" hidden></div>
+    <template id="menu-overlay-close-button">
+        <button type="button" class="<?php echo Icon::X->value; ?>" aria-label="<?php echo escape(text('close')); ?>" data-menu-trigger-close></button>
+    </template>
 
     <script>
 

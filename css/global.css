@@ -3824,6 +3824,22 @@ header.LoginHeader {
 }
 
 @media(max-width: 360px) {
+    #menu-overlay {
+        background: var(--colour-transparency-black-80, rgba(0, 0, 0, 0.80));
+    }
+
+    .menu-panel {
+        /* Left is normally managed by JS (see MenuOverlay module) but in this case we want to control its left & right boundaries */
+        left: var(--space-16, 16px) !important;
+        right: var(--space-16, 16px) !important;
+    }
+
+    button[data-menu-trigger-close] {
+        position: fixed;
+        right: 16px;
+        z-index: 1001; /* On top of the #menu-overlay */
+    }
+
     #header-container {
         grid-template-columns: 1fr;
         grid-template-areas:

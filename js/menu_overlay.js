@@ -34,7 +34,9 @@
  */
 ResourceSpace.Modules.MenuOverlay = (() => {
     const overlay = document.getElementById('menu-overlay');
+    const templateMenuCloseBtn = document.getElementById('menu-overlay-close-button');
     let openMenu = null;
+    const mq_mobile = window.matchMedia('(max-width: 360px)');
 
     function init() {
         if (!overlay) return;
@@ -44,19 +46,21 @@ ResourceSpace.Modules.MenuOverlay = (() => {
 
     function bindEvents() {
         document.addEventListener('click', (e) => {
-            const panel = e.target.closest('[data-menu-panel]');
-            const trigger = panel
-                // Clicking within the menu panel (on one of the menu items)
-                ? jQuery(panel).parents('[data-menu]').find('[data-menu-trigger]')[0]
-                // Clicking on the actual trigger element
-                : e.target.closest('[data-menu-trigger]');
-            if (!trigger) return;
-
-            const menu = trigger.closest('[data-menu]');
+            const menu = e.target.closest('[data-menu]');
             if (!menu) return;
 
-            // e.preventDefault(); // IMPORTANT: commented to allow external links in the navigation overflow menu to
-            // continue working. If we need to use this, consider adding some logic to cater for both cases.
+            // If needed to allow clicks within the menu panel, consider separating out some of the logic to a
+            // different listener.
+            const openBtn = menu.querySelector('[data-menu-trigger]');
+            const closeBtn = menu.querySelector('[data-menu-trigger-close]');
+            const trigger = e.target === openBtn || e.target === closeBtn
+                ? e.target
+                : e.target.closest('[data-menu-panel]');
+
+            if (!trigger) return;
+
+            // e.preventDefault(); // IMPORTANT: commented to allow external links in the primary navigation to continue
+            // working. If we need to use this, consider adding some logic to cater for both cases.
             toggle(menu);
         });
 
@@ -143,6 +147,11 @@ ResourceSpace.Modules.MenuOverlay = (() => {
         showOverlay();
         setExpanded(menu, true);
 
+        if (mq_mobile.matches) {
+            const closeBtn = templateMenuCloseBtn.content.cloneNode(true);
+            menu.appendChild(closeBtn);
+        }
+
         // Ensure layout has panel dimensions
         requestAnimationFrame(() => {
             positionPanel(trigger, panel);
@@ -168,6 +177,10 @@ ResourceSpace.Modules.MenuOverlay = (() => {
         menu.classList.remove('is-open');
         hideOverlay();
         setExpanded(menu, false);
+
+        if (mq_mobile.matches) {
+            menu.querySelector('[data-menu-trigger-close]')?.remove();
+        }
 
         if (openMenu === menu) {
             openMenu = null;

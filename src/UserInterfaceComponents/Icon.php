@@ -13,4 +13,5 @@ enum Icon: string
     case User = 'icon-user';
     case EllipsisVertical = 'icon-ellipsis-vertical';
     case Menu = 'icon-menu';
+    case X = 'icon-x';
 }
