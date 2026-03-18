@@ -1009,26 +1009,6 @@ function save_resource_data($ref, $multi, $autosave_field = "")
                 }
             } // End of if not a fixed list field
 
-            // Determine whether a required field has a default for the user
-            $field_has_default_for_user = false;
-            if ($userresourcedefaults != '') {
-                foreach (explode(';', $userresourcedefaults) as $rule) {
-                    $rule_detail         = explode('=', trim($rule));
-                    $field_shortname     = $rule_detail[0];
-                    $field_default_value = $rule_detail[1];
-                    if ($field_shortname  == $fields[$n]['name'] && $field_default_value != "") {
-                        $field_has_default_for_user = true;
-                        break;
-                    }
-                }
-            }
-
-            // Populate empty field with the default if necessary
-            if ($field_has_default_for_user && strlen((string) $val) == 0) {
-                $val = $field_default_value;
-                $new_checksums[$fields[$n]['ref']] = md5(trim(preg_replace('/\s\s+/', ' ', $val)));
-            }
-
             if (
                 $fields[$n]['required'] == 1
                 && check_display_condition($n, $fields[$n], $fields, false, $ref)
@@ -1037,16 +1017,6 @@ function save_resource_data($ref, $multi, $autosave_field = "")
                     (in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES) && count($ui_selected_node_values) == 0)
                     // Required continuous field with no value is a candidate for error
                     || (!in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES) && trim(strip_leading_comma($val)) == '')
-                )
-                && (
-                    // An existing resource node field with neither any nodes submitted nor a resource default
-                    ($ref > 0 && in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES) && count($ui_selected_node_values) == 0 && !$field_has_default_for_user)
-                    // An existing resource continuous field with neither an input value nor a resource default
-                    || ($ref > 0 && !in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES) && strlen((string) $val) == 0 && !$field_has_default_for_user)
-                    // A template node field with neither any nodes submitted nor a resource default
-                    || ($ref < 0 && in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES) && count($ui_selected_node_values) == 0 && !$field_has_default_for_user)
-                    // A template continuous field with neither an input value nor a resource default
-                    || ($ref < 0 && !in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES) && strlen((string) $val) == 0 && !$field_has_default_for_user)
                 )
                 // Not a metadata template
                 && !$is_template
