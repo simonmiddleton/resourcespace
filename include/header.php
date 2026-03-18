@@ -341,14 +341,16 @@ $page_title = get_page_title($pagename, pluginname());
                         </form>
                     </div>
 
-                    <?php
-                    if (!($pagename == "terms" && isset($_SERVER["HTTP_REFERER"]) && strpos($_SERVER["HTTP_REFERER"], "login") !== false && $terms_login)) {
-                        include __DIR__ . "/header_links.php";
-                    }
-                    ?>
+                    <?php render_header_links(['button' => Icon::EllipsisVertical]); ?>
 
                     <div class="actions">
                         <?php
+                        // This is ONLY for the responsive mode (tablet & mobile)
+                        render_header_links([
+                            'button' => Icon::Menu,
+                            'force_overflow' => true,
+                        ]);
+
                         if (checkPermission_anonymoususer()) {
                             if (!hook("replaceheadernav1anon")) {
                                 ?>

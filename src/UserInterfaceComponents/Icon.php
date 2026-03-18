@@ -11,4 +11,6 @@ enum Icon: string
     case Settings = 'icon-settings';
     case Mail = 'icon-mail';
     case User = 'icon-user';
+    case EllipsisVertical = 'icon-ellipsis-vertical';
+    case Menu = 'icon-menu';
 }
