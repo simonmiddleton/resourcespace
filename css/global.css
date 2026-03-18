@@ -3776,6 +3776,10 @@ header.LoginHeader {
     #header-container a.UploadButton span {
         display: none;
     }
+
+    /* WIP for q13511 - dropping searchbar (allows for other tests to be carried out much easier */
+    .collection-bar--minimised #UICenter { width: unset; }
+    .collection-bar--minimised #SearchBarContainer { display: none; }
 }
 
 /* Login page mobile layout */
@@ -3798,6 +3802,35 @@ header.LoginHeader {
             "logo"
             "actions"
             "search";
+        transition: gap 0.2s ease;
+    }
+
+    /* When the logo & actions are collapsed (for the sticky header; see header.js, is-compact is driven by JS) */
+    #header-container.is-compact {
+        gap: 0;
+    }
+
+    /* Base state for the sticky header (see header.js) */
+    #header-container .logo,
+    #header-container .actions {
+        max-height: 48px;
+        opacity: 1;
+        /* overflow: hidden; */
+        transition:
+            max-height 0.25s ease,
+            opacity 0.2s ease,
+            margin 0.2s ease,
+            padding 0.2s ease;
+    }
+
+    /* Collapsed state is driven by JS for the sticky header (see header.js) */
+    #header-container .is-collapsed {
+        max-height: 0 !important;
+        opacity: 0;
+
+        /* Optional: fully remove spacing */
+        margin: 0 !important;
+        padding: 0 !important;
     }
 
     #header-container .logo {
