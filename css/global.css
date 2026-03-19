@@ -3688,6 +3688,71 @@ header.LoginHeader {
     line-height: 100%; /* 18px */
 }
 
+
+/* Test search filter panel */
+header {
+    position: relative;
+    /* z-index: 10; */
+}
+
+/* .header-search-field {
+    position: relative;
+} */
+
+/* #search-form {
+    position: relative;
+} */
+
+.input-wrapper {
+    position: relative;
+    z-index: 2;
+}
+
+/* Sliding panel */
+#search-filters-panel {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
+
+    padding: 1rem;
+    border: 1px solid #ddd;
+    /* border-radius: 0 0 12px 12px; */
+    background: #fff;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-12px);
+    transition:
+        opacity 0.22s ease,
+        transform 0.22s ease,
+        visibility 0.22s ease;
+
+    z-index: 200;
+
+    border-bottom: 1px solid var(--colour-surface-400, #D4D5D2);
+    background: var(--colour-surface-100, #FAFAFA);
+}
+
+#search-form.filters-open #search-filters-panel {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* #search-filters-panel[hidden] {
+    display: block;
+    pointer-events: none;
+}
+
+#search-form.filters-open #search-filters-panel[hidden] {
+    pointer-events: auto;
+} */
+/* END of Test search filter panel */
+
+
 /* ===== Responsive layouts ===== */
 
 @media(max-width: 1366px) {

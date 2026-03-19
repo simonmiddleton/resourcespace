@@ -18,7 +18,26 @@ ResourceSpace.Modules.Header = (() => {
         header.querySelector('.header-search-field .input-wrapper > button').addEventListener('click', (e) => {
             // todo: show filter menu (note: in responsive, change button class to "icon-circle-x")
             e.stopPropagation();
-            alert('Clicked header-search-field button!');
+
+            // WIP!!!
+            const form = document.getElementById('search-form');
+            const panel = document.getElementById('search-filters-panel');
+            const isOpen = form.classList.toggle('filters-open');
+            e.target.setAttribute('aria-expanded', String(isOpen));
+
+            if (isOpen) {
+                panel.hidden = false;
+            } else {
+                panel.addEventListener(
+                    'transitionend',
+                    () => {
+                        if (!form.classList.contains('filters-open')) {
+                            panel.hidden = true;
+                        }
+                    },
+                    { once: true }
+                );
+            }
         });
 
         // todo: see if we can abstract this for settings, messages and user profile

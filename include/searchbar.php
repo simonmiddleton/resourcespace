@@ -1,5 +1,4 @@
 <?php
-include_once 'render_functions.php';
 
 # Store key variables to revert later so that we don't interfere with values that still need to be processed by search.php
 $stored_restypes = (isset($restypes) ? $restypes : '');

@@ -336,8 +336,9 @@ $page_title = get_page_title($pagename, pluginname());
                             <div class="input-wrapper">
                                 <?php render_icon_wrapper_component(Icon::Search); ?>
                                 <input type="text" name="search" aria-label="<?php echo escape($lang["simplesearch"]); ?>">
-                                <button type="button" class="icon-sliders-horizontal"></button>
+                                <button type="button" class="icon-sliders-horizontal" aria-expanded="false" aria-controls="search-filters-panel"></button>
                             </div>
+                            <?php render_search_filter_panel(); ?>
                         </form>
                     </div>
 
