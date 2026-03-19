@@ -4478,7 +4478,9 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
                 $i++;
                 }
 
-            $extra   .= $template;
+            $extra .= $template;
+            $extra .= $dismisslink ? "<div class=\"clearerleft\"></div><div class=\"RecordStory\">{$dismisslink}</div>" : "";
+
             }
         else
             {
