@@ -82,7 +82,7 @@
             "@composer audit",
             "@build:applyDownstreamChanges",
             "svn add --no-ignore --force vendor/",
-            "svn rm .svnignore phpcs.xml.dist phpstan-baseline.neon phpstan.neon.dist rector.php tests/",
+            "svn rm .svnignore phpcs.xml.dist phpstan-baseline.neon phpstan.neon.dist rector.php tests/ js/build_js_dependencies.js js/build_bump_cache_busting_version.js",
             "echo Release build completed!",
             "svn status --depth=immediates"
         ]

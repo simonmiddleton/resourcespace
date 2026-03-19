@@ -2491,8 +2491,9 @@ function add_saved_search_items(
         ]),
         $fc_branch_path_keys
     );
-    $resourcesnotadded = array(); # record the resources that are not added so we can display to the user
+    $resourcesnotadded = array(); # Record the resources that are not added due to archive state
     $blockedtypes = array();# Record the resource types that are not added
+    $blockedshares = array(); # Record the resources that are not added due to share permissions
 
     foreach ($results["data"] as $result) {
         $resource = $result["ref"];
@@ -2504,8 +2505,13 @@ function add_saved_search_items(
         }
 
         if (count($keys) > 0) {
-            if (($archivestatus < 0 && !$collection_allow_not_approved_share) || !can_share_resource($resource)) {
+            if ($archivestatus < 0 && !$collection_allow_not_approved_share) {
                 $resourcesnotadded[$resource] = $result;
+                continue;
+            }
+
+            if (!can_share_resource($resource)) { 
+                $blockedshares[$resource] = $result;
                 continue;
             }
 
@@ -2551,7 +2557,7 @@ function add_saved_search_items(
         $n = 0;
         foreach ($results["data"] as $result) {
             $resource = $result["ref"];
-            if (!isset($resourcesnotadded[$resource]) && !in_array($result["resource_type"], $collection_block_restypes)) {
+            if (!isset($resourcesnotadded[$resource]) && !in_array($result["resource_type"], $collection_block_restypes) && !isset($blockedshares[$resource])) {
                 ps_query("DELETE FROM collection_resource WHERE resource=? AND collection=?", array("i",$resource,"i",$collection));
                 ps_query("INSERT INTO collection_resource(resource,collection,sortorder) VALUES (?,?,?)", array("i",$resource,"i",$collection,"s",$n));
 
@@ -2566,12 +2572,15 @@ function add_saved_search_items(
     clear_query_cache('themeimage');
     clear_query_cache('col_total_ref_count_w_perm');
 
-    if (!empty($resourcesnotadded) || count($blockedtypes) > 0) {
+    if (!empty($resourcesnotadded) || count($blockedtypes) > 0 || !empty($blockedshares)) {
         # Translate to titles only for displaying them to the user
         global $view_title_field;
         $titles = array();
         foreach ($resourcesnotadded as $resource) {
             $titles[] = i18n_get_translated($resource['field' . $view_title_field]);
+        }
+        foreach ($blockedshares as $resource) {
+            $titles['blockedshares'][] = i18n_get_translated($resource['field' . $view_title_field]);
         }
         if (count($blockedtypes) > 0) {
             $blocked_restypes = array_unique($blockedtypes);
@@ -3022,6 +3031,8 @@ function swap_collection_order($resource1, $resource2, $collection)
  */
 function update_collection_order($neworder, $collection, $offset = 0)
 {
+    global $pagename, $username;
+
     if (!is_array($neworder)) {
         exit("Error: invalid input to update collection function.");
     }
@@ -3041,6 +3052,22 @@ function update_collection_order($neworder, $collection, $offset = 0)
     }
     $updatesql = "update collection_resource set sortorder=99999 WHERE collection= ? and sortorder is NULL";
     ps_query($updatesql, ['i', $collection]);
+    // Only log reordering if there is something new to log, i.e. different user, ordered from a different page
+    $last_log = get_collection_log($collection, 1);
+    if (
+        (
+            count($last_log['data']) > 0
+            && (
+                $last_log['data'][0]['type'] !== LOG_CODE_COLLECTION_REORDER 
+                || date('Y-m-d', strtotime($last_log['data'][0]['date'])) !== date('Y-m-d')
+                || strpos($last_log['data'][0]['notes'], $pagename) == 0
+                || $last_log['data'][0]['username'] !== $username
+            )
+        )
+        || count($last_log['data']) == 0
+    ) {
+        collection_log($collection, LOG_CODE_COLLECTION_REORDER, null, "Collection reordered via " . $pagename);
+    }
 }
 
 /**

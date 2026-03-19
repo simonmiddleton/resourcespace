@@ -249,6 +249,10 @@ if ($order_by_resource_id) {
     $sort_order_fields['resourceid'] = $lang['resourceid'];
 }
 
+if ($random_sort) {
+    $sort_order_fields['random'] = $lang['random'];
+}
+
 $sort_order_fields['resourcetype'] = $lang['type'];
 
 foreach ($sort_fields as $field) {

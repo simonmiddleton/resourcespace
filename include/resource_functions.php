@@ -7,7 +7,7 @@ use Montala\ResourceSpace\CommandPlaceholderArg;
 
 $GLOBALS['get_resource_path_fpcache'] = array();
 /**
-* Get resource path/ resource URL/ download URL for this resource
+* Get resource path / resource URL / download URL for this resource
 *
 * IMPORTANT: the download URL should always be used client side (public)
 *            whilst filstore path is private for internal use only
@@ -16,46 +16,38 @@ $GLOBALS['get_resource_path_fpcache'] = array();
 * @uses get_alternative_file()
 * @uses get_resource_data()
 *
-* @param integer $ref              Resource ID
-* @param boolean $getfilepath      Set to TRUE to get the filestore (physical) path
-* @param string  $size             Specify which size of the resource should be returned. Use '' for original file
-* @param boolean $generate         Generate folder if not found
-* @param string  $extension        Extension of the file we are looking for. For original file, this would be the file
-*                                  extension, otherwise use the preview extension (e.g image preview will have JPG
-*                                  while video preview can have MP4 or others)
-* @param boolean $scramble         Set to TRUE to get the scrambled folder (requires scramble key for it to work)
-* @param integer $page             For documents, use the page number we are trying to get the preview of.
-* @param boolean $watermarked      Get the watermark version?
-* @param int     $file_modified    Specify when the file was last modified as a Unix timestamp
-* @param integer $alternative      ID of the alternative file
-* @param boolean $includemodified  Show when the file was last modified
+* @param  integer       $ref               Resource ID
+* @param  boolean       $getfilepath       Set to TRUE to get the filestore (physical) path
+* @param  string|null   $size              Specify which size of the resource should be returned. Use '' for original file
+* @param  boolean       $generate          Generate folder if not found
+* @param  string|null   $extension         Extension of the file we are looking for. For original file, this would be the file
+*                                          extension, otherwise use the preview extension (e.g image preview will have JPG
+*                                          while video preview can have MP4 or others)
+* @param  boolean       $scramble          Set to TRUE to get the scrambled folder (requires scramble key for it to work)
+* @param  integer       $page              For documents, use the page number we are trying to get the preview of.
+* @param  boolean       $watermarked       Get the watermark version?
+* @param  string|null   $file_modified     Specify when the file was last modified as a Unix timestamp
+* @param  integer       $alternative       ID of the alternative file
+* @param  boolean       $includemodified   Show when the file was last modified
 *
-* @return string
+* @return string   resource path / resource URL / download URL
 */
 function get_resource_path(
-    $ref,
-    $getfilepath,
-    $size = '',
-    $generate = true,
-    $extension = 'jpg',
-    $scramble = true,
-    $page = 1,
-    $watermarked = false,
-    $file_modified = '',
-    $alternative = -1,
-    $includemodified = true
-) {
-    global $storagedir, $originals_separate_storage, $fstemplate_alt_threshold, $fstemplate_alt_storagedir,
-    $fstemplate_alt_storageurl, $fstemplate_alt_scramblekey, $scramble_key, $hide_real_filepath,
-    $migrating_scrambled, $scramble_key_old, $filestore_evenspread, $filestore_migrate,
-    $baseurl, $k, $get_resource_path_extra_download_query_string_params;
-
-    $int_vars = [&$ref, &$page, &$alternative];
-    foreach ($int_vars as $var) {
-        if (!is_int_loose($var)) {
-            $var = (int) $var;
-        }
-    }
+    int $ref,
+    bool $getfilepath,
+    ?string $size = '',
+    bool $generate = true,
+    ?string $extension = 'jpg',
+    bool $scramble = true,
+    int $page = 1,
+    bool $watermarked = false,
+    ?string $file_modified = '',
+    int $alternative = -1,
+    bool $includemodified = true): string
+{
+    global $storagedir, $originals_separate_storage, $fstemplate_alt_threshold, $fstemplate_alt_storagedir, $fstemplate_alt_storageurl,
+    $fstemplate_alt_scramblekey, $scramble_key, $hide_real_filepath, $migrating_scrambled, $scramble_key_old, $filestore_evenspread,
+    $filestore_migrate, $baseurl, $k, $get_resource_path_extra_download_query_string_params;
 
     $size = safe_file_name((string) $size);
     $extension = safe_file_name((string) $extension);
@@ -1009,26 +1001,6 @@ function save_resource_data($ref, $multi, $autosave_field = "")
                 }
             } // End of if not a fixed list field
 
-            // Determine whether a required field has a default for the user
-            $field_has_default_for_user = false;
-            if ($userresourcedefaults != '') {
-                foreach (explode(';', $userresourcedefaults) as $rule) {
-                    $rule_detail         = explode('=', trim($rule));
-                    $field_shortname     = $rule_detail[0];
-                    $field_default_value = $rule_detail[1];
-                    if ($field_shortname  == $fields[$n]['name'] && $field_default_value != "") {
-                        $field_has_default_for_user = true;
-                        break;
-                    }
-                }
-            }
-
-            // Populate empty field with the default if necessary
-            if ($field_has_default_for_user && strlen((string) $val) == 0) {
-                $val = $field_default_value;
-                $new_checksums[$fields[$n]['ref']] = md5(trim(preg_replace('/\s\s+/', ' ', $val)));
-            }
-
             if (
                 $fields[$n]['required'] == 1
                 && check_display_condition($n, $fields[$n], $fields, false, $ref)
@@ -1037,16 +1009,6 @@ function save_resource_data($ref, $multi, $autosave_field = "")
                     (in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES) && count($ui_selected_node_values) == 0)
                     // Required continuous field with no value is a candidate for error
                     || (!in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES) && trim(strip_leading_comma($val)) == '')
-                )
-                && (
-                    // An existing resource node field with neither any nodes submitted nor a resource default
-                    ($ref > 0 && in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES) && count($ui_selected_node_values) == 0 && !$field_has_default_for_user)
-                    // An existing resource continuous field with neither an input value nor a resource default
-                    || ($ref > 0 && !in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES) && strlen((string) $val) == 0 && !$field_has_default_for_user)
-                    // A template node field with neither any nodes submitted nor a resource default
-                    || ($ref < 0 && in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES) && count($ui_selected_node_values) == 0 && !$field_has_default_for_user)
-                    // A template continuous field with neither an input value nor a resource default
-                    || ($ref < 0 && !in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES) && strlen((string) $val) == 0 && !$field_has_default_for_user)
                 )
                 // Not a metadata template
                 && !$is_template
@@ -1171,14 +1133,14 @@ function save_resource_data($ref, $multi, $autosave_field = "")
     if (count($nodes_to_add) > 0) {
         add_resource_nodes($ref, $nodes_to_add, false, false);
     }
+    db_end_transaction("update_resource_node");
+
     log_node_changes($ref, $new_node_values, $all_current_field_nodes, "", $oldnodenames);
 
     if (count($nodes_check_delete) > 0) {
         // This has to be after call to log_node_changes() or nodes cannot be resolved
         check_delete_nodes($nodes_check_delete);
     }
-
-    db_end_transaction("update_resource_node");
 
     // Autocomplete any blank fields without overwriting any existing metadata
     $autocomplete_fields = autocomplete_blank_fields($ref, false, true);
@@ -2614,6 +2576,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log 
             if (count($nodes_to_add) > 0) {
                 add_resource_nodes($resource, $nodes_to_add, false, false);
             }
+            db_end_transaction("update_field_{$field}");
 
             // Update log
             if ($log && (count($nodes_to_add) > 0 || count($nodes_to_remove) > 0)) {
@@ -2621,8 +2584,6 @@ function update_field($resource, $field, $value, array &$errors = array(), $log 
                 // Don't need to log this later
                 $log = false;
             }
-
-            db_end_transaction("update_field_{$field}");
 
             if ($fieldinfo['type'] == FIELD_TYPE_CATEGORY_TREE) {
                 $all_treenodes = get_cattree_nodes_ordered($field, $resource, false); # True means get all nodes; False means get selected nodes
@@ -5812,7 +5773,7 @@ function get_page_count($resource, $alternative = -1)
         $file = get_resource_path($ref, true, "", false, "pdf");
     } elseif ($alternative == -1) {
         # some unoconv files are not pdfs but this needs to use the auto-alt file
-        $alt_ref = ps_value("select ref value from resource_alt_files where resource=? and unoconv=1", array("i",$ref), "");
+        $alt_ref = ps_value("select ref value from resource_alt_files where resource=? and unoconv=1", array("i",$ref), -1);
         $file = get_resource_path($ref, true, "", false, "pdf", -1, 1, false, "", $alt_ref);
     } else {
         $file = get_resource_path($ref, true, "", false, "pdf", -1, 1, false, "", $alternative);
@@ -8778,7 +8739,7 @@ function revert_resource_file($resource, $logentry, $createpreviews = true)
     ps_query("UPDATE resource_log SET previous_file_alt_ref=? WHERE ref=?", $parameters);
 
     // Now perform the revert, copy and recreate previews.
-    $revert_alt_ref = $logentry["previous_file_alt_ref"];
+    $revert_alt_ref = $logentry["previous_file_alt_ref"] ?? -1;
     $revert_ext = ps_value("SELECT file_extension value FROM resource_alt_files WHERE ref=?", array("i",$revert_alt_ref), "");
 
     $revert_path = get_resource_path($resource, true, '', true, $revert_ext, -1, 1, false, "", $revert_alt_ref);

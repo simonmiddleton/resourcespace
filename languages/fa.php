@@ -2219,7 +2219,6 @@ $lang["userpreferences"] = 'ترجیحات';
 $lang["modifyuserpreferencesintro"] = 'گزینه‌های این صفحه به شما اجازه می‌دهند تا تغییراتی در برخی از قابلیت‌ها و رابط کاربری که در دسترس شما هستند، ایجاد کنید.';
 $lang["userpreference_colourtheme"] = 'تم رنگ';
 $lang["userpreferencecolourtheme"] = 'تم رنگ رابط کاربری';
-$lang["userpreference_user_interface"] = 'رابط کاربری';
 $lang["userpreference_enable_option"] = 'فعال کردن';
 $lang["userpreference_disable_option"] = 'غیرفعال کردن';
 $lang["userpreference_default_sort_label"] = 'مرتب‌سازی پیش‌فرض';
@@ -2269,7 +2268,6 @@ $lang["systemconfig_use_theme_as_home_label"] = 'آیا از صفحه "مجمو�
 $lang["systemconfig_use_recent_as_home_label"] = 'آیا از صفحه "تازه اضافه شده‌ها" به عنوان صفحه اصلی استفاده شود؟';
 $lang["systemconfig_workflow"] = 'گردش کار';
 $lang["systemconfig_minyear_label"] = 'سال اولین رکورد منبع';
-$lang["systemconfig_user_accounts"] = 'حساب‌های کاربری';
 $lang["systemconfig_allow_account_request_label"] = 'اجازه به کاربران برای درخواست حساب‌ها';
 $lang["systemconfig_terms_download_label"] = 'شرایط و ضوابط برای دانلود';
 $lang["systemconfig_terms_upload_label"] = 'شرایط و ضوابط برای اشتراک‌گذاری بارگذاری‌های خارجی';
@@ -2629,7 +2627,6 @@ $lang["locked_resource_search"] = 'منابع قفل شده';
 $lang["autocomplete_log_note"] = '(تکمیل خودکار)';
 $lang["posted-file-not-found"] = 'فایلی که ارسال شده پیدا نشد';
 $lang["error-theme-missing"] = 'مجموعه ویژه وجود ندارد یا مشخص نشده است.';
-$lang["system_config_search_engines"] = 'موتورهای جستجو';
 $lang["search_engine_noindex"] = 'درخواست کنید که موتورهای جستجو این سایت را فهرست نکنند';
 $lang["search_engine_noindex_external_shares"] = 'درخواست کنید که موتورهای جستجو اشتراک‌های خارجی را ایندکس نکنند';
 $lang["job_details"] = 'جزئیات کار';

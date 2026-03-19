@@ -79,6 +79,8 @@ $mysqli_ssl_verify_server_cert = true;
 
 $mysql_sort_buffer_size = 0;
 
+// Applying changes to the database in a single transaction for performance improvement.
+$use_db_transaction = true;
 
 $baseurl = "http://my.site/resourcespace"; // The 'base' web address for this installation. Note: no trailing slash
 $email_from = ""; // Where system e-mails appear to come from. Written to config.php by setup.php
@@ -581,6 +583,7 @@ $show_powered_by_logo = true;
 // Enable sorting resources in other ways:
 $colour_sort = true;
 $popularity_sort = true;
+$random_sort = false; 
 
 // What is the default sort order?
 // Options are date, colour, relevance, popularity, country

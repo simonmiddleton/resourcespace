@@ -124,6 +124,7 @@ define('LOG_CODE_SET_NO_FILE', 'NOFIL');
 define('LOG_CODE_UNSET_NO_FILE', 'FIL');
 define('LOG_CODE_COLLECTION_REMOVED_RESOURCE', 'r');
 define('LOG_CODE_COLLECTION_REMOVED_ALL_RESOURCES', 'R');
+define('LOG_CODE_COLLECTION_REORDER', 'O');
 define('LOG_CODE_COLLECTION_DELETED_ALL_RESOURCES', 'D');
 define('LOG_CODE_COLLECTION_DELETED_RESOURCE', 'd');
 define('LOG_CODE_COLLECTION_ADDED_RESOURCE', 'a');
@@ -306,7 +307,7 @@ $permitted_html_attributes = array('id', 'class', 'style');
 // Standard paths (e.g libraries)
 $jquery_path = "/lib/js/jquery-3.6.0.min.js";
 $jquery_ui_path = "/lib/js/jquery-ui-1.13.2.min.js";
-define('LIB_OPENSEADRAGON', '/lib/openseadragon_2.4.2');
+const LIB_OPENSEADRAGON = '/lib/openseadragon';
 
 // Define dropdown action categories
 define('ACTIONGROUP_RESOURCE', 1);
@@ -1091,7 +1092,7 @@ const FIELD_SORT_METHODS = [
 // The preview attempts for a resource are reset if preview generation is manually initiated
 const SYSTEM_MAX_PREVIEW_ATTEMPTS = 5;
 
-const NON_PREVIEW_EXTENSIONS = ['zip'];
+const NON_PREVIEW_EXTENSIONS = ['zip','fla'];
 
 $offline_job_list = [
     0 => ['name' => 'Core',
