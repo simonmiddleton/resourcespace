@@ -38,7 +38,6 @@ $lang["perpage"] = " لكل صفحة ";
 
 $lang["gotoadvancedsearch"] = " انتقل إلى بحث متقدم ";
 $lang["viewnewmaterial"] = " عرض المواد الجديدة ";
-$lang["researchrequestservice"] = " بحث طلب الخدمة ";
 
 # Admin
 $lang["manageresources"] = " إدارة الموارد ";

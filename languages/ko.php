@@ -233,7 +233,6 @@ $lang["stopbutton"] = '중지';
 $lang["loadmorebutton"] = '더 불러오기';
 $lang["gotoadvancedsearch"] = '고급 검색';
 $lang["viewnewmaterial"] = '새 자료 보기';
-$lang["researchrequestservice"] = '연구 요청 서비스';
 $lang["manageresources"] = '자원';
 $lang["overquota"] = '디스크 공간 할당량 초과; 리소스를 추가할 수 없습니다';
 $lang["managearchiveresources"] = '리소스 보관';

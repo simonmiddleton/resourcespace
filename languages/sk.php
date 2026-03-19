@@ -251,7 +251,6 @@ $lang["loadmorebutton"] = "Načítať viac";
 
 $lang["gotoadvancedsearch"] = "Pokročilé vyhľadávanie";
 $lang["viewnewmaterial"] = "Zobraziť nový materiál";
-$lang["researchrequestservice"] = "Služba výskumných žiadostí";
 
 # Admin
 $lang["manageresources"] = "Správa zdrojov";

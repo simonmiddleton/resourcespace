@@ -30,7 +30,6 @@ $lang["list"] = "Lista";
 $lang["perpage"] = "po stranici";
 $lang["gotoadvancedsearch"] = "Go to Advanced Search";
 $lang["viewnewmaterial"] = "Pogledajte novi materijal";
-$lang["researchrequestservice"] = "Research Service Request";
 $lang["manageresources"] = "Upravljanje resursima";
 $lang["overquota"] = "Iznad prostora na disku kvota; ne možete dodati resursi";
 $lang["managearchiveresources"] = "Arhiva Upravljanje resursima";

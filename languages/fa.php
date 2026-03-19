@@ -233,7 +233,6 @@ $lang["stopbutton"] = 'توقف';
 $lang["loadmorebutton"] = 'بارگذاری بیشتر';
 $lang["gotoadvancedsearch"] = 'جستجوی پیشرفته';
 $lang["viewnewmaterial"] = 'مشاهده مواد جدید';
-$lang["researchrequestservice"] = 'خدمات درخواست تحقیق';
 $lang["manageresources"] = 'منابع';
 $lang["overquota"] = 'بیش از سهمیه فضای دیسک؛ نمی‌توان منابع اضافه کرد';
 $lang["managearchiveresources"] = 'بایگانی منابع';

@@ -233,7 +233,6 @@ $lang["stopbutton"] = 'روکیں';
 $lang["loadmorebutton"] = 'مزید لوڈ کریں';
 $lang["gotoadvancedsearch"] = 'اعلیٰ تلاش';
 $lang["viewnewmaterial"] = 'نیا مواد دیکھیں';
-$lang["researchrequestservice"] = 'تحقیقی درخواست سروس';
 $lang["manageresources"] = 'وسائل';
 $lang["overquota"] = 'ڈسک اسپیس کوٹہ سے تجاوز؛ وسائل شامل نہیں کر سکتے';
 $lang["managearchiveresources"] = 'وسائل کو محفوظ کریں';

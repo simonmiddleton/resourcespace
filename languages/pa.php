@@ -232,7 +232,6 @@ $lang["stopbutton"] = 'ਰੋਕੋ';
 $lang["loadmorebutton"] = 'ਹੋਰ ਲੋਡ ਕਰੋ';
 $lang["gotoadvancedsearch"] = 'ਉੱਨਤ ਖੋਜ';
 $lang["viewnewmaterial"] = 'ਨਵਾਂ ਸਮੱਗਰੀ ਵੇਖੋ';
-$lang["researchrequestservice"] = 'ਖੋਜ ਬੇਨਤੀ ਸੇਵਾ';
 $lang["manageresources"] = 'ਸੰਸਾਧਨ';
 $lang["overquota"] = 'ਡਿਸਕ ਸਪੇਸ ਕੋਟਾ ਤੋਂ ਵੱਧ; ਸਰੋਤ ਨਹੀਂ ਜੋੜ ਸਕਦੇ';
 $lang["managearchiveresources"] = 'ਸੰਸਾਧਨ ਆਰਕਾਈਵ ਕਰੋ';

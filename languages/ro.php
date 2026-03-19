@@ -232,7 +232,6 @@ $lang["stopbutton"] = 'Oprire';
 $lang["loadmorebutton"] = 'Încărcați mai multe';
 $lang["gotoadvancedsearch"] = 'Căutare avansată';
 $lang["viewnewmaterial"] = 'Vizualizează materialul nou';
-$lang["researchrequestservice"] = 'Serviciu de cerere de cercetare';
 $lang["manageresources"] = 'Resurse';
 $lang["overquota"] = 'Peste cota de spațiu pe disc; nu se pot adăuga resurse.';
 $lang["managearchiveresources"] = 'Arhivarea resurselor';

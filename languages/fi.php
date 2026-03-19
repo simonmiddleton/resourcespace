@@ -191,7 +191,6 @@ $lang["perpage"] = "per sivu";
 
 $lang["gotoadvancedsearch"] = "Mene kehittyneempään hakuun";
 $lang["viewnewmaterial"] = "Katso uutta materiaalia";
-$lang["researchrequestservice"] = "Tutkimuspyyntöhaku";
 
 # Admin
 $lang["manageresources"] = "Hallitse resursseja";

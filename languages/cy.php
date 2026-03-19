@@ -233,7 +233,6 @@ $lang["stopbutton"] = 'Stop';
 $lang["loadmorebutton"] = 'Llwytho mwy';
 $lang["gotoadvancedsearch"] = 'Chwilio uwch';
 $lang["viewnewmaterial"] = 'Gweld deunydd newydd';
-$lang["researchrequestservice"] = 'Gwasanaeth cais ymchwil';
 $lang["manageresources"] = 'Adnoddau';
 $lang["overquota"] = 'Dros y cwota lle ar ddisg; ni ellir ychwanegu adnoddau';
 $lang["managearchiveresources"] = 'Archifio adnoddau';

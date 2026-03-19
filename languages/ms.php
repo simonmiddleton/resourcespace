@@ -240,7 +240,6 @@ $lang["stopbutton"] = 'Hentikan';
 $lang["loadmorebutton"] = 'Muat lebih banyak';
 $lang["gotoadvancedsearch"] = 'Carian lanjutan';
 $lang["viewnewmaterial"] = 'Lihat bahan baru';
-$lang["researchrequestservice"] = 'Perkhidmatan permintaan penyelidikan';
 $lang["manageresources"] = 'Sumber';
 $lang["overquota"] = 'Melebihi kuota ruang cakera; tidak dapat menambah sumber';
 $lang["managearchiveresources"] = 'Arsipkan sumber';

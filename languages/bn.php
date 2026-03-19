@@ -233,7 +233,6 @@ $lang["stopbutton"] = 'থামুন';
 $lang["loadmorebutton"] = 'আরও লোড করুন';
 $lang["gotoadvancedsearch"] = 'উন্নত অনুসন্ধান';
 $lang["viewnewmaterial"] = 'নতুন উপাদান দেখুন';
-$lang["researchrequestservice"] = 'গবেষণা অনুরোধ সেবা';
 $lang["manageresources"] = 'সম্পদসমূহ';
 $lang["overquota"] = 'ডিস্ক স্পেস কোটার বাইরে; রিসোর্স যোগ করা যাবে না';
 $lang["managearchiveresources"] = 'আর্কাইভ রিসোর্সসমূহ';

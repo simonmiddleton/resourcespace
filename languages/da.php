@@ -30,7 +30,6 @@ $lang["list"] = "Liste";
 $lang["perpage"] = "pr side";
 $lang["gotoadvancedsearch"] = "Gå til Avanceret Søgning";
 $lang["viewnewmaterial"] = "Vis nyt materiale";
-$lang["researchrequestservice"] = "Anmodning om søgning";
 $lang["manageresources"] = "Behandle ressourcer";
 $lang["overquota"] = "Over diskplads kvote kan ikke tilføje ressourcer";
 $lang["managearchiveresources"] = "Administrer arkivsamlinger";

@@ -232,7 +232,6 @@ $lang["stopbutton"] = 'Dừng lại';
 $lang["loadmorebutton"] = 'Tải thêm';
 $lang["gotoadvancedsearch"] = 'Tìm kiếm nâng cao';
 $lang["viewnewmaterial"] = 'Xem tài liệu mới';
-$lang["researchrequestservice"] = 'Dịch vụ yêu cầu nghiên cứu';
 $lang["manageresources"] = 'Tài nguyên';
 $lang["overquota"] = 'Vượt quá hạn mức dung lượng đĩa; không thể thêm tài nguyên';
 $lang["managearchiveresources"] = 'Lưu trữ tài nguyên';

@@ -98,7 +98,6 @@ $lang["perpage"] = "pr. side";
 
 $lang["gotoadvancedsearch"] = "Avansert søk";
 $lang["viewnewmaterial"] = "Vis nytt materiale";
-$lang["researchrequestservice"] = "Materialforespørsel";
 
 # Admin
 $lang["manageresources"] = "Administrer materiale";

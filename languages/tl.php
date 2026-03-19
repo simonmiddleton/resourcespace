@@ -240,7 +240,6 @@ $lang["stopbutton"] = 'Itigil';
 $lang["loadmorebutton"] = 'Mag-load pa ng higit pang mga resulta';
 $lang["gotoadvancedsearch"] = 'Sopistikadong paghahanap';
 $lang["viewnewmaterial"] = 'Tingnan ang bagong materyal';
-$lang["researchrequestservice"] = 'Serbisyo ng kahilingan sa pananaliksik';
 $lang["manageresources"] = 'Mga Yaman';
 $lang["overquota"] = 'Sobra sa quota ng espasyo sa disk; hindi maidaragdag ang mga mapagkukunan';
 $lang["managearchiveresources"] = 'I-archive ang mga mapagkukunan';

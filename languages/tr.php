@@ -232,7 +232,6 @@ $lang["stopbutton"] = 'Durdur';
 $lang["loadmorebutton"] = 'Daha fazla yükle';
 $lang["gotoadvancedsearch"] = 'Gelişmiş arama';
 $lang["viewnewmaterial"] = 'Yeni materyali görüntüle';
-$lang["researchrequestservice"] = 'Araştırma talebi hizmeti';
 $lang["manageresources"] = 'Kaynaklar';
 $lang["overquota"] = 'Disk alanı kotası aşıldı; kaynak eklenemiyor';
 $lang["managearchiveresources"] = 'Arşiv kaynakları';

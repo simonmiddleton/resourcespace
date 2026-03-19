@@ -36,7 +36,6 @@ $lang["perpage"] = "per page";
 
 $lang["gotoadvancedsearch"] = "詳細検索へ";
 $lang["viewnewmaterial"] = "新着の参照";
-$lang["researchrequestservice"] = "調査依頼サービス";
 
 # Admin
 $lang["manageresources"] = "リソース管理";

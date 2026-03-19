@@ -231,7 +231,6 @@ $lang["stopbutton"] = 'Zastavit';
 $lang["loadmorebutton"] = 'Načíst více';
 $lang["gotoadvancedsearch"] = 'Pokročilé vyhledávání';
 $lang["viewnewmaterial"] = 'Zobrazit nový materiál';
-$lang["researchrequestservice"] = 'Služba žádosti o výzkum';
 $lang["manageresources"] = 'Zdroje';
 $lang["overquota"] = 'Překročena kvóta diskového prostoru; nelze přidat zdroje';
 $lang["managearchiveresources"] = 'Archivovat zdroje';

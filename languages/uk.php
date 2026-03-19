@@ -233,7 +233,6 @@ $lang["stopbutton"] = 'Зупинити';
 $lang["loadmorebutton"] = 'Завантажити більше';
 $lang["gotoadvancedsearch"] = 'Розширений пошук';
 $lang["viewnewmaterial"] = 'Переглянути новий матеріал';
-$lang["researchrequestservice"] = 'Служба запитів на дослідження';
 $lang["manageresources"] = 'Ресурси';
 $lang["overquota"] = 'Перевищено квоту дискового простору; неможливо додати ресурси';
 $lang["managearchiveresources"] = 'Архівувати ресурси';

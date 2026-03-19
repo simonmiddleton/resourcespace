@@ -31,7 +31,6 @@ $lang["list"] = "Список";
 $lang["perpage"] = "за страницу";
 $lang["gotoadvancedsearch"] = "Перейти к расширенному поиску";
 $lang["viewnewmaterial"] = "Посмотреть новый объект";
-$lang["researchrequestservice"] = "служба запроса на исследование";
 $lang["manageresources"] = "Управление объектами";
 $lang["overquota"] = "Квота дискового пространтства превышена, невозможно добавить объект";
 $lang["managearchiveresources"] = "Управление архивом объектов";

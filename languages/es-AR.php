@@ -1101,7 +1101,6 @@ $lang["pause"] = 'Pausa';
 $lang["filterbutton"] = 'Filtro';
 $lang["stopbutton"] = 'Detener';
 $lang["loadmorebutton"] = 'Cargar más';
-$lang["researchrequestservice"] = 'Servicio de solicitud de investigación';
 $lang["report"] = 'Informe';
 $lang["treeobjecttype-report"] = 'Informe';
 $lang["systemlog"] = 'Registro';

@@ -240,7 +240,6 @@ $lang["stopbutton"] = 'Спыніце';
 $lang["loadmorebutton"] = 'Загрузіць больш';
 $lang["gotoadvancedsearch"] = 'Пашыраны пошук';
 $lang["viewnewmaterial"] = 'Прагляд новага матэрыялу';
-$lang["researchrequestservice"] = 'Служба запытаў на даследаванні';
 $lang["manageresources"] = 'Рэсурсы';
 $lang["overquota"] = 'Перасягнуты ліміт прасторы на дыску; немагчыма дадаць рэсурсы';
 $lang["managearchiveresources"] = 'Архіваваць рэсурсы';

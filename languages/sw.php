@@ -233,7 +233,6 @@ $lang["stopbutton"] = 'Simamisha';
 $lang["loadmorebutton"] = 'Pakia zaidi';
 $lang["gotoadvancedsearch"] = 'Utafutaji wa hali ya juu';
 $lang["viewnewmaterial"] = 'Tazama nyenzo mpya';
-$lang["researchrequestservice"] = 'Huduma ya ombi la utafiti';
 $lang["manageresources"] = 'Rasilimali';
 $lang["overquota"] = 'Zaidi ya kiwango cha nafasi ya diski; huwezi kuongeza rasilimali';
 $lang["managearchiveresources"] = 'Archiwa rasilimali';

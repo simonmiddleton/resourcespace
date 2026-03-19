@@ -235,7 +235,6 @@ $lang["stopbutton"] = 'หยุด';
 $lang["loadmorebutton"] = 'โหลดเพิ่มเติม';
 $lang["gotoadvancedsearch"] = 'การค้นหาขั้นสูง';
 $lang["viewnewmaterial"] = 'ดูวัสดุใหม่';
-$lang["researchrequestservice"] = 'บริการขอข้อมูลวิจัย';
 $lang["manageresources"] = 'ทรัพยากร';
 $lang["overquota"] = 'เกินโควต้าพื้นที่ดิสก์; ไม่สามารถเพิ่มทรัพยากรได้';
 $lang["managearchiveresources"] = 'จัดเก็บทรัพยากร';

@@ -208,7 +208,6 @@ $lang["perpage"] = "pro Seite";
 
 $lang["gotoadvancedsearch"] = "zur erweiterten Suche";
 $lang["viewnewmaterial"] = "neue Einträge anzeigen";
-$lang["researchrequestservice"] = "Suchanfrage";
 
 # Admin
 $lang["manageresources"] = "Ressourcen";

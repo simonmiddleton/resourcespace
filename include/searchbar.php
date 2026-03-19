@@ -980,21 +980,6 @@ $selected_search_tab = getval("selected_search_tab", "search");
                 ?>
             </div>
             <?php
-            if (($research_request) && (!isset($k) || $k == "") && (checkperm("q"))) { ?>
-                <div id="ResearchBoxPanel">
-                    <div class="SearchSpace">
-                        <h2><?php echo escape($lang["researchrequest"]); ?></h2>
-                        <p><?php echo escape(text("researchrequest")); ?></p>
-                        <div class="HorizontalWhiteNav">
-                            <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl; ?>/pages/research_request.php">
-                                <?php echo LINK_CARET . escape($lang["researchrequestservice"]); ?>
-                            </a>
-                        </div>
-                    </div>
-                    <br />
-                </div>
-            <?php }
-            
             if ($show_powered_by_logo && (get_header_image() != $baseurl . '/gfx/titles/title-black.svg')) { ?>
                 <div class="PoweredByPanel">
                     <a href="https://www.resourcespace.com" target="_blank">

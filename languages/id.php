@@ -36,7 +36,6 @@ $lang["perpage"] = "tiap halaman";
 
 $lang["gotoadvancedsearch"] = "Menuju ke Penelusuran Lanjutan";
 $lang["viewnewmaterial"] = "Lihat Materi Baru";
-$lang["researchrequestservice"] = "Pelayanan Permintaan Penelusuran";
 
 # Admin
 $lang["manageresources"] = "Mengatur Aset";

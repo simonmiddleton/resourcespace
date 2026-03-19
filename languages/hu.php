@@ -233,7 +233,6 @@ $lang["stopbutton"] = 'Állj';
 $lang["loadmorebutton"] = 'Töltsön be többet';
 $lang["gotoadvancedsearch"] = 'Részletes keresés';
 $lang["viewnewmaterial"] = 'Új anyag megtekintése';
-$lang["researchrequestservice"] = 'Kutatási kérelem szolgáltatás';
 $lang["manageresources"] = 'Erőforrások';
 $lang["overquota"] = 'Túl a lemezterület kvótán; nem lehet erőforrásokat hozzáadni';
 $lang["managearchiveresources"] = 'Archívum erőforrások';

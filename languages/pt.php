@@ -36,7 +36,6 @@ $lang["perpage"] = "por página";
 
 $lang["gotoadvancedsearch"] = "Busca Avançada";
 $lang["viewnewmaterial"] = "Visualizar mais novos";
-$lang["researchrequestservice"] = "Requisitar Material";
 
 # Admin
 $lang["manageresources"] = "Gerenciar Material";

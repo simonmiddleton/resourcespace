@@ -35,7 +35,6 @@ $lang["list"] = "Lista";
 $lang["perpage"] = "Por página";
 $lang["gotoadvancedsearch"] = "Ir a búsqueda avanzada";
 $lang["viewnewmaterial"] = "Ver material nuevo";
-$lang["researchrequestservice"] = "Servicio de petición de materiales";
 $lang["allresourcessearchbar"] = "Todos los recursos";
 $lang["allcollectionssearchbar"] = "Todas las colecciones";
 $lang["geographicsearch"] = "Búsqueda Geográfica";

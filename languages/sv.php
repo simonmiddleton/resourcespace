@@ -205,7 +205,6 @@ $lang["perpage"] = "per sida";
 
 $lang["gotoadvancedsearch"] = "Avancerad sökning";
 $lang["viewnewmaterial"] = "Visa nyaste materialet";
-$lang["researchrequestservice"] = "Researchförfrågan";
 
 # Admin
 $lang["manageresources"] = "Hantera material";

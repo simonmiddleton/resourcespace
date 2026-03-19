@@ -37,7 +37,6 @@ $lang["perpage"] = "根据页数";
 
 $lang["gotoadvancedsearch"] = "高级搜索";
 $lang["viewnewmaterial"] = "查看新资料";
-$lang["researchrequestservice"] = "搜索要求服务";
 
 # Admin
 $lang["manageresources"] = "管理资源";

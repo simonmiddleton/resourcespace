@@ -233,7 +233,6 @@ $lang["stopbutton"] = 'रोकें';
 $lang["loadmorebutton"] = 'और लोड करें';
 $lang["gotoadvancedsearch"] = 'उन्नत खोज';
 $lang["viewnewmaterial"] = 'नया सामग्री देखें';
-$lang["researchrequestservice"] = 'अनुसंधान अनुरोध सेवा';
 $lang["manageresources"] = 'संसाधन';
 $lang["overquota"] = 'डिस्क स्पेस कोटा से अधिक; संसाधन नहीं जोड़ सकते';
 $lang["managearchiveresources"] = 'संसाधनों को संग्रहित करें';

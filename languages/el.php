@@ -30,7 +30,6 @@ $lang["list"] = "Κατάλογος";
 $lang["perpage"] = "ανά σελίδα";
 $lang["gotoadvancedsearch"] = "Προχωρημένη Αναζήτηση";
 $lang["viewnewmaterial"] = "Δείτε το νέο υλικό";
-$lang["researchrequestservice"] = "Αίτηση Υπηρεσία Ερευνών";
 $lang["manageresources"] = "Διαχείριση Πόρων";
 $lang["overquota"] = "Πάνω από χώρο στο δίσκο ποσόστωση? Δεν μπορεί να προσθέσει πόρους";
 $lang["managearchiveresources"] = "Αρχείο Διαχείριση Πόρων";

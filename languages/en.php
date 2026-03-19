@@ -267,7 +267,6 @@ $lang["loadmorebutton"] = "Load more";
 
 $lang["gotoadvancedsearch"] = "Advanced search";
 $lang["viewnewmaterial"] = "View new material";
-$lang["researchrequestservice"] = "Research request service";
 
 # Admin
 $lang["manageresources"] = "Resources";
