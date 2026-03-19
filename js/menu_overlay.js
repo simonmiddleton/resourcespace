@@ -50,7 +50,7 @@ ResourceSpace.Modules.MenuOverlay = (() => {
             if (!menu) return;
 
             // If needed to allow clicks within the menu panel, consider separating out some of the logic to a
-            // different listener.
+            // different listener (more specific like the panel itself).
             const openBtn = menu.querySelector('[data-menu-trigger]');
             const closeBtn = menu.querySelector('[data-menu-trigger-close]');
             const trigger = e.target === openBtn || e.target === closeBtn

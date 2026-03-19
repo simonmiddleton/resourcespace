@@ -3829,7 +3829,8 @@ header.LoginHeader {
     }
 
     .menu-panel {
-        /* Left is normally managed by JS (see MenuOverlay module) but in this case we want to control its left & right boundaries */
+        /* Left is normally managed by JS (see MenuOverlay module) but in this case we want to control its left & right
+        boundaries to make it stretch (while having some "space" on the sides. */
         left: var(--space-16, 16px) !important;
         right: var(--space-16, 16px) !important;
     }
