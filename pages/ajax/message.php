@@ -275,7 +275,6 @@ if (basename(__FILE__) == basename($_SERVER['PHP_SELF'])) {
                         } else {
                             actioncountlabel = actioncount.toString();
                         }
-                        console.log(actioncount);
                         jQuery('span.ActionCountPill').html(DOMPurify.sanitize(actioncountlabel)).fadeIn();
                     } else {
                         jQuery('span.ActionCountPill').hide();
