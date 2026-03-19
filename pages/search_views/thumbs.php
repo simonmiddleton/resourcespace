@@ -1,6 +1,6 @@
 <?php
 
-$resource_view_title = i18n_get_translated($result[$n]["field" . $view_title_field]);
+$resource_view_title = i18n_get_translated($result[$n]["field" . $view_title_field] ?? "");
 
 if ($display == "xlthumbs") {
     $resolved_title_trim = $xl_search_results_title_trim;
