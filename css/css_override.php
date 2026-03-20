@@ -28,6 +28,60 @@ if (isset($user_pref_appearance) && !(isset($high_contrast_mode) && $high_contra
     if ($user_pref_appearance == "dark" || $user_pref_appearance == "device") {
         ?>
         /* Core elements */
+
+        :root {
+            /* Colours - Surface - Dark */
+            --colour-surface-50: var(--colour-neutral-1000);
+            --colour-surface-100: var(--colour-neutral-900);
+            --colour-surface-200: var(--colour-neutral-800);
+            --colour-surface-300: var(--colour-neutral-700);
+            --colour-surface-400: var(--colour-neutral-600);
+            --colour-surface-500: var(--colour-neutral-500);
+            --colour-surface-600: var(--colour-neutral-400);
+            --colour-surface-700: var(--colour-neutral-300);
+            --colour-surface-800: var(--colour-neutral-200);
+            --colour-surface-900: var(--colour-neutral-100);
+            --colour-surface-1000: var(--colour-neutral-50);            
+            --colour-surface-breadcrumb-background: var(--colour-surface-200);
+            --colour-surface-card-accent: var(---colour-neutral-800);
+            --colour-surface-card-content-background: var(--colour-neutral-850);
+            --colour-surface-card-icon: var(--colour-neutral-500);
+            --colour-surface-card-icon-background: var(--colour-neutral-800);
+            --colour-surface-card-icon-background-hover: var(--colour-neutral-700);
+            --colour-surface-card-icon-container: var(--colour-transparency-black-30);
+            --colour-surface-card-image-background: var(--colour-neutral-800);
+            --colour-surface-header-background: var(--colour-neutral-950);
+            --colour-surface-mode-surface: var(--colour-neutral-850);
+            --colour-surface-page-title-background: var(--colour-neutral-850);
+            --colour-surface-uploader-background: var(--colour-surface-200);
+
+            /* Colours - Typography - Dark */
+            --colour-typography-50: var(--colour-neutral-1000);
+            --colour-typography-100: var(--colour-neutral-900);
+            --colour-typography-200: var(--colour-neutral-800);
+            --colour-typography-300: var(--colour-neutral-700);
+            --colour-typography-400: var(--colour-neutral-600);
+            --colour-typography-500: var(--colour-neutral-500);
+            --colour-typography-600: var(--colour-neutral-400);
+            --colour-typography-700: var(--colour-neutral-300);
+            --colour-typography-800: var(--colour-neutral-200);
+            --colour-typography-900: var(--colour-neutral-100);
+            --colour-typography-1000: var(--colour-neutral-50);
+
+            /* Form colours - Dark */
+            --form-field-border: var(--colour-neutral-500);
+            --form-focus: var(--colour-brand-primary-default);
+            --form-form-chip-background: var(--colour-neutral-950);
+            --form-form-chip-label: var(--colour-neutral-100);
+            --form-form-chip-stroke: var(--colour-neutral-500);
+            --form-form-divider: var(--colour-neutral-700);
+            --form-form-field-background: var(--colour-surface-800);
+            --form-form-required-background: var(--colour-neutral-950);
+            --form-form-required-stroke: var(--colour-neutral-950);
+            --form-tooltip-background: var(--colour-neutral-850);
+            --form-tooltip-stroke: var(--colour-neutral-500);
+        }
+
         body, html {
             color: white;
             background: #262626;
@@ -389,6 +443,44 @@ if (isset($user_pref_appearance) && !(isset($high_contrast_mode) && $high_contra
         div.SaveError > input {
             color: red;
         }
+
+        #CentralSpaceResources {
+            background: var(--colour-surface-100);
+        }
+
+        .resource-card-id, .resource-card-status.custom, .resource-card-annotations {
+            color: var(--colour-typography-900);
+            background: var(--colour-surface-300);
+        }
+        
+        .resource-card-status.active {
+            color: #26C902;
+            background: none;
+            border-radius: var(--space-16);
+            border: 1px solid #26C902;
+        }
+
+        .resource-card-status.pending {
+            color: #FECF7F;
+            background: none;
+            border-radius: var(--space-16);
+            border: 1px solid #FECF7F;
+        }
+
+        .resource-card-status.archive {
+            color: #56A3FC;
+            background: none;
+            border-radius: var(--space-16);
+            border: 1px solid #56A3FC;
+        }
+
+        .resource-card-status.deleted {
+            color: #F95050;
+            background: none;
+            border-radius: var(--space-16);
+            border: 1px solid #F93737;
+        }
+    
         <?php
     }
 

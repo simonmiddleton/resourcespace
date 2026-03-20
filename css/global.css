@@ -2170,10 +2170,7 @@ form.FormFilter button.ClearButton {
 #CentralSpaceResources  
     {
         display: flex;
-        /* width: 1920px; */
         padding: var(--space-24);
-        /* align-items: flex-start;
-        align-content: flex-start; */
         gap: var(--space-32) var(--space-32);
         flex-wrap: wrap;
     }
@@ -3735,7 +3732,6 @@ a.text-link:visited {
 
 .resource-card-title {
     color: var(--colour-typography-900);
-    font-family: "Atkinson Hyperlegible Next";
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -3745,7 +3741,6 @@ a.text-link:visited {
 
 .resource-card-field {
     color: var(--colour-typography-600);
-    font-family: "Atkinson Hyperlegible Next";
     font-size: 13px;
     font-style: normal;
     font-weight: 400;
@@ -3791,7 +3786,6 @@ a.text-link:visited {
     gap: 4px;
     border-radius: var(--space-16);
     white-space: nowrap;
-    font-family: "Atkinson Hyperlegible Next";
     font-size: 13px;
     font-style: normal;
     font-weight: 400;
@@ -3908,7 +3902,6 @@ a.text-link:visited {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 1px;
     align-self: stretch;
     background: var(--form-form-divider);
 }
@@ -3926,6 +3919,10 @@ a.text-link:visited {
     font-style: normal;
     font-weight: 500;
     line-height: normal;
+}
+
+.menu-item + .menu-item {
+    margin-top: 1px;
 }
 
 .menu-item:hover { 
@@ -3968,23 +3965,29 @@ a.text-link:visited {
     background: var(--colour-feedback-error-lighter);
 }
 
+.flyout-menu.is-confirm .menu-confirm {
+    margin-top: 1px;
+}
+
 .menu-confirm {
     display: grid;
     width: 220px;
     padding: 0;
     flex-direction: column;
     align-items: flex-start;
-    gap: 10px;
     align-self: stretch;
     grid-template-rows: 0fr;
     transition: grid-template-rows 250ms ease;
     background: var(--colour-surface-50);
 }
 
+.menu-confirm-inner > * + * {
+    margin-top: 10px;
+}
+
 .menu-confirm.is-permanent {
     background: var(--colour-feedback-error-lightest);
 }
-
 
 .menu-confirm-text {
     color: var(--colour-typography-900);
@@ -4030,7 +4033,6 @@ a.text-link:visited {
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    gap: 10px;
     padding: 0 var(--space-12);
     opacity: 0;
     transition: opacity 250ms ease;

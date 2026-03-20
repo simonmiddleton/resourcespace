@@ -1445,11 +1445,6 @@ $thumbs_display_extended_fields = array();
 # $search_result_title_height=26;
 $search_results_title_trim = 30;
 
-// Shortcut icons on the thumbnails. Adds clutter but some users may prefer the direct link.
-$thumbs_edit=false;
-$thumbs_expand=false;
-$thumbs_share=false;
-
 // Enable extra large thumbnails option for search screen
 $xlthumbs = true;
 $xl_search_results_title_trim = 50;

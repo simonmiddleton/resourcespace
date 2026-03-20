@@ -47,7 +47,7 @@ if (
 $draw_menu = !$add_collection_item_hidden && !$remove_collection_item_hidden;
 
 // Share
-if ($thumbs_share && $allow_share && ($k == "" || $internal_share_access)) {
+if ($allow_share && ($k == "" || $internal_share_access)) {
     $share_item = true;
     $draw_menu = true;
 }
@@ -67,8 +67,6 @@ if (
 // when displaying many resources. As such this is a convenience feature for users that have system-wide edit access to the given
 // access level.
 if (
-    $thumbs_edit
-    &&
     (
     checkperm("e" . $result[$n]["archive"])
     || ($edit_access_for_contributor && $userref == $result[$n]["created_by"])
