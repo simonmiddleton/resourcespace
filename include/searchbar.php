@@ -213,7 +213,7 @@ $selected_search_tab = getval("selected_search_tab", "search");
     var categoryTreeChecksArray = [];
 </script>
 
-<search class="header-search-field" aria-label="<?php echo escape(text('simplesearch')); ?>">
+<search id="SearchBox" class="header-search-field" aria-label="<?php echo escape(text('simplesearch')); ?>">
     <?php if (checkperm("s") && (!isset($k) || $k == "" || $internal_share_access)) { ?>
     <form
         id="simple_search_form"
@@ -239,6 +239,7 @@ $selected_search_tab = getval("selected_search_tab", "search");
             ></button>
         </div>
         <section id="search-filters-panel" hidden>
+            <div id="SearchBoxPanel">
                     <input
                         id="ssearchhiddenfields"
                         name="ssearchhiddenfields"
@@ -981,6 +982,7 @@ $selected_search_tab = getval("selected_search_tab", "search");
             <?php } ?>
     <?php }
 ?>
+            </div>
         </section>
     </form>
 </search>
