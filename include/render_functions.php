@@ -7819,6 +7819,7 @@ function render_header_links(array $ctx): void
 function render_search_filter_panel(): void
 {
     // todo: - to be deleted - created purely for testing separately without affecting the searchbar
+    // this structure should be part of the searchbar.php (memo: the search input MUST be outside of the section element)
 ?>
     <section id="search-filters-panel" hidden>
         <?php generateFormToken("test_simple_search_form"); ?>

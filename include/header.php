@@ -331,16 +331,23 @@ $page_title = get_page_title($pagename, pluginname());
 
                 <?php
                 if (isset($username) && !in_array($pagename, $not_authenticated_pages) && !$loginterms && '' == $k || $internal_share_access) { ?>
-                    <div class="header-search-field">
+                <!-- todo: this structure needs to be part of the searchbar logic -->
+                    <search class="header-search-field" aria-label="<?php echo escape(text('simplesearch')); ?>">
                         <form id="search-form" action="/search.php" method="get">
                             <div class="input-wrapper">
                                 <?php render_icon_wrapper_component(Icon::Search); ?>
-                                <input type="text" name="search" aria-label="<?php echo escape($lang["simplesearch"]); ?>">
-                                <button type="button" class="icon-sliders-horizontal" aria-expanded="false" aria-controls="search-filters-panel"></button>
+                                <input type="search" name="search">
+                                <button
+                                    type="button"
+                                    class="icon-sliders-horizontal"
+                                    aria-label="<?php echo escape(text('search_filter_panel_toggle')); ?>"
+                                    aria-expanded="false"
+                                    aria-controls="search-filters-panel"
+                                ></button>
                             </div>
                             <?php render_search_filter_panel(); ?>
                         </form>
-                    </div>
+                    </search>
 
                     <?php render_header_links(['button' => Icon::EllipsisVertical]); ?>
 
@@ -435,6 +442,7 @@ $page_title = get_page_title($pagename, pluginname());
         <?php
         }
 
+// todo: logic needs to move higher up (in the header)
         $omit_searchbar_pages = array(
             'index',
             'search_advanced',
@@ -467,6 +475,7 @@ $page_title = get_page_title($pagename, pluginname());
                 <?php
             }
         }
+// END of todo: logic needs to move higher up (in the header)
 
         # Determine which content holder div to use
         if (
