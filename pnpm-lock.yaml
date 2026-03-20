@@ -38,9 +38,6 @@ importers:
       jquery:
         specifier: ^3.6.0
         version: 3.7.1
-      jquery-tageditor:
-        specifier: ^1.0.1
-        version: 1.0.1
       jquery-ui:
         specifier: 1.13.2
         version: 1.13.2
@@ -410,9 +407,6 @@ packages:
   jcrop@https://codeload.github.com/tapmodo/Jcrop/tar.gz/43c396817f992cbbfd010f35c07e2f1f58d6a7ac:
     resolution: {tarball: https://codeload.github.com/tapmodo/Jcrop/tar.gz/43c396817f992cbbfd010f35c07e2f1f58d6a7ac}
     version: 0.9.15
-
-  jquery-tageditor@1.0.1:
-    resolution: {integrity: sha512-PrTZ8PlHQvn5s4xRuUrEDMV5Z2whwXcsknNTdc9sNC3UEtqkJt+s1p4/xsu67iZwHwcS7pwDyY0RAlzBzPv6oA==}
 
   jquery-ui-touch-punch@0.2.3:
     resolution: {integrity: sha512-Q/7aAd+SjbV0SspHO7Kuk96NJIbLwJAS0lD81U1PKcU2T5ZKayXMORH+Y5qvYLuy41xqVQbWimsRKDn1v3oI2Q==}
@@ -1018,8 +1012,6 @@ snapshots:
   is-stream@2.0.1: {}
 
   jcrop@https://codeload.github.com/tapmodo/Jcrop/tar.gz/43c396817f992cbbfd010f35c07e2f1f58d6a7ac: {}
-
-  jquery-tageditor@1.0.1: {}
 
   jquery-ui-touch-punch@0.2.3: {}
 

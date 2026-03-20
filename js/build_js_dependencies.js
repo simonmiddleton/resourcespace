@@ -134,11 +134,6 @@ function globToRegExp(glob) {
 const files = [
     { src: 'node_modules/jquery/dist/jquery.min.js', dest: 'lib/js/jquery-3.6.0.min.js' },
     { src: 'node_modules/jquery/LICENSE.txt', dest: 'documentation/licenses/jquery.txt' },
-    {
-        src: 'node_modules/jquery-tageditor',
-        dest: 'lib/jquery_tag_editor',
-        filter: { patterns: ['**/*.min.js', '**/*.css'] }
-    },
     { src: 'node_modules/jquery-ui/dist/jquery-ui.min.js', dest: 'lib/js/jquery-ui-1.13.2.min.js' },
     { src: 'node_modules/jquery-ui/LICENSE.txt', dest: 'documentation/licenses/jquery-ui.txt' },
     { src: 'node_modules/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js', dest: 'lib/js/jquery.ui.touch-punch.min.js' },
