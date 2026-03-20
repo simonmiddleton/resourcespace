@@ -1599,33 +1599,6 @@ function selectDownloadTab(tabName, modal)
         }
     }
 
-/**
- * Handle clicks on the tab bar in the search area
- *
- * @param {string} tabName - name of the tab clicked
- */
-function selectSearchBarTab(tabName)
-    {
-    jQuery('#SearchBarTabsContainer .SearchBarTab').removeClass('SearchBarTabSelected');
-
-    switch(tabName)
-        {
-        case 'search':
-            jQuery('#SearchBarTabsContainer .SearchTab').addClass('SearchBarTabSelected');
-            jQuery('#SearchBoxPanel').show();
-            jQuery('#BrowseBarContainer').hide();
-            SetCookie('selected_search_tab', 'search');
-            break;
-        case 'browse':
-            jQuery('#SearchBarTabsContainer .BrowseTab').addClass('SearchBarTabSelected');
-            jQuery('#SearchBoxPanel').hide();
-            jQuery('#BrowseBarContainer').show();
-            SetCookie('selected_search_tab', 'browse');
-            break;
-        }
-    }
-
-// unset cookie
 function unsetCookie(cookieName, cpath)
     {
     document.cookie = cookieName + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;path=' + cpath;
