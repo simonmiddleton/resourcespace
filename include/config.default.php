@@ -920,10 +920,6 @@ $searchbar_selectall = false;
 // Hide the resource type selector on the simple search and advanced search pages
 $hide_search_resource_types = false;
 
-/*Display keywords as pills on Simple Search. Use tab to create new tags/ pills
-Note: full text strings are also accepted as a pill*/
-$simple_search_pills_view = false;
-
 // Custom top navigation links.
 // You can add as many panels as you like. They must be numbered sequentially starting from zero (0,1,2,3 etc.)
 // URL should be absolute, or include $baseurl as below, because a relative URL will not work from the Team Center.

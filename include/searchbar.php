@@ -253,86 +253,18 @@ $selected_search_tab = getval("selected_search_tab", "search");
                         if ($autocomplete_search) {
                             $autocomplete_src = "{$baseurl}/pages/ajax/autocomplete_search.php";
                         }
-
-                        if ($simple_search_pills_view) {
-                            // $initial_tags is used for reloading search bar so that the tags will remain the same otherwise separate tags can become one big tag
-                            $initial_tags = (isset($initial_tags) ? $initial_tags : array());
-                            ?>
-                            jQuery('#ssearchbox').tagEditor({
-                                'initialTags': <?php echo json_encode($initial_tags); ?>,
-                                'delimiter': '<?php echo TAG_EDITOR_DELIMITER; ?>',
-                                'forceLowercase': false,
-                                'autocomplete': {
-                                    'source': '<?php echo $autocomplete_src; ?>',
-                                    'minLength:': 3,
-                                },
-                                onChange: function(field, editor, tags) {
-                                    jQuery(document).keyup(function(event) {
-                                        if (event.key == 'Enter' && event.which === 13) {
-                                            document.getElementById("searchbutton").click();
-                                        }
-                                    });
-                                }
-                            });
-
-                            // Decide when to add tags:
-                            // if space addTag
-                            // if "word" then addTag
-                            // don't do anything if open " but not closed
-                            jQuery('ul.tag-editor').keydown(function(e) {
-                                var key = e.keyCode || e.which;
-                                var add_tag_flag = false;
-
-                                // Get new tag value which is not yet finished/ rendered as a pill
-                                var existing_tags = jQuery('#ssearchbox').tagEditor('getTags')[0].tags;
-                                var all_tags = jQuery('.tag-editor-tag:not(.deleted)', this).map(function(i, e) {
-                                    var val = jQuery.trim(jQuery(this).hasClass('active') ? jQuery(this).find('input').val() : jQuery(e).text());
-
-                                    if (val) {
-                                        return val;
-                                    }
-                                }).get();
-
-                                var new_tag = (array_diff(existing_tags, all_tags)[0] || '');
-
-                                // Find how many double quotes we have in our tag
-                                // 1 => spaces are allowed
-                                // 2 => add tag
-                                var double_quotes_occurences = (new_tag.match(/"/g) || []).length;
-
-                                // 32 is keyCode for " " (spacebar)
-                                if (key == 32 && double_quotes_occurences == 0) {
-                                    add_tag_flag = true;
-                                }
-                                // 50 is keyCode for " (double quotes)
-                                else if (key == 50 && double_quotes_occurences == 2) {
-                                    add_tag_flag = true;
-                                }
-
-                                if (add_tag_flag) {
-                                    jQuery('#ssearchbox').tagEditor('addTag', new_tag);
-                                }
-
-                                return;
-                            });
-
-                            <?php
-                        } else {
-                            ?>
-                            jQuery(document).ready(function () {
-                                jQuery('#ssearchbox').autocomplete({
-                                    source: "<?php echo $autocomplete_src; ?>",
-                                    minLength: 3,
-                                });
-                                
-                                <?php if (!$basic_simple_search) { ?>
-                                    // Ensure any previously hidden search fields remain hidden
-                                    SimpleSearchFieldsHideOrShow();
-                                <?php } ?>
-                            });
-                            <?php
-                        }
                         ?>
+                        jQuery(document).ready(function () {
+                            jQuery('#ssearchbox').autocomplete({
+                                source: "<?php echo $autocomplete_src; ?>",
+                                minLength: 3,
+                            });
+                            
+                            <?php if (!$basic_simple_search) { ?>
+                                // Ensure any previously hidden search fields remain hidden
+                                SimpleSearchFieldsHideOrShow();
+                            <?php } ?>
+                        });
                     </script>
 
                     <?php
@@ -534,10 +466,6 @@ $selected_search_tab = getval("selected_search_tab", "search");
                     if (!$basic_simple_search) {
                         $searchbuttons .= "<input name=\"Clear\" id=\"clearbutton\" class=\"searchbutton\" type=\"button\" value=\"" . escape($lang['clearbutton']) . "\" onClick=\"unsetCookie('search_form_submit','" . $baseurl_short . "');";
 
-                        if ($simple_search_pills_view) {
-                            $searchbuttons .= "removeSearchTagInputPills(jQuery('#ssearchbox'));";
-                        }
-
                         # Clear the standard fields
                         $searchbuttons .= "document.getElementById('ssearchbox').value='';" . $cleardate;
 
@@ -547,11 +475,7 @@ $selected_search_tab = getval("selected_search_tab", "search");
 
                         $searchbuttons .= "ResetTicks();SimpleSearchFieldsHideOrShow();\"/>";
                     } else {
-                        if (!$simple_search_pills_view) {
-                            $searchbuttons .= '<input name="Clear" id="clearbutton" class="searchbutton" type="button" value="' . escape($lang['clearbutton']) . '" onClick=" document.getElementById(\'ssearchbox\').value=\'\';"/>';
-                        } else {
-                            $searchbuttons .= '<input name="Clear" id="clearbutton" class="searchbutton" type="button" value="' . escape($lang['clearbutton']) . '" onClick="removeSearchTagInputPills(jQuery(\'#ssearchbox\'));" />';
-                        }
+                        $searchbuttons .= '<input name="Clear" id="clearbutton" class="searchbutton" type="button" value="' . escape($lang['clearbutton']) . '" onClick=" document.getElementById(\'ssearchbox\').value=\'\';"/>';
                     }
 
                     $searchbuttons .= "<input name=\"Submit\" id=\"searchbutton\" class=\"searchbutton\" type=\"submit\" value=\"" . escape($lang['searchbutton']) . "\" onclick=\"SimpleSearchFieldsHideOrShow();\" />";

@@ -1213,18 +1213,6 @@ function ChosenDropdownInit(elem, selector)
         }
     }
 
-function removeSearchTagInputPills(search_input)
-    {
-    var tags = search_input.tagEditor('getTags')[0].tags;
-
-    for(i = 0; i < tags.length; i++)
-        {
-        search_input.tagEditor('removeTag', tags[i]);
-        }
-
-    return true;
-    }
-
 function array_diff(array_1, array_2)
     {
     var a    = []

@@ -421,8 +421,7 @@ if (isset($header_link_style_override) && $header_link_style_override != '') { ?
 
 # Override home UI elements colour (intro text, dash tiles, simple search)
 if (isset($home_colour_style_override) && $home_colour_style_override != '') { ?>
-    #SearchBox, #HomeSiteText.dashtext, .HomePanelIN, #NewsPanel.BasicsBox, #remote_assist #SearchBoxPanel,
-    .SearchBarTab.SearchBarTabSelected {
+    #HomeSiteText.dashtext, .HomePanelIN, #NewsPanel.BasicsBox, #remote_assist #SearchBoxPanel {
         background: <?php echo $home_colour_style_override; ?>;
     } <?php
 }
@@ -726,13 +725,3 @@ if (isset($high_contrast_mode) && $high_contrast_mode) { ?>
         text-decoration: underline;
     } <?php
 }
-
-// Simple Search pills using jQuery tag editor
-if ($simple_search_pills_view) { ?>
-    .search-icon, .search-icon:hover, .search-icon:active {
-        background-color: #ffffff00;
-        margin-top: -36px;
-        margin-left: 221px;
-    } <?php
-}
-

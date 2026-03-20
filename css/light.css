@@ -53,9 +53,7 @@ input[readonly] {
 .HorizontalWhiteNav a:hover, .BasicsBox .VerticalNav a:hover, .ListTitle a:hover {color:#2e99e6;}
 
 /* Search Bar */
-#SearchBoxPanel a:link, #SearchBoxPanel a:visited, #SearchBoxPanel a:hover,
 #ResearchBoxPanel a:link, #ResearchBoxPanel a:visited, #ResearchBoxPanel a:hover, #ResearchBoxPanel a:active,
-.SearchSpace a:link, .SearchSpace a:visited, .SearchSpace a:hover, .SearchSpace a:active,
 .PoweredByPanel a:link, .PoweredByPanel a:visited, .PoweredByPanel a:hover {
     color:#fff;text-decoration:none;
 }
@@ -88,8 +86,6 @@ tr[id^="ResourceShell"].Selected { background-color: #d5eafa; /* Used a tint of 
 
 .ImageWrapper {background-color: #f6f6f6;}
 
-#SearchBoxPanel h2, #ThemeBoxPanel h2, #ResearchBoxPanel h2, .SearchSpace h2{color: #fff;}
-
 /* Collection Bar */
 .CollectBack {color:#E0E0E0;background: #2b2b2b;}
 .CollectBack a:link, .CollectBack a:visited, .CollectBack a:active,.CollectBack h2 {color:#E0E0E0;}
@@ -111,7 +107,7 @@ tr[id^="ResourceShell"].Selected { background-color: #d5eafa; /* Used a tint of 
 #HomeSiteText.dashtext h1 {color:#FFF;}
 
 /* Default colours for search, dash tiles, browse bar etc */
-#SearchBox, #HomeSiteText.dashtext, .HomePanelIN, .PopupCategoryTree {
+#HomeSiteText.dashtext, .HomePanelIN, .PopupCategoryTree {
     background: rgba(0, 0, 0, 0.51);
     color:#FFF;
 }

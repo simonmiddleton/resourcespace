@@ -576,9 +576,9 @@ input[type="number"].NumberSearchWidth {width:80px; margin: 0 10px;}
 #CentralSpace .ChosenDateRangeYear {width:100px !important;}
 
 /*Right Search Box layout*/
-#SearchBarContainer {height: 100%; float: right; position: relative; }
-#SearchBox {float: right; width: 295px;text-align:left; height: 100%; overflow-x: hidden;}
-#SearchBoxPanel {width: inherit;}
+/* #SearchBarContainer {height: 100%; float: right; position: relative; } */
+/* #SearchBox {float: right; width: 295px;text-align:left; height: 100%; overflow-x: hidden;} */
+/* #SearchBoxPanel {width: inherit;} */
 #ResearchBoxPanel {width: 100%;}
 #SearchBox .PopupCategoryTree {display: none; text-align: left; z-index: 999; padding: 5px; background: none; overflow-x: scroll;}
 .PoweredByPanel {font-style: italic; margin: 0 15px 15px 15px; font-size: 13px;}
@@ -642,21 +642,6 @@ input[type="number"].NumberSearchWidth {width:80px; margin: 0 10px;}
 .ListViewBulkActions i {padding-right: 8px;}
 .ListViewBulkActions span {cursor: pointer; margin-right: 5px; margin-left: 5px;}
 .ListViewBulkActions span .DisabledLink {cursor: default;}
-
-/*Search Panel layout*/
-.SearchSpace {padding: 15px;width: auto;}
-.SearchSpace p {padding:0 0 0.5em; margin:0; font-size:0.95em; line-height:1.1em;}
-.SearchSpace form {padding:0; margin:0;}
-.SearchSpace .SearchWidth {width: 250px;font-size: 1em;margin: 3px 0;}
-.SearchSpace .SearchWidthHalf {width: 120px;margin: 5px 4px 5px 0;}
-.SearchSpace .SearchWidthRight {margin-right:0;}
-
-.SearchSpace .tick {margin:2px;}
-.SearchSpace .tickindent {margin-left:12px;}
-.SearchSpace .SearchItem {margin: 10px 0 0;padding: 0;font-weight: bold;}
-.SearchSpace a:link, .SearchSpace a:visited {text-decoration:none;}
-.SearchSpace a:hover, .SearchSpace a:active {text-decoration:underline;}
-
 .ListDropdown {width: 115px;margin:0;padding-left: 8px;height:18px;}
 
 /*Forms*/
@@ -2289,9 +2274,9 @@ a.Enabled, a:visited.Enabled {
     margin-bottom: 20px;
 }
 
-#modal #SearchBox, #modal #SearchBoxPanel {
+/* #modal #SearchBox, #modal #SearchBoxPanel {
     margin: 0;
-}
+} */
 
 #previewimage {
     max-height: 500px;
@@ -2642,27 +2627,6 @@ input[type="text"]#iconpicker-input {
     z-index: 100;
     padding-top: 15px;
     margin-top: 0;
-}
-
-/* jQuery tagEditor */
-.SearchSpace .tag-editor{
-    border-radius: 5px;
-    min-height: 28px;
-    width: 250px;
-    display: inline-block;
-}
-
-.SearchSpace .tag-editor li {
-    margin: 4px 0;
-}
-
-.SearchSpace .tag-editor .active input{
-    max-height: 18px;
-    min-height: 0;
-    padding: 2px;
-    margin: 0;
-    border: none;
-    box-shadow: none;
 }
 
 .inline_config_search {
@@ -3486,10 +3450,6 @@ header.LoginHeader {
     width: 100%;
     box-sizing: border-box;
 
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-
     padding: 1rem;
     border: 1px solid #ddd;
     /* border-radius: 0 0 12px 12px; */
@@ -3514,6 +3474,14 @@ header.LoginHeader {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
+}
+
+.header-search-field #search-filters-panel #SearchBoxPanel {
+    max-width: 1366px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
 
 #header-container .primary-navigation {

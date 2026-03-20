@@ -1,7 +1,6 @@
 <?php
 
 use Montala\ResourceSpace\UserInterfaceComponents\Icon;
-use Montala\ResourceSpace\UserInterfaceComponents\IconSize;
 
 hook("preheaderoutput");
 
@@ -114,13 +113,6 @@ $page_title = get_page_title($pagename, pluginname());
 
         <?php if ($keyboard_navigation_video_search || $keyboard_navigation_video_view || $keyboard_navigation_video_preview) { ?>
             <script type="text/javascript" src="<?php echo $baseurl_short?>js/videojs-extras.js?<?php echo $css_reload_key; ?>"></script>
-            <?php
-        }
-
-        if ($simple_search_pills_view) { ?>
-            <script src="<?php echo $baseurl_short; ?>lib/jquery_tag_editor/jquery.caret.min.js"></script>
-            <script src="<?php echo $baseurl_short; ?>lib/jquery_tag_editor/jquery.tag-editor.min.js"></script>
-            <link type="text/css" rel="stylesheet" href="<?php echo $baseurl_short; ?>lib/jquery_tag_editor/jquery.tag-editor.css" />
             <?php
         }
         ?>
