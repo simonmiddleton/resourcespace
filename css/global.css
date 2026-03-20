@@ -3350,6 +3350,10 @@ header {
     background: var(--colour-surface-header-background, #FFF);
 }
 
+header button {
+    margin: unset;
+}
+
 header.LoginHeader {
     /* Hide Header on Login page */
     display: none !important;
@@ -3417,7 +3421,6 @@ header.LoginHeader {
 
 .header-search-field .input-wrapper > button {
     display: flex;
-    margin: unset;
     padding: 11.5px;
     width: 46px;
     height: 46px;
@@ -3448,14 +3451,7 @@ header.LoginHeader {
     top: 100%;
     left: 0;
     width: 100%;
-    box-sizing: border-box;
-
-    padding: 1rem;
-    border: 1px solid #ddd;
-    /* border-radius: 0 0 12px 12px; */
-    background: #fff;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
-
+    padding: var(--space--24, 24px) 0 var(--space-16, 16px) 0;
     opacity: 0;
     visibility: hidden;
     transform: translateY(-12px);
@@ -3463,17 +3459,37 @@ header.LoginHeader {
         opacity 0.22s ease,
         transform 0.22s ease,
         visibility 0.22s ease;
-
-    z-index: 200;
-
-    border-bottom: 1px solid var(--colour-surface-400, #D4D5D2);
     background: var(--colour-surface-100, #FAFAFA);
+    border-bottom: 1px solid var(--colour-surface-400, #D4D5D2);
+    box-sizing: border-box;
+    z-index: 200;
 }
 
 .header-search-field #simple_search_form.filters-open #search-filters-panel {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
+}
+
+.header-search-field #search-filters-panel > button {
+    position: absolute;
+    right: var(--space-24, 24px);
+    display: flex;
+    width: var(--space-48, 48px);
+    height: var(--space-48, 48px);
+    justify-content: center;
+    align-items: center;
+    border-radius: var(--space-4, 4px);
+    font-size: 28px;
+    font-weight: inherit;
+    color: var(--colour-neutral-700, #4A4C48);
+    background: var(--colour-surface-300, #EAEBEA);
+    box-shadow: none;
+}
+
+.header-search-field #search-filters-panel > button:hover {
+    color: var(--colour-surface-50, #FFF);
+    background: var(--colour-surface-700, #4A4C48);
 }
 
 .header-search-field #search-filters-panel #SearchBoxPanel {
@@ -3766,6 +3782,10 @@ header.LoginHeader {
         width: 100%;
     }
 
+    .header-search-field #search-filters-panel > button {
+        display: none;
+    }
+
     #header-container > .primary-navigation {
         display: none;
     }
@@ -3816,7 +3836,6 @@ header.LoginHeader {
 
     /* WIP for q13511 - dropping searchbar (allows for other tests to be carried out much easier */
     .collection-bar--minimised #UICenter { width: unset; }
-    .collection-bar--minimised #SearchBarContainer { display: none; }
 }
 
 /* Login page mobile layout */
