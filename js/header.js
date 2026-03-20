@@ -16,23 +16,33 @@ ResourceSpace.Modules.Header = (() => {
         makeStickyHeader(mq_mobile);
 
         header.querySelector('.header-search-field .input-wrapper > button').addEventListener('click', (e) => {
-            // todo: show filter menu (note: in responsive, change button class to "icon-circle-x")
             e.stopPropagation();
 
+            const mq_tablet = window.matchMedia('(max-width: 768px)');
+            const is_small_screen = mq_tablet.matches;
+
             // WIP!!!
-            const form = document.getElementById('search-form');
+            const form = e.target.closest('form');
             const panel = document.getElementById('search-filters-panel');
             const isOpen = form.classList.toggle('filters-open');
             e.target.setAttribute('aria-expanded', String(isOpen));
 
             if (isOpen) {
                 panel.hidden = false;
+
+                if (is_small_screen) {
+                    e.target.classList.replace('icon-sliders-horizontal', 'icon-circle-x');
+                }
             } else {
                 panel.addEventListener(
                     'transitionend',
                     () => {
                         if (!form.classList.contains('filters-open')) {
                             panel.hidden = true;
+
+                            if (is_small_screen) {
+                                e.target.classList.replace('icon-circle-x', 'icon-sliders-horizontal');
+                            }
                         }
                     },
                     { once: true }

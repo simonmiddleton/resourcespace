@@ -1242,12 +1242,6 @@ input.contactadminbutton  {
     width: 150px;
     }
 
-#ssearchbox {
-    margin-top:0;
-    padding: 4px 30px 4px 6px;
-    border: none;
-}
-
 .search-icon,
 .search-icon:hover,
 .search-icon:active {
@@ -3708,7 +3702,7 @@ header {
     position: relative;
 } */
 
-/* #search-form {
+/* #simple_search_form {
     position: relative;
 } */
 
@@ -3724,6 +3718,10 @@ header {
     left: 0;
     width: 100%;
     box-sizing: border-box;
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
 
     padding: 1rem;
     border: 1px solid #ddd;
@@ -3745,7 +3743,7 @@ header {
     background: var(--colour-surface-100, #FAFAFA);
 }
 
-#search-form.filters-open #search-filters-panel {
+#simple_search_form.filters-open #search-filters-panel {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
@@ -3756,7 +3754,7 @@ header {
     pointer-events: none;
 }
 
-#search-form.filters-open #search-filters-panel[hidden] {
+#simple_search_form.filters-open #search-filters-panel[hidden] {
     pointer-events: auto;
 } */
 /* END of Test search filter panel */

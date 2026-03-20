@@ -148,8 +148,6 @@ $page_title = get_page_title($pagename, pluginname());
         if (isset($GLOBALS['modify_header_not_authenticated_pages']) && is_array($GLOBALS['modify_header_not_authenticated_pages'])) {
             $not_authenticated_pages = array_filter($GLOBALS['modify_header_not_authenticated_pages']);
         }
-
-        $selected_search_tab = getval("selected_search_tab", "");
         ?>
 
         <script type="text/javascript">
@@ -335,28 +333,9 @@ $page_title = get_page_title($pagename, pluginname());
                     && !in_array($pagename, $not_authenticated_pages)
                     && !$loginterms
                     && ($k == '' || $internal_share_access)
-                ) { ?>
-<!-- todo: this structure needs to be part of the searchbar logic -->
-                    <search class="header-search-field" aria-label="<?php echo escape(text('simplesearch')); ?>">
-                        <form id="search-form" action="/search.php" method="get">
-                            <div class="input-wrapper">
-                                <?php render_icon_wrapper_component(Icon::Search); ?>
-                                <input type="search" name="search">
-                                <button
-                                    type="button"
-                                    class="icon-sliders-horizontal"
-                                    aria-label="<?php echo escape(text('search_filter_panel_toggle')); ?>"
-                                    aria-expanded="false"
-                                    aria-controls="search-filters-panel"
-                                ></button>
-                            </div>
-                            <?php render_search_filter_panel(); ?>
-                        </form>
-                    </search>
-
-                    <?php
+                ) {
                     if (checkperm('s')) {
-                        // include __DIR__ . '/searchbar.php';
+                        include __DIR__ . '/searchbar.php';
                     }
 
                     render_header_links(['button' => Icon::EllipsisVertical]);

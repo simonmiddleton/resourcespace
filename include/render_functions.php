@@ -7815,32 +7815,3 @@ function render_header_links(array $ctx): void
     </nav>
     <?php
 }
-
-function render_search_filter_panel(): void
-{
-    // todo: - to be deleted - created purely for testing separately without affecting the searchbar
-    // this structure should be part of the searchbar.php (memo: the search input MUST be outside of the section element)
-?>
-    <section id="search-filters-panel" hidden>
-        <?php generateFormToken("test_simple_search_form"); ?>
-        <div class="SearchItem" id="simplesearch_51">
-            <label for="simplesearch_51">Original filename</label><br>
-            <input class="SearchWidth ui-autocomplete-input" type="text" name="field_originalfilename" id="field_51" value="" onkeyup="if('' != jQuery(this).val()){FilterBasicSearchOptions('originalfilename',[]);}" autocomplete="off">
-        </div>
-        <div class="SearchItem" id="simplesearch_89">
-            <label for="simplesearch_89">Checkbox field</label><br>
-            <select class="SearchWidth" name="nodes_searched[89]" id="field_89" onchange="FilterBasicSearchOptions('checkboxfield',[0]);">
-                <option value=""></option>
-                <option value="334">Opt 1</option>
-                <option value="335">Opt 2</option>
-                <option value="336">Opt 3</option>
-            </select>
-            <div class="clearerleft"></div>
-        </div>
-        <div class="SearchItem" id="simplesearchbuttons">
-            <input name="Clear" id="clearbutton" class="searchbutton" type="button" value="Clear" onclick="unsetCookie('search_form_submit','/');document.getElementById('ssearchbox').value=''; document.getElementById('basicyear').value='';document.getElementById('basicmonth').value='';ResetTicks();SimpleSearchFieldsHideOrShow();">
-            <input name="Submit" id="searchbutton" class="searchbutton" type="submit" value="Search" onclick="SimpleSearchFieldsHideOrShow();">
-        </div>
-    </section>
-<?php
-}

@@ -1,6 +1,9 @@
 <?php
 
 # Store key variables to revert later so that we don't interfere with values that still need to be processed by search.php
+
+use Montala\ResourceSpace\UserInterfaceComponents\Icon;
+
 $stored_restypes = (isset($restypes) ? $restypes : '');
 $stored_search = (isset($search) ? $search : '');
 $stored_quicksearch = (isset($quicksearch) ? $quicksearch : '');
@@ -210,47 +213,38 @@ $selected_search_tab = getval("selected_search_tab", "search");
     var categoryTreeChecksArray = [];
 </script>
 
-<div id="SearchBox">
-    <div id="SearchBarTabsContainer">
-        <a href="#" onclick="selectSearchBarTab('search');">
-            <div class="SearchBarTab SearchTab <?php echo ($selected_search_tab === "search") ? "SearchBarTabSelected" : ""; ?>">
-                <i class="icon-search "></i>
-                <?php echo escape($lang["searchbutton"]); ?>
-            </div>
-        </a>
-    </div>
-
+<search class="header-search-field" aria-label="<?php echo escape(text('simplesearch')); ?>">
     <?php if (checkperm("s") && (!isset($k) || $k == "" || $internal_share_access)) { ?>
-        <div id="SearchBoxPanel">
-            <div class="SearchSpace" id="searchspace"> 
-                <form
-                    id="simple_search_form"
-                    method="post"
-                    action="<?php echo $baseurl; ?>/pages/search.php"
-                    onsubmit="return CentralSpacePost(this,true);"
-                >
-                    <?php generateFormToken("simple_search_form"); ?>
-                    <input 
-                        id="ssearchbox"
-                        name="search"
-                        type="text"
-                        class="SearchWidth"
-                        value="<?php echo escape(stripslashes($quicksearch)); ?>"
-                        placeholder="<?php echo escape($lang["searchbutton"]); ?>"
-                        aria-label="<?php echo escape($lang["simplesearch"]); ?>"
-                    >
+    <form
+        id="simple_search_form"
+        method="post"
+        action="<?php echo $baseurl; ?>/pages/search.php"
+        onsubmit="return CentralSpacePost(this,true);"
+    >
+        <?php generateFormToken("simple_search_form"); ?>
+        <div class="input-wrapper">
+            <?php render_icon_wrapper_component(Icon::Search); ?>
+            <input 
+                type="search"
+                name="search"
+                id="ssearchbox"
+                value="<?php echo escape(stripslashes($quicksearch)); ?>"
+            >
+            <button
+                type="button"
+                class="icon-sliders-horizontal"
+                aria-label="<?php echo escape(text('search_filter_panel_toggle')); ?>"
+                aria-expanded="false"
+                aria-controls="search-filters-panel"
+            ></button>
+        </div>
+        <section id="search-filters-panel" hidden>
                     <input
                         id="ssearchhiddenfields"
                         name="ssearchhiddenfields"
                         type="hidden"
                         value="<?php echo escape($ssearchhiddenfields); ?>"
                     >
-                    <button
-                        class="icon-search search-icon"
-                        type="submit"
-                        alt="<?php echo escape($lang['searchbutton']); ?>"
-                        title="<?php echo escape($lang['searchbutton']); ?>"
-                    ></button>
 
                     <script>
                         <?php
@@ -936,7 +930,6 @@ $selected_search_tab = getval("selected_search_tab", "search");
                     
                     echo $searchbuttons;
                     ?>
-                </form>
                 <br />
 
                 <?php
@@ -977,7 +970,6 @@ $selected_search_tab = getval("selected_search_tab", "search");
                     <?php
                 }
                 ?>
-            </div>
             <?php
             if ($show_powered_by_logo && (get_header_image() != $baseurl . '/gfx/titles/title-black.svg')) { ?>
                 <div class="PoweredByPanel">
@@ -987,24 +979,13 @@ $selected_search_tab = getval("selected_search_tab", "search");
                     </a>
                 </div>
             <?php } ?>
-        </div>
     <?php }
 ?>
-</div>
+        </section>
+    </form>
+</search>
 
 <?php
-global $selected_search_tab;
-
-if ($selected_search_tab == "browse") {
-    ?>
-    <script>
-        jQuery(document).ready(function () {
-            selectSearchBarTab('browse');
-        });
-    </script>
-    <?php
-}
-
 # Restore original values that may have been affected by processsing so the search page still draws correctly with the current search.
 $restypes = $stored_restypes;
 $search = $stored_search;
