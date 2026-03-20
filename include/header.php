@@ -330,8 +330,13 @@ $page_title = get_page_title($pagename, pluginname());
                     </div>
 
                 <?php
-                if (isset($username) && !in_array($pagename, $not_authenticated_pages) && !$loginterms && '' == $k || $internal_share_access) { ?>
-                <!-- todo: this structure needs to be part of the searchbar logic -->
+                if (
+                    isset($username)
+                    && !in_array($pagename, $not_authenticated_pages)
+                    && !$loginterms
+                    && ($k == '' || $internal_share_access)
+                ) { ?>
+<!-- todo: this structure needs to be part of the searchbar logic -->
                     <search class="header-search-field" aria-label="<?php echo escape(text('simplesearch')); ?>">
                         <form id="search-form" action="/search.php" method="get">
                             <div class="input-wrapper">
@@ -349,7 +354,13 @@ $page_title = get_page_title($pagename, pluginname());
                         </form>
                     </search>
 
-                    <?php render_header_links(['button' => Icon::EllipsisVertical]); ?>
+                    <?php
+                    if (checkperm('s')) {
+                        // include __DIR__ . '/searchbar.php';
+                    }
+
+                    render_header_links(['button' => Icon::EllipsisVertical]);
+                    ?>
 
                     <div class="actions">
                         <?php
@@ -442,41 +453,6 @@ $page_title = get_page_title($pagename, pluginname());
         <?php
         }
 
-// todo: logic needs to move higher up (in the header)
-        $omit_searchbar_pages = array(
-            'index',
-            'search_advanced',
-            'preview',
-            'admin_header',
-            'login',
-            'user_request',
-            'user_password',
-            'user_change_password',
-            'document_viewer'
-        );
-
-        if ($pagename == "terms" && isset($_SERVER["HTTP_REFERER"]) && strpos($_SERVER["HTTP_REFERER"], "login") !== false && $terms_login) {
-            array_push($omit_searchbar_pages, 'terms');
-        }
-
-        # if config set to display search form in header or (usergroup search permission omitted and anonymous login panel not to be displayed, then do not show simple search bar
-        if (checkperm("s") || is_anonymous_user()) {
-            # Include simple search sidebar?
-
-            if (isset($GLOBALS['modify_header_omit_searchbar_pages']) && is_array($GLOBALS['modify_header_omit_searchbar_pages'])) {
-                $omit_searchbar_pages = array_filter($GLOBALS['modify_header_omit_searchbar_pages']);
-            }
-
-            if (!in_array($pagename, $omit_searchbar_pages) && !$loginterms && ($k == '' || $internal_share_access)) {
-                ?>
-                <div id="SearchBarContainer">
-                    <?php include __DIR__ . "/searchbar.php"; ?>
-                </div>
-                <?php
-            }
-        }
-// END of todo: logic needs to move higher up (in the header)
-
         # Determine which content holder div to use
         if (
             $pagename == "login"
@@ -489,11 +465,7 @@ $page_title = get_page_title($pagename, pluginname());
             $uicenterclass .= is_login_slideshow_enabled() ? " slideshow-enabled" : '';
         } else {
             $div = "CentralSpace";
-            if (in_array($pagename, $omit_searchbar_pages)) {
-                $uicenterclass = "NoSearch";
-            } else {
-                $uicenterclass = "Search";
-            }
+            $uicenterclass = "Search";
         }
         ?>
 
