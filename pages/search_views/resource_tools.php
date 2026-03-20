@@ -42,7 +42,7 @@ if (
 
 // Preview icon
 if (
-    && !hook("replacefullscreenpreviewicon")
+    !hook("replacefullscreenpreviewicon")
     && (int) $result[$n]["has_image"] !== RESOURCE_PREVIEWS_NONE
 ) {
     ?>

@@ -30,6 +30,13 @@ if (isset($user_pref_appearance) && !(isset($high_contrast_mode) && $high_contra
         /* Core elements */
 
         :root {
+
+            /* Colours - Alternatives - Dark */
+            --colour-colour-dark-alternates-amber: #fecf7f;
+            --colour-colour-dark-alternates-blue: #56a3fc;
+            --colour-colour-dark-alternates-green: #26c902;
+            --colour-colour-dark-alternates-red: #f93737;
+
             /* Colours - Surface - Dark */
             --colour-surface-50: var(--colour-neutral-1000);
             --colour-surface-100: var(--colour-neutral-900);
@@ -69,17 +76,19 @@ if (isset($user_pref_appearance) && !(isset($high_contrast_mode) && $high_contra
             --colour-typography-1000: var(--colour-neutral-50);
 
             /* Form colours - Dark */
+            --form-destructive-background: var(--colour-surface-50);
+            --form-destructive-text: var(--colour-colour-dark-alternates-red);
             --form-field-border: var(--colour-neutral-500);
             --form-focus: var(--colour-brand-primary-default);
             --form-form-chip-background: var(--colour-neutral-950);
             --form-form-chip-label: var(--colour-neutral-100);
-            --form-form-chip-stroke: var(--colour-neutral-500);
+            --form-form-chip-stroke: var(--form-field-border);
             --form-form-divider: var(--colour-neutral-700);
-            --form-form-field-background: var(--colour-surface-800);
+            --form-form-field-background: var(--colour-neutral-800);
             --form-form-required-background: var(--colour-neutral-950);
             --form-form-required-stroke: var(--colour-neutral-950);
-            --form-tooltip-background: var(--colour-neutral-850);
-            --form-tooltip-stroke: var(--colour-neutral-500);
+            --form-tooltip-background: var(--colour-surface-mode-surface);
+            --form-tooltip-stroke: var(--form-field-border);
         }
 
         body, html {
@@ -454,31 +463,31 @@ if (isset($user_pref_appearance) && !(isset($high_contrast_mode) && $high_contra
         }
         
         .resource-card-status.active {
-            color: #26C902;
+            color: var(--colour-colour-dark-alternates-green);
             background: none;
             border-radius: var(--space-16);
-            border: 1px solid #26C902;
+            border: 1px solid var(--colour-colour-dark-alternates-green);
         }
 
         .resource-card-status.pending {
-            color: #FECF7F;
+            color: var(--colour-colour-dark-alternates-amber);
             background: none;
             border-radius: var(--space-16);
-            border: 1px solid #FECF7F;
+            border: 1px solid var(--colour-colour-dark-alternates-amber);
         }
 
         .resource-card-status.archive {
-            color: #56A3FC;
+            color: var(--colour-colour-dark-alternates-blue);
             background: none;
             border-radius: var(--space-16);
-            border: 1px solid #56A3FC;
+            border: 1px solid var(--colour-colour-dark-alternates-blue);
         }
 
         .resource-card-status.deleted {
-            color: #F95050;
+            color: var(--colour-colour-dark-alternates-red);
             background: none;
             border-radius: var(--space-16);
-            border: 1px solid #F93737;
+            border: 1px solid var(--colour-colour-dark-alternates-red);
         }
     
         <?php

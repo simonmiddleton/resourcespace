@@ -111,6 +111,8 @@
     --colour-typography-1000: var(--colour-neutral-1000);
 
     /* Form colours */
+    --form-destructive-background: var(--colour-feedback-error-lighter);
+    --form-destructive-text: var(--colour-feedback-error-dark);
     --form-field-border: var(--colour-neutral-700);
     --form-focus: var(--colour-brand-primary-default);
     --form-form-chip-background: var(--colour-brand-primary-lightest);
@@ -3951,18 +3953,18 @@ a.text-link:visited {
 }
 
 .flyout-menu.is-confirm .menu-item-danger {
-    color: var(--colour-feedback-error-dark);
-    background: var(--colour-feedback-error-lighter);
+    color: var(--form-destructive-text);
+    background: var(--form-destructive-background);
 }
 
 .flyout-menu.is-confirm .menu-item-danger:hover {
-    color: var(--colour-feedback-error-dark);
-    background: var(--colour-feedback-error-lighter);
+    color: var(--form-destructive-text);
+    background: var(--form-destructive-background);
 }
 
 .flyout-menu.is-confirm .menu-item-danger:active {
-    color: var(--colour-feedback-error-dark);
-    background: var(--colour-feedback-error-lighter);
+    color: var(--form-destructive-text);
+    background: var(--form-destructive-background);
 }
 
 .flyout-menu.is-confirm .menu-confirm {
@@ -3984,11 +3986,6 @@ a.text-link:visited {
 .menu-confirm-inner > * + * {
     margin-top: 10px;
 }
-
-.menu-confirm.is-permanent {
-    background: var(--colour-feedback-error-lightest);
-}
-
 .menu-confirm-text {
     color: var(--colour-typography-900);
     font-size: 14px;
@@ -4005,21 +4002,14 @@ a.text-link:visited {
     font-weight: 600;
     cursor: pointer;
     border-radius: var(--space-4);
-    color: var(--colour-feedback-error-default);
-    border: 1px solid var(--colour-feedback-error-default);
-    background: var(--colour-feedback-error-lightest);
+    color: var(--colour-global-white);
+    background: var(--colour-feedback-error-default);
     opacity: 0;
     transform: translateY(-4px);
     pointer-events: none;
     transition:
         opacity 200ms ease 150ms,
         transform 200ms ease 100ms;
-}
-
-.menu-confirm.is-permanent .menu-confirm-btn {
-    color: var(--colour-surface-50);
-    border: 1px solid var(--colour-feedback-error-default);
-    background: var(--colour-feedback-error-default)
 }
 
 .flyout-menu.is-confirm .menu-confirm-btn {
