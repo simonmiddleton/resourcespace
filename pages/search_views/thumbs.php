@@ -1,6 +1,6 @@
 <?php
 
-$resource_view_title = i18n_get_translated($result[$n]["field" . $view_title_field]);
+$resource_view_title = i18n_get_translated($result[$n]["field" . $view_title_field] ?? "");
 
 # Establish various metrics for use in thumbnail rendering
 $resolved_title_trim = 0;
