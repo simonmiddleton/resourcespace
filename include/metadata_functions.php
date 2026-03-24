@@ -504,6 +504,28 @@ function update_archive_required_fields_check(int|array $resource, int $archive_
     return $result;
 }
 
+function update_geolocation_fields($resource, $location): void
+{
+    if ($location !== "" && !is_array($location)) {
+        return;
+    }
+
+    $fields = ps_query("SELECT ref, geomapping FROM resource_type_field WHERE geomapping != 0", []);
+    if (empty($fields)) {
+        return;
+    }
+    foreach($fields as $field) {
+        if ($location == "") {
+            update_field($resource, $field["ref"], "");
+        } elseif ($field["geomapping"] == FIELD_GEO_LOCATION::both->value) {
+            update_field($resource, $field["ref"], $location[0] . ", " . $location[1]);
+        } elseif ($field["geomapping"] == FIELD_GEO_LOCATION::latitude->value) {
+            update_field($resource, $field["ref"], $location[0]);
+        } elseif ($field["geomapping"] == FIELD_GEO_LOCATION::longitude->value) {
+            update_field($resource, $field["ref"], $location[1]);
+        }
+    }
+}
 
 enum FIELD_GEO_LOCATION: int 
 {

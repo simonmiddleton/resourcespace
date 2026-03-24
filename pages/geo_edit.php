@@ -71,6 +71,7 @@ if (isset($_POST['submit']) && enforcePostRequest(false)) {
             $old_location = $resource["geo_lat"] . ", " . $resource["geo_long"];
         }
 
+        update_geolocation_fields($resource["ref"], $s);
         resource_log(
             $ref,
             LOG_CODE_EDITED_RESOURCE,
@@ -82,6 +83,7 @@ if (isset($_POST['submit']) && enforcePostRequest(false)) {
     } elseif (getval('geo-loc', '') == '') {
         # Blank geo-location
         ps_query("update resource set geo_lat=null,geo_long=null,mapzoom=null where ref= ?", ['i', $ref]);
+        update_geolocation_fields($resource["ref"], "");
         resource_log(
             $ref,
             LOG_CODE_EDITED_RESOURCE,
