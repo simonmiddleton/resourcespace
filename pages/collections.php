@@ -531,7 +531,7 @@ if ($addsearch != -1) {
                     }
 
                     if (isset($resourcesnotadded["blockedshares"])) {
-                        // There are resource blocked from being added due to share permissions
+                        // There are resources blocked from being added due to share permissions
                         if ($warningtext != "") {
                             $warningtext .= "<br />";
                         }
