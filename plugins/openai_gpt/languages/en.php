@@ -41,6 +41,7 @@ $lang["openai_gpt_configured_limit"] = "%%TOKEN_LIMIT%% per %%DAYS%% days";
 $lang["openai_gpt_token_count"] = "%%TOKEN_COUNT%% tokens";
 
 $lang["openai_gpt_provider"] = "AI Provider";
+$lang["openai_gpt_provider_override"] = "The provider has been locked in global configuration to: [provider]";
 $lang["ollama_name"] = "Ollama";
 $lang["ollama_model"] = "Ollama model to use (e.g. 'gemma3:12b')";
 $lang["ollama_endpoint"] = "Ollama endpoint to use (e.g http://[IP]:11434/v1/chat/completions";

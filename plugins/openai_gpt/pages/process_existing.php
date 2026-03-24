@@ -5,7 +5,7 @@
 
 include __DIR__ . '/../../../include/boot.php';
 
-global $openai_gpt_token_limit, $openai_gpt_token_limit_days, $openai_gpt_provider;
+global $openai_gpt_token_limit, $openai_gpt_token_limit_days;
 
 command_line_only();
 
@@ -16,8 +16,10 @@ if (!in_array("openai_gpt",$plugins)) {
     exit("OpenAI/Ollama metadata processing plugin not enabled. Exiting\n");
 }
 
+$provider = openai_gpt_get_provider();
+
 // Check usage limits if set before any processing starts
-if ($openai_gpt_token_limit !== 0 && $openai_gpt_token_limit_days !== 0 && $openai_gpt_provider == "openai") {
+if ($openai_gpt_token_limit !== 0 && $openai_gpt_token_limit_days !== 0 && $provider == "openai") {
     $tokens_used = openai_gpt_get_tokens_used($openai_gpt_token_limit_days);
 
     if ($tokens_used > $openai_gpt_token_limit) {

@@ -19,15 +19,17 @@ function openai_gpt_update_field($resources,array $target_field,array $values, s
     $openai_gpt_temperature,$openai_gpt_example_json_user,$openai_gpt_example_json_assistant,$openai_gpt_example_text_user,
     $openai_gpt_example_text_assistant,$openai_gpt_max_tokens, $openai_gpt_max_data_length, $openai_gpt_system_message,
     $openai_gpt_fallback_model, $openai_gpt_message_output_text, $openai_gpt_model_override, $lang, $language, $languages, $openai_gpt_language,
-    $openai_gpt_token_limit, $openai_gpt_token_limit_days, $openai_gpt_endpoint, $openai_gpt_provider, $ollama_endpoint, $ollama_hide_enpoint, $ollama_model;
+    $openai_gpt_token_limit, $openai_gpt_token_limit_days, $openai_gpt_endpoint, $ollama_endpoint, $ollama_hide_enpoint, $ollama_model, $ollama_model_override;
 
     // Don't update if not a valid field type
     if (!in_array($target_field["type"],$valid_ai_field_types)) {
         return false;
     }
+
+    $provider = openai_gpt_get_provider();
     
     // Check usage limits if set before any processing starts
-    if ($openai_gpt_provider == "openai" && $openai_gpt_token_limit !== 0 && $openai_gpt_token_limit_days !== 0) {
+    if ($provider == "openai" && $openai_gpt_token_limit !== 0 && $openai_gpt_token_limit_days !== 0) {
         $tokens_used = openai_gpt_get_tokens_used($openai_gpt_token_limit_days);
 
         if ($tokens_used > $openai_gpt_token_limit) {
@@ -92,7 +94,7 @@ function openai_gpt_update_field($resources,array $target_field,array $values, s
         $messages = [];
         $messages[] = ["role" => "system", "content" => $system_message];
 
-        if ($openai_gpt_provider == "ollama") {
+        if ($provider == "ollama") {
             $messages[] = [
                 "role" => "user",
                 "content" => [
@@ -167,7 +169,7 @@ function openai_gpt_update_field($resources,array $target_field,array $values, s
     
 
     // Determine endpoint, api key and model to use
-    if ($openai_gpt_provider == "ollama") {
+    if ($provider == "ollama") {
         $endpoint = isset($ollama_hide_enpoint) ? $ollama_hide_enpoint : $ollama_endpoint;
         // No API key required for Ollama at the moment
         $api_key = "";
@@ -188,7 +190,7 @@ function openai_gpt_update_field($resources,array $target_field,array $values, s
         }
     }
 
-    debug("openai_gpt - sending $openai_gpt_provider request prompt " . json_encode($messages));
+    debug("openai_gpt - sending $provider request prompt " . json_encode($messages));
     
     $response = openai_gpt_generate_completions($endpoint, $api_key, $model, $messages, $openai_gpt_temperature, $openai_gpt_max_tokens);
 
@@ -277,9 +279,11 @@ function openai_gpt_update_field($resources,array $target_field,array $values, s
  */
 function openai_gpt_generate_completions($endpoint, $api_key = "", $model, $messages, $temperature = 0, $max_tokens = 2048)
 {
-    global $openai_response_cache, $openai_gpt_provider, $userref;
+    global $openai_response_cache, $userref;
 
-    debug("openai_gpt_generate_completions() \$model = '" . $model . "', \$prompt = '" . json_encode($messages) . "' \$temperature = '" . $temperature . "', \$max_tokens = " . $max_tokens);
+    $provider = openai_gpt_get_provider();
+
+    debug("openai_gpt_generate_completions() \$provider=" . $provider . " \$model = '" . $model . "', \$prompt = '" . json_encode($messages) . "' \$temperature = '" . $temperature . "', \$max_tokens = " . $max_tokens);
     
     $messagestring = json_encode($messages);
 
@@ -350,7 +354,7 @@ function openai_gpt_generate_completions($endpoint, $api_key = "", $model, $mess
 
     // Log the usage
     if (isset($response_data["usage"]["total_tokens"]) && is_numeric($response_data["usage"]["total_tokens"])) {
-        if ($openai_gpt_provider == "openai") {
+        if ($provider == "openai") {
             daily_stat("OpenAI Token Usage", $userref, $response_data["usage"]["total_tokens"]);
         } else {
             daily_stat("Ollama Usage", $userref, 1);
@@ -423,4 +427,17 @@ function openai_gpt_get_tokens_used(int $days): int
                                 FROM daily_stat 
                                 WHERE activity_type = 'OpenAI Token Usage'
                                 AND DATEDIFF(NOW(), CONCAT(`year`, '-', LPAD(`month`, 2, '0'), '-', LPAD(`day`, 2, '0'))) <= ?;", array("i", $days), 0, "gpt_token_check");
+}
+
+/**
+ * Return the configured AI provider handles the remote override.
+ * 
+ * @return string    Currently configured AI provider
+ */
+function openai_gpt_get_provider(): string
+{
+    global $openai_gpt_provider_override, $openai_gpt_provider;
+
+    return (isset($openai_gpt_provider_override) && $openai_gpt_provider_override) ? $openai_gpt_provider_override : $openai_gpt_provider;
+
 }

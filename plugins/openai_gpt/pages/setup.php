@@ -14,7 +14,13 @@ $page_heading = $lang['openai_gpt_title'];
 
 $page_intro = "<p>" . $lang['openai_gpt_intro'] . "</p>";
 
-$page_def[] = config_add_single_select("openai_gpt_provider", $lang["openai_gpt_provider"], ["openai" => $lang["openai_gpt"], "ollama" => $lang["ollama_name"]]);
+if (!(isset($openai_gpt_provider_override) && $openai_gpt_provider_override)) {
+    $page_def[] = config_add_single_select("openai_gpt_provider", $lang["openai_gpt_provider"], ["openai" => $lang["openai_gpt"], "ollama" => $lang["ollama_name"]]);
+    $provider = $openai_gpt_provider;
+} else {
+    $page_def[] = config_add_html("<div class='Question'><label>" . escape($lang["openai_gpt_provider"]) . "</label><div class='Fixed'>" . escape(str_replace("[provider]", $openai_gpt_provider_override, escape($lang["openai_gpt_provider_override"]))) . "</div><div class='clearerleft'></div></div>");
+    $provider = $openai_gpt_provider_override;
+}
 
 // OpenAI specific setup
 $page_def[] = config_add_section_header($lang["openai_gpt"]);
@@ -34,7 +40,7 @@ $tokens_used_label = str_replace("%%DAYS%%", $token_limit_days, $lang["openai_gp
 $tokens_used_text = str_replace("%%TOKEN_COUNT%%", number_format($tokens_used), $lang["openai_gpt_token_count"]);
 
 
-if ($openai_gpt_provider == "openai" && $tokens_used > $openai_gpt_token_limit) {
+if ($provider == "openai" && $tokens_used > $openai_gpt_token_limit) {
     $page_def[] = config_add_html("<div class='Question'><strong>" . escape($lang["openai_gpt_limit_warning"]) . "</strong><div class='clearerleft'></div></div>");
 }
 
@@ -68,7 +74,7 @@ if (!(isset($ollama_hide_enpoint) && $ollama_hide_enpoint)) {
 }
 
  // Can be forced in configuration
-if (!isset($openai_gpt_model_override)) {
+if (!isset($ollama_model_override)) {
     $page_def[] = config_add_text_input("ollama_model", $lang["ollama_model"]);
 } else {
     $page_def[] = config_add_html("<div class='Question'><label>" . escape($lang["ollama_model"]) . "</label><div class='Fixed'>" . escape(str_replace("[model]", $ollama_model_override, escape($lang["openai_gpt_model_override"]))) . "</div><div class='clearerleft'></div></div>");
