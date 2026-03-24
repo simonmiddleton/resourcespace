@@ -1,8 +1,22 @@
 <?php
-// OpenAI key from https://openai.com/api/
-global $openai_gpt_api_key, $openai_gpt_model, $openai_gpt_token_limit, $openai_gpt_token_limit_days;
+
+global $openai_gpt_api_key, $openai_gpt_model, $openai_gpt_token_limit, $openai_gpt_token_limit_days, 
+       $openai_gpt_provider, $ollama_endpoint, $ollama_model;
+
+// Provider to use for metadata processing requests - can be overriden remotely.
+$openai_gpt_provider = $openai_gpt_provider ?? "openai";
+
+// OpenAI key from https://openai.com/api/ - can be overriden remotely.
 $openai_gpt_api_key = $openai_gpt_api_key ?? "";
+
+// OpenAI GPT model to use - can be overriden remotely.
 $openai_gpt_model = $openai_gpt_model ?? "gpt-4o";
+
+// Ollama endpoint - can be overriden remotely.
+$ollama_endpoint = $ollama_endpoint ?? "";
+
+// Ollama model - can be overriden remotely.
+$ollama_model = $ollama_model ?? "";
 
 // The number of tokens that can be used in the specified time period, 0 is no limit
 $openai_gpt_token_limit = $openai_gpt_token_limit ?? 0;

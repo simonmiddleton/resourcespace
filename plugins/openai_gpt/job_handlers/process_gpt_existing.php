@@ -6,10 +6,10 @@
 
 logScript("[process_gpt_existing] Starting process_gpt_existing job", $log_file);
 
-global $openai_gpt_token_limit, $openai_gpt_token_limit_days;
+global $openai_gpt_token_limit, $openai_gpt_token_limit_days, $openai_gpt_provider;
     
 // Check usage limits if set before any processing starts
-if ($openai_gpt_token_limit !== 0 && $openai_gpt_token_limit_days !== 0) {
+if ($openai_gpt_token_limit !== 0 && $openai_gpt_token_limit_days !== 0 && $openai_gpt_provider == "openai") {
     $tokens_used = openai_gpt_get_tokens_used($openai_gpt_token_limit_days);
 
     if ($tokens_used > $openai_gpt_token_limit) {
