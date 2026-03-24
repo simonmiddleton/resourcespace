@@ -2013,12 +2013,11 @@ function save_resource_type_field(int $ref, array $columns, $postdata): bool
         // Geo mapping only available for single line text fields
             if (
                 $column == "geomapping"
-                // && (
-                //     $postdata["type"] != FIELD_TYPE_TEXT_BOX_SINGLE_LINE
-                //     || ($postdata["type"] != FIELD_TYPE_TEXT_BOX_SINGLE_LINE && $val == "")
-                // )
+                && (
+                    $postdata["type"] != FIELD_TYPE_TEXT_BOX_SINGLE_LINE
+                    || ($postdata["type"] != FIELD_TYPE_TEXT_BOX_SINGLE_LINE && $val == "")
+                )
             ) {
-                debug("BANG " . print_r($val, true));
                 $val = 0;
             }
         }

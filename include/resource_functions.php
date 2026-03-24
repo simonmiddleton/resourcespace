@@ -1119,6 +1119,106 @@ function save_resource_data($ref, $multi, $autosave_field = "")
                 if (in_array($fields[$n]["ref"], $joins)) {
                     update_resource_field_column($ref, $fields[$n]["ref"], $val);
                 }
+
+                # Update geo location if this is a geo location field
+                if ($fields[$n]["geomapping"] > 0) {
+                    if ($fields[$n]["geomapping"] == FIELD_GEO_LOCATION::both->value) {
+                        if ($val == "") {
+                            ps_query("UPDATE resource SET geo_lat=null, geo_long=null WHERE ref= ?", ['i', $ref]);
+                            resource_log(
+                                $ref,
+                                LOG_CODE_EDITED_RESOURCE,
+                                null,
+                                "Removed Location",
+                                $resource_data["geo_lat"] . ", " . $resource_data["geo_long"],
+                                ""
+                            );
+                        } else {
+                            $pattern = '/
+                                ^
+                                (-?\d{1,3}(?:\.\d+)?) # Latitude capture
+                                ,\s*                  # Comma + whitespace
+                                (-?\d{1,3}(?:\.\d+)?) # Longitude capture
+                                $
+                                /x';
+                            $valid_geolocation = false;
+                            if (preg_match($pattern, $val, $matches)) {
+                                $lat = (float) $matches[1];
+                                $lng = (float) $matches[2];
+
+                                // Validate coordinate ranges
+                                if ($lat >= -90 && $lat <= 90 && $lng >= -180 && $lng <= 180) {
+                                    $valid_geolocation = true;
+                                }
+                            }
+
+                            if ($valid_geolocation) {
+                                ps_query("UPDATE resource SET geo_lat=?, geo_long=? WHERE ref= ?", ['d', $lat, 'd', $lng, 'i', $ref]);
+                                resource_log(
+                                    $ref,
+                                    LOG_CODE_EDITED_RESOURCE,
+                                    null,
+                                    "Updated Location",
+                                    $resource_data["geo_lat"] . ", " . $resource_data["geo_long"],
+                                    $lat . ", " . $lng
+                                );
+                            } else {
+                                $errors[$fields[$n]['ref']] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-error-invalid-latlong"];
+                            }
+                        }
+                    } elseif ($fields[$n]["geomapping"] == FIELD_GEO_LOCATION::latitude->value) {
+                        debug("BANG " . __LINE__ . ": " . $val);
+                        if ($val == "") {
+                            ps_query("UPDATE resource SET geo_lat=null WHERE ref= ?", ['i', $ref]);
+                            resource_log(
+                                $ref,
+                                LOG_CODE_EDITED_RESOURCE,
+                                null,
+                                "Removed Latitude",
+                                $resource_data["geo_lat"],
+                                ""
+                            );
+                        } elseif (is_float_loose($val) && ((float) $val) >= -90 && ((float) $val) <= 90) {
+                            debug("BANG " . __LINE__);
+                            ps_query("UPDATE resource SET geo_lat=? WHERE ref= ?", ['d', $val, 'i', $ref]);
+                            resource_log(
+                                $ref,
+                                LOG_CODE_EDITED_RESOURCE,
+                                null,
+                                "Updated Latitude",
+                                $resource_data["geo_lat"],
+                                $val
+                            );
+                        } else {
+                            debug("BANG " . __LINE__);
+                            $errors[$fields[$n]['ref']] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-error-invalid-lat"];
+                        }
+                    } elseif ($fields[$n]["geomapping"] == FIELD_GEO_LOCATION::longitude->value) {
+                        if ($val == "") {
+                            ps_query("UPDATE resource SET geo_long=null WHERE ref= ?", ['i', $ref]);
+                            resource_log(
+                                $ref,
+                                LOG_CODE_EDITED_RESOURCE,
+                                null,
+                                "Removed Longitude",
+                                $resource_data["geo_lat"],
+                                ""
+                            );
+                        } elseif (is_float_loose($val) && (float) $val >= -180 && (float) $val <= 180) {
+                            ps_query("UPDATE resource SET geo_long=? WHERE ref= ?", ['d', $val, 'i', $ref]);
+                            resource_log(
+                                $ref,
+                                LOG_CODE_EDITED_RESOURCE,
+                                null,
+                                "Updated Longitude",
+                                $resource_data["geo_long"],
+                                $val
+                            );
+                        } else {
+                            $errors[$fields[$n]['ref']] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-error-invalid-long"];
+                        }
+                    }
+                }
             }
 
             # Add any onchange code if new checksum for field shows that it has changed

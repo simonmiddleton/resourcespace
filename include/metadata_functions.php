@@ -514,7 +514,7 @@ enum FIELD_GEO_LOCATION: int
 
     public function i18n(array $lang): string
     {
-        return $lang["geo_location-{$this->name}"] ?? "BANG" . $this->name;
+        return $lang["geo_location-{$this->name}"];
     }
 
 }
