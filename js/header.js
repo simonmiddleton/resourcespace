@@ -15,47 +15,14 @@ ResourceSpace.Modules.Header = (() => {
         mq_mobile.addEventListener('change', makeStickyHeader);
         makeStickyHeader(mq_mobile);
 
-        header.querySelector('.header-search-field .input-wrapper > button').addEventListener('click', (e) => {
-            e.stopPropagation();
-
-            const mq_tablet = window.matchMedia('(max-width: 768px)');
-            const is_small_screen = mq_tablet.matches;
-
-            // WIP!!!
-            const form = e.target.closest('form');
-            const panel = document.getElementById('search-filters-panel');
-            const isOpen = form.classList.toggle('filters-open');
-            e.target.setAttribute('aria-expanded', String(isOpen));
-
-            if (isOpen) {
-                panel.hidden = false;
-
-                if (is_small_screen) {
-                    e.target.classList.replace('icon-sliders-horizontal', 'icon-circle-x');
-                }
-            } else {
-                panel.addEventListener(
-                    'transitionend',
-                    () => {
-                        if (!form.classList.contains('filters-open')) {
-                            panel.hidden = true;
-
-                            if (is_small_screen) {
-                                e.target.classList.replace('icon-circle-x', 'icon-sliders-horizontal');
-                            }
-                        }
-                    },
-                    { once: true }
-                );
+        header.addEventListener('click', (e) => {
+            if (
+                e.target.matches('.header-search-field .input-wrapper > button') ||
+                e.target.matches('.header-search-field section > button')
+            ) {
+                toggleSearchPanel(e);
             }
         });
-
-        // todo: see if we can abstract this for settings, messages and user profile
-        // header.find('#header-action-settings').on('click', function (event) {
-        //     // event.stopPropagation();
-        //     // alert('Clicked header-action-settings!');
-        //     ModalClose();return ModalLoad(this,true,true,'right');
-        // });
     }
 
     function makeStickyHeader(e) {
@@ -91,6 +58,41 @@ ResourceSpace.Modules.Header = (() => {
         logo.classList.remove('is-collapsed');
         actions.classList.remove('is-collapsed');
         header.classList.remove('is-compact');
+    }
+
+    function toggleSearchPanel(e) {
+        e.stopPropagation();
+
+        const mq_tablet = window.matchMedia('(max-width: 768px)');
+        const is_small_screen = mq_tablet.matches;
+
+        const form = e.target.closest('form');
+        const panel = document.getElementById('search-filters-panel');
+        const isOpen = form.classList.toggle('filters-open');
+        form.querySelector('.header-search-field .input-wrapper > button')
+            .setAttribute('aria-expanded', String(isOpen));
+
+        if (isOpen) {
+            panel.hidden = false;
+
+            if (is_small_screen) {
+                e.target.classList.replace('icon-sliders-horizontal', 'icon-circle-x');
+            }
+        } else {
+            panel.addEventListener(
+                'transitionend',
+                () => {
+                    if (!form.classList.contains('filters-open')) {
+                        panel.hidden = true;
+
+                        if (is_small_screen) {
+                            e.target.classList.replace('icon-circle-x', 'icon-sliders-horizontal');
+                        }
+                    }
+                },
+                { once: true }
+            );
+        }
     }
 
     return {
