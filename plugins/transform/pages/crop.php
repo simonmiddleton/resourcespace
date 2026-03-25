@@ -252,7 +252,7 @@ $return_to_url = getval('return_to_url', '');
 
 $terms_url = $baseurl_short."pages/terms.php?ref=".$ref;
 
-$is_resource_template = resource_is_template($ref);
+$is_resource_template = resource_file_readonly($ref);
 
 if ($saveaction != '' && enforcePostRequest(false))
     {
@@ -430,7 +430,8 @@ if ($saveaction != '' && enforcePostRequest(false))
             else
                 {
                 // Original file has been updated so remove original_copy as invalid now
-                if (file_exists($org)) 
+                $is_original_copy_file = ($org != $originalpath && mb_strpos($org, 'original_copy', mb_strrpos($org, '/')) !== false);
+                if ($is_original_copy_file && file_exists($org)) 
                     {
                     unlink($org);
                     }

@@ -2491,8 +2491,9 @@ function add_saved_search_items(
         ]),
         $fc_branch_path_keys
     );
-    $resourcesnotadded = array(); # record the resources that are not added so we can display to the user
+    $resourcesnotadded = array(); # Record the resources that are not added due to archive state
     $blockedtypes = array();# Record the resource types that are not added
+    $blockedshares = array(); # Record the resources that are not added due to share permissions
 
     foreach ($results["data"] as $result) {
         $resource = $result["ref"];
@@ -2504,8 +2505,13 @@ function add_saved_search_items(
         }
 
         if (count($keys) > 0) {
-            if (($archivestatus < 0 && !$collection_allow_not_approved_share) || !can_share_resource($resource)) {
+            if ($archivestatus < 0 && !$collection_allow_not_approved_share) {
                 $resourcesnotadded[$resource] = $result;
+                continue;
+            }
+
+            if (!can_share_resource($resource)) { 
+                $blockedshares[$resource] = $result;
                 continue;
             }
 
@@ -2551,7 +2557,7 @@ function add_saved_search_items(
         $n = 0;
         foreach ($results["data"] as $result) {
             $resource = $result["ref"];
-            if (!isset($resourcesnotadded[$resource]) && !in_array($result["resource_type"], $collection_block_restypes)) {
+            if (!isset($resourcesnotadded[$resource]) && !in_array($result["resource_type"], $collection_block_restypes) && !isset($blockedshares[$resource])) {
                 ps_query("DELETE FROM collection_resource WHERE resource=? AND collection=?", array("i",$resource,"i",$collection));
                 ps_query("INSERT INTO collection_resource(resource,collection,sortorder) VALUES (?,?,?)", array("i",$resource,"i",$collection,"s",$n));
 
@@ -2566,12 +2572,15 @@ function add_saved_search_items(
     clear_query_cache('themeimage');
     clear_query_cache('col_total_ref_count_w_perm');
 
-    if (!empty($resourcesnotadded) || count($blockedtypes) > 0) {
+    if (!empty($resourcesnotadded) || count($blockedtypes) > 0 || !empty($blockedshares)) {
         # Translate to titles only for displaying them to the user
         global $view_title_field;
         $titles = array();
         foreach ($resourcesnotadded as $resource) {
             $titles[] = i18n_get_translated($resource['field' . $view_title_field]);
+        }
+        foreach ($blockedshares as $resource) {
+            $titles['blockedshares'][] = i18n_get_translated($resource['field' . $view_title_field]);
         }
         if (count($blockedtypes) > 0) {
             $blocked_restypes = array_unique($blockedtypes);

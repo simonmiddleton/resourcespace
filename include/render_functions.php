@@ -2927,8 +2927,6 @@ function render_resource_image($resource, $img_url, $display="thumbs")
     
     list($width, $height, $margin) = calculate_image_display($resource, $img_url, $display);
 
-    $margin = (is_numeric($margin)) ? $margin . "px" : $margin;
-
     // Produce a 'softer' colour for the loading preview (extracted colours tend to have a very high saturation)
     if (  (isset($resource["image_red"]) && isset($resource["image_green"]) && isset($resource["image_blue"]))
        && (is_int_loose($resource["image_red"]) && is_int_loose($resource["image_green"]) && is_int_loose($resource["image_blue"]))  )
@@ -2944,7 +2942,7 @@ function render_resource_image($resource, $img_url, $display="thumbs")
     ?>
     <div class="ImageColourWrapper" 
     style="background-color: rgb(<?php echo $preview_red ?>,<?php echo $preview_green ?>,<?php echo $preview_blue ?>);
-    width:<?php echo $width; ?>px;height:<?php echo $height; ?>px;margin:<?php echo $margin; ?> auto 0 auto; 
+    width:<?php echo $width; ?>px;height:<?php echo $height; ?>px;
     <?php 
     $blurbleedstopper = hook("stopblurbleed"); 
     if ($blurbleedstopper) { echo $blurbleedstopper; }
@@ -2991,8 +2989,8 @@ function calculate_image_display(array $imagedata, string $img_url, string $disp
             break;
 
         case "thumbs":
-            $defaultwidth = 200;
-            $defaultheight = 200;
+            $defaultwidth = 202;
+            $defaultheight = 202;
             break;
 
         case "list":
@@ -6227,8 +6225,18 @@ function display_related_resources($context)
 
     $allrestypes = get_resource_types();
     $allrestypes_names = array_column($allrestypes, 'name', 'ref');
-
-    if ($ref == 0 || count(array_diff(array_column($allrestypes, "ref"), $relatedtypes_shown)) == 0) {
+    $render_related = checkperm("s") && ($k == "" || $internal_share_access);
+    if (
+        $ref == 0
+        || (
+            (
+                $render_related                 // Do you have permission to see the related resources
+                || !is_array($arr_related)      // Would there be any resources to populate it with
+                || count(array_intersect($relatedtypes_shown, array_column($arr_related, 'resource_type'))) == 0
+            )
+            && !$edit_access                    // If there aren't resources but you have access to add
+        )                                       // related resource you still need to be able to see the div
+    ) {
         return;
     }
 
@@ -6241,10 +6249,7 @@ function display_related_resources($context)
                 <div class="RecordResource">
                     <div class="Title"><?php echo escape($lang["relatedresources"]); ?></div>
                     <?php
-                    if (
-                        checkperm("s")
-                        && ($k == "" || $internal_share_access)
-                    ) {
+                    if ($render_related) {
                         if (count(array_diff(array_column($arr_related, "resource_type"), $relatedtypes_shown)) > 0) {
                             ?>
                             <a href="<?php echo generateURL($baseurl . '/pages/search.php', ['search' => "!related$ref", 'restypes' => '']); ?>"

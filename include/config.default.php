@@ -79,6 +79,8 @@ $mysqli_ssl_verify_server_cert = true;
 
 $mysql_sort_buffer_size = 0;
 
+// Applying changes to the database in a single transaction for performance improvement.
+$use_db_transaction = true;
 
 $baseurl = "http://my.site/resourcespace"; // The 'base' web address for this installation. Note: no trailing slash
 $email_from = ""; // Where system e-mails appear to come from. Written to config.php by setup.php
@@ -1428,20 +1430,14 @@ $partial_index_min_word_length = 3;
 // Thumbs Display Fields: array of fields to display on the large thumbnail view.
 $thumbs_display_fields = array(8); // ** SEE NOTE (1)
 
-// array of defined thumbs_display_fields to apply CSS modifications to (via $search_results_title_wordwrap, $search_results_title_height, $search_results_title_trim)
+// array of defined thumbs_display_fields to apply CSS modifications to (via $search_results_title_trim)
 $thumbs_display_extended_fields = array();
-    # $search_result_title_height=26;
-    $search_results_title_trim = 30;
-    $search_results_title_wordwrap = 100; // Force breaking up of very large titles so they wrap to multiple lines (useful when using multi line titles with $search_result_title_height). By default this is set very high so that breaking doesn't occur. If you use titles that have large unbroken words (e.g. filenames with no spaces) then it may be useful to set this value to something lower, e.g. 20
-
-// Shortcut icons on the thumbnails. Adds clutter but some users may prefer the direct link.
-$thumbs_edit=false;
-$thumbs_expand=false;
-$thumbs_share=false;
+# $search_result_title_height=26;
+$search_results_title_trim = 30;
 
 // Enable extra large thumbnails option for search screen
 $xlthumbs = true;
-$xl_search_results_title_trim = 60;
+$xl_search_results_title_trim = 50;
 
 // SORT Fields: display fields to be added to the sort links in large,small, and xlarge thumbnail views
 $sort_fields = array(12); // ** SEE NOTE (1)

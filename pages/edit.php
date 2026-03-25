@@ -345,7 +345,7 @@ if($editsearch)
     $items = $all_resource_refs;
 
     # Establish a list of resource types which will be involved in this edit
-    $items_resource_types = array_unique(array_column($edititems,"resource_type"));
+    $items_resource_types = array_unique(array_column($edititems,"resource_type")) ?: $restypes;
     if(in_array('2',(array_column($edititems,'archive')))){$items_resource_types[]=999;}
 
     $last_resource_edit = get_last_resource_edit_array($items); 
@@ -1376,7 +1376,7 @@ else
         
     hook("beforeimagecorrection");
 
-    if (!checkperm("F*") && !$resource_file_readonly && !$upload_review_mode)
+    if (!checkperm("F*") && !$resource_file_readonly && !$upload_review_mode && !resource_file_readonly($ref))
         { ?>
         <div class="Question" id="question_imagecorrection">
             <label for="tweak"><?php echo escape($lang["imagecorrection"])?><br/><?php echo escape($lang["previewthumbonly"])?></label>

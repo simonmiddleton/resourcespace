@@ -1067,6 +1067,7 @@ $lang["externalshareexpired"] = "Sorry, this share has expired and is no longer 
 $lang["notapprovedsharecollection"] = "One or more resources in this collection are not active and therefore sharing is prohibited.";
 $lang["notapprovedsharetheme"] = "Sharing is prohibited for at least one collection, because one or more resources is not active.";
 $lang["notapprovedresources"] = "The following resources are not active and cannot be added to a shared collection: ";
+$lang["notsharableresources"] = "The following resources are not shareable by this user and cannot be added to a shared collection: ";
 $lang['error_generating_access_key'] = 'Could not generate an access key';
 $lang['access_key_deleted'] = "Access key '%access_key' deleted";
 $lang['email_error_user_list_not_valid'] = 'No valid notifications to send (users might not be approved)';
@@ -3635,3 +3636,9 @@ $lang["requiredfield_multiple"] = "This is a required field when changing the ar
 
 $lang["reorder_invalid"] = "Collection can not be re-ordered unless the sort order is collection order";
 $lang["reorder_permissions_fail"] = "Collection can not be re-ordered as you do not have access to all resources in this collection";
+
+// Resource card menu
+$lang["resource-card-menu-delete"] = "Are you sure you wish to delete this resource?";
+$lang["resource-card-menu-delete-button"] = "Yes, delete resource";
+$lang["resource-card-menu-delete-perm"] = "Are you sure? This action cannot be reversed.";
+$lang["resource-card-menu-delete-perm-button"] = "Yes, delete permanently";

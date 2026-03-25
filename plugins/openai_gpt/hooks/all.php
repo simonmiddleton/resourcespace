@@ -174,7 +174,7 @@ function HookOpenai_gptAllAftersaveresourcedata($r, $all_nodes_to_add, $all_node
                     {
                     if(count($updated_resources[$ref][$field["ref"]]) == 1 && trim($updated_resources[$ref][$field["ref"]][0]) == "")
                         {
-                        if (trim($field["value"]) == "") 
+                        if (trim($field["value"] ?? "") == "")
                             {
                                 continue;
                             }

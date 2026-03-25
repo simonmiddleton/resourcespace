@@ -4282,32 +4282,35 @@ function create_previews_using_im(
             run_command($mpr_command);
         }
 
-         # For the thumbnail image, call extract_mean_colour() to save the colour/size information
-         $thumbpath = get_resource_path($ref, true, "thm", false, "jpg", -1, 1, false, "", $alternative);
-        if (file_exists($thumbpath)) {
-            $GLOBALS["use_error_exception"] = true;
-            try {
-                $target = imagecreatefromjpeg($thumbpath);
-            } catch (Throwable $e) {
+        if (count($onlysizes) === 0 || count(array_diff($GLOBALS['minimal_previews_sizes'], $onlysizes)) === 0) {
+            # Only when creating all previews or minimal previews - not for individual previews.
+            # For the thumbnail image, call extract_mean_colour() to save the colour/size information
+            $thumbpath = get_resource_path($ref, true, "thm", false, "jpg", -1, 1, false, "", $alternative);
+            if (file_exists($thumbpath)) {
+                $GLOBALS["use_error_exception"] = true;
+                try {
+                    $target = imagecreatefromjpeg($thumbpath);
+                } catch (Throwable $e) {
+                    $target = false;
+                    debug('Error when opening thm size for calling extract_mean_colour(): ' . $e->getMessage());
+                }
+                unset($GLOBALS["use_error_exception"]);
+            } else {
                 $target = false;
-                debug('Error when opening thm size for calling extract_mean_colour(): ' . $e->getMessage());
             }
-            unset($GLOBALS["use_error_exception"]);
-        } else {
-            $target = false;
-        }
 
-        $resource_data = get_resource_data($ref);
-        if ($target && $alternative == -1) {
-            // Do not run for alternative uploads
-            extract_mean_colour($target, $ref);
-            // Flag database. If this was run for e.g. a video or PDF it is not the full set of previews
-            $has_image = (($resource_data["file_extension"] ?? "") === $extension && $generateall) || $previewonly ? RESOURCE_PREVIEWS_ALL : RESOURCE_PREVIEWS_MINIMAL;
+            $resource_data = get_resource_data($ref);
+            if ($target && $alternative == -1) {
+                // Do not run for alternative uploads
+                extract_mean_colour($target, $ref);
+                // Flag database. If this was run for e.g. a video or PDF it is not the full set of previews
+                $has_image = (($resource_data["file_extension"] ?? "") === $extension && $generateall) || $previewonly ? RESOURCE_PREVIEWS_ALL : RESOURCE_PREVIEWS_MINIMAL;
 
-            ps_query("UPDATE resource SET has_image=?, preview_extension='jpg', preview_attempts=0, file_modified=NOW() WHERE ref = ?", ["i",$has_image, "i", $ref]);
-        } else {
-            if (!$target) {
-                ps_query("UPDATE resource SET preview_attempts=IFNULL(preview_attempts,0) + 1 WHERE ref = ?", ["i",$ref]);
+                ps_query("UPDATE resource SET has_image=?, preview_extension='jpg', preview_attempts=0, file_modified=NOW() WHERE ref = ?", ["i",$has_image, "i", $ref]);
+            } else {
+                if (!$target) {
+                    ps_query("UPDATE resource SET preview_attempts=IFNULL(preview_attempts,0) + 1 WHERE ref = ?", ["i",$ref]);
+                }
             }
         }
 
