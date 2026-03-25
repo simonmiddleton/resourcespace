@@ -2019,6 +2019,16 @@ function save_resource_type_field(int $ref, array $columns, $postdata): bool
                 )
             ) {
                 $val = 0;
+            } else {
+                $geomapping_fields = ps_array("SELECT geomapping value FROM resource_type_field WHERE ref != ?", ["i", $ref]);
+                if (
+                    in_array($val, $geomapping_fields) // This option is used elsewhere
+                    || in_array(FIELD_GEO_LOCATION::both->value, $geomapping_fields) // A different field is set to both
+                    || (in_array(FIELD_GEO_LOCATION::latitude->value, $geomapping_fields)
+                        && in_array(FIELD_GEO_LOCATION::longitude->value, $geomapping_fields)) // Both lat and long are set elsewhere
+                    ) {
+                    $val = 0;
+                }
             }
         }
 
