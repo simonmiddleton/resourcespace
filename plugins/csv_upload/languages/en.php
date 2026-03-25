@@ -15,6 +15,7 @@ $lang["csv_upload_condition5"] = "For column(s) that have values containing <b>c
 $lang["csv_upload_condition6"] = "You can download a CSV file example by clicking on <a href=\"../downloads/csv_upload_example.csv\">csv-upload-example.csv</a>";
 $lang["csv_upload_condition7"] = "To update existing resource data you can download a CSV with the existing metadata by clicking on the 'CSV export - metadata' option from the collection or search results actions menu";
 $lang["csv_upload_condition8"] = "You can re-use a previously configured CSV mapping file by clicking on 'Upload CSV configuration file'";
+$lang["csv_upload_condition9"] = "To update location latitude and longitude must be combined in a single column with a comma separator or in two different fields.";
 $lang["csv_upload_error_no_permission"] = "You do not have the correct permissions to upload a CSV file";
 $lang["check_line_count"] = "At least two rows found in CSV file";
 $lang["csv_upload_file"] = "Select CSV file";
@@ -46,6 +47,8 @@ $lang["csv_upload_resource_type_default"]       = "Default resource type if no c
 $lang["csv_upload_resource_match_column"]       = "Select the column that contains the resource identifier";
 $lang["csv_upload_match_type"]                  = "Match resource based on resource ID or metadata field value?";
 $lang["csv_upload_multiple_match_action"]       = "Action to take if multiple matching resources are found";
+$lang["csv_upload_location"]                    = "Select the column that contains the location for the resource, or Latitude if using separate columns";
+$lang["csv_upload_longitude"]                   = "Select the column for Longitude if separate to the column above";
 $lang["csv_upload_validation_notes"]            = "Check the validation messages below before proceeding. Click Process to commit the changes";
 $lang["csv_upload_upload_another"]              = "Upload another CSV";
 $lang["csv_upload_mapping config"]              = "CSV column mapping settings";
@@ -83,3 +86,5 @@ $lang['csv_upload_processing'] = 'Processing';
 $lang['processing_batch_edit_save'] = 'row [row_number] of [rows_count]';
 
 $lang["page-title_csv_upload_csv_upload"] = "Upload CSV";
+$lang["latitude"] = "latitude";
+$lang["longitude"] = "longitude";

@@ -1167,7 +1167,6 @@ function save_resource_data($ref, $multi, $autosave_field = "")
                             }
                         }
                     } elseif ($fields[$n]["geomapping"] == FIELD_GEO_LOCATION::latitude->value) {
-                        debug("BANG " . __LINE__ . ": " . $val);
                         if ($val == "") {
                             ps_query("UPDATE resource SET geo_lat=null WHERE ref= ?", ['i', $ref]);
                             resource_log(
@@ -1179,7 +1178,6 @@ function save_resource_data($ref, $multi, $autosave_field = "")
                                 ""
                             );
                         } elseif (is_float_loose($val) && ((float) $val) >= -90 && ((float) $val) <= 90) {
-                            debug("BANG " . __LINE__);
                             ps_query("UPDATE resource SET geo_lat=? WHERE ref= ?", ['d', $val, 'i', $ref]);
                             resource_log(
                                 $ref,
@@ -1190,7 +1188,6 @@ function save_resource_data($ref, $multi, $autosave_field = "")
                                 $val
                             );
                         } else {
-                            debug("BANG " . __LINE__);
                             $errors[$fields[$n]['ref']] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-error-invalid-lat"];
                         }
                     } elseif ($fields[$n]["geomapping"] == FIELD_GEO_LOCATION::longitude->value) {

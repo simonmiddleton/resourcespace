@@ -51,7 +51,9 @@ $csv_default_settings = array(
     "access_default" => 0,
     "fieldmapping" => array(),
     "csvchecksum" => "",
-    "csv_filename" => ""
+    "csv_filename" => "",
+    "location_column" => "",
+    "longitude_column" => "",
     );
 
 if ($csv_saved_options != "" && getval("resetconfig", "") == "") {
@@ -73,6 +75,8 @@ $selected_columns[] = $csv_set_options["resource_type_column"];
 $selected_columns[] = $csv_set_options["id_column"];
 $selected_columns[] = $csv_set_options["status_column"];
 $selected_columns[] = $csv_set_options["access_column"];
+$selected_columns[] = $csv_set_options["location_column"];
+$selected_columns[] = $csv_set_options["longitude_column"];
 $selected_columns = array_filter($selected_columns, "emptyiszero");
 
 $usehash = $session_hash ?? get_rs_session_id(true);
@@ -418,6 +422,49 @@ if (!checkperm("c")) {
                         <div class="clearerleft"></div>
                     </div>               
 
+                    <?php if (!$disable_geocoding) { ?>
+                        <div class="Question" id="location_column_question">
+                            <label for="location_column"><?php echo escape($lang["csv_upload_location"]); ?></label>
+                            <select id="location_column" name="location_column" class="stdwidth columnselect">
+                                <option value=""><?php echo escape($lang["select"]); ?></option>
+                                <?php
+                                foreach ($csv_info as $csv_column => $csv_field_data) {
+                                    echo "<option value=\"" . $csv_column . "\" ";
+                                    if (
+                                        ($csv_set_options["location_column"] != "" && $csv_set_options["location_column"] == $csv_column)
+                                        || strtolower($csv_field_data["header"]) == strtolower($lang["location"])
+                                        || strtolower($csv_field_data["header"]) == strtolower($lang["latitude"])
+                                    ) {
+                                        echo " selected ";
+                                    }
+                                    echo  ">" . escape($csv_field_data["header"]) . "</option>\n";
+                                }
+                                ?>
+                            </select>
+                            <div class="clearerleft"></div>
+                        </div>
+                        <div class="Question"  id="longitude_column_question">
+                            <label for="longitude_column"><?php echo escape($lang["csv_upload_longitude"]); ?></label>
+                            <select id="longitude_column" name="longitude_column" class="stdwidth columnselect">
+                                <option value=""><?php echo escape($lang["select"]); ?></option>
+                                <?php
+                                foreach ($csv_info as $csv_column => $csv_field_data) {
+                                    echo "<option value=\"" . $csv_column . "\" ";
+                                    if (
+                                        ($csv_set_options["longitude_column"] != "" && $csv_set_options["longitude_column"] == $csv_column)
+                                        ||
+                                        strtolower($csv_field_data["header"]) == strtolower($lang["longitude"])
+                                    ) {
+                                        echo " selected ";
+                                    }
+                                    echo  ">" . escape($csv_field_data["header"]) . "</option>\n";
+                                }
+                                ?>
+                            </select>
+                            <div class="clearerleft"></div>
+                        </div>
+                    <?php } ?>
+
                     <div class="QuestionSubmit NoPaddingSaveClear QuestionSticky">
                         <input type="button" id="back" value="<?php echo escape($lang["back"]); ?>"  onClick="CentralSpaceLoad('<?php echo generateURL($_SERVER["SCRIPT_NAME"], array("csvstep" => $csvstep - 1)); ?>',true);return false;" > 
                         <input type="submit" id="submit" value="<?php echo escape($lang["next"]); ?>">
@@ -588,6 +635,49 @@ if (!checkperm("c")) {
                         </select>
                         <div class="clearerleft"></div>
                     </div>
+
+                    <?php if (!$disable_geocoding) { ?>
+                        <div class="Question" id="location_column_question">
+                            <label for="location_column"><?php echo escape($lang["csv_upload_location"]); ?></label>
+                            <select id="location_column" name="location_column" class="stdwidth columnselect">
+                                <option value=""><?php echo escape($lang["select"]); ?></option>
+                                <?php
+                                foreach ($csv_info as $csv_column => $csv_field_data) {
+                                    echo "<option value=\"" . $csv_column . "\" ";
+                                    if (
+                                        ($csv_set_options["location_column"] != "" && $csv_set_options["location_column"] == $csv_column)
+                                        || strtolower($csv_field_data["header"]) == strtolower($lang["location"])
+                                        || strtolower($csv_field_data["header"]) == strtolower($lang["latitude"])
+                                    ) {
+                                        echo " selected ";
+                                    }
+                                    echo  ">" . escape($csv_field_data["header"]) . "</option>\n";
+                                }
+                                ?>
+                            </select>
+                            <div class="clearerleft"></div>
+                        </div>
+                        <div class="Question"  id="longitude_column_question">
+                            <label for="longitude_column"><?php echo escape($lang["csv_upload_longitude"]); ?></label>
+                            <select id="longitude_column" name="longitude_column" class="stdwidth columnselect">
+                                <option value=""><?php echo escape($lang["select"]); ?></option>
+                                <?php
+                                foreach ($csv_info as $csv_column => $csv_field_data) {
+                                    echo "<option value=\"" . $csv_column . "\" ";
+                                    if (
+                                        ($csv_set_options["longitude_column"] != "" && $csv_set_options["longitude_column"] == $csv_column)
+                                        ||
+                                        strtolower($csv_field_data["header"]) == strtolower($lang["longitude"])
+                                    ) {
+                                        echo " selected ";
+                                    }
+                                    echo  ">" . escape($csv_field_data["header"]) . "</option>\n";
+                                }
+                                ?>
+                            </select>
+                            <div class="clearerleft"></div>
+                        </div>
+                    <?php } ?>
 
                     <div class="QuestionSubmit NoPaddingSaveClear QuestionSticky">
                         <input type="button" id="back" value="<?php echo escape($lang["back"]); ?>"  onClick="CentralSpaceLoad('<?php echo generateURL($_SERVER["SCRIPT_NAME"], array("csvstep" => $csvstep - 1)); ?>',true);return false;"> 
