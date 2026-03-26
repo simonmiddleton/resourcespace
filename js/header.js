@@ -15,10 +15,15 @@ ResourceSpace.Modules.Header = (() => {
         mq_mobile.addEventListener('change', makeStickyHeader);
         makeStickyHeader(mq_mobile);
 
-        header.addEventListener('click', (e) => {
+        header.querySelector('.header-search-field').addEventListener('click', (e) => {
             if (
-                e.target.matches('.header-search-field .input-wrapper > button') ||
-                e.target.matches('.header-search-field section > button')
+                // The open/close buttons for the search (filter) panel
+                e.target.matches('.input-wrapper > button')
+                || e.target.matches('section > button')
+                
+                // Clicking on the search (filter) panel links, at the bottom, will close the panel
+                || e.target.matches('#simplesearchbuttons > a i')
+                || e.target.matches('#simplesearchbuttons > a span')
             ) {
                 toggleSearchPanel(e);
             }

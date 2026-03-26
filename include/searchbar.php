@@ -241,6 +241,7 @@ $selected_search_tab = getval("selected_search_tab", "search");
         <section id="search-filters-panel" hidden>
             <button type="button" class="<?php echo Icon::X->value; ?>" aria-label="<?php echo escape(text('close')); ?>"></button>
             <div id="SearchBoxPanel">
+                <div id="search-panel-main">
                     <input
                         id="ssearchhiddenfields"
                         name="ssearchhiddenfields"
@@ -333,7 +334,7 @@ $selected_search_tab = getval("selected_search_tab", "search");
                                 <?php
                             }
 
-                            $rt = explode(",", @$restypes);
+                            $rt = is_array($restypes) ? $restypes : explode(",", $restypes);
                             $clear_function = "SetCookie('search','');SetCookie('restypes','');SetCookie('ssearchhiddenfields','');SetCookie('saved_offset','');SetCookie('saved_archive','');";
                             hook('clearsearchcookies');
 
@@ -452,35 +453,6 @@ $selected_search_tab = getval("selected_search_tab", "search");
                     }
 
                     hook("searchfiltertop");
-
-                    $searchbuttons = "<div class=\"SearchItem\" id=\"simplesearchbuttons\">";
-
-                    $cleardate = "";
-                    if ($simple_search_date) {
-                        $cleardate .= " document.getElementById('basicyear').value='';document.getElementById('basicmonth').value='';" ;
-                    }
-
-                    if ($searchbyday && $simple_search_date) {
-                        $cleardate .= "document.getElementById('basicday').value='';";
-                    }
-
-                    if (!$basic_simple_search) {
-                        $searchbuttons .= "<input name=\"Clear\" id=\"clearbutton\" class=\"searchbutton\" type=\"button\" value=\"" . escape($lang['clearbutton']) . "\" onClick=\"unsetCookie('search_form_submit','" . $baseurl_short . "');";
-
-                        # Clear the standard fields
-                        $searchbuttons .= "document.getElementById('ssearchbox').value='';" . $cleardate;
-
-                        if ($resourceid_simple_search) {
-                            $searchbuttons .= " document.getElementById('searchresourceid').value='';";
-                        }
-
-                        $searchbuttons .= "ResetTicks();SimpleSearchFieldsHideOrShow();\"/>";
-                    } else {
-                        $searchbuttons .= '<input name="Clear" id="clearbutton" class="searchbutton" type="button" value="' . escape($lang['clearbutton']) . '" onClick=" document.getElementById(\'ssearchbox\').value=\'\';"/>';
-                    }
-
-                    $searchbuttons .= "<input name=\"Submit\" id=\"searchbutton\" class=\"searchbutton\" type=\"submit\" value=\"" . escape($lang['searchbutton']) . "\" onclick=\"SimpleSearchFieldsHideOrShow();\" />";
-                    $searchbuttons .= "</div>";
 
                     if (!$basic_simple_search) {
                         // Include simple search items (if any)
@@ -844,7 +816,6 @@ $selected_search_tab = getval("selected_search_tab", "search");
                             }
                             ?>
                         </div>
-
                         <script type="text/javascript">
                             function ResetTicks() {
                                 <?php echo $clear_function; ?>
@@ -853,33 +824,49 @@ $selected_search_tab = getval("selected_search_tab", "search");
         
                         <?php
                     }
-                    
-                    echo $searchbuttons;
-                    ?>
-                <br />
-
+                ?>
+                </div>
+                <div id="simplesearchbuttons" class="SearchItem">
+                    <input name="Submit" id="searchbutton" class="searchbutton" type="submit" value="<?php echo escape($lang['searchbutton']); ?>" onclick="SimpleSearchFieldsHideOrShow();">
+                    <a href="#" onclick="<?php
+                        if ($basic_simple_search) {
+                            echo "document.getElementById('ssearchbox').value='';";
+                        } else {
+                            printf(
+                                'unsetCookie(\'search_form_submit\', baseurl_short);
+                                document.getElementById(\'ssearchbox\').value=\'\';
+                                %s
+                                %s
+                                %s
+                                ResetTicks(); SimpleSearchFieldsHideOrShow();
+                                return false;',
+                                $simple_search_date ? "document.getElementById('basicyear').value='';document.getElementById('basicmonth').value='';" : '',
+                                $searchbyday && $simple_search_date ? "document.getElementById('basicday').value='';" : '',
+                                $resourceid_simple_search ? "document.getElementById('searchresourceid').value='';" : ''
+                            );
+                        }
+                    ?>">
+                        <?php render_icon_wrapper_component(Icon::CircleX); ?>
+                        <span><?php echo escape($lang["clearbutton"]); ?></span>
+                    </a>
                 <?php
                 hook("searchbarbeforebottomlinks");
 
                 if (!$disable_geocoding) {
                     ?>
-                    <p>
-                        <i aria-hidden="true" class="icon-globe "></i>
-                        <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl; ?>/pages/geo_search.php">
-                            <?php echo escape($lang["geographicsearch"]); ?>
-                        </a>
-                    </p>
+                    <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl; ?>/pages/geo_search.php">
+                        <?php render_icon_wrapper_component(Icon::Globe); ?>
+                        <span><?php echo escape($lang["geographicsearch"]); ?></span>
+                    </a>
                     <?php
                 }
                 
                 if (!$advancedsearch_disabled) {
                     ?>
-                    <p>
-                        <i aria-hidden="true" class="icon-zoom-in "></i>
-                        <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl; ?>/pages/search_advanced.php">
-                            <?php echo escape($lang["gotoadvancedsearch"]); ?>
-                        </a>
-                    </p>
+                    <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl; ?>/pages/search_advanced.php">
+                        <?php render_icon_wrapper_component(Icon::FunnelPlus); ?>
+                        <span><?php echo escape($lang["gotoadvancedsearch"]); ?></span>
+                    </a>
                     <?php
                 }
                 
@@ -887,12 +874,10 @@ $selected_search_tab = getval("selected_search_tab", "search");
                 
                 if ($view_new_material) {
                     ?>
-                    <p>
-                        <i aria-hidden="true" class="icon-clock"></i>
-                        <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl; ?>/pages/search.php?search=<?php echo urlencode("!last" . $recent_search_quantity); ?>">
-                            <?php echo escape($lang["viewnewmaterial"]); ?>
-                        </a>
-                    </p>
+                    <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL("{$baseurl}/pages/search.php", ['search' => "!last{$recent_search_quantity}"]); ?>">
+                        <?php render_icon_wrapper_component(Icon::Clock); ?>
+                        <span><?php echo escape($lang["viewnewmaterial"]); ?></span>
+                    </a>
                     <?php
                 }
                 ?>
@@ -907,6 +892,7 @@ $selected_search_tab = getval("selected_search_tab", "search");
             <?php } ?>
     <?php }
 ?>
+                </div>
             </div>
         </section>
     </form>

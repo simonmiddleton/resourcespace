@@ -404,7 +404,6 @@ select:before {
 }
 
 #clearbutton {margin: 10px 5px 0 0;width: 122px; font-weight: 600;}
-#searchbutton{ width: 122px;margin: 10px 0 0 0; font-weight: 600;}
 /*General tags*/
 .clearer {clear:both;}
 .clearerleft {clear:left;}
@@ -3512,9 +3511,55 @@ header.LoginHeader {
 .header-search-field #search-filters-panel #SearchBoxPanel {
     max-width: 1366px;
     margin: 0 auto;
+}
+
+.header-search-field #search-panel-main {
+    width: 100%;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.header-search-field #simplesearchbuttons {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-direction: row-reverse;
+}
+
+.header-search-field #simplesearchbuttons > a {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: var(--space-4);
+    padding: unset;
+    text-decoration: none;
+    color: var(--colour-brand-primary-default);
+    line-height: 150%; /* 24px */
+}
+
+.header-search-field #simplesearchbuttons > a:hover {
+    color: var(--colour-brand-primary-darkest);
+}
+
+.header-search-field #simplesearchbuttons a > span {
+    text-decoration: underline;
+}
+
+.header-search-field #simplesearchbuttons a > i {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: var(--space-20);
+}
+
+.header-search-field #searchbutton {
+    margin: unset;
+    height: var(--space-48);
+    padding: var(--space-12) var(--space-16);
+    border-radius: var(--space-4);
+    background: var(--colour-brand-primary-default);
+    box-shadow: unset;
 }
 
 #header-container .primary-navigation {
@@ -3551,9 +3596,13 @@ header.LoginHeader {
 
 #header-container .primary-navigation ul.menu-panel {
     gap: unset;
+    /* todo: fix menu items following r28445 - this is commented more to make it obvious the styling is broken!
+    background: var(--colour-surface-50); */
 }
 
 #header-container .primary-navigation ul.menu-panel > li {
+    /* todo: fix menu items following r28445
+    max-width: 250px; */
     max-width: unset;
     height: var(--space--36, 36px);
     padding: 0 var(--space-12, 12px);
@@ -3705,13 +3754,15 @@ header.LoginHeader {
 }
 
 #header-container a.UploadButton:hover,
-#header-container a.LoginButton:hover {
-    background: var(--colour-brand-primary-hover, #0A73EB);
+#header-container a.LoginButton:hover,
+#header-container #searchbutton:hover {
+    background: var(--colour-brand-primary-hover);
 }
 
 #header-container a.UploadButton:active,
-#header-container a.LoginButton:active {
-    background: var(--colour-brand-primary-dark, #053D7D);
+#header-container a.LoginButton:active,
+#header-container #searchbutton:active {
+    background: var(--colour-brand-primary-dark);
     opacity: unset;
 }
 
@@ -3938,6 +3989,11 @@ header.LoginHeader {
     #header-container .actions .UploadButton {
         margin-left: auto;
     }
+
+    /* todo: fix menu items following r28445
+    #header-container .primary-navigation ul.menu-panel > li {
+        max-width: unset;
+    } */
 }
 
 
