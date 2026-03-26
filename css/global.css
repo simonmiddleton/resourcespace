@@ -4007,6 +4007,22 @@ header.LoginHeader {
         margin-left: auto;
     }
 
+    .header-search-field #search-filters-panel #SearchBoxPanel {
+        height: 65vh;
+        overflow: auto;
+        gap: var(--space-16);
+    }
+
+    .header-search-field #simplesearchbuttons {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .header-search-field #simplesearchbuttons > input {
+        margin-bottom: var(--space-4);
+        width: 100%;
+    }
+
     /* todo: fix menu items following r28445
     #header-container .primary-navigation ul.menu-panel > li {
         max-width: unset;
