@@ -38,7 +38,7 @@ if (!$resdata) {
 }
 
 if ($resource > 0) {
-    delete_previews($resource);
+    delete_previews($resource, $alternative);
 }
 
 logScript("[create_previews] Creating previews", $log_file);

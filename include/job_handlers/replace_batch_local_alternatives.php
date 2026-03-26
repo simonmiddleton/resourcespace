@@ -8,14 +8,13 @@ $job_data['import_path'] - Folder to scan for files to import
 */
 
 global $lang, $baseurl_short, $offline_job_delete_completed, $fstemplate_alt_threshold;
-global $notify_on_resource_change_days, $replace_batch_existing;
+global $notify_on_resource_change_days, $replace_alt_batch_existing;
 
 $local_path     = $job_data['import_path'];
 $minref         = $job_data['batch_replace_min'];
 $maxref         = $job_data['batch_replace_max'];
 $collectionid   = $job_data['batch_replace_col'];
 $filename_field = $job_data['filename_field'];
-$no_exif         = ($job_data['no_exif'] == "yes") ? true : false ;
 
 if (!file_exists($local_path)) {
     job_queue_update($jobref, $job_data, STATUS_ERROR);
@@ -45,8 +44,6 @@ if (!isset($collectionid) || $collectionid == 0) {
     $logtext[] = "Replacing resources within collection " . $collectionid . " only";
 }
 
-
-$logtext[] = "Embedded (EXIF) data extraction: " . ($no_exif ? "OFF" : "ON");
 $replaced = array();
 $errors = array();
 
@@ -60,87 +57,60 @@ foreach ($foldercontents as $objectindex => $object) {
     $extension  = $object->getExtension();
     $full_path = $local_path . DIRECTORY_SEPARATOR . $filename;
 
-    $alternatives = get_alternative_files_by_filename($filename, $collectionid, $min, $max);
+    $alternatives = get_alternative_files_by_filename($filename, $collectionid, $minref, $maxref);
 
-    if (count($alternatives) == 1) {
-        $alternative = $alternatives[0]['ref'];
-        $resource = $alternatives[0]['resource'];
-        $extension = $alternatives[0]['extension'];
-
-        // A single resource has been found with the same filename
-        $altfile = get_resource_path($resource, true, '', true, $extension, true, 1, false, '', $alternative);
-        try {
-            copy($full_path, $altfile);
-            $success = filesize_unlimited($full_path) == filesize_unlimited($altfile);
-        } catch (Exception $e) {
-            $success = false;
-            $errors[] = "ERROR - Copy operation failed for {$full_path} : " . $e->getMessage();
-        }
-        if ($success) {
-            // update resource alt file table
-            ps_query();
-            resource_log($resource, "u", 0);
-            create_previews($resource, false, $extension, false, false, $alternative);
-            if ($notify_on_resource_change_days != 0) {
-                notify_resource_change($resource);
-            }
-            $replaced[] = $resource;
-            try_unlink($full_path);
-        } else {
-            $errors[] = "Failed to copy file from : " .  $full_path;
-        }
-    } elseif (count($valid_resources) == 0) {
+    if (count($alternatives) == 0) {
         // No resource found with the same filename
         $errors[] = "Failed to find matching alternative file record for: " .  $filename;
+    } else if (count($alternatives) === 1 || $replace_alt_batch_existing) {
+        $copy_error = false;
+        foreach ($alternatives as $alternative) {
+            $ref = $alternative['ref'];
+            $resource = $alternative['resource'];
+            $extension = $alternative['file_extension'];
+            $altfile = get_resource_path($resource, true, '', true, $extension, true, 1, false, "", $ref);
+            $GLOBALS["use_error_exception"] = true;
+            try {
+                copy($full_path, $altfile);
+                $filesize = filesize_unlimited($altfile);
+                $success = filesize_unlimited($full_path) == $filesize;
+            } catch (Exception $e) {
+                $success = false;
+                $errors[] = "ERROR - Copy operation failed for {$full_path} : " . $e->getMessage();
+            }
+            unset($GLOBALS["use_error_exception"]);
+
+            if ($success) {
+                ps_query(
+                    "UPDATE resource_alt_files SET file_size = ? WHERE ref = ?",
+                    ["i", $filesize, "i", $ref]
+                );
+                resource_log($resource, "u", 0);
+                create_previews($resource, false, $extension, false, false, $ref);
+                $replaced[$ref] = $resource;
+            } else {
+                $errors[] = "Failed to copy file from : " .  $full_path;
+                $copy_error = true;
+            }
+        }
+        // Attempt to delete
+        if (!$copy_error) {
+            try_unlink($full_path);
+        }
     } else {
         // Multiple resources found with the same filename
-        if ($replace_alt_batch_existing) {
-            $copy_error = false;
-            foreach ($alternatives as $alternative) {
-                $alternative = $alternative['ref'];
-                $resource = $alternative['resource'];
-                $extension = $alternative['extension'];
-                $altfile = get_resource_path($alternative['resource'], true, '', true, $extension);
-                try {
-                    copy($full_path, $altfile);
-                    $success = filesize_unlimited($full_path) == filesize_unlimited($altfile);
-                } catch (Exception $e) {
-                    $success = false;
-                    $errors[] = "ERROR - Copy operation failed for {$full_path} : " . $e->getMessage();
-                }
-                if ($success) {
-                    ps_query("update resource set file_extension = lower(?) where ref = ?", array("s", $extension, "i", $valid_resource));
-                    resource_log($valid_resource, "u", 0);
-                    if (!$no_exif) {
-                        extract_exif_comment($valid_resource, $extension);
-                    }
-                    create_previews($valid_resource, false, $extension);
-                    if ($notify_on_resource_change_days != 0) {
-                        notify_resource_change($valid_resource);
-                    }
-                    $replaced[] = $resource;
-                } else {
-                    $errors[] = "Failed to copy file from : " .  $full_path;
-                    $copy_error = true;
-                }
-            }
-            // Attempt to delete
-            if (!$copy_error) {
-                try_unlink($full_path);
-            }
-        } else {
-            // Multiple resources found with the same filename
-            $resourcelist = implode(",", array_column($alternatives, 'resource'));
-            $errors[] = "ERROR - multiple alternative file records found with filename '" . $filename . "'. Resource IDs : " . $resourcelist;
-        }
+        $resourcelist = implode(",", array_unique(array_column($alternatives, 'resource'), SORT_NUMERIC));
+        $errors[] = "ERROR - multiple alternative file records found with filename '" . $filename . "'. Resource IDs : $resourcelist";
     }
 }
 
 $logtext[] = "Replaced " . count($replaced) . " alternative files: -";
 
 if (count($replaced) > 0) {
-    $logtext[] = "Replaced alternative files for resource IDs:";
-    $logtext[] = implode(",", $replaced);
+    $logtext[] = "Replaced alternative files:";
+    $logtext[] = implode(",", array_keys($replaced));
+    $logtext[] = "For resource IDs:";
+    $logtext[] = implode(",", array_unique(array_values($replaced), SORT_NUMERIC));
 }
 
 if (count($errors) > 0) {
@@ -157,4 +127,10 @@ if (count($errors) > 0) {
 }
 
 echo " --> " . implode("\n --> ", $logtext) . "\n";
-message_add($job["user"], implode("<br />", $logtext), (count($replaced) > 0) ? $baseurl_short . "pages/search.php?search=!list" . implode(":", $replaced) : "");
+if (count($replaced) > 0) {
+    $url = "{$baseurl_short}pages/search.php?search=!list";
+    $url .= implode(":", array_unique(array_values($replaced), SORT_NUMERIC));
+} else {
+    $url = "";
+}
+message_add($job["user"], implode("<br />", $logtext), $url);
