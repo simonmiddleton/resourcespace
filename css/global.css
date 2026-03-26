@@ -3523,7 +3523,7 @@ header.LoginHeader {
 
 .header-search-field #simplesearchbuttons {
     display: flex;
-    gap: 10px;
+    gap: var(--space-20);
     align-items: center;
     flex-direction: row-reverse;
 }
