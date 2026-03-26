@@ -461,6 +461,10 @@ function add_resource_to_collection(
             collection_log($collection, LOG_CODE_COLLECTION_ADDED_RESOURCE, $resource);
         }
 
+        if ($collection_data['type'] === COLLECTION_TYPE_FEATURED) {
+            clear_query_cache("featured_collections");
+        }
+
         // Clear theme image cache
         clear_query_cache("themeimage");
         clear_query_cache('col_total_ref_count_w_perm');
