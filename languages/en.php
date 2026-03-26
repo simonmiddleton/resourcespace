@@ -235,8 +235,8 @@ $lang["changethemeto"] = "Change theme to";
 # Search bar
 $lang["simplesearch"] = "Simple search";
 $lang["search_filter_panel_toggle"] = "Toggle search filters";
-$lang["searchbutton"] = "Search";
-$lang["clearbutton"] = "Clear";
+$lang["searchbutton"] = "Search resources";
+$lang["clearbutton"] = "Clear filters";
 $lang["bycountry"] = "By country";
 $lang["bydate"] = "By date";
 $lang["anyyear"] = "Any year";
