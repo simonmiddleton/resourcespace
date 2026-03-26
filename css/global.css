@@ -3511,6 +3511,9 @@ header.LoginHeader {
 .header-search-field #search-filters-panel #SearchBoxPanel {
     max-width: 1366px;
     margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-20);
 }
 
 .header-search-field #search-panel-main {
@@ -3525,6 +3528,7 @@ header.LoginHeader {
     display: flex;
     gap: var(--space-20);
     align-items: center;
+    flex-wrap: wrap;
     flex-direction: row-reverse;
 }
 
@@ -3850,8 +3854,21 @@ header.LoginHeader {
         width: 100%;
     }
 
+    .header-search-field #search-filters-panel {
+        padding: var(--space-16);
+    }
+
+    .header-search-field #search-filters-panel #SearchBoxPanel {
+        gap: var(--space-32);
+    }
+
     .header-search-field #search-filters-panel > button {
         display: none;
+    }
+
+    .header-search-field #simplesearchbuttons > input {
+        margin-left: auto;
+        flex-shrink: 0;
     }
 
     #header-container > .primary-navigation {

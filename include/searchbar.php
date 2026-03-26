@@ -826,7 +826,7 @@ $selected_search_tab = getval("selected_search_tab", "search");
                     }
                 ?>
                 </div>
-                <div id="simplesearchbuttons" class="SearchItem">
+                <div id="simplesearchbuttons">
                     <input name="Submit" id="searchbutton" class="searchbutton" type="submit" value="<?php echo escape($lang['searchbutton']); ?>" onclick="SimpleSearchFieldsHideOrShow();">
                     <a href="#" onclick="<?php
                         if ($basic_simple_search) {
