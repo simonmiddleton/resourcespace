@@ -14,4 +14,10 @@ enum Icon: string
     case EllipsisVertical = 'icon-ellipsis-vertical';
     case Menu = 'icon-menu';
     case X = 'icon-x';
+    case CircleX = 'icon-circle-x';
+    case Globe = 'icon-globe';
+    case FunnelPlus = 'icon-funnel-plus';
+    case Clock = 'icon-clock';
+    case Rss = 'icon-rss';
+    case Brain = 'icon-brain';
 }
