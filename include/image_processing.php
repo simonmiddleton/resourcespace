@@ -2564,6 +2564,10 @@ function delete_previews($resource, $alternative = -1)
         $extension = $resource_data["file_extension"];
     }
 
+    if (resource_file_readonly($resource)) {
+        return;
+    }
+
     $fullsizejpgpath = get_resource_path($resource, true, "", false, "jpg", -1, 1, false, "", $alternative);
     // Delete the full size original if not a JPG resource
     if ($extension !== "" && strtolower((string) $extension) != "jpg" && file_exists($fullsizejpgpath) && $alternative == -1) {
