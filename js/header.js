@@ -21,9 +21,11 @@ ResourceSpace.Modules.Header = (() => {
                 e.target.matches('.input-wrapper > button')
                 || e.target.matches('section > button')
                 
-                // Clicking on the search (filter) panel links, at the bottom, will close the panel
-                || e.target.matches('#simplesearchbuttons > a i')
-                || e.target.matches('#simplesearchbuttons > a span')
+                // Clicking on the search (filter) panel links (except the clear filters ones), or on the search button
+                // will close the panel
+                || e.target.matches('#simplesearchbuttons > a:not(:first-of-type) i')
+                || e.target.matches('#simplesearchbuttons > a:not(:first-of-type) span')
+                || e.target.matches('#simplesearchbuttons > input')
             ) {
                 toggleSearchPanel(e);
             }
