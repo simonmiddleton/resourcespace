@@ -757,9 +757,6 @@ function render_search_field(
                 }
               ?>
             </select>
-
-            <?php if ($forsearchbar && $searchbyday) { ?><br /><?php } ?>
-
             <select name="<?php echo escape($name);?>-m" id="<?php echo $id?>-m" class="SearchWidth<?php if ($forsearchbar){ echo "Half SearchWidthRight";} ?>" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
               <option value=""><?php echo escape($lang["anymonth"])?></option>
               <?php
