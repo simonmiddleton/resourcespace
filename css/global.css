@@ -3538,13 +3538,9 @@ header.LoginHeader {
     padding-bottom: unset;
 }
 
-.header-search-field #search-panel-main > .field-input input {
-    width: 250px;
-}
-
+.header-search-field #search-panel-main > .field-input input,
 .header-search-field #search-panel-main > .field-input select {
     width: 250px;
-    max-width: 250px;
 }
 
 .header-search-field #search-panel-main > .field-input #cattree_categorytreefield {
@@ -4054,10 +4050,30 @@ header.LoginHeader {
         margin-left: auto;
     }
 
+    .header-search-field #search-panel-main {
+        flex-direction: column;
+        flex-wrap: nowrap;
+    }
+
     .header-search-field #search-filters-panel #SearchBoxPanel {
         height: 65vh;
         overflow: auto;
         gap: var(--space-16);
+    }
+
+    .header-search-field #search-panel-main > .field-input input,
+    .header-search-field #search-panel-main > .field-input select {
+        width: 100%;
+    }
+
+    .header-search-field #search-panel-main > .field-input #cattree_categorytreefield {
+        /* width: 290px; */
+        max-width: 300px;
+    }
+
+    .header-search-field #search-panel-main > .field-input .MiniCategoryBox {
+        width: 290px;
+        height: calc(2 * var(--form-field-min-height));
     }
 
     .header-search-field #simplesearchbuttons {
