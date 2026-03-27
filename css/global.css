@@ -3381,7 +3381,7 @@ header.LoginHeader {
     max-width: 1366px;
     padding: var(--space-16, 16px);
     align-items: center;
-    gap: var(--space--32, 32px);
+    gap: var(--space-32, 32px);
 }
 
 #header-container .logo {
@@ -3467,7 +3467,7 @@ header.LoginHeader {
     top: 100%;
     left: 0;
     width: 100%;
-    padding: var(--space--24, 24px) 0 var(--space-16, 16px) 0;
+    padding: var(--space-24) var(--space-32) var(--space-16) var(--space-32);
     opacity: 0;
     visibility: hidden;
     transform: translateY(-12px);
@@ -3671,7 +3671,7 @@ header.LoginHeader {
 #header-container .actions {
     display: flex;
     align-items: center;
-    gap: var(--space--24, 24px);
+    gap: var(--space-24, 24px);
 }
 
 #header-container .actions > .primary-navigation {
@@ -3799,6 +3799,17 @@ header.LoginHeader {
 
     #header-container .header-search-field {
         flex: 0 1 clamp(320px, 38vw, 399px);
+    }
+
+    .header-search-field #search-filters-panel {
+        display: flex;
+        flex-direction: row-reverse;
+        gap: var(--space-16);
+    }
+
+    .header-search-field #search-filters-panel > button {
+        position: unset;
+        right: unset;
     }
 }
 
