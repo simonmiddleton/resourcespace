@@ -754,11 +754,9 @@ $selected_search_tab = getval("selected_search_tab", "search");
                             }
                         </script>
         
-                        <div id="basicdate" class="SearchItem" <?php echo $simpleSearchFieldsAreHidden ? 'style="display:none;"' : ''; ?>>
-                            <?php if ($simple_search_date) {
-                                echo escape($lang["bydate"]);
-                                ?>
-                                <br />
+                        <div id="basicdate" class="field-input" <?php echo $simpleSearchFieldsAreHidden ? 'style="display:none;"' : ''; ?>>
+                            <?php if ($simple_search_date) { ?>
+                                <label for="basicyear"><?php echo escape($lang["bydate"]); ?></label>
                                 <select id="basicyear" name="basicyear" class="SearchWidthHalf" title="<?php echo escape($lang['year']); ?>" aria-label="<?php echo escape($lang['year']); ?>">
                                     <option selected="selected" value=""><?php echo escape($lang["anyyear"]); ?></option>
                                     <?php
@@ -771,11 +769,6 @@ $selected_search_tab = getval("selected_search_tab", "search");
                                     }
                                     ?>
                                 </select> 
-                
-                                <?php if ($searchbyday) { ?>
-                                    <br />
-                                <?php } ?>
-                
                                 <select id="basicmonth" name="basicmonth" class="SearchWidthHalf SearchWidthRight" title="<?php echo escape($lang['month']);?>" aria-label="<?php echo escape($lang['month']); ?>">
                                     <option selected="selected" value=""><?php echo escape($lang["anymonth"]) ?></option>
                                     <?php
@@ -789,7 +782,6 @@ $selected_search_tab = getval("selected_search_tab", "search");
                                     }
                                     ?>
                                 </select>
-                                
                                 <?php if ($searchbyday) { ?>
                                     <select id="basicday" name="basicday" class="SearchWidthHalf" title="<?php echo escape($lang['day']);?>">
                                         <option selected="selected" value=""><?php echo escape($lang["anyday"]); ?></option>
@@ -803,19 +795,20 @@ $selected_search_tab = getval("selected_search_tab", "search");
                                         ?>
                                     </select>
                                 <?php }
+                        ?>
+                        </div>
+                            <?php
                             }
                             
                             if (isset($resourceid_simple_search) && $resourceid_simple_search) {
                                 ?>
-                                <div class="SearchItem">
-                                    <?php echo escape($lang["resourceid"]); ?>
-                                    <br />
+                                <div class="field-input">
+                                    <label for="searchresourceid"><?php echo escape($lang["resourceid"]); ?></label>
                                     <input id="searchresourceid" name="searchresourceid" type="text" class="SearchWidth" value="" />
                                 </div>
                                 <?php
                             }
                             ?>
-                        </div>
                         <script type="text/javascript">
                             function ResetTicks() {
                                 <?php echo $clear_function; ?>

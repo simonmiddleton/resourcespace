@@ -18,9 +18,18 @@ use Montala\ResourceSpace\UserInterfaceComponents\IconSize;
 * $reset    is non-blank if the caller requires the field to be reset
 * @param array $searched_nodes Array of all the searched nodes previously
 */
-function render_search_field($field,$fields,$value="",$autoupdate=false,$class="stdwidth",$forsearchbar=false,$limit_keywords=array(), 
-                             $searched_nodes = array(), $reset="",$simpleSearchFieldsAreHidden=false)
-    {
+function render_search_field(
+    $field,
+    $fields,
+    $value="",
+    $autoupdate=false,
+    $class="stdwidth",
+    $forsearchbar=false,
+    $limit_keywords=array(), 
+    $searched_nodes = array(),
+    $reset="",
+    $simpleSearchFieldsAreHidden=false
+) {
     node_field_options_override($field);
 
     global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $lang, $category_tree_open, $minyear, $daterange_search, $searchbyday, 
@@ -498,8 +507,8 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
         {
         hook("modifysearchfieldtitle");
         ?>
-        <div class="SearchItem" id="simplesearch_<?php echo $field["ref"]; ?>" <?php if (!$displaycondition || $simpleSearchFieldsAreHidden) {?>style="display:none;"<?php } if (strlen($field["tooltip_text"] ?? "" ) >= 1){ echo "title=\"" . escape(lang_or_i18n_get_translated($field["tooltip_text"], "fieldtooltip-")) . "\"";} ?> ><label for="simplesearch_<?php echo $field["ref"]; ?>"><?php echo escape(lang_or_i18n_get_translated($field["title"], "fieldtitle-")) ?></label><br/>
-
+        <div class="field-input" id="simplesearch_<?php echo $field["ref"]; ?>" <?php if (!$displaycondition || $simpleSearchFieldsAreHidden) {?>style="display:none;"<?php } if (strlen($field["tooltip_text"] ?? "" ) >= 1){ echo "title=\"" . escape(lang_or_i18n_get_translated($field["tooltip_text"], "fieldtooltip-")) . "\"";} ?> >
+            <label for="<?php echo escape($id); ?>"><?php echo escape(lang_or_i18n_get_translated($field["title"], "fieldtitle-")); ?></label>
         <?php
         #hook to modify field type in special case. Returning zero (to get a standard text box) doesn't work, so return 1 for type 0, 2 for type 1, etc.
         if(hook("modifyfieldtype")){$fields[$n]["type"]=hook("modifyfieldtype")-1;}
@@ -737,7 +746,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                 $found_day   = (array_key_exists(2, $s)) ? $s[2] : '';
                 }
             ?>      
-            <select name="<?php echo escape($name);?>-y" id="<?php echo $id?>-y" class="SearchWidth<?php if ($forsearchbar){ echo "Half";} ?>" style="width:120px;" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
+            <select name="<?php echo escape($name);?>-y" id="<?php echo $id?>-y" class="SearchWidth<?php if ($forsearchbar){ echo "Half";} ?>" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
               <option value=""><?php echo escape($lang["anyyear"])?></option>
               <?php
               $y=date("Y");
@@ -751,7 +760,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
 
             <?php if ($forsearchbar && $searchbyday) { ?><br /><?php } ?>
 
-            <select name="<?php echo escape($name);?>-m" id="<?php echo $id?>-m" class="SearchWidth<?php if ($forsearchbar){ echo "Half SearchWidthRight";} ?>" style="width:120px;" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
+            <select name="<?php echo escape($name);?>-m" id="<?php echo $id?>-m" class="SearchWidth<?php if ($forsearchbar){ echo "Half SearchWidthRight";} ?>" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
               <option value=""><?php echo escape($lang["anymonth"])?></option>
               <?php
               for ($d=1;$d<=12;$d++)
@@ -765,7 +774,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
             <?php if (!$forsearchbar || ($forsearchbar && $searchbyday)) 
                 { 
                 ?>
-                <select name="<?php echo escape($name);?>-d" id="<?php echo $id?>-d" class="SearchWidth<?php if ($forsearchbar){ echo "Half";} ?>" style="width:120px;" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
+                <select name="<?php echo escape($name);?>-d" id="<?php echo $id?>-d" class="SearchWidth<?php if ($forsearchbar){ echo "Half";} ?>" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
                   <option value=""><?php echo escape($lang["anyday"])?></option>
                   <?php
                   for ($d=1;$d<=31;$d++)
