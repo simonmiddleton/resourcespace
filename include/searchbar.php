@@ -797,18 +797,18 @@ $selected_search_tab = getval("selected_search_tab", "search");
                                 <?php }
                         ?>
                         </div>
-                            <?php
-                            }
-                            
-                            if (isset($resourceid_simple_search) && $resourceid_simple_search) {
-                                ?>
-                                <div class="field-input">
-                                    <label for="searchresourceid"><?php echo escape($lang["resourceid"]); ?></label>
-                                    <input id="searchresourceid" name="searchresourceid" type="text" class="SearchWidth" value="" />
-                                </div>
-                                <?php
-                            }
+                        <?php
+                        }
+
+                        if (isset($resourceid_simple_search) && $resourceid_simple_search) {
                             ?>
+                            <div class="field-input">
+                                <label for="searchresourceid"><?php echo escape($lang["resourceid"]); ?></label>
+                                <input id="searchresourceid" name="searchresourceid" type="text" value="" />
+                            </div>
+                            <?php
+                        }
+                        ?>
                         <script type="text/javascript">
                             function ResetTicks() {
                                 <?php echo $clear_function; ?>
