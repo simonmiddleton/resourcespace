@@ -76,7 +76,7 @@ ResourceSpace.Modules.Header = (() => {
         const form = e.target.closest('form');
         const panel = document.getElementById('search-filters-panel');
         const isOpen = form.classList.toggle('filters-open');
-        form.querySelector('.header-search-field .input-wrapper > button')
+        form.querySelector('.input-wrapper > button')
             .setAttribute('aria-expanded', String(isOpen));
 
         if (isOpen) {
