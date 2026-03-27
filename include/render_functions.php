@@ -545,21 +545,18 @@ function render_search_field(
              $clear_function.="document.getElementById('".$name."').value='';";
             }
 
-
-
         if ($forsearchbar && $autocomplete_search) { 
-                # Auto-complete search functionality
-                ?></div>
-                <script type="text/javascript">
+            # Auto-complete search functionality
+            ?>
+            <script type="text/javascript">
+            jQuery(document).ready(function () { 
 
-                jQuery(document).ready(function () { 
+                jQuery("#field_<?php echo escape($field["ref"])?>").autocomplete( { source: "<?php echo $baseurl?>/pages/ajax/autocomplete_search.php?field=<?php echo escape($field["name"]) ?>&fieldref=<?php echo escape($field["ref"]) ?>"} );
+                })
 
-                    jQuery("#field_<?php echo escape($field["ref"])?>").autocomplete( { source: "<?php echo $baseurl?>/pages/ajax/autocomplete_search.php?field=<?php echo escape($field["name"]) ?>&fieldref=<?php echo escape($field["ref"]) ?>"} );
-                    })
-
-                </script>
-                <div class="SearchItem">
-<?php }
+            </script>
+        <?php
+        }
 
         break;
 

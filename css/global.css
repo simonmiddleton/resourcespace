@@ -3074,6 +3074,10 @@ div.slide:not([style]) {
     display: none;
 }
 
+.ui-menu.ui-autocomplete {
+    z-index: 201; /* On top of #search-filters-panel when config $autocomplete_search=true; */
+}
+
 /* ===== New UI elements ===== */
 
 .default-icon-size {
