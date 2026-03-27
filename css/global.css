@@ -3166,7 +3166,8 @@ div.slide:not([style]) {
 
 .field-input input[type="text"],
 .field-input input[type="password"],
-.field-input textarea {
+.field-input textarea,
+.MiniCategoryBox {
     border: 1px solid var(--form-field-border);
     box-shadow: none;
     width: 100%;
@@ -3546,6 +3547,13 @@ header.LoginHeader {
     max-height: 250px;
     max-width: 250px;
     overflow: auto;
+}
+
+.header-search-field #search-panel-main > .field-input .MiniCategoryBox {
+    width: 224px;
+    height: calc(2 * var(--form-field-min-height) - 24px); /* 24px is from the show/hide tree toggle link */
+    background-color: var(--form-form-field-background);
+    text-align: left;
 }
 
 .header-search-field #simplesearchbuttons {
