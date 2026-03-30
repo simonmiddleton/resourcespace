@@ -260,7 +260,11 @@ function get_resource_path(
     if ($extension == 'icc') {
         $size = '';
         $icc = true;
-        $extension = ps_value("select file_extension value from resource where ref=?", array("i",$ref), 'jpg');
+        if ($alternative > 0) {
+            $extension = ps_value("SELECT file_extension value FROM resource_alt_files WHERE ref = ?", array("i", $alternative), 'jpg');
+        } else {
+            $extension = ps_value("SELECT file_extension value FROM resource WHERE ref = ?", array("i", $ref), 'jpg');
+        } 
     }
 
     $filefolder = $sdir . $path_suffix . $folder;
