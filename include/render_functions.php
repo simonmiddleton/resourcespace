@@ -6168,6 +6168,38 @@ function escape(string $unsafe): string
     return htmlspecialchars($unsafe, ENT_QUOTES | ENT_SUBSTITUTE);
 }
 
+/**
+ * Output encoding for Javascript (JS) context. Allows PHP code to embed data as a JS value by producing a JS-compatible
+ * literal for the common JSON types.
+ * IMPORTANT: encoding failures result in NULL. 
+ *
+ * @example echo 'const x = ' . encode_js_value($value) . ';';
+ * @see https://www.resourcespace.com/knowledge-base/developers/security/injection
+ */
+function encode_js_value(mixed $unsafe): string
+{
+    $use_error_exception_cache = $GLOBALS['use_error_exception'] ?? false;
+    $GLOBALS['use_error_exception'] = true;
+    try {
+        $encoded_val = json_encode(
+            $unsafe,
+            JSON_HEX_TAG
+            | JSON_HEX_AMP
+            | JSON_HEX_QUOT
+            | JSON_HEX_APOS
+            | JSON_UNESCAPED_SLASHES
+            | JSON_INVALID_UTF8_SUBSTITUTE
+            | JSON_THROW_ON_ERROR
+        );
+    } catch (\JsonException $e) {
+        debug("Failed to encode value for JS context. Reason: {$e}");
+        $encoded_val = 'null';
+    }
+    $GLOBALS['use_error_exception'] = $use_error_exception_cache;
+
+    return $encoded_val;
+}
+
 
 /**
  * HTML aware function to break up long words onto multiple lines for
