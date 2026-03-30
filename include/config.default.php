@@ -2222,6 +2222,10 @@ $icc_preview_options = '-intent perceptual -black-point-compensation';
 // Embed the target preview profile?
 $icc_preview_profile_embed = false;
 
+// Enable to keep the original images ICC profile and avoid conversion to sRGB
+// Requires $icc_preview_profile_embed, $icc_extraction
+$icc_embed_source_profile = false;
+
 // play videos/audio on hover instead of on click
 $video_search_play_hover = false; // search.php
 $video_view_play_hover = false; // view.php

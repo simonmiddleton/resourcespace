@@ -3630,7 +3630,7 @@ function transform_apply_icc_profile(int $ref, string $original_file_path): arra
         return array();
     }
 
-    global $icc_preview_options, $icc_preview_profile_embed, $icc_preview_profile, $imagemagick_preserve_profiles;
+    global $icc_preview_options, $icc_preview_profile_embed, $icc_preview_profile, $imagemagick_preserve_profiles, $icc_embed_source_profile;
 
     if ($imagemagick_preserve_profiles) {
         // Don't touch the ICC profile
@@ -3639,7 +3639,7 @@ function transform_apply_icc_profile(int $ref, string $original_file_path): arra
 
     $targetprofile = __DIR__ . '/../iccprofiles/' . $icc_preview_profile;
 
-    $transform_actions['icc_profile']['command'] = " -strip -profile %%ICCPATH%% " . $icc_preview_options . " -profile %%TARGETPROFILE%% " . ($icc_preview_profile_embed ? " " : " -strip ");
+    $transform_actions['icc_profile']['command'] = " -strip -profile %%ICCPATH%% " . ($icc_embed_source_profile ? " " : $icc_preview_options . " -profile %%TARGETPROFILE%% ") . ($icc_preview_profile_embed ? " " : " -strip ");
     $transform_actions['icc_profile']['cmdparams']["%%ICCPATH%%"] = new CommandPlaceholderArg($iccpath, 'is_valid_rs_path');
     $transform_actions['icc_profile']['cmdparams']["%%TARGETPROFILE%%"] = new CommandPlaceholderArg($targetprofile, 'file_exists');
 
@@ -4048,10 +4048,10 @@ function create_previews_using_im(
                     && file_exists($iccpath)
                     && (!$imagemagick_mpr || ($imagemagick_mpr_preserve_profiles && in_array($id, ["pre","thm","col","scr"])))
                 ) {
-                    global $icc_preview_profile_embed;
+                    global $icc_preview_profile_embed, $icc_embed_source_profile;
                     // we have an extracted ICC profile, so use it as source
                     $targetprofile = __DIR__ . '/../iccprofiles/' . $icc_preview_profile;
-                    $profile = " -strip -profile %%ICCPATH%% " . $icc_preview_options . " -profile %%TARGETPROFILE%% ";
+                    $profile = " -strip -profile %%ICCPATH%% " . ($icc_embed_source_profile ? " " : $icc_preview_options . " -profile %%TARGETPROFILE%% ");
 
                     if ($imagemagick_mpr && $mpr_metadata_profiles !== '') {
                         $profile .= " +profile %%MPR_METADATA_PROFILES%%";
