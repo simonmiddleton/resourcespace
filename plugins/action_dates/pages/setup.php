@@ -59,7 +59,9 @@ if (getval('submit', '') != '' || getval('save', '') != '' && enforcePostRequest
             $action_dates_extra_config[$mappingcount] = array();
             $action_dates_extra_config[$mappingcount]["field"] = (int)$action_date_extra_fields[$i];
             $action_dates_extra_config[$mappingcount]["status"] = (int)$action_date_extra_statuses[$i];
-            $action_dates_extra_config[$mappingcount]["email_admin_days"] = (int)$action_date_extra_email_admin_days[$i];
+            if (isset($action_date_extra_email_admin_days[$i]) && $action_date_extra_email_admin_days[$i] !== "") {
+                $action_dates_extra_config[$mappingcount]["email_admin_days"] = (int)$action_date_extra_email_admin_days[$i];
+            }
             $mappingcount++;
         }
     }
@@ -139,12 +141,13 @@ foreach ($action_dates_extra_config as $action_dates_extra_config) {
         </td>
             <td>
                 <input
-                    class='Question action_dates_extra_email_admin_days stdwidth'
                     name='action_dates_extra_email_admin_days[]'
                     type='number'
-                    min=0
-                    value=$value
-                >
+                    min=0 ";
+    if ($value !== "") {
+        $page_def_extra .= "value=$value";
+    }
+    $page_def_extra .= ">
             </td>
         </tr>";
 }
@@ -197,19 +200,6 @@ jQuery(document).ready(function() {
         // The new state is not eligible
         jQuery('#action_dates_eligible_states'+action_dates_new_state).prop('checked', false);
         jQuery('#action_dates_eligible_states> #archivestate'+action_dates_new_state).hide();
-    });
-
-    jQuery(document).ready(function() {
-
-        function updateActionDateFields() {
-            var enable = jQuery('#action_dates_email_for_state').val() === '1';
-            jQuery('.action_dates_extra_email_admin_days').prop('disabled', !enable);
-            jQuery('.action_dates_extra_email_admin_days').toggleClass('is-disabled', !enable);
-        }
-
-        jQuery('#action_dates_email_for_state').on('change', updateActionDateFields);
-
-        updateActionDateFields(); // run once on load
     });
 });
 

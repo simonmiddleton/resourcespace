@@ -33,7 +33,7 @@ function HookAction_datesCronCron()
         if ('cli' == PHP_SAPI) {
             echo " - Skipping action date cron - last run: " . $last_action_dates_cron . PHP_EOL;
         }
-        return false;
+        //BANGreturn false;
     }
 
     # Store time to update last run date/time after completion
@@ -301,20 +301,16 @@ function HookAction_datesCronCron()
                         echo "action_dates: Moving resource {$ref} to archive state " . $lang["status" . $newstatus] . PHP_EOL;
                     }
                     update_archive_status($ref, $newstatus);
-                } elseif ($action_dates_extra_config_setting["email_admin_days"] > 0) {
-                    if (in_array($ref, $email_state_refs)) {
+                } elseif (($action_dates_extra_config_setting["email_admin_days"] ?? "") != "") {
+                    if ($action_dates_email_for_state == 1 && in_array($ref, $email_state_refs)) {
                         continue;
                     }
                     $restrict_date_target = date_create($resource["value"]);
                     $restrict_interval = date_diff($action_date_current, $restrict_date_target);
                     $days_before_action = (int) $restrict_interval->format('%R%a');
                     if ($days_before_action <= $action_dates_extra_config_setting["email_admin_days"]) {
-                        if (PHP_SAPI == "cli") {
-                            echo "action_dates: Notifying admin {$ref} to be be moved to " . $lang["status" . $newstatus];
-                            echo " in " . $days_before_action . " days" . PHP_EOL;
-                        }
-                        $email_state_refs[] = $ref;
-                        $email_state_days[] = $days_before_action;
+                        $email_extra_state_refs[] = $ref;
+                        $email_extra_state_days[] = $days_before_action;
                     }
                 }
             }
@@ -328,6 +324,17 @@ function HookAction_datesCronCron()
     }
     if ($action_dates_deletefield == "") {
         $action_dates_email_for_state = "0";
+    }
+
+    if ($action_dates_email_for_state == "1") {
+        $email_state_refs = array_merge($email_state_refs, $email_extra_state_refs ?? []);
+        $email_state_days = array_unique(array_merge($email_state_days, $email_extra_state_days ?? []));
+    } elseif (count($email_extra_state_refs ?? []) > 0) {
+        // Extra actions are configured to send emails but the default action is not.
+        // Use the change state emails but only for the extra actions.
+        $email_state_refs = $email_extra_state_refs;
+        $email_state_days = $email_extra_state_days;
+        $action_dates_email_for_state = "1";
     }
 
     $message_state = "";
