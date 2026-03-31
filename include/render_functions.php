@@ -6854,7 +6854,11 @@ function admin_resource_type_field_option(string $propertyname,string $propertyt
                 // At least one other field is using geo mapping
                 if (in_array(FIELD_GEO_LOCATION::both->value, $geo_location_fields)) {
                     // A field is set to both, no options here except none
-                    $disabled_options = array_intersect(FIELD_GEO_LOCATION::cases(), FIELD_GEO_LOCATION::none);
+                    $disabled_options = [
+                        FIELD_GEO_LOCATION::both,
+                        FIELD_GEO_LOCATION::latitude,
+                        FIELD_GEO_LOCATION::longitude
+                    ];
                 } else {
                     // At least one field is lat or long, only allow one of these if not set elsewhere
                     $disabled_options[] = FIELD_GEO_LOCATION::both;
