@@ -467,6 +467,8 @@ img[src$=".svg"]
 #login_box #Footer {margin: 0 0 10px 0;}
 
 #UICenter {
+    display: flex;
+    flex-direction: column;
     height: calc(100% - 66px);
     overflow-y: scroll;
 }
@@ -475,7 +477,8 @@ img[src$=".svg"]
     margin:0 15px 20px;
     padding:0 0 0 0;
     text-align:left;
-    }
+    flex: 1;
+}
 #CentralSpaceContainerRestrict {margin:0 15px 20px 25px;padding:0;text-align:left;}
 #CentralSpaceLogin {
     margin: var(--space-80) auto;
@@ -585,8 +588,6 @@ input[type="number"].NumberSearchWidth {width:80px; margin: 0 10px;}
 /* #SearchBoxPanel {width: inherit;} */
 #ResearchBoxPanel {width: 100%;}
 #SearchBox .PopupCategoryTree {display: none; text-align: left; z-index: 999; padding: 5px; background: none; overflow-x: scroll;}
-.PoweredByPanel {font-style: italic; margin: 0 15px 15px 15px; font-size: 13px;}
-.PoweredByPanel img {max-width: 215px; margin-top: 8px;}
 
 /*Resource Panel layout*/
 .ResourcePanel { padding:0; margin:0 14px 14px 0; width: 200px; float:left; position:relative; overflow: hidden; border:3px transarent; transition: all 0.1s ease-in-out; border-radius: var(--space-4); }
@@ -3815,6 +3816,34 @@ header.LoginHeader {
     font-style: normal;
     font-weight: 500;
     line-height: 100%; /* 18px */
+}
+
+.PoweredByPanel {
+    /* padding: 0 var(--space-16) var(--space-36) var(--space-16); */
+    padding-bottom: var(--space-36);
+    color: var(--colour-surface-600);
+}
+
+.PoweredByPanel > a {
+    display: flex;
+    height: 25px;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-12);
+    text-decoration: underline;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%; /* 21px */
+}
+
+.PoweredByPanel > a:hover {
+    color: var(--colour-surface-800);
+}
+
+.PoweredByPanel > a > svg {
+    height: 25px;
+    width: auto;
 }
 
 /* ===== Responsive layouts ===== */

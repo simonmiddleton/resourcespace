@@ -53,8 +53,7 @@ input[readonly] {
 .HorizontalWhiteNav a:hover, .BasicsBox .VerticalNav a:hover, .ListTitle a:hover {color:#2e99e6;}
 
 /* Search Bar */
-#ResearchBoxPanel a:link, #ResearchBoxPanel a:visited, #ResearchBoxPanel a:hover, #ResearchBoxPanel a:active,
-.PoweredByPanel a:link, .PoweredByPanel a:visited, .PoweredByPanel a:hover {
+#ResearchBoxPanel a:link, #ResearchBoxPanel a:visited, #ResearchBoxPanel a:hover, #ResearchBoxPanel a:active {
     color:#fff;text-decoration:none;
 }
 
