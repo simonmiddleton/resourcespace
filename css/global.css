@@ -3949,7 +3949,7 @@ header.LoginHeader {
 
     #header-container .actions {
         grid-area: actions;
-        gap: var(--space--12);
+        gap: var(--space-12);
         justify-self: end;
     }
 
