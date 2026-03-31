@@ -1151,10 +1151,6 @@ h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
     }
 
 /* Search bar resource types */
-#searchbarrt {
-    width: 250px;
-}
-
 #themeselect
     {
     width: 200px;
@@ -3495,6 +3491,8 @@ header.LoginHeader {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
+    max-height: 65vh;
+    overflow-y: auto;
 }
 
 .header-search-field #search-filters-panel > button {
@@ -3539,19 +3537,20 @@ header.LoginHeader {
     padding-bottom: unset;
 }
 
+#searchbarrt,
 .header-search-field #search-panel-main > .field-input input,
 .header-search-field #search-panel-main > .field-input select {
-    width: 250px;
+    width: 230px;
 }
 
 .header-search-field #search-panel-main > .field-input #cattree_categorytreefield {
-    max-width: 240px;
-    max-height: 250px;
+    max-width: 219px;
+    max-height: 219px;
     overflow: auto;
 }
 
 .header-search-field #search-panel-main > .field-input .MiniCategoryBox {
-    width: 224px;
+    width: 204px;
     height: calc(2 * var(--form-field-min-height) - 24px); /* 24px is for the show/hide tree toggle link */
     background-color: var(--form-form-field-background);
     text-align: left;
@@ -4085,8 +4084,6 @@ header.LoginHeader {
     }
 
     .header-search-field #search-filters-panel #SearchBoxPanel {
-        height: 65vh;
-        overflow: auto;
         gap: var(--space-16);
     }
 
