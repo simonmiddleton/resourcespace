@@ -523,9 +523,6 @@ $page_title = get_page_title($pagename, pluginname());
 
             if (!in_array($pagename, $omit_searchbar_pages) && !$loginterms && ($k == '' || $internal_share_access)) {
                 ?>
-                <div id="SearchBarContainer">
-                    <?php include __DIR__ . "/searchbar.php"; ?>
-                </div>
                 <?php
             }
         }

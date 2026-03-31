@@ -240,7 +240,9 @@ if (getval("ajax", "") == "") {
                 $restypes = implode(',', $restypes);
             }
             ?>
-            <div id="CollectionDiv" class="CollectBack AjaxCollect"></div>
+            <div id="CollectionDiv">
+
+            </div>
 
             <script type="text/javascript">
             var collection_frame_height=<?php echo COLLECTION_FRAME_HEIGHT ?>;

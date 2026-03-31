@@ -252,7 +252,7 @@ select {font-size:1em; height:1.8rem;}
 
 /*Create Base font for relative sizing*/
 html {height:100%;-webkit-text-size-adjust: 100%;}
-body {width:100%;height:100%; margin:0;padding:0;font-size:16px;text-align: center; line-height: 1.4; overflow: hidden;}
+body {width:100%;height:100%; margin:0;padding:0;font-size:16px;text-align: center; line-height: 1.4; overflow: visible;}
 
 /*Basic tag setup for creating standards across platforms and browsers*/
 p, h1, h2, h3, h4, h5 {padding:0; margin:0; vertical-align:top;}
@@ -520,9 +520,7 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
 #login_box #Footer {margin: 0 0 10px 0;}
 
 #UICenter {
-    width: calc(100% - 295px);
-    height: calc(100% - 66px);
-    overflow-y: scroll;
+    overflow: visible;
 }
 
 #CentralSpaceContainer {
@@ -621,8 +619,8 @@ input[type="number"].NumberSearchWidth {width:80px; margin: 0 10px;}
 .chosen-container.chosen-drop-up.chosen-container-active.chosen-with-drop .chosen-drop {border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 0; border-bottom-left-radius: 0;}
 .chosen-container.chosen-drop-up.chosen-container-active.chosen-with-drop .chosen-single {border-top-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px;}
 .chosen-container.chosen-drop-up .chosen-drop {top: auto; bottom: 100%;}
-#CollectionDiv #CollectionMinDiv .chosen-drop {display:none;}
-#CollectionDiv .chosen-results li.active-result {display:list-item; float:none; padding:5px 6px;}
+/* #CollectionDiv #CollectionMinDiv .chosen-drop {display:none;}
+#CollectionDiv .chosen-results li.active-result {display:list-item; float:none; padding:5px 6px;} */
 #colselect2 .chosen-container, #CollectionMinDiv .ActionsContainer .chosen-container {text-align:left;}
 
 /* Chosen support */
@@ -3247,34 +3245,9 @@ label {
 }
 
 #CollectionDiv {
-    height: 40px;
-    overflow-y: scroll;
+    overflow: hidden;
     position: fixed;
-    width: 100%;
-}
-
-.collection-bar--minimised #CollectionDiv {
-    height: 40px;
-}
-
-.collection-bar--maximised #CollectionDiv {
-    height: 160px;
-}
-
-.collection-bar--minimised #UICenter {
-    height: calc(100% - 40px - 66px)
-}
-
-.collection-bar--maximised #UICenter {
-    height: calc(100% - 160px - 66px)
-}
-
-.collection-bar--maximised #SearchBarContainer {
-    height: calc(100% - 160px - 66px);
-}
-
-.collection-bar--minimised #SearchBarContainer {
-    height: calc(100% - 40px - 66px);
+    bottom: 0px;
 }
 
 #toggleThumbsLink i {
@@ -4057,3 +4030,149 @@ a.text-link:visited {
     } */
 }
 
+.collection-bar-holder {
+    width: 100vw;
+    transition: transform 0.25s ease;
+}
+
+.collection-bar-holder .collection-bar-toggle-button {
+    height: var(--space-72);
+    width: var(--space-72);
+    margin-left: var(--space-16);
+    border-radius: var(--space-4) var(--space-4) 0 0;
+    color: var(--colour-neutral-50);
+    background-color: var(--colour-brand-primary-default);
+    font-size: 48px;
+}
+
+.collection-bar-holder:not(.state-closed) .collection-bar-toggle-button {
+    background: var(--colour-neutral-900);
+}
+
+.collection-bar-toggle-button i::before {
+    content: "\e1c1";
+}
+
+.collection-bar-holder:not(.state-closed) .collection-bar-toggle-button i::before {
+    content: "\e084";
+}
+
+.state-closed {
+    transform: translateY(calc(100% - var(--space-72)));
+}
+
+/* Actions visible */
+.state-actions {
+    transform: translateY(calc(100% - (var(--space-32) + (2* var(--space-72)))));
+}
+
+/* Full open */
+.state-thumbs {
+    transform: translateY(0);
+}
+
+.collection-bar-actions-section,
+.collection-bar-thumbs-section {
+    pointer-events: none;
+}
+
+.state-actions .collection-bar-actions-section,
+.state-thumbs .collection-bar-actions-section {
+    pointer-events: auto;
+}
+
+.state-thumbs .collection-bar-thumbs-section {
+    pointer-events: auto;
+}
+
+.collection-bar-actions-section {
+    display: flex;
+    padding: var(--space-16);
+    align-items: center;
+    gap: var(--space-16);
+    align-self: stretch;
+    color: var(--colour-neutral-50);
+    background: var(--colour-neutral-900);
+    
+}
+
+.collection-bar-actions-form {
+    display: flex;
+    align-items: flex-end;
+    gap: var(--space-16);
+}
+
+.collection-bar-actions-form .field {
+    display: flex;
+    gap: var(--space-8);
+    flex-direction: column;
+    min-width: 0;
+}
+
+.collection-bar-actions-form .label-holder {
+    display: flex;
+    align-items: center;
+}
+
+.collection-bar-actions-form .field label {
+    color: var(--colour-surface-50);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 22px;
+}
+
+.collection-bar-actions-form .meta {
+    margin-left: auto;
+    color: var(--colour-surface-200);
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+}
+
+.collection-bar-actions-form select {
+    width: 356px;
+    height: var(--space-48);
+    padding: 0 12px;
+    margin: 0;
+    color: var(--colour-surface-100);
+    background: var(--colour-neutral-900);
+    border-radius: var(--space-4);
+    border: 1px solid var(--colour-surface-400);
+    background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%3E%3Cpath%20d='M6%209L12%2015L18%209'%20stroke='%23D4D5D2'%20stroke-width='2'/%3E%3C/svg%3E");
+    background-size: 24px 24px;
+    background-repeat: no-repeat;
+    background-position: top var(--space-12) right var(--space-12);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+}
+
+.show-thumbs-button {
+    display: inline-flex;
+    height: var(--space-48);
+    padding: var(--space-12, 12px) 18px;
+    align-items: center;
+    gap: var(--space-6);
+    margin: 0;
+    background: var(--colour-brand-primary-default);
+    border: 0;
+    border-radius: var(--space-4);
+    color: var(--colour-global-white);
+    text-align: center;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 100%;
+}
+
+.collection-bar-holder.state-thumbs button.show-thumbs-button {
+    background-color: var(--colour-neutral-700);
+}
+
+.collection-bar-thumbs-section {
+    background: var(--colour-neutral-900);
+    color: #fff;
+    height: 216px;
+}
