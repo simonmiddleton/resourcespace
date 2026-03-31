@@ -359,7 +359,7 @@ function csv_upload_process($filename, &$meta, $resource_types, &$messages, $csv
                 }
             }
         }
-        // Create resoruces or Update resource data
+        // Create resources or Update resource data
         if (in_array($csv_set_options["csv_mode"], ["create_new", "update_existing"])) {
             if ($processcsv) {
                 // Get status to set
