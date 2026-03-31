@@ -25,7 +25,9 @@ ResourceSpace.Modules.Header = (() => {
                 // will close the panel
                 || e.target.matches('#simplesearchbuttons > a:not(:first-of-type) i')
                 || e.target.matches('#simplesearchbuttons > a:not(:first-of-type) span')
-                || e.target.matches('#simplesearchbuttons > input')
+                // Using e.detail to avoid trigger being called when the form is submitted on Enter (which seems to call
+                // click on the submit input virtually)
+                || (e.target.matches('#simplesearchbuttons > input') && e.detail > 0)
             ) {
                 toggleSearchPanel(e);
             }
