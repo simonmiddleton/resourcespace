@@ -1120,7 +1120,7 @@ function save_resource_data($ref, $multi, $autosave_field = "")
                     update_resource_field_column($ref, $fields[$n]["ref"], $val);
                 }
 
-                # Update geo location if this is a geo location field
+                # Update geolocation if this is a geolocation field
                 if ($fields[$n]["geomapping"] > 0) {
                     if ($fields[$n]["geomapping"] == FIELD_GEO_LOCATION::both->value) {
                         if ($val == "") {
