@@ -361,7 +361,7 @@ function csv_upload_process($filename, &$meta, $resource_types, &$messages, $csv
         }
         // Create resources or Update resource data
         if (in_array($csv_set_options["csv_mode"], ["create_new", "update_existing"])) {
-            if ($processcsv) {
+            if ($processcsv && $csv_set_options["csv_mode"] == "update_existing") {
                 // Get status to set
                 if (trim($csv_set_options["status_column"]) != "" && in_array($csv_set_options["status_column"], array_keys($line))) {
                     $setstatus = $line[$csv_set_options["status_column"]];
