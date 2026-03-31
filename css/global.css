@@ -281,8 +281,8 @@ input.defaultbutton {position: absolute; left: -100%; width: 0; height: 0;}
 
 input[type="search"]::-webkit-search-cancel-button {
     -webkit-appearance: none;
-    height: var(--space-16, 16px);
-    width: var(--space-16, 16px);
+    height: var(--space-16);
+    width: var(--space-16);
     background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x-icon lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>') no-repeat center;
     background-size: contain;
     cursor: pointer;
@@ -3096,7 +3096,7 @@ div.slide:not([style]) {
 #menu-overlay {
     position: fixed;
     inset: 0;
-    background: var(--colour-transparency-black-40, rgba(0, 0, 0, 0.40));
+    background: var(--colour-transparency-black-40);
     z-index: 1000;
 }
 
@@ -3104,13 +3104,13 @@ div.slide:not([style]) {
     position: fixed; /* IMPORTANT: we actually position with JS using viewport coords */
     z-index: 1001; /* On top of the #menu-overlay */
     min-width: 15rem;
-    padding: var(--space-8, 8px) 0;
+    padding: var(--space-8) 0;
     flex-direction: column;
     align-items: flex-start;
     text-align: left;
-    background: var(--colour-surface-200, #F5F5F5);
+    background: var(--colour-surface-200);
     border: 1px solid rgba(0,0,0,.12);
-    border-radius: var(--space-4, 4px);
+    border-radius: var(--space-4);
     box-shadow: 0 4px 8px 8px rgba(0, 0, 0, 0.10);
     transform: translateY(-2px);
     opacity: 0;
@@ -3128,7 +3128,7 @@ div.slide:not([style]) {
 .menu-item:hover,
 .menu-item:focus {
     outline: none;
-    background: var(--colour-surface-300, #EAEBEA);
+    background: var(--colour-surface-300);
 }
 
 /* Input fields */
@@ -3373,7 +3373,7 @@ a.text-link:visited {
 /* Header */
 header {
     position: relative;
-    background: var(--colour-surface-header-background, #FFF);
+    background: var(--colour-surface-header-background);
 }
 
 header button {
@@ -3389,9 +3389,9 @@ header.LoginHeader {
     display: flex;
     margin: 0 auto;
     max-width: 1366px;
-    padding: var(--space-16, 16px);
+    padding: var(--space-16);
     align-items: center;
-    gap: var(--space-32, 32px);
+    gap: var(--space-32);
 }
 
 #header-container .logo {
@@ -3415,13 +3415,13 @@ header.LoginHeader {
 
 .header-search-field .input-wrapper {
     display: flex;
-    max-height: var(--form-field-min-height, 48px);
+    max-height: var(--form-field-min-height);
     align-items: center;
-    border-radius: var(--space-4, 4px);
-    background: var(--Colour-Surface-50, #FFF);
-    border: 1px solid var(--form-field-border, #4A4C48);
-    padding-left: var(--space-12, 12px);
-    gap: var(--space-8, 8px);
+    border-radius: var(--space-4);
+    background: var(--Colour-Surface-50);
+    border: 1px solid var(--form-field-border);
+    padding-left: var(--space-12);
+    gap: var(--space-8);
 }
 
 .header-search-field .input-wrapper i,
@@ -3452,9 +3452,9 @@ header.LoginHeader {
     height: 46px;
     box-shadow: none;
     border-radius: 0 3px 3px 0;
-    border-left: 1px solid var(--form-field-border, #4A4C48);
-    background: var(--colour-surface-200, #F5F5F5);
-    color: var(--colour-surface-900, #0C0D0C);
+    border-left: 1px solid var(--form-field-border);
+    background: var(--colour-surface-200);
+    color: var(--colour-surface-900);
     justify-content: center;
     align-items: center;
     font-weight: unset;
@@ -3462,14 +3462,14 @@ header.LoginHeader {
 
 .header-search-field .input-wrapper > button:hover {
     padding: 11px;
-    background: var(--colour-surface-700, #4A4C48);
-    color: var(--colour-surface-50, #FFF);
+    background: var(--colour-surface-700);
+    color: var(--colour-surface-50);
 }
 
 .header-search-field .input-wrapper > button:active,
 .header-search-field .input-wrapper > button[aria-expanded="true"] {
-    background: var(--colour-surface-900, #0C0D0C);
-    color: var(--colour-surface-50, #FFF);
+    background: var(--colour-surface-900);
+    color: var(--colour-surface-50);
 }
 
 .header-search-field #search-filters-panel {
@@ -3485,8 +3485,8 @@ header.LoginHeader {
         opacity 0.22s ease,
         transform 0.22s ease,
         visibility 0.22s ease;
-    background: var(--colour-surface-100, #FAFAFA);
-    border-bottom: 1px solid var(--colour-surface-400, #D4D5D2);
+    background: var(--colour-surface-100);
+    border-bottom: 1px solid var(--colour-surface-400);
     box-sizing: border-box;
     z-index: 200;
 }
@@ -3499,23 +3499,23 @@ header.LoginHeader {
 
 .header-search-field #search-filters-panel > button {
     position: absolute;
-    right: var(--space-24, 24px);
+    right: var(--space-24);
     display: flex;
-    width: var(--space-48, 48px);
-    height: var(--space-48, 48px);
+    width: var(--space-48);
+    height: var(--space-48);
     justify-content: center;
     align-items: center;
-    border-radius: var(--space-4, 4px);
+    border-radius: var(--space-4);
     font-size: 28px;
     font-weight: inherit;
-    color: var(--colour-neutral-700, #4A4C48);
-    background: var(--colour-surface-300, #EAEBEA);
+    color: var(--colour-neutral-700);
+    background: var(--colour-surface-300);
     box-shadow: none;
 }
 
 .header-search-field #search-filters-panel > button:hover {
-    color: var(--colour-surface-50, #FFF);
-    background: var(--colour-surface-700, #4A4C48);
+    color: var(--colour-surface-50);
+    background: var(--colour-surface-700);
 }
 
 .header-search-field #search-filters-panel #SearchBoxPanel {
@@ -3603,15 +3603,15 @@ header.LoginHeader {
     display: flex;
     flex: 0 0 auto;
     align-items: center;
-    gap: var(--space-12, 12px);
+    gap: var(--space-12);
     white-space: nowrap;
 }
 
 #header-container .primary-navigation ul {
     display: flex;
     align-items: center;
-    gap: var(--space-12, 12px);
-    color: var(--colour-typography-900, #0C0D0C);
+    gap: var(--space-12);
+    color: var(--colour-typography-900);
     font-size: 0;
     list-style: none;
 }
@@ -3641,10 +3641,10 @@ header.LoginHeader {
     /* todo: fix menu items following r28445
     max-width: 250px; */
     max-width: unset;
-    height: var(--space--36, 36px);
-    padding: 0 var(--space-12, 12px);
+    height: var(--space-36);
+    padding: 0 var(--space-12);
     display: flex;
-    gap: var(--space-12, 12px);
+    gap: var(--space-12);
     align-items: center;
     align-self: stretch;
 }
@@ -3658,11 +3658,11 @@ header.LoginHeader {
 }
 
 #header-container .primary-navigation ul > li > a {
-    color: var(--colour-typography-900, #0C0D0C);
+    color: var(--colour-typography-900);
 }
 
 #header-container .primary-navigation ul > li > a:hover {
-    color: var(--colour-typography-900, #0C0D0C);
+    color: var(--colour-typography-900);
     text-decoration-line: underline;
     text-decoration-style: solid;
     text-decoration-skip-ink: none;
@@ -3679,21 +3679,21 @@ header.LoginHeader {
     margin: unset;
     justify-content: center;
     align-items: center;
-    border-radius: var(--space-4, 4px);
+    border-radius: var(--space-4);
     font-size: 24px;
-    color: var(--colour-surface-800, #30322F);
+    color: var(--colour-surface-800);
     background-color: unset;
     box-shadow: none;
 }
 
 #header-container .primary-navigation > button:hover {
-    background: var(--colour-surface-400, #D4D5D2);
+    background: var(--colour-surface-400);
 }
 
 #header-container .primary-navigation > button:active,
 #header-container .primary-navigation > button[aria-expanded="true"] {
-    background: var(--colour-surface-900, #0C0D0C);
-    color: var(--colour-surface-50, #FFF);
+    background: var(--colour-surface-900);
+    color: var(--colour-surface-50);
 }
 
 /* Hide the button when not overflowing nav links */
@@ -3704,7 +3704,7 @@ header.LoginHeader {
 #header-container .actions {
     display: flex;
     align-items: center;
-    gap: var(--space-24, 24px);
+    gap: var(--space-24);
 }
 
 #header-container .actions > .primary-navigation {
@@ -3717,21 +3717,21 @@ header.LoginHeader {
     height: 48px;
     justify-content: center;
     align-items: center;
-    border-radius: var(--space-4, 4px);
-    background: var(--colour-surface-200, #F5F5F5);
-    color: var(--colour-surface-800, #30322F);
+    border-radius: var(--space-4);
+    background: var(--colour-surface-200);
+    color: var(--colour-surface-800);
     font-size: 24px;
     text-decoration: none;
 }
 
 #header-container .actions .get-menu-content:hover {
-    background: var(--colour-surface-700, #4A4C48);
-    color: var(--colour-surface-50, #FFF);
+    background: var(--colour-surface-700);
+    color: var(--colour-surface-50);
 }
 
 #header-container .actions .get-menu-content:active {
-    background: var(--colour-surface-900, #0C0D0C);
-    color: var(--colour-surface-50, #FFF);
+    background: var(--colour-surface-900);
+    color: var(--colour-surface-50);
     opacity: unset;
 }
 
@@ -3750,9 +3750,9 @@ header.LoginHeader {
     right: -24px;
     min-width: 18px;
     height: 18px;
-    border-radius: var(--space-60, 60px);
-    background: var(--colour-feedback-error-default, #C20101);
-    color: var(--colour-global-white, #FFF);
+    border-radius: var(--space-60);
+    background: var(--colour-feedback-error-default);
+    color: var(--colour-global-white);
     text-align: center;
     font-size: 12px;
     font-style: normal;
@@ -3762,9 +3762,9 @@ header.LoginHeader {
 
 #header-container .actions .get-menu-content .ProfileImage {
     vertical-align: top;
-    width: var(--space-48, 48px);
-    height: var(--space-48, 48px);
-    border-radius: var(--space-4, 4px);
+    width: var(--space-48);
+    height: var(--space-48);
+    border-radius: var(--space-4);
     filter: brightness(0.95);
 }
 
@@ -3780,13 +3780,13 @@ header.LoginHeader {
 #header-container a.UploadButton,
 #header-container a.LoginButton {
     display: flex;
-    height: var(--space-48, 48px);
-    padding: 0 var(--space-16, 16px);
+    height: var(--space-48);
+    padding: 0 var(--space-16);
     justify-content: center;
     align-items: center;
-    border-radius: var(--space-4, 4px);
-    background: var(--colour-brand-primary-default, #0E6DD9);
-    color: var(--colour-global-white, #FFF);
+    border-radius: var(--space-4);
+    background: var(--colour-brand-primary-default);
+    color: var(--colour-global-white);
     text-decoration: none;
 }
 
@@ -3914,7 +3914,7 @@ header.LoginHeader {
             "logo actions"
             "search search";
         align-items: center;
-        gap: var(--space-16, 16px);
+        gap: var(--space-16);
     }
 
     #header-container .logo {
@@ -3949,7 +3949,7 @@ header.LoginHeader {
 
     #header-container .actions {
         grid-area: actions;
-        gap: var(--space--12, 12px);
+        gap: var(--space--12);
         justify-self: end;
     }
 
@@ -3960,21 +3960,21 @@ header.LoginHeader {
     }
 
     #header-container .actions > .primary-navigation button {
-        border-radius: var(--space-4, 4px);
-        background: var(--colour-surface-200, #F5F5F5);
-        color: var(--colour-surface-800, #30322F);
+        border-radius: var(--space-4);
+        background: var(--colour-surface-200);
+        color: var(--colour-surface-800);
         font-weight: unset;
     }
 
     #header-container .actions > .primary-navigation button:hover {
-        background: var(--colour-surface-700, #4A4C48);
-        color: var(--colour-surface-50, #FFF);
+        background: var(--colour-surface-700);
+        color: var(--colour-surface-50);
     }
 
     #header-container .actions > .primary-navigation button:active,
     #header-container .actions > .primary-navigation button[aria-expanded="true"] {
-        background: var(--colour-surface-900, #0C0D0C);
-        color: var(--colour-surface-50, #FFF);
+        background: var(--colour-surface-900);
+        color: var(--colour-surface-50);
     }
 
     #header-container a.UploadButton {
@@ -4016,14 +4016,14 @@ header.LoginHeader {
 
 @media(max-width: 360px) {
     #menu-overlay {
-        background: var(--colour-transparency-black-80, rgba(0, 0, 0, 0.80));
+        background: var(--colour-transparency-black-80);
     }
 
     .menu-panel {
         /* Left is normally managed by JS (see MenuOverlay module) but in this case we want to control its left & right
         boundaries to make it stretch (while having some "space" on the sides. */
-        left: var(--space-16, 16px) !important;
-        right: var(--space-16, 16px) !important;
+        left: var(--space-16) !important;
+        right: var(--space-16) !important;
     }
 
     button[data-menu-trigger-close] {
