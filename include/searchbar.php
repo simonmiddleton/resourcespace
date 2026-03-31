@@ -874,21 +874,13 @@ $selected_search_tab = getval("selected_search_tab", "search");
                     <?php
                 }
                 ?>
-            <?php
-            if ($show_powered_by_logo && (get_header_image() != $baseurl . '/gfx/titles/title-black.svg')) { ?>
-                <div class="PoweredByPanel">
-                    <a href="https://www.resourcespace.com" target="_blank">
-                        <span><?php echo escape($lang["powered_by"]); ?></span>
-                        <img src="<?php echo $baseurl; ?>/gfx/titles/title.svg" alt="<?php echo escape($lang['powered_by_resourcespace']); ?>">
-                    </a>
-                </div>
-            <?php } ?>
-    <?php }
-?>
                 </div>
             </div>
         </section>
     </form>
+    <?php
+    }
+    ?>
 </search>
 
 <?php
