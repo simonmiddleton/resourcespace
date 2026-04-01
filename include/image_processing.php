@@ -4315,7 +4315,7 @@ function create_previews_using_im(
             create_image_alternatives(
                 $ref,
                 ["extension" => $extension,
-                "file" => $file,
+                "file" => $origfile,
                 "previewonly" => $previewonly,
                 "previewbased" => $previewbased,
                 "ingested" => $ingested],
