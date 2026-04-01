@@ -583,9 +583,6 @@ input[type="number"].NumberSearchWidth {width:80px; margin: 0 10px;}
 #CentralSpace .ChosenDateRangeYear {width:100px !important;}
 
 /*Right Search Box layout*/
-/* #SearchBarContainer {height: 100%; float: right; position: relative; } */
-/* #SearchBox {float: right; width: 295px;text-align:left; height: 100%; overflow-x: hidden;} */
-/* #SearchBoxPanel {width: inherit;} */
 #ResearchBoxPanel {width: 100%;}
 #SearchBox .PopupCategoryTree {display: none; text-align: left; z-index: 999; padding: 5px; background: none; overflow-x: scroll;}
 
@@ -3043,14 +3040,6 @@ label {
 
 .collection-bar--maximised #UICenter {
     height: calc(100% - 160px - 80px)
-}
-
-.collection-bar--maximised #SearchBarContainer {
-    height: calc(100% - 160px - 80px);
-}
-
-.collection-bar--minimised #SearchBarContainer {
-    height: calc(100% - 40px - 80px);
 }
 
 #toggleThumbsLink i {
