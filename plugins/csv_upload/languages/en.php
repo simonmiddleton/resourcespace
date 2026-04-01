@@ -15,7 +15,7 @@ $lang["csv_upload_condition5"] = "For column(s) that have values containing <b>c
 $lang["csv_upload_condition6"] = "You can download a CSV file example by clicking on <a href=\"../downloads/csv_upload_example.csv\">csv-upload-example.csv</a>";
 $lang["csv_upload_condition7"] = "To update existing resource data you can download a CSV with the existing metadata by clicking on the 'CSV export - metadata' option from the collection or search results actions menu";
 $lang["csv_upload_condition8"] = "You can re-use a previously configured CSV mapping file by clicking on 'Upload CSV configuration file'";
-$lang["csv_upload_condition9"] = "To update location latitude and longitude must be combined in a single column with a comma separator or in two different fields.";
+$lang["csv_upload_condition9"] = "To update location, latitude and longitude values must be combined in a single column with a comma separator or in two different fields.";
 $lang["csv_upload_error_no_permission"] = "You do not have the correct permissions to upload a CSV file";
 $lang["check_line_count"] = "At least two rows found in CSV file";
 $lang["csv_upload_file"] = "Select CSV file";
