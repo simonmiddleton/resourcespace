@@ -239,7 +239,6 @@ $selected_search_tab = getval("selected_search_tab", "search");
             ></button>
         </div>
         <section id="search-filters-panel" hidden>
-            <button type="button" class="<?php echo Icon::X->value; ?>" aria-label="<?php echo escape(text('close')); ?>"></button>
             <div id="SearchBoxPanel">
                 <div id="search-panel-main">
                     <input
@@ -876,6 +875,7 @@ $selected_search_tab = getval("selected_search_tab", "search");
                 ?>
                 </div>
             </div>
+            <button type="button" class="<?php echo Icon::X->value; ?>" aria-label="<?php echo escape(text('close')); ?>"></button>
         </section>
     </form>
     <?php

@@ -3469,6 +3469,12 @@ header.LoginHeader {
 }
 
 .header-search-field #search-filters-panel {
+    display: grid;
+    grid-template-columns:
+        1fr               /* left flexible space */
+        min(1366px, 100%) /* centered content */
+        1fr;              /* right flexible space (for the button to stretch to the far right) */
+    gap: var(--space-16);
     position: absolute;
     top: 100%;
     left: 0;
@@ -3496,8 +3502,8 @@ header.LoginHeader {
 }
 
 .header-search-field #search-filters-panel > button {
-    position: absolute;
-    right: var(--space-24);
+    grid-column: 3;
+    justify-self: end;
     display: flex;
     width: var(--space-48);
     height: var(--space-48);
@@ -3517,6 +3523,7 @@ header.LoginHeader {
 }
 
 .header-search-field #search-filters-panel #SearchBoxPanel {
+    grid-column: 2;
     max-width: 1366px;
     margin: 0 auto;
     display: flex;
@@ -3529,7 +3536,6 @@ header.LoginHeader {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: flex-end;
     gap: var(--space-16);
 }
 
@@ -3861,12 +3867,6 @@ header.LoginHeader {
         flex: 0 1 clamp(320px, 38vw, 399px);
     }
 
-    .header-search-field #search-filters-panel {
-        display: flex;
-        flex-direction: row-reverse;
-        gap: var(--space-16);
-    }
-
     .header-search-field #search-filters-panel > button {
         position: unset;
         right: unset;
@@ -3926,11 +3926,32 @@ header.LoginHeader {
     }
 
     .header-search-field #search-filters-panel {
+        display: unset;
         padding: var(--space-16);
+        padding-right: var(--space-4);
     }
 
     .header-search-field #search-filters-panel #SearchBoxPanel {
         gap: var(--space-32);
+    }
+
+    .header-search-field #search-panel-main {
+        justify-content: unset;
+    }
+
+    #searchbarrt,
+    .header-search-field #search-panel-main > .field-input input,
+    .header-search-field #search-panel-main > .field-input select {
+        width: 234px;
+    }
+
+    .header-search-field #search-panel-main > .field-input .MiniCategoryBox {
+        width: 210px;
+    }
+
+    .header-search-field #search-panel-main > .field-input #cattree_categorytreefield {
+        max-width: 225px;
+        max-height: 225px;
     }
 
     .header-search-field #search-filters-panel > button {
@@ -4093,12 +4114,11 @@ header.LoginHeader {
     }
 
     .header-search-field #search-panel-main > .field-input #cattree_categorytreefield {
-        /* width: 290px; */
-        max-width: 300px;
+        max-width: 316px;
     }
 
     .header-search-field #search-panel-main > .field-input .MiniCategoryBox {
-        width: 290px;
+        width: 302px;
         height: calc(2 * var(--form-field-min-height));
     }
 
