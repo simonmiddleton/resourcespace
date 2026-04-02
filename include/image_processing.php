@@ -3280,7 +3280,12 @@ function start_previews(int $ref, string $extension = ""): int
 
     $minimal_previews = false;
     $resource_data = get_resource_data($ref, false);
-    delete_previews($resource_data);
+    $preview_based = false;
+    if (resource_has_preview_source($ref, $extension)) {
+        delete_previews($resource_data);   
+    } else {
+        $preview_based = true;
+    }
     if (trim($extension) == "") {
         $extension = $resource_data["file_extension"];
     }
@@ -3291,7 +3296,7 @@ function start_previews(int $ref, string $extension = ""): int
             'thumbonly' => false,
             'extension' => $resource_data["file_extension"],
             'previewonly' => false,
-            'previewbased' => false,
+            'previewbased' => $preview_based,
             'alternative' => -1,
             'ignoremaxsize' => true,
         ];
@@ -3315,7 +3320,7 @@ function start_previews(int $ref, string $extension = ""): int
                 false, 
                 in_array($extension, NON_PREVIEW_EXTENSIONS) ? 'jpg' : $extension, 
                 false, 
-                in_array($extension, NON_PREVIEW_EXTENSIONS), 
+                $preview_based || in_array($extension, NON_PREVIEW_EXTENSIONS), 
                 -1, 
                 true, 
                 $ingested, 
@@ -3333,7 +3338,7 @@ function start_previews(int $ref, string $extension = ""): int
         false, 
         in_array($resource_data["file_extension"], NON_PREVIEW_EXTENSIONS) ? 'jpg' : $resource_data["file_extension"],  
         false, 
-        in_array($resource_data["file_extension"], NON_PREVIEW_EXTENSIONS), 
+        $preview_based || in_array($resource_data["file_extension"], NON_PREVIEW_EXTENSIONS), 
         -1, 
         false, 
         $ingested);
