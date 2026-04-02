@@ -120,25 +120,6 @@ function ClearLoadingTimers()
         }
     }
 
-/* AJAX loading of searchbar contents for search executed outside of searchbar */
-function ReloadSearchBar()
-{
-    var SearchBar = jQuery('#SearchBarContainer');
-
-    SearchBar.load(baseurl_short + "pages/ajax/reload_searchbar.php?ajax=true&pagename=" + pagename, function (response, status, xhr) {
-        if (status=="error") {
-            SearchBar.html(errorpageload  + xhr.status + " " + xhr.statusText + "<br/>" + response);
-        } else if (typeof chosen_config !== 'undefined' && chosen_config['#SearchBox select']!=='undefined') {
-            // Load completed, add Chosen dropdowns if configured
-            jQuery('#SearchBox select').each(function() {
-                ChosenDropdownInit(this, '#SearchBox select');
-            });
-        }
-    });
-
-    return false;
-}
-
 /* Scroll to top if parameter set - used when changing pages */
 function pageScrolltop(element)
     {
@@ -395,10 +376,6 @@ function CentralSpaceLoad (anchor,scrolltop,modal,keep_fragment = true)
                     ChosenDropdownInit(this, '#CentralSpace select');
                     });
                 }
-
-            if (typeof AdditionalJs == 'function') {
-              AdditionalJs();
-            }
 
             ReloadLinks();
 

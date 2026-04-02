@@ -655,11 +655,15 @@ include "../include/header.php";
 if($k=="" || $internal_share_access)
     {
      ?>
-    <script type="text/javascript">
-    var dontReloadSearchBar=<?php echo getval('noreload', null)!=null ? 'true' : 'false' ?>;
-    if (dontReloadSearchBar !== true)
-        ReloadSearchBar();
-    ReloadLinks();
+    <script>
+        jQuery(() => {
+            const dontReloadSearchBar=<?php echo getval('noreload', null)!=null ? 'true' : 'false' ?>;
+            if (dontReloadSearchBar !== true) {
+                ResourceSpace.Modules.Header.reloadSearchBar();
+            }
+
+            ReloadLinks();
+        });
     </script>
     <?php
     }

@@ -15,7 +15,11 @@ ResourceSpace.Modules.Header = (() => {
         mq_mobile.addEventListener('change', makeStickyHeader);
         makeStickyHeader(mq_mobile);
 
-        header.querySelector('.header-search-field').addEventListener('click', (e) => {
+        header.addEventListener('click', (e) => {
+            // The search container is being replaced in the DOM as part of the reloadSearchBar()
+            const headerSearch = e.target.closest('.header-search-field');
+            if (!headerSearch) return;
+
             if (
                 // The open/close buttons for the search (filter) panel
                 e.target.matches('.input-wrapper > button')
@@ -104,7 +108,36 @@ ResourceSpace.Modules.Header = (() => {
         }
     }
 
+    function reloadSearchBar() {
+        console.debug('Reloading the search (filter) panel container...');
+        const searchBar_jq = jQuery('search#SearchBox');
+        const url = `${baseurl_short}pages/ajax/reload_searchbar.php?ajax=true&pagename=${encodeURIComponent(pagename)}`;
+
+        jQuery.get(url, function(response) {
+            const response_jq = jQuery(response);
+            const newSearchBar_jq = response_jq.is('search#SearchBox')
+                ? response_jq
+                : response_jq.find('search#SearchBox').first();
+
+            if (!newSearchBar_jq.length) {
+                console.warn('Invalid response content received (no search#SearchBox)! Unable to reload the search (filter) panel container.');
+                return;
+            }
+
+            searchBar_jq.replaceWith(newSearchBar_jq);
+
+            if (typeof chosen_config !== 'undefined' && typeof chosen_config['#SearchBox select'] !== 'undefined') {
+                jQuery('#SearchBox select').each(function() {
+                    ChosenDropdownInit(this, '#SearchBox select');
+                });
+            }
+        });
+
+        return;
+    }
+
     return {
-        init: init
+        init: init,
+        reloadSearchBar: reloadSearchBar,
     };
 })();

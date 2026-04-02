@@ -207,13 +207,11 @@ if (isset($set_fields["basicday"])) {
 }
 
 $selected_search_tab = getval("selected_search_tab", "search");
-?>
 
-<script>
-    var categoryTreeChecksArray = [];
-</script>
-
+// The search DOM element is replaced when calling the ResourceSpace.Modules.Header.reloadSearchBar() via search.php in
+// order to update it when carrying out searches outside the filter panel ?>
 <search id="SearchBox" class="header-search-field" aria-label="<?php echo escape(text('simplesearch')); ?>">
+    <script>var categoryTreeChecksArray = [];</script>
     <?php if (checkperm("s") && (!isset($k) || $k == "" || $internal_share_access)) { ?>
     <form
         id="simple_search_form"

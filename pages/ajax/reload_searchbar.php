@@ -23,11 +23,3 @@ if ($simple_search_reset_after_search) {
 $initial_tags = explode(',', $quicksearch);
 
 include_once '../../include/searchbar.php';
-?>
-<script type="text/javascript">
-    jQuery(window).on("load", function() {
-        if (typeof AdditionalJs == 'function') {
-            AdditionalJs();  
-        }
-    });
-</script>
