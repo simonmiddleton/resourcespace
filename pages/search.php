@@ -661,8 +661,6 @@ if($k=="" || $internal_share_access)
             if (dontReloadSearchBar !== true) {
                 ResourceSpace.Modules.Header.reloadSearchBar();
             }
-
-            ReloadLinks();
         });
     </script>
     <?php

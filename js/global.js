@@ -376,9 +376,6 @@ function CentralSpaceLoad (anchor,scrolltop,modal,keep_fragment = true)
                     ChosenDropdownInit(this, '#CentralSpace select');
                     });
                 }
-
-            ReloadLinks();
-
         });
 
     jQuery('#UICenter').show(0);
@@ -659,44 +656,6 @@ function directDownload(url, element = undefined)
         {
         window.open(url, '_blank').focus();
         }
-    }
-
-
-
-/* AJAX loading of navigation link */
-function ReloadLinks()
-    {
-    if(!linkreload)
-        {
-        return false;
-        }
-
-    var nav2=jQuery('#HeaderNav2');
-    if(!nav2.has("#HeaderLinksContainer").length)
-        {
-        return false;
-        }
-
-    nav2.load(baseurl_short+"pages/ajax/reload_links.php?ajax=true", function (response, status, xhr)
-        {
-        // 403 is returned when user is logged out and ajax request! @see revision #12655
-        if(xhr.status == 403)
-            {
-            window.location = baseurl_short + "login.php";
-            }
-        else if(status=="error")
-            {
-            var SearchBar=jQuery('#SearchBarContainer');
-            SearchBar.html(errorpageload  + xhr.status + " " + xhr.statusText + "<br/>" + response);
-            }
-        else
-            {
-            // Load completed
-            ActivateHeaderLink(document.location.href);
-            }
-        });
-
-    return false;
     }
 
 function relateresources(ref,related,action, ctx)

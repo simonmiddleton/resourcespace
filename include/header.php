@@ -500,10 +500,6 @@ if (!$disable_geocoding) {
             window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateHeaderImage);
         <?php } ?>
     });
-    
-    window.onresize = function() {
-        ReloadLinks();
-    }
 </script>
 
 <?php
