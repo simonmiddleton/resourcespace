@@ -1314,6 +1314,7 @@ function create_previews($ref, $thumbonly = false, $extension = "jpg", $previewo
             "previewonly" => $previewonly,
             "previewbased" => $previewbased,
             "ingested" => $ingested],
+            true
         );
     }
 
@@ -4332,6 +4333,7 @@ function create_previews_using_im(
                 "previewonly" => $previewonly,
                 "previewbased" => $previewbased,
                 "ingested" => $ingested],
+                true
             );
         }
         hook('afterpreviewcreation', '', array($ref, $alternative, $generateall));
