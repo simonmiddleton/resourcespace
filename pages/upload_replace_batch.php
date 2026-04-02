@@ -41,11 +41,12 @@ if ($submitted) {
             'filename_field'        => $filename_field,
             'batch_replace_col'     => $batch_replace_col,
             'batch_replace_min'     => $batch_replace_min,
-            'batch_replace_max'     => $batch_replace_max
+            'batch_replace_max'     => $batch_replace_max,
+            'no_exif'               => $no_exif
         );
 
         job_queue_add(
-            'replace_batch_local_alternatives',
+            $batch_replace_alternatives ? 'replace_batch_local_alternatives' : 'replace_batch_local',
             $replace_batch_local_data,
             '',
             '',
@@ -120,7 +121,7 @@ if (isset($info_text)) { ?>
         <div class="clearerleft"></div>
     </div>
 
-    <div class="Question" id="question_filename_field" <?php echo ($filename_field == 0) ? "style='display:none;'" : ''; ?>>
+    <div class="Question replace_originals" id="question_filename_field" <?php echo ($filename_field == 0) ? "style='display:none;'" : ''; ?>>
         <label for="filename_field"><?php echo escape($lang["batch_replace_filename_field_select"]); ?></label>
         <select  class="stdwidth" name="filename_field" id="filename_field">
             <option value="0">
