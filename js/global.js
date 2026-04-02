@@ -382,7 +382,6 @@ function CentralSpaceLoad (anchor,scrolltop,modal,keep_fragment = true)
         });
 
     jQuery('#UICenter').show(0);
-    jQuery("#SearchBarContainer").removeClass("FullSearch");
 
     ajaxinprogress=false;
     return false;
@@ -488,7 +487,6 @@ function CentralSpacePost (form, scrolltop, modal, update_history, container_id)
         CentralSpace.html(data);
 
         jQuery('#UICenter').show(0);
-        jQuery("#SearchBarContainer").removeClass("FullSearch");
 
         // Add global trash bin:
         CentralSpace.append(global_trash_html);
