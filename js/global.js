@@ -1011,35 +1011,6 @@ function SetContext(url)
     return url;
     }
 
-// Update header links to add a class that indicates current location
-function ActivateHeaderLink(activeurl)
-        {
-        var matchedstring=0;
-        activelink='';
-
-        // Was the 'recent' link clicked?
-        var recentlink=(decodeURIComponent(activeurl).indexOf('%21last')>-1 ||
-        decodeURIComponent(activeurl).indexOf('!last')>-1);
-
-        jQuery('#HeaderNav2 li a').each(function() {
-            // Remove current class from all header links
-            jQuery(this).removeClass('current');
-
-            if(decodeURIComponent(activeurl).indexOf(this.href)>-1
-
-            // Set "recent" rather than "search results" when the search is for recent items.
-            || (recentlink && this.href.indexOf('%21last')>-1))
-                {
-                    if (this.href.length>matchedstring) {
-                    // Find longest matched URL
-                    matchedstring=this.href.length;
-                    activelink=jQuery(this);
-                    }
-                }
-            });
-        jQuery(activelink).addClass('current').attr('aria-current', 'page');
-        }
-
 function ReplaceUrlParameter(url, parameter, value){
     var parameterstring = new RegExp('\\b(' + parameter + '=).*?(&|$)')
     if(url.search(parameterstring)>=0){

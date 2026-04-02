@@ -479,8 +479,6 @@ if (!$disable_geocoding) {
     b_progressmsgs = <?php echo $noauth_page ? "false" : "true"; ?>;
 
     jQuery(document).ready(function() {
-        ActivateHeaderLink(<?php echo json_encode($activate_header_link); ?>);
-
         <?php if (!$ajax) { ?>
             setThemePreference();
         <?php } ?>
