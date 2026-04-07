@@ -97,15 +97,16 @@ function csv_upload_process($filename, &$meta, $resource_types, &$messages, $csv
 
     # ----- end of header row checks, process each of the rows checking data -----
 
+    $restypefields = get_resource_type_fields();
+    $allfields = [];
+
+    foreach ($restypefields as $field) {
+        $allfields[$field["ref"]] = $field;
+        $allfields[$field["ref"]]["options"] =  in_array($field["type"], $FIXED_LIST_FIELD_TYPES) ? get_field_options($field["ref"], true) : array();
+        $allfields[$field["ref"]]["resource_types"] = $field["global"] == 0 ? explode(",", $field["resource_types"] ?? "") : array_keys($resource_types);
+    }
+
     if (in_array($csv_set_options["csv_mode"], ["create_new", "update_existing"])) {
-        $restypefields = get_resource_type_fields();
-
-        foreach ($restypefields as $field) {
-            $allfields[$field["ref"]] = $field;
-            $allfields[$field["ref"]]["options"] =  in_array($field["type"], $FIXED_LIST_FIELD_TYPES) ? get_field_options($field["ref"], true) : array();
-            $allfields[$field["ref"]]["resource_types"] = $field["global"] == 0 ? explode(",", $field["resource_types"] ?? "") : array_keys($resource_types);
-        }
-
         array_push(
             $messages,
             "{$lang['csv_upload_process']} " . ($processcsv ? $lang['csv_upload_step5'] : $lang['csv_upload_step4']),
@@ -775,7 +776,10 @@ function csv_upload_process($filename, &$meta, $resource_types, &$messages, $csv
             // Check edit access to the resource
             $editable = get_edit_access($resource_id);
             if (!$editable) {
-                $logtext = "BANG POP goes the weasel";
+                $logtext = "Error: Resource $resource_id is not editable in line $line_count";
+                csv_upload_log($logfile, $logtext);
+                array_push($messages, $logtext);
+                continue;
             }
 
             // Check if filename is safe and not already used for an alternative file
@@ -783,6 +787,12 @@ function csv_upload_process($filename, &$meta, $resource_types, &$messages, $csv
             $extension = parse_filename_extension($filename);
             if ($extension == "") {
                 $logtext = ("Error: Filename $filename unable to extract extension in line $line_count");
+                csv_upload_log($logfile, $logtext);
+                array_push($messages, $logtext);
+                $error_count++;
+                continue;
+            } elseif (!empty(get_alternative_files_by_filename($filename, 0,$resource_id, $resource_id))) {
+                $logtext = ("Error: Filename $filename already exists for resource $resource_id in line $line_count");
                 csv_upload_log($logfile, $logtext);
                 array_push($messages, $logtext);
                 $error_count++;

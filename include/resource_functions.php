@@ -4696,6 +4696,18 @@ function get_alternative_files($resource, $order_by = "", $sort = "", $type = ""
     return ps_query($alt_files_sql, $alt_files_parameters);
 }
 
+/**
+ * Search the alternative file records for matching filenames
+ * Alternative files can be optionally filtered by the Resource ID or by collection
+ *
+ * @param  string $filename Filename of the alternative file(s) to search for
+ * @param  int $collection Collection ID to filter resources, use 0 to ignore
+ * @param  int $min Minimum Resource ID to consider, use 0 to ignore
+ * @param  int $max Maximum Resource ID to consider, use 0 to ignore
+ * 
+ * @return array All matching alternative file records with corresponding:
+ *               resource ID, filename, file size, extension, name, and description
+ */
 function get_alternative_files_by_filename(string $filename, int $collection, int $min, int $max) : array
 {
     $sql = new PreparedStatementQuery(
