@@ -279,7 +279,7 @@ function openai_gpt_update_field($resources,array $target_field,array $values, s
  */
 function openai_gpt_generate_completions($endpoint, $api_key = "", $model, $messages, $temperature = 0, $max_tokens = 2048)
 {
-    global $openai_response_cache, $userref;
+    global $openai_response_cache, $userref, $ai_endpoint_connect_timeout, $ai_endpoint_timeout;
 
     $provider = openai_gpt_get_provider();
 
@@ -329,6 +329,8 @@ function openai_gpt_generate_completions($endpoint, $api_key = "", $model, $mess
         CURLOPT_POSTFIELDS => json_encode($data),
         CURLOPT_SSL_VERIFYPEER => true,
         CURLOPT_SSL_VERIFYHOST => 2,
+        CURLOPT_CONNECTTIMEOUT => $ai_endpoint_connect_timeout,
+        CURLOPT_TIMEOUT => $ai_endpoint_timeout,
     ]);
 
     // Send the request and get the response
