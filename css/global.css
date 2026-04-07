@@ -3840,6 +3840,42 @@ header.LoginHeader {
     width: auto;
 }
 
+
+/* ### WIP ### */
+.header-search-field #search-filters-panel .field-input:has(.date-range-search) {
+    gap: var(--space-4);
+}
+
+.header-search-field #search-filters-panel .date-range-search {
+    text-align: left;
+}
+
+.header-search-field #search-filters-panel .date-range-search:first-of-type {
+    margin-top: var(--space-4);
+}
+
+.header-search-field #search-filters-panel .date-range-search select[name$="_start-d"],
+.header-search-field #search-filters-panel .date-range-search select[name$="_end-d"] {
+    width: 78px;
+}
+
+.header-search-field #search-filters-panel .date-range-search select[name$="_start-m"],
+.header-search-field #search-filters-panel .date-range-search select[name$="_end-m"] {
+    width: 135px;
+}
+
+.header-search-field #search-filters-panel .date-range-search select[name$="_start-y"],
+.header-search-field #search-filters-panel .date-range-search select[name$="_end-y"] {
+    width: 90px;
+}
+
+.header-search-field #search-filters-panel .date-range-search label{
+    display: inline-block;
+    width: 100px;
+}
+/* ### WIP ### */
+
+
 /* ===== Responsive layouts ===== */
 
 @media(max-width: 1366px) {
