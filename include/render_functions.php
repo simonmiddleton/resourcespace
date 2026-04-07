@@ -927,14 +927,8 @@ function render_search_field(
                 }
 
             include __DIR__ . '/../pages/edit_fields/12.php';
-            // need to adjust the field's name value
-            ?>
-            <script type="text/javascript">
-                jQuery("#field_<?php echo $field['ref']; ?>").attr('name', 'field_<?php echo $field["name"]; ?>');
-            </script>
-            <?php
         break;
-        } ## END CASE
+    }
     ?>
     <div class="clearerleft"> </div>
     </div>
