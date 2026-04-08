@@ -730,6 +730,7 @@ function render_search_field(
         case FIELD_TYPE_DATE_RANGE: 
         $found_year='';$found_month='';$found_day='';$found_start_year='';$found_start_month='';$found_start_day='';$found_end_year='';$found_end_month='';$found_end_day='';
         if ($daterange_search) {
+            // Note: the "$clear_function" logic for date range fields is done generically in ResetTicks().
             render_date_range_field($name, $value, true, $autoupdate, array(), $reset);
         } else {
             $s=explode("|",$value);

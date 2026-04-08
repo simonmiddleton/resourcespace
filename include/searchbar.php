@@ -809,6 +809,9 @@ $selected_search_tab = getval("selected_search_tab", "search");
                         <script type="text/javascript">
                             function ResetTicks() {
                                 <?php echo $clear_function; ?>
+
+                                const date_range_fields = document.querySelectorAll('.header-search-field #search-filters-panel .date-range-search select');
+                                date_range_fields.forEach(f => f.selectedIndex = 0);
                             }
                         </script>
         
