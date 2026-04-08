@@ -40,7 +40,7 @@ $tokens_used_label = str_replace("%%DAYS%%", $token_limit_days, $lang["openai_gp
 $tokens_used_text = str_replace("%%TOKEN_COUNT%%", number_format($tokens_used), $lang["openai_gpt_token_count"]);
 
 
-if ($provider == "openai" && $tokens_used > $openai_gpt_token_limit) {
+if ($provider == "openai" && $openai_gpt_token_limit !== 0 && $openai_gpt_token_limit_days !== 0 && $tokens_used > $openai_gpt_token_limit) {
     $page_def[] = config_add_html("<div class='Question'><strong>" . escape($lang["openai_gpt_limit_warning"]) . "</strong><div class='clearerleft'></div></div>");
 }
 
