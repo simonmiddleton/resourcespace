@@ -229,7 +229,9 @@ $saved_search=$search;
 if (!$config_search_for_number || !is_numeric($search)) # Don't do this when the search query is numeric, as users typically expect numeric searches to return the resource with that ID and ignore country/date filters.
     {
     // For the simple search fields, collect from the GET and POST requests and assemble into the search string.
+    debug(sprintf('[q13511][before update_search_from_request] $search = %s', json_encode($search)));
     $search = update_search_from_request($search);
+    debug(sprintf('[q13511][after update_search_from_request] $search = %s', json_encode($search)));
     }
 
 $searchresourceid = "";

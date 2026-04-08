@@ -330,92 +330,7 @@ function search_form_to_search_query($fields, $fromsearchbar = false)
             case FIELD_TYPE_EXPIRY_DATE:
             case FIELD_TYPE_DATE:
             case FIELD_TYPE_DATE_RANGE:
-                $name = "field_" . $fields[$n]["ref"];
-                $datepart = "";
-                $value = "";
-                if (strpos($search, $name . ":") === false) {
-                    // Get each part of the date
-                    $key_year = $name . "-y";
-                    $value_year = getval($key_year, "");
-
-                    $key_month = $name . "-m";
-                    $value_month = getval($key_month, "");
-
-                    $key_day = $name . "-d";
-                    $value_day = getval($key_day, "");
-
-                    // The following constructs full date yyyy-mm-dd or partial dates yyyy-mm or yyyy
-                    // However yyyy-00-dd is interpreted as yyyy because its not a valid partial date
-
-                    $value_date_final = "";
-                    // Process the valid combinations, otherwise treat it as an empty date
-                    if ($value_year != "" && $value_month != "" && $value_day != "") {
-                        $value_date_final = $value_year . "-" . $value_month . "-" . $value_day;
-                    } elseif ($value_year != "" && $value_month != "") {
-                        $value_date_final = $value_year . "-" . $value_month;
-                    } elseif ($value_year != "") {
-                        $value_date_final = $value_year;
-                    }
-
-                    if ($value_date_final != "") {
-                        // If search already has value, then attach this value separated by a comma
-                        if ($search != "") {
-                            $search .= ", ";
-                        }
-                        $search .= $fields[$n]["name"] . ":" . $value_date_final;
-                    }
-                }
-
-                if (($date_edtf = getval("field_" . $fields[$n]["ref"] . "_edtf", "")) !== "") {
-                    // We have been passed the range in EDTF format, check it is in the correct format
-                    $rangeregex = "/^(\d{4})(-\d{2})?(-\d{2})?\/(\d{4})(-\d{2})?(-\d{2})?/";
-                    if (!preg_match($rangeregex, $date_edtf, $matches)) {
-                        //ignore this string as it is not a valid EDTF string
-                        continue 2;
-                    }
-                    $rangedates = explode("/", $date_edtf);
-                    $rangestart = str_pad($rangedates[0], 10, "-00");
-                    $rangeendparts = explode("-", $rangedates[1]);
-                    $rangeend = $rangeendparts[0] . "-" . (isset($rangeendparts[1]) ? $rangeendparts[1] : "12") . "-" . (isset($rangeendparts[2]) ? $rangeendparts[2] : "99");
-                    $datepart = "start" . $rangestart . "end" . $rangeend;
-                } else {
-                    #Date range search - start date
-                    if (getval($name . "_start-y", "") != "") {
-                        $datepart .= "start" . getval($name . "_start-y", "");
-                        if (getval($name . "_start-m", "") != "") {
-                            $datepart .= "-" . getval($name . "_start-m", "");
-                            if (getval($name . "_start-d", "") != "") {
-                                $datepart .= "-" . getval($name . "_start-d", "");
-                            } else {
-                                $datepart .= "";
-                            }
-                        } else {
-                            $datepart .= "";
-                        }
-                    }
-
-                    #Date range search - end date
-                    if (getval($name . "_end-y", "") != "") {
-                        $datepart .= "end" . getval($name . "_end-y", "");
-                        if (getval($name . "_end-m", "") != "") {
-                            $datepart .= "-" . getval($name . "_end-m", "");
-                            if (getval($name . "_end-d", "") != "") {
-                                $datepart .= "-" . getval($name . "_end-d", "");
-                            } else {
-                                $datepart .= "-31";
-                            }
-                        } else {
-                            $datepart .= "-12-31";
-                        }
-                    }
-                }
-                if ($datepart != "") {
-                    if ($search != "") {
-                        $search .= ", ";
-                    }
-                    $search .= $fields[$n]["name"] . ":range" . $datepart;
-                }
-
+                $search .= convert_search_form_date_to_search_query($fields[$n]);
                 break;
 
             case FIELD_TYPE_TEXT_BOX_SINGLE_LINE: # -------- Text boxes
@@ -2847,52 +2762,43 @@ function copy_filter($filter)
 */
 function update_search_from_request($search)
 {
+    debug(sprintf('[q13511][line:%s] $search = %s', __LINE__, json_encode($search)));
     global $config_separators,$resource_field_verbatim_keyword_regex;
     reset($_POST);
     reset($_GET);
 
+    $simple_search_fields = get_simple_search_fields();
+    $find_simple_search_field = fn(string $name) => array_filter(
+        $simple_search_fields,
+        fn($V) => str_starts_with($name, "field_{$V['name']}")
+    );
+
     foreach (array_merge($_GET, $_POST) as $key => $value) {
         if (is_string($value)) {
             $value = trim($value);
+            debug(sprintf('[q13511][line:%s] GET/POST %s = %s', __LINE__, $key, json_encode($value)));
         }
 
         if ($value != "") {
-            if (substr($key, 0, 6) == "field_") {
-                if ((string_ends_with($key, "-y") !== false) || (string_ends_with($key, "-m") !== false) || (string_ends_with($key, "-d") !== false)) {
-                    # Date field
+            $field = $find_simple_search_field($key);
+            $field = reset($field);
 
-                    # Construct the date from the supplied dropdown values
-                    $key_part = substr($key, 0, strrpos($key, "-"));
-                    $field = substr($key_part, 6);
-                    $value = "";
-                    if (strpos($search, $field . ":") === false) {
-                        $key_year = $key_part . "-y";
-                        $value_year = getval($key_year, "");
+            if ($field) {
+                if (in_array($field['type'], $GLOBALS['DATE_FIELD_TYPES'])) {
+                    debug(sprintf('[q13511][line:%s] Date field %s', __LINE__, json_encode($key)));
 
-                        if ($value_year != "") {
-                            $value = $value_year;
-                        } else {
-                            $value = "nnnn";
-                        }
-
-                        $key_month = $key_part . "-m";
-                        $value_month = getval($key_month, "");
-
-                        if ($value_month == "") {
-                            $value_month .= "nn";
-                        }
-
-                        $key_day = $key_part . "-d";
-                        $value_day = getval($key_day, "");
-
-                        if ($value_day != "") {
-                            $value .= "|" . $value_month . "|" . $value_day;
-                        } elseif ($value_month != "nn") {
-                            $value .= "|" . $value_month;
-                        }
-
-                        $search = (($search == "") ? "" : join(", ", split_keywords($search)) . ", ") . $field . ":" . $value;
-                    }
+                    // todo: FIX date range searche filter work alongside other filters
+                    // memo: it might be the split_keywords because you get multiple input processed for one date range. 
+                    // consider keeping track of what date field was processed so we can skip it once done once. 
+                    $search .= convert_search_form_date_to_search_query(
+                        $field,
+                        ['html_field_name' => "field_{$field['name']}"]
+                    );
+                    // $search = (($search == '') ? '' : join(', ', split_keywords($search)) . ', ')
+                    //     . convert_search_form_date_to_search_query(
+                    //         $field,
+                    //         ['html_field_name' => "field_{$field['name']}"]
+                    //     );
                 } elseif (strpos($key, "_drop_") !== false) {
                     # Dropdown field
                     # Add keyword exactly as it is as the full value is indexed as a single keyword for dropdown boxes.
@@ -3343,4 +3249,110 @@ function prepare_regex_search_string(string $keyword): string
         $keyword = "\\b" . $keyword . "\\b";
     }
     return $keyword;
+}
+
+/**
+ * Utility converter between sumitted date input and ResourceSpace search query
+ *
+ * @param array{ref: int, name: string, type: int} $field Field information relevant for the submitted data ()
+ * @param array{html_field_name?: string} $ctx
+ *
+ * @return string The constructed search query string (based on the input/submitted data).
+ */
+function convert_search_form_date_to_search_query(array $field, array $ctx = []): string
+{
+    if (!in_array($field['type'], $GLOBALS['DATE_FIELD_TYPES'])) {
+        return '';
+    }
+
+    $search = '';
+    $name = $ctx['html_field_name'] ?? "field_{$field['ref']}";
+    $datepart = '';
+
+    if (strpos($search, $name . ":") === false) {
+        // Get each part of the date
+        $key_year = $name . "-y";
+        $value_year = getval($key_year, "");
+
+        $key_month = $name . "-m";
+        $value_month = getval($key_month, "");
+
+        $key_day = $name . "-d";
+        $value_day = getval($key_day, "");
+
+        // The following constructs full date yyyy-mm-dd or partial dates yyyy-mm or yyyy
+        // However yyyy-00-dd is interpreted as yyyy because its not a valid partial date
+
+        $value_date_final = "";
+        // Process the valid combinations, otherwise treat it as an empty date
+        if ($value_year != "" && $value_month != "" && $value_day != "") {
+            $value_date_final = $value_year . "-" . $value_month . "-" . $value_day;
+        } elseif ($value_year != "" && $value_month != "") {
+            $value_date_final = $value_year . "-" . $value_month;
+        } elseif ($value_year != "") {
+            $value_date_final = $value_year;
+        }
+
+        if ($value_date_final != "") {
+            // If search already has value, then attach this value separated by a comma
+            if ($search != "") {
+                $search .= ", ";
+            }
+            $search .= $field["name"] . ":" . $value_date_final;
+        }
+    }
+
+    if (($date_edtf = getval("field_" . $field["ref"] . "_edtf", "")) !== "") {
+        // We have been passed the range in EDTF format, check it is in the correct format
+        $rangeregex = "/^(\d{4})(-\d{2})?(-\d{2})?\/(\d{4})(-\d{2})?(-\d{2})?/";
+        if (!preg_match($rangeregex, $date_edtf, $matches)) {
+            //ignore this string as it is not a valid EDTF string
+            return '';
+        }
+
+        $rangedates = explode("/", $date_edtf);
+        $rangestart = str_pad($rangedates[0], 10, "-00");
+        $rangeendparts = explode("-", $rangedates[1]);
+        $rangeend = $rangeendparts[0] . "-" . (isset($rangeendparts[1]) ? $rangeendparts[1] : "12") . "-" . (isset($rangeendparts[2]) ? $rangeendparts[2] : "99");
+        $datepart = "start" . $rangestart . "end" . $rangeend;
+    } else {
+        #Date range search - start date
+        if (getval($name . "_start-y", "") != "") {
+            $datepart .= "start" . getval($name . "_start-y", "");
+            if (getval($name . "_start-m", "") != "") {
+                $datepart .= "-" . getval($name . "_start-m", "");
+                if (getval($name . "_start-d", "") != "") {
+                    $datepart .= "-" . getval($name . "_start-d", "");
+                } else {
+                    $datepart .= "";
+                }
+            } else {
+                $datepart .= "";
+            }
+        }
+
+        #Date range search - end date
+        if (getval($name . "_end-y", "") != "") {
+            $datepart .= "end" . getval($name . "_end-y", "");
+            if (getval($name . "_end-m", "") != "") {
+                $datepart .= "-" . getval($name . "_end-m", "");
+                if (getval($name . "_end-d", "") != "") {
+                    $datepart .= "-" . getval($name . "_end-d", "");
+                } else {
+                    $datepart .= "-31";
+                }
+            } else {
+                $datepart .= "-12-31";
+            }
+        }
+    }
+
+    if ($datepart != "") {
+        if ($search != "") {
+            $search .= ", ";
+        }
+        $search .= $field["name"] . ":range" . $datepart;
+    }
+
+    return $search;
 }

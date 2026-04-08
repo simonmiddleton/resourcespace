@@ -77,6 +77,7 @@ if (getval("submitted", "") == "yes" && getval("resetform", "") == "") {
 
     # Build a search query from the search form
     $search = search_form_to_search_query($fields);
+    debug(sprintf('[q13511] search_form_to_search_query = %s', json_encode($search)));
     $search = refine_searchstring($search);
 
     if (getval("countonly", "") != "") {
