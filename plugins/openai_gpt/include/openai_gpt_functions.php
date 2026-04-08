@@ -277,7 +277,7 @@ function openai_gpt_update_field($resources,array $target_field,array $values, s
  * @return string   The first API response text output
  * 
  */
-function openai_gpt_generate_completions($endpoint, $api_key = "", $model, $messages, $temperature = 0, $max_tokens = 2048)
+function openai_gpt_generate_completions($endpoint, $api_key, $model, $messages, $temperature = 0, $max_tokens = 2048)
 {
     global $openai_response_cache, $userref, $ai_endpoint_connect_timeout, $ai_endpoint_timeout;
 
