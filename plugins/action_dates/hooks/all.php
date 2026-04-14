@@ -33,7 +33,7 @@ function HookAction_datesCronCron()
         if ('cli' == PHP_SAPI) {
             echo " - Skipping action date cron - last run: " . $last_action_dates_cron . PHP_EOL;
         }
-        //BANGreturn false;
+        return false;
     }
 
     # Store time to update last run date/time after completion
