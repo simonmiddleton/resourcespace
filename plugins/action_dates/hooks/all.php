@@ -272,7 +272,7 @@ function HookAction_datesCronCron()
                 LEFT JOIN node n ON n.ref=rn.node
             WHERE r.ref > 0 
                 AND n.resource_type_field = ?
-                AND r.archive<> ?
+                AND r.archive <> ?
             GROUP BY rn.resource";
 
             $sql_params = array(
