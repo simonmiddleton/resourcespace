@@ -3248,6 +3248,7 @@ label {
     overflow: hidden;
     position: fixed;
     bottom: 0px;
+    pointer-events: none;
 }
 
 #toggleThumbsLink i {
@@ -4043,10 +4044,19 @@ a.text-link:visited {
     color: var(--colour-neutral-50);
     background-color: var(--colour-brand-primary-default);
     font-size: 48px;
+    pointer-events: auto;
+}
+
+.collection-bar-holder .collection-bar-toggle-button:hover {
+    background-color: var(--colour-brand-primary-hover);
 }
 
 .collection-bar-holder:not(.state-closed) .collection-bar-toggle-button {
     background: var(--colour-neutral-900);
+}
+
+.collection-bar-holder:not(.state-closed) .collection-bar-toggle-button:hover {
+    background: var(--colour-neutral-700);
 }
 
 .collection-bar-toggle-button i::before {
@@ -4061,28 +4071,12 @@ a.text-link:visited {
     transform: translateY(calc(100% - var(--space-72)));
 }
 
-/* Actions visible */
 .state-actions {
     transform: translateY(calc(100% - (var(--space-32) + (2* var(--space-72)))));
 }
 
-/* Full open */
 .state-thumbs {
     transform: translateY(0);
-}
-
-.collection-bar-actions-section,
-.collection-bar-thumbs-section {
-    pointer-events: none;
-}
-
-.state-actions .collection-bar-actions-section,
-.state-thumbs .collection-bar-actions-section {
-    pointer-events: auto;
-}
-
-.state-thumbs .collection-bar-thumbs-section {
-    pointer-events: auto;
 }
 
 .collection-bar-actions-section {
@@ -4093,6 +4087,7 @@ a.text-link:visited {
     align-self: stretch;
     color: var(--colour-neutral-50);
     background: var(--colour-neutral-900);
+    pointer-events: auto;
     
 }
 
@@ -4132,7 +4127,7 @@ a.text-link:visited {
 
 .collection-bar-actions-form select {
     width: 356px;
-    height: var(--space-48);
+    min-height: var(--form-field-min-height);
     padding: 0 12px;
     margin: 0;
     color: var(--colour-surface-100);
@@ -4149,10 +4144,11 @@ a.text-link:visited {
     line-height: 24px;
 }
 
+
 .show-thumbs-button {
     display: inline-flex;
     height: var(--space-48);
-    padding: var(--space-12, 12px) 18px;
+    padding: var(--space-12) 18px;
     align-items: center;
     gap: var(--space-6);
     margin: 0;
@@ -4167,12 +4163,123 @@ a.text-link:visited {
     line-height: 100%;
 }
 
+.show-thumbs-button:hover {
+    background-color: var(--colour-brand-primary-hover);
+}
+
 .collection-bar-holder.state-thumbs button.show-thumbs-button {
     background-color: var(--colour-neutral-700);
 }
 
+.collection-bar-holder.state-thumbs button.show-thumbs-button:hover {
+    background-color: var(--colour-neutral-600);
+}
+
 .collection-bar-thumbs-section {
     background: var(--colour-neutral-900);
-    color: #fff;
-    height: 216px;
+    color: var(--colour-neutral-100);
+    height: 200px;
+    pointer-events: auto;
+    scrollbar-width: 4px;
+    scrollbar-color: var(--colour-neutral-100) var(--colour-neutral-900);
+}
+
+.collection-bar-thumbnails {
+    display: flex;
+    padding: var(--space-16) var(--space-16) var(--space-8) var(--space-16);
+}
+
+.collection-bar-thumbnail-row {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: var(--space-12);
+    overflow-x: auto;
+}
+
+.collection-bar-resource-card {
+    position: relative;
+    display: flex;
+    height: 172px;
+    width: 140px;
+    flex-direction: column;
+    align-items: flex-start;
+    border-radius: 2px;
+}
+
+.collection-bar-resource-card-image {
+    width: 140px;
+    height: 140px;
+    display: block;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    display: inline-block;
+    border-radius: 2px 2px 0 0;
+    background: var(--colour-neutral-800);
+
+}
+
+.collection-bar-resource-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.collection-bar-resource-card-image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.1);
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+}
+
+.collection-bar-resource-card:hover .collection-bar-resource-card-image-overlay {
+    opacity: 0;
+}
+
+.collection-bar-resource-card-image img {
+    display: block;
+    border-radius: 2px 2px 0 0;
+    width: 100%;
+}
+
+.collection-bar-resource-card-remove {
+    display: flex;
+    width: 24px;
+    height: 24px;
+    flex-direction: column; 
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    position: absolute;
+    right: 0;
+    border-radius: 0 2px 0 0;
+    background: var(--colour-transparency-white-70);
+    color: var(--colour-neutral-900);
+    font-size: 20px;
+    transition: background 0.25s ease;
+}
+
+.collection-bar-resource-card-remove:hover {
+    background: var(--colour-neutral-50);
+}
+
+.collection-bar-resource-card-title {
+    width: 100%;
+    height: var(--space-32);
+    border-radius: 0 0 2px 2px;
+    color: var(--colour-neutral-100);
+    text-align: left;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: var(--space-32);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
