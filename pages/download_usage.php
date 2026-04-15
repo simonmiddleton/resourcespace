@@ -15,8 +15,6 @@ $email       = getval('email', '');
 $usage       = getval("usage", '', true);
 $usagecomment = getval("usagecomment", '');
 
-resource_type_config_override(get_resource_data($ref)['resource_type']);
-
 $error = array();
 
 if (-1 != $col) {
