@@ -537,9 +537,10 @@ function csv_upload_process($filename, &$meta, $resource_types, &$messages, $csv
                     $logtext = " - Add location $lat, $lng ";
                 }
             } else {
-                $logtext = " - Error: no valid location found on line " . $line;
+                $logtext = " - Error: no valid location found on line " . $line_count;
                 array_push($messages, $logtext);
                 $error_count++;
+                continue;
             }
             csv_upload_log($logfile, $logtext);
             array_push($messages, $logtext);
