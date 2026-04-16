@@ -2343,11 +2343,13 @@ function save_resource_data_multi($collection, $editsearch = array(), $postvals 
                     "UPDATE resource SET geo_lat = ?,geo_long = ? WHERE ref IN (" . ps_param_insert(count($list)) . ")",
                     array_merge(["d",$geo_lat,"d",$geo_long], ps_param_fill($list, "i"))
                 );
+                update_geolocation_fields($list, [$geo_lat, $geo_long]);
             } elseif (($postvals["location"] ?? "") == "") {
                 ps_query(
                     "UPDATE resource SET geo_lat=NULL,geo_long=NULL WHERE ref IN (" . ps_param_insert(count($list)) . ")",
                     ps_param_fill($list, "i")
                 );
+                update_geolocation_fields($list, "");
             }
 
             foreach ($list as $ref) {

@@ -1982,7 +1982,7 @@ $tabcount = 0;
 $last_tab_drawn = 0;
 foreach($fields as $n => $field)
     {
-    if(!(is_field_displayed($field)))
+    if(!(is_field_displayed($field)) || ($field['geomapping'] > 0 && $multiple))
         {
         continue;
         }
