@@ -654,6 +654,7 @@ if ($keysearch) {
                                                         FROM `node` 
                                                         WHERE ";
 
+                                    // Full text matching is used to reduce the rows checked by regex where possible
                                     $pattern = '/
                                         (
                                         [a-zA-Z0-9_] # First character cannot be a wildcard
@@ -677,9 +678,6 @@ if ($keysearch) {
                                             foreach (array_unique($matches[1]) as $match) {
                                                 if (preg_match('/[a-zA-Z0-9_]{3,}/', $match) && !in_array($match, $stop_words)) {
                                                     $and_matches[] = '+' . $match; // + means required
-                                                    // Full text matching is used to reduce the rows checked by regex where possible
-                                                    //$union->parameters = array_merge(['s',$match], $union->parameters);
-                                                    //$union->sql .= "MATCH(name) AGAINST (? IN BOOLEAN MODE) AND ";
                                                 }
                                             }
                                         }
