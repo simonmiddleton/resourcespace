@@ -55,7 +55,18 @@ if (!isset($thumbs)) {
     }
 }
 
-    # ------------ Change the collection, if a collection ID has been provided ----------------
+switch ($thumbs) {
+    case "show":
+        $collection_holder_state = "state-thumbs";
+        break;
+    case "actions":
+        $collection_holder_state = "state-actions";
+        break;
+    default:
+        $collection_holder_state = "state-closed";
+}
+
+# ------------ Change the collection, if a collection ID has been provided ----------------
 if ($collection != "" && $collection != "undefined") {
     hook("prechangecollection");
     
@@ -367,6 +378,13 @@ jQuery(function () {
     function setBarState(state) {
         $bar.removeClass('state-closed state-actions state-thumbs')
             .addClass(state);
+        if (state == 'state-thumbs') {
+            SetCookie('thumbs',"show",1000);
+        } else if (state == 'state-actions') {
+            SetCookie('thumbs',"actions",1000);
+        } else {
+            SetCookie('thumbs',"hide",1000);
+        }
     }
 
     jQuery('.collection-bar-toggle-button').on('click', function () {
@@ -388,13 +406,9 @@ jQuery(function () {
         }
     });
 
-    // TEMP FOR TESTING
-    setBarState('state-thumbs');
-    $toggleThumbsBtn.find('span').text('Hide thumbnails');
-
 });
 </script>
-<div class="collection-bar-holder">
+<div class="collection-bar-holder <?php echo $collection_holder_state; ?>">
     <div style="display:none;" id="currentusercollection"><?php echo (int) $usercollection; ?></div>
     <script>usercollection='<?php echo escape($usercollection) ?>';</script>
     <div class="collection-bar-toggle-button"><i class="icon-layout-dashboard"></i></div>
@@ -490,11 +504,20 @@ jQuery(function () {
                     ?>
                 </div>
             </div>
-            <button class="show-thumbs-button"><i class="icon-images"></i><span>Show thumbnails</span></button>
+            <button class="show-thumbs-button">
+                <i class="icon-images"></i>
+                <span><?php echo ($collection_holder_state == "state-thumbs") ? "Hide thumbnails" : "Show thumbnails"; ?></span>
+            </button>
         </div>
     </div>
     <div class="collection-bar-thumbs-section">
+        <script>
+            var collection_resources = <?php echo json_encode(array_column($result, 'ref'));?>; 
+        </script>
         <div class="collection-bar-thumbnails">
+            <button class="thumbnail-row-arrow left" aria-label="Scroll left">
+                <i class="icon-chevron-left"></i>
+            </button>
             <div class="collection-bar-thumbnail-row">
             <?php
             # Loop through saved searches
@@ -505,10 +528,13 @@ jQuery(function () {
                     ?>
                      <!--Resource Panel-->
                     <div class="collection-bar-resource-card" data-saved-search="yes">
+                        <a class="collection-bar-resource-card-link" 
+                               onclick="return CentralSpaceLoad(this,true);" 
+                               href="<?php echo $url?>"
+                               aria-label="Open saved search">
+                        </a>
                         <div class="collection-bar-resource-card-image">
-                            <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $url?>">
-                                <i class="icon-search"></i>
-                            </a>
+                            <i class="icon-search"></i>
                             <div class="collection-bar-resource-card-image-overlay"></div>
                         </div>
                         <div class="collection-bar-resource-card-remove">
@@ -539,9 +565,25 @@ jQuery(function () {
                     $ref = $result[$n]["ref"];
                     $resource_view_title = i18n_get_translated($result[$n]["field" . $view_title_field]);
 
+                    $resource_url = generateURL($baseurl_short . "pages/view.php", [
+                        "ref" => $ref,
+                        "search" => "!collection" . $usercollection,
+                        "order_by" => $order_by,
+                        "sort" => $sort,
+                        "k" => $k,
+                        "curpos" => $n,
+                    ]);
+
                     ?>
                     <!--Resource Panel-->
                     <div class="collection-bar-resource-card" id="ResourceShell<?php echo urlencode($ref) ?>">
+
+                        <a
+                            class="collection-bar-resource-card-link"
+                            onclick="return <?php echo $resource_view_modal ? 'Modal' : 'CentralSpace'; ?>Load(this,true);"
+                            href="<?php echo $resource_url ?>"
+                            aria-label="Open resource"
+                        ></a>
                         
                         <?php
                         if (!hook("rendercollectionthumb")) {
@@ -552,19 +594,12 @@ jQuery(function () {
 
                             $access = isset($result[$n]["access"]) ? $result[$n]["access"] : get_resource_access($result[$n]);
                             $use_watermark = check_use_watermark();
-                            $thumb_url = generateURL($baseurl_short . "pages/view.php", [
-                                "ref" => $ref,
-                                "search" => "!collection" . $usercollection,
-                                "order_by" => $order_by,
-                                "sort" => $sort,
-                                "k" => $k,
-                                "curpos" => $n,
-                            ]);
+
                             ?>
 
                             <div class="collection-bar-resource-card-image">
-                                <a onclick="return <?php echo $resource_view_modal ? 'Modal' : 'CentralSpace'; ?>Load(this,true);"
-                                   href="<?php echo $thumb_url ?>">
+                                <!-- <a onclick="return <?php echo $resource_view_modal ? 'Modal' : 'CentralSpace'; ?>Load(this,true);"
+                                   href="<?php echo $resource_url ?>"> -->
                                 <?php
                                 $colimg_preview_size = $retina_mode ? 'thm' : 'col';
                                 $colimgpath = get_resource_preview($result[$n], [$colimg_preview_size]);
@@ -584,23 +619,76 @@ jQuery(function () {
                                 }
                                 hook("aftersearchimg", "", array($result[$n]));
                                 ?>
-                                </a>
+                                <!-- </a> -->
                                 <div class="collection-bar-resource-card-image-overlay"></div>
                             </div>
                         <?php 
-                        } ?>
+                        } 
+                        ?>
 
 
                         <div class="collection-bar-resource-card-remove">
-                            <i class="icon-circle-minus" onclick="alert('test');"/> </i>
+                            <?php
+                            // Remove from collection icon
+                            if (!checkperm('b') && ($k == '' || $internal_share_access)) {
+                                $col_link_class = ['icon-circle-minus'];
+
+                                if (
+                                    isset($usercollection_resources)
+                                    && is_array($usercollection_resources)
+                                    && !in_array($ref, $usercollection_resources)
+                                ) {
+                                    $col_link_class[] = 'DisplayNone';
+                                }
+
+                                $onclick = 'toggle_addremove_to_collection_icon(this);';
+                                echo remove_from_collection_link($ref, implode(' ', $col_link_class), $onclick, 0, $resource_view_title) . '</a>';
+                            }
+
+                            ?>
                         </div>
+                        <?php
+
+                        $title = $result[$n]["field" . $view_title_field];
+                        $title_field = $view_title_field;
+
+                        if (
+                            isset($metadata_template_title_field)
+                            && isset($metadata_template_resource_type)
+                            && $result[$n]['resource_type'] == $metadata_template_resource_type
+                        ) {
+                            $title = $result[$n]["field" . $metadata_template_title_field];
+                            $title_field = $metadata_template_title_field;
+                        }
+
+                        $field_type = ps_value(
+                            "SELECT type value FROM resource_type_field WHERE ref=?",
+                            array("i",$title_field),
+                            "",
+                            "schema"
+                        );
+
+                        if ($field_type == 8) {
+                            $title = str_replace("&nbsp;", " ", $title);
+                        }
+
+                        $replace_resource_url = generateURL($baseurl_short . "pages/view.php", [
+                            "ref" => $ref,
+                            "search" => "!collection" . $usercollection,
+                            "k" => $k
+                        ]);
+
+                        ?>
                         <div class="collection-bar-resource-card-title">
-                            Dog #
+                            <?php echo escape(i18n_get_translated($title)); ?>
                         </div>
                     </div>
                 <?php
                 } } ?>
             </div>
+            <button class="thumbnail-row-arrow right" aria-label="Scroll right">
+                <i class="icon-chevron-right"></i>
+            </button>
         </div>
     </div>
 </div>

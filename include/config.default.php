@@ -678,6 +678,7 @@ $terms_login = false;
 //  Thumbnails options
 
 // In the collection frame, show or hide thumbnails by default? ("hide" is better if collections are not going to be heavily used).
+// Can be show - full display, actions - minimized bar, or hide - show collection button only
 $thumbs_default = "show";
 //  Automatically show thumbs when you change collection (only if default is show)
 $autoshow_thumbs = false;

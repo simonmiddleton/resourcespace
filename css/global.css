@@ -4180,22 +4180,74 @@ a.text-link:visited {
     color: var(--colour-neutral-100);
     height: 200px;
     pointer-events: auto;
-    scrollbar-width: 4px;
-    scrollbar-color: var(--colour-neutral-100) var(--colour-neutral-900);
+    /* scrollbar-width: 4px; */
+    /* scrollbar-color: var(--colour-neutral-100) var(--colour-neutral-900); */
+}
+
+.collection-bar-thumbs-section::-webkit-scrollbar {
+    display: none;
 }
 
 .collection-bar-thumbnails {
-    display: flex;
-    padding: var(--space-16) var(--space-16) var(--space-8) var(--space-16);
+    position: relative;
+    width: 100%;
+    /* display: flex; */
+    padding: var(--space-16) 0 var(--space-8) 0;
 }
 
 .collection-bar-thumbnail-row {
-    width: 100%;
+    /* width: 100%; */
     display: flex;
     align-items: center;
     gap: var(--space-12);
+    padding: 0 var(--space-16) 0 var(--space-16);
     overflow-x: auto;
 }
+
+.thumbnail-row-arrow {
+    position: absolute;
+    top: calc(var(--space-48) + var(--space-16));
+    /* top: calc(var(--space-72) + var(--space-32) + 78); */
+    /* transform: translateY(-50%); */
+    box-shadow: none;
+    margin: 0;
+    padding: 0;
+    z-index: 10;
+    width: var(--space-48);
+    height: var(--space-48);
+    line-height: var(--space-48);
+    border: 0;
+    border-radius: 0;
+    background: var(--colour-transparency-white-80);
+    color: var(--colour-neutral-900);
+    font-size: 40px;
+    
+    /* cursor: pointer;
+    display: grid;
+    place-items: center; */
+    opacity: 1;
+    transition: opacity 0.25s ease;
+}
+
+.thumbnail-row-arrow.left {
+    left: 0;
+}
+
+.thumbnail-row-arrow.right {
+    right: 0;
+}
+
+/* .collection-bar-thumbnails:hover .thumbnail-row-arrow {
+  opacity: 1;
+} */
+
+
+
+
+
+
+
+
 
 .collection-bar-resource-card {
     position: relative;
@@ -4205,6 +4257,16 @@ a.text-link:visited {
     flex-direction: column;
     align-items: flex-start;
     border-radius: 2px;
+}
+
+.collection-bar-resource-card:hover {
+    cursor: pointer;
+}
+
+.collection-bar-resource-card-link {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
 }
 
 .collection-bar-resource-card-image {
@@ -4219,6 +4281,7 @@ a.text-link:visited {
     display: inline-block;
     border-radius: 2px 2px 0 0;
     background: var(--colour-neutral-800);
+    font-size: 48px;
 
 }
 
@@ -4226,6 +4289,13 @@ a.text-link:visited {
     width: 100%;
     height: 100%;
     object-fit: contain;
+}
+
+.collection-bar-resource-card-image i {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    line-height: 140px;
 }
 
 .collection-bar-resource-card-image-overlay {
@@ -4264,6 +4334,7 @@ a.text-link:visited {
     color: var(--colour-neutral-900);
     font-size: 20px;
     transition: background 0.25s ease;
+    z-index: 5;
 }
 
 .collection-bar-resource-card-remove:hover {
