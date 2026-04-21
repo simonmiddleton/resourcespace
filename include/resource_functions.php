@@ -1163,7 +1163,12 @@ function save_resource_data($ref, $multi, $autosave_field = "")
                                     $lat . ", " . $lng
                                 );
                             } else {
-                                $errors[$fields[$n]['ref']] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-error-invalid-latlong"];
+                                if (is_int_loose($resource_data["geo_lat"]) && is_int_loose($resource_data["geo_lat"])) {
+                                    $error_code = 'location' . $resource_data["geo_lat"] . "," . $resource_data["geo_long"];
+                                } else {
+                                    $error_code = 'location';
+                                }
+                                $errors[$error_code] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-error-invalid-latlong"];
                             }
                         }
                     } elseif ($fields[$n]["geomapping"] == FIELD_GEO_LOCATION::latitude->value) {
@@ -1188,7 +1193,12 @@ function save_resource_data($ref, $multi, $autosave_field = "")
                                 $val
                             );
                         } else {
-                            $errors[$fields[$n]['ref']] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-error-invalid-lat"];
+                            if (is_int_loose($resource_data["geo_lat"])) {
+                                $error_code = 'latitude' . $resource_data["geo_lat"];
+                            } else {
+                                $error_code = 'latitude';
+                            }
+                            $errors[$error_code] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-error-invalid-lat"];
                         }
                     } elseif ($fields[$n]["geomapping"] == FIELD_GEO_LOCATION::longitude->value) {
                         if ($val == "") {
@@ -1212,7 +1222,12 @@ function save_resource_data($ref, $multi, $autosave_field = "")
                                 $val
                             );
                         } else {
-                            $errors[$fields[$n]['ref']] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-error-invalid-long"];
+                            if (is_int_loose($resource_data["geo_long"])) {
+                                $error_code = 'longitude' . $resource_data["geo_long"];
+                            } else {
+                                $error_code = 'longitude';
+                            }
+                            $errors[$error_code] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-error-invalid-long"];
                         }
                     }
                 }
@@ -2350,6 +2365,9 @@ function save_resource_data_multi($collection, $editsearch = array(), $postvals 
                     ps_param_fill($list, "i")
                 );
                 update_geolocation_fields($list, "");
+            } else {
+                $errors[] = $lang['location-validation-error'];
+                return $errors;
             }
 
             foreach ($list as $ref) {

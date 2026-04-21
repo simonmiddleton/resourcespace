@@ -1259,6 +1259,21 @@ jQuery(document).ready(function()
                                 {
                                 original_value = i.substring(6);
                                 }
+                            else if (i.substring(0,8) == 'location')
+                                {
+                                original_value = i.substring(8);
+                                jQuery('.location').val(original_value);
+                                }
+                            else if (i.substring(0,8) == 'latitude')
+                                {
+                                original_value = i.substring(8);
+                                jQuery('.latitude').val(original_value);
+                                }
+                            else if (i.substring(0,9) == 'longitude')
+                                {
+                                original_value = i.substring(9);
+                                jQuery('.longitude').val(original_value);
+                                }
                             }
                         }
                     jQuery('#AutoSaveStatus' + field).html('<?php echo escape($lang["save-error"]) ?>');
