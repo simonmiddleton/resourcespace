@@ -1,12 +1,39 @@
-#remote_assist #SearchBoxPanel {
-    margin-top: 0 !important;
-}
-
-#remote_assist #HomeSiteText {
-    max-width: unset;
-    padding: 0 15px 5px 15px;
-}
-
 #remote_assist {
-    color: white;
+  display: flex;
+  margin: 24px 20px;
+  min-height: var(--space-48, 48px);
+  padding: var(--space-12, 12px);
+  align-items: center;
+  gap: 10px;
+  border-radius: var(--space-4, 4px);
+  border: 1px solid var(--Colour-Feedback-Warning-Default, #CC8200);
+  background: var(--Colour-Feedback-Warning-Lightest, #FFFBF5);
+  box-shadow: 0 4px 8px 8px rgba(0, 0, 0, 0.10);
+}
+
+#remote_assist p,
+#remote_assist a {
+  color: var(--Colour-Feedback-Warning-Dark, #7F530D);
+  font-size: 14px;
+  font-style: normal;
+}
+
+#remote_assist p {
+  padding: 0;
+}
+
+#remote_assist a {
+  text-decoration: underline;
+}
+
+#remote_assist i {
+  color: var(--Colour-Feedback-Warning-Dark, #7F530D);
+  display: flex;
+  font-size: 24px;
+}
+
+#remote_assist i.icon-x {
+  font-size: 14px !important;
+  padding-left: 10px;
+  margin-left: auto;
 }

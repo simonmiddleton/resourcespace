@@ -53,7 +53,7 @@ $access     =get_resource_access($ref);
 $cropperestricted = in_array($usergroup,$cropper_restricteduse_groups);
 
 $sswidth = 1920; 
-$ssheight = 1080;
+$ssheight = 640;
 
 // Create array to hold errors
 $errors = array();
