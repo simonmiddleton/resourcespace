@@ -3301,3 +3301,30 @@ function set_search_order_by(string $search, string $order_by, string $sort): st
 
     return $order_by;
 }
+
+/**
+ * Escape and process a string from ResourceSpace search syntax to regex syntax
+ * Wildcards are replaced with '.*?' - any character 0 or more times
+ * Multiple keyword matches are split into an OR group
+ * Word boundaries are added to avoid unintended wildcards.
+ *
+ * @param  string $keyword      Keyword string without any field names or special search strings
+ * @return string               Processed string ready for RLIKE searches
+ */
+function prepare_regex_search_string(string $keyword): string
+{
+    $keyword = preg_quote($keyword);
+    $keyword = str_replace('\*', '.*?', $keyword);
+    $keywords = explode(";", $keyword);
+    if (count($keywords) > 1) {
+        $keyword = '(' . implode("|", $keywords) . ')';
+    }
+    if (preg_match('/^\W|\W$/', $keyword) === 0) {
+        // Use lookaheads/lookbehinds for boundary-like behavior when the keyword starts or ends with non-word characters (e.g. ,, &, -)
+        // because \b only works for transitions between word characters (letters, digits, _) and non-word characters.
+        $keyword = "(?<!\w)" . $keyword . "(?!\w)";
+    } else {
+        $keyword = "\\b" . $keyword . "\\b";
+    }
+    return $keyword;
+}
