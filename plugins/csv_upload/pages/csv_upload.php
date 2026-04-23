@@ -732,7 +732,7 @@ if (!checkperm("c")) {
                                 name="alternative_file_name_column"
                                 class="stdwidth columnselect"
                                 >
-                                <option value=""><?php echo escape($lang["select"]); ?></option>
+                                <option value="0"><?php echo escape($lang["select"]); ?></option>
                                 <?php
                                 foreach ($csv_info as $csv_column => $csv_field_data) {
                                     echo "<option value=\"" . $csv_column . "\" >" . escape($csv_field_data["header"]) . "</option>\n";
@@ -749,7 +749,7 @@ if (!checkperm("c")) {
                                 name="alternative_file_description_column"
                                 class="stdwidth columnselect"
                                 >
-                                <option value=""><?php echo escape($lang["select"]); ?></option>
+                                <option value="0"><?php echo escape($lang["select"]); ?></option>
                                 <?php
                                 foreach ($csv_info as $csv_column => $csv_field_data) {
                                     echo "<option value=\"" . $csv_column . "\" >" . escape($csv_field_data["header"]) . "</option>\n";
