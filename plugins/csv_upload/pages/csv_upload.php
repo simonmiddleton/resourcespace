@@ -758,6 +758,16 @@ if (!checkperm("c")) {
                             </select>
                         <div class="clearerleft"></div>
                     </div>
+                    <div class="Question" id="multiple_match_question">
+                        <label for="multiple_match"><?php echo escape($lang["csv_upload_multiple_match_action"]); ?></label>
+                        <select id="multiple_match" name="multiple_match" class="stdwidth">
+                            <option value="0" <?php echo ($csv_set_options["multiple_match"] == 0) ? " selected " : ''; ?>
+                                ><?php echo escape($lang["csv_upload_multiple_match_none"]);?></option>
+                            <option value="1" <?php echo ($csv_set_options["multiple_match"] == 1) ? " selected " : ''; ?>
+                                ><?php echo escape($lang["csv_upload_multiple_match_all"]);?></option>
+                        </select>
+                        <div class="clearerleft"></div>
+                    </div>
                     <div class="QuestionSubmit NoPaddingSaveClear QuestionSticky">
                         <input type="button" id="back" value="<?php echo escape($lang["back"]); ?>"  onClick="CentralSpaceLoad('<?php echo generateURL($_SERVER["SCRIPT_NAME"], array("csvstep" => $csvstep - 1)); ?>',true);return false;"> 
                         <input type="submit" id="submit" value="<?php echo escape($lang["next"]); ?>">

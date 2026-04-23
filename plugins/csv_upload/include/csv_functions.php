@@ -346,7 +346,10 @@ function csv_upload_process($filename, &$meta, $resource_types, &$messages, $csv
                     csv_upload_log($logfile, $logtext);
                     array_push($messages, $logtext);
                     $resourcerefs = $validmatches;
-                } elseif ($csv_set_options["csv_mode"] == "update_existing" && $csv_set_options["multiple_match"]) {
+                } elseif (
+                    in_array($csv_set_options["csv_mode"], ["update_existing", "create_alternatives"])
+                    && $csv_set_options["multiple_match"]
+                ) {
                     $logtext = "Processing multiple matching resources (" . implode(",", $validmatches) . ") found matching the identifier " . $match_val . " specified in line " . $line_count;
                     csv_upload_log($logfile, $logtext);
                     array_push($messages, $logtext);
@@ -773,57 +776,59 @@ function csv_upload_process($filename, &$meta, $resource_types, &$messages, $csv
                 autocomplete_blank_fields($resource_id, false);
             }
         } elseif ($csv_set_options["csv_mode"] == "create_alternatives") {
-            // Check edit access to the resource
-            $editable = get_edit_access($resource_id);
-            if (!$editable) {
-                $logtext = "Error: Resource $resource_id is not editable in line $line_count";
-                csv_upload_log($logfile, $logtext);
-                array_push($messages, $logtext);
-                continue;
-            }
+            foreach($resourcerefs as $resource_id) {
+                // Check edit access to the resource
+                $editable = get_edit_access($resource_id);
+                if (!$editable) {
+                    $logtext = "Error: Resource $resource_id is not editable in line $line_count";
+                    csv_upload_log($logfile, $logtext);
+                    array_push($messages, $logtext);
+                    continue;
+                }
 
-            // Check if filename is safe and not already used for an alternative file
-            $filename = $line[$csv_set_options["alternative_file_filename_column"]];
-            $extension = parse_filename_extension($filename);
-            if ($extension == "") {
-                $logtext = ("Error: Filename $filename unable to extract extension in line $line_count");
-                csv_upload_log($logfile, $logtext);
-                array_push($messages, $logtext);
-                $error_count++;
-                continue;
-            } elseif (!empty(get_alternative_files_by_filename($filename, 0,$resource_id, $resource_id))) {
-                $logtext = ("Error: Filename $filename already exists for resource $resource_id in line $line_count");
-                csv_upload_log($logfile, $logtext);
-                array_push($messages, $logtext);
-                $error_count++;
-                continue;
-            } else {
-                $logtext = ($processcsv ? "Adding" : "Add") . " alternative file to resource " . $resource_id;
-                csv_upload_log($logfile, $logtext);
-                array_push($messages, $logtext);
-                $logtext = "Filename for alternative file: $filename with extension $extension";
-                csv_upload_log($logfile, $logtext);
-                array_push($messages, $logtext);
-                if ($csv_set_options["alternative_file_name_column"]) {
-                    $name = $line[$csv_set_options["alternative_file_name_column"]] ?? "";
-                    if ($name != "") {
-                        $logtext = "Name for alternative file: $name";
-                        csv_upload_log($logfile, $logtext);
-                        array_push($messages, $logtext);
+                // Check if filename is safe and not already used for an alternative file
+                $filename = $line[$csv_set_options["alternative_file_filename_column"]];
+                $extension = parse_filename_extension($filename);
+                if ($extension == "") {
+                    $logtext = ("Error: Filename $filename unable to extract extension in line $line_count");
+                    csv_upload_log($logfile, $logtext);
+                    array_push($messages, $logtext);
+                    $error_count++;
+                    continue;
+                } elseif (!empty(get_alternative_files_by_filename($filename, 0,$resource_id, $resource_id))) {
+                    $logtext = ("Error: Filename $filename already exists for resource $resource_id in line $line_count");
+                    csv_upload_log($logfile, $logtext);
+                    array_push($messages, $logtext);
+                    $error_count++;
+                    continue;
+                } else {
+                    $logtext = ($processcsv ? "Adding" : "Add") . " alternative file to resource " . $resource_id;
+                    csv_upload_log($logfile, $logtext);
+                    array_push($messages, $logtext);
+                    $logtext = "Filename for alternative file: $filename with extension $extension";
+                    csv_upload_log($logfile, $logtext);
+                    array_push($messages, $logtext);
+                    if ($csv_set_options["alternative_file_name_column"]) {
+                        $name = $line[$csv_set_options["alternative_file_name_column"]] ?? "";
+                        if ($name != "") {
+                            $logtext = "Name for alternative file: $name";
+                            csv_upload_log($logfile, $logtext);
+                            array_push($messages, $logtext);
+                        }
+                    }
+                    if ($csv_set_options["alternative_file_description_column"]) {
+                        $description = $line[$csv_set_options["alternative_file_description_column"]] ?? "";
+                        if ($description != "") {
+                            $logtext = "Description for alternative file: $description";
+                            csv_upload_log($logfile, $logtext);
+                            array_push($messages, $logtext);
+                        }
                     }
                 }
-                if ($csv_set_options["alternative_file_description_column"]) {
-                    $description = $line[$csv_set_options["alternative_file_description_column"]] ?? "";
-                    if ($description != "") {
-                        $logtext = "Description for alternative file: $description";
-                        csv_upload_log($logfile, $logtext);
-                        array_push($messages, $logtext);
-                    }
+                // Create alternative file record
+                if ($processcsv) {
+                    add_alternative_file($resource_id, $name ?? $filename, $description ?? "", $filename, $extension);
                 }
-            }
-            // Create alternative file record
-            if ($processcsv) {
-                add_alternative_file($resource_id, $name ?? $filename, $description ?? "", $filename, $extension);
             }
         } // end of loop through lines
     }

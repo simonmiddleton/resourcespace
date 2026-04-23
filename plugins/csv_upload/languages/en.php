@@ -50,6 +50,8 @@ $lang["csv_upload_resource_type_default"]       = "Default resource type if no c
 $lang["csv_upload_resource_match_column"]       = "Select the column that contains the resource identifier";
 $lang["csv_upload_match_type"]                  = "Match resource based on resource ID or metadata field value?";
 $lang["csv_upload_multiple_match_action"]       = "Action to take if multiple matching resources are found";
+$lang["csv_upload_multiple_match_all"]          = "Update all matching";
+$lang["csv_upload_multiple_match_none"]         = "Update none";
 
 $lang["csv_upload_validation_notes"]            = "Check the validation messages below before proceeding. Click Process to commit the changes";
 $lang["csv_upload_upload_another"]              = "Upload another CSV";
