@@ -2152,6 +2152,7 @@ $lang['comments_in-response-to-on'] = "on";
 $lang['comments_anonymous-user'] = "Anonymous";
 $lang['comments_submit-button-label'] = "Submit";
 $lang['comments_body-placeholder'] = "Add a comment. Use @(username) to tag people.";
+$lang['comments_body-placeholder-anon'] = "Add a comment.";
 $lang['comments_fullname-placeholder'] = "Your Name (required)";
 $lang['comments_email-placeholder'] = "Your E-mail (required)";
 $lang['comments_website-url-placeholder'] = "Website";
@@ -2987,6 +2988,7 @@ $lang["new_report"] = "New report";
 $lang["edit_report"] = "Edit report";
 $lang["all_activity"] = "All activity";
 $lang["all_resource_types"] = "All resource types";
+$lang["error_report_execution"] = "An error occurred when running the report, please check the query is valid";
 
 $lang["report-graph-by-pie"] = "breakdown";
 $lang["report-graph-by-piegroup"] = "by user group";

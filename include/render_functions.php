@@ -90,6 +90,7 @@ function render_search_field(
                     $scriptconditions[$condref]["name"]                = $fields[$cf]["name"];
                     $scriptconditions[$condref]['type']                = $fields[$cf]['type'];
                     $scriptconditions[$condref]['display_as_dropdown'] = $fields[$cf]['display_as_dropdown'];
+                    $scriptconditions[$condref]['resource_types']      = $fields[$cf]['resource_types'];
                     # Get the node references of the governing field
                     $scriptconditionnodes = get_nodes($fields[$cf]['ref'], null, (FIELD_TYPE_CATEGORY_TREE == $fields[$cf]['type'] ? true : false));
 
@@ -377,10 +378,12 @@ function render_search_field(
                 <?php
                 }?>
 
-                // If no governing node found then disable this governed field
-                if(!field<?php echo $field['ref']; ?>valuefound)
-                {
-                field<?php echo $field['ref']; ?>visibility = false;
+                if (
+                    !field<?php echo escape($field['ref']); ?>valuefound
+                    && ((selectedtypes.includes(<?php echo json_encode($scriptcondition['resource_types']); ?>))
+                    || <?php echo escape(empty($scriptcondition['resource_types'])) ? 'true' : 'false'; ?>)
+                ) {
+                    field<?php echo escape($field['ref']); ?>visibility = false;
                 }
 
             <?php
@@ -3921,13 +3924,13 @@ function check_display_condition($n, array $field, array $fields, $render_js, in
                             if($GLOBALS["multiple"] === false)
                                 {
                                 ?>
-                                checkDisplayCondition<?php echo $field['ref']; ?>();
+                                checkDisplayCondition<?php echo (int) $field['ref']; ?>();
                                 <?php
                                 }
                             ?>
                             jQuery('#CentralSpace').on('categoryTreeChanged', function(e,node)
                                 {
-                                checkDisplayCondition<?php echo $field['ref']; ?>();
+                                checkDisplayCondition<?php echo (int) $field['ref']; ?>();
                                 });
                             });
                         </script>
@@ -3946,15 +3949,15 @@ function check_display_condition($n, array $field, array $fields, $render_js, in
                             if($GLOBALS["multiple"] === false)
                                 {
                                 ?>
-                                console.debug('[document.ready] Going to call checkDisplayCondition<?php echo $field['ref']; ?>()');
-                                checkDisplayCondition<?php echo $field['ref']; ?>();
+                                console.debug('[document.ready] Going to call checkDisplayCondition<?php echo (int) $field['ref']; ?>()');
+                                checkDisplayCondition<?php echo (int) $field['ref']; ?>();
                                 <?php
                                 }
                             ?>
                             jQuery('#CentralSpace').on('dynamicKeywordChanged', function(e,node)
                                 {
-                                console.debug('#CentralSpace-on-dynamicKeywordChanged for field #<?php echo $field['ref']; ?>');
-                                checkDisplayCondition<?php echo $field['ref']; ?>();
+                                console.debug('#CentralSpace-on-dynamicKeywordChanged for field #<?php echo (int) $field['ref']; ?>');
+                                checkDisplayCondition<?php echo (int) $field['ref']; ?>();
                                 });
                             });
                         </script>
@@ -3986,13 +3989,13 @@ function check_display_condition($n, array $field, array $fields, $render_js, in
                         if($GLOBALS["multiple"] === false)
                             {
                             ?>
-                            checkDisplayCondition<?php echo $field['ref']; ?>();
+                            checkDisplayCondition<?php echo (int) $field['ref']; ?>();
                             <?php
                             }
                         ?>
                         jQuery('<?php echo $jquery_selector; ?>').change(function ()
                             {
-                            checkDisplayCondition<?php echo $field['ref']; ?>();
+                            checkDisplayCondition<?php echo (int) $field['ref']; ?>();
                             });
                         });
                     </script>
@@ -4008,13 +4011,13 @@ function check_display_condition($n, array $field, array $fields, $render_js, in
                         if($GLOBALS["multiple"] === false)
                             {
                             ?>
-                            checkDisplayCondition<?php echo $field['ref']; ?>();
+                            checkDisplayCondition<?php echo (int) $field['ref']; ?>();
                             <?php
                             }
                         ?>
-                        jQuery('#field_<?php echo $display_check_data[$cf]["ref"]; ?>').change(function ()
+                        jQuery('#field_<?php echo (int) $display_check_data[$cf]["ref"]; ?>').change(function ()
                             {
-                            checkDisplayCondition<?php echo $field['ref']; ?>();
+                            checkDisplayCondition<?php echo (int) $field['ref']; ?>();
                             });
                         });
                     </script>
@@ -4032,9 +4035,9 @@ function check_display_condition($n, array $field, array $fields, $render_js, in
         $question_id = '#question_' . $n . ($GLOBALS["multiple"] === true ? '' : '_' . $resource_ref);
         ?>
         <script type="text/javascript">
-        function checkDisplayCondition<?php echo $field["ref"];?>()
+        function checkDisplayCondition<?php echo (int) $field["ref"];?>()
             {
-            console.debug('(<?php echo str_replace(dirname(__DIR__), '', __FILE__) . ':' . __LINE__?>) checkDisplayCondition<?php echo $field["ref"]; ?>()');
+            console.debug('(<?php echo str_replace(dirname(__DIR__), '', __FILE__) . ':' . __LINE__?>) checkDisplayCondition<?php echo (int) $field["ref"]; ?>()');
 
             if (jQuery('#field_<?php echo (int) $field["ref"]; ?>_displayed').length === 0)
                 {
@@ -4043,78 +4046,83 @@ function check_display_condition($n, array $field, array $fields, $render_js, in
                 }
 
             // Get current display state for governed field ("block" or "none")
-            field<?php echo $field['ref']; ?>status    = jQuery('<?php echo escape($question_id); ?>').css('display');
-            newfield<?php echo $field['ref']; ?>status = 'none';
+            field<?php echo (int) $field['ref']; ?>status    = jQuery('<?php echo escape($question_id); ?>').css('display');
+            newfield<?php echo (int) $field['ref']; ?>status = 'none';
 
             // Assume visible by default
-            field<?php echo $field['ref']; ?>visibility = true;
+            field<?php echo (int) $field['ref']; ?>visibility = true;
             <?php
             foreach($scriptconditions as $scriptcondition)
                 {
-                /* Example of $scriptconditions:
-                    [{"field":"73","type":"3","display_as_dropdown":"0","valid":["267","266"]}]
-                */
-                ?>
-
-                field<?php echo $field['ref']; ?>valuefound = false;
-                fieldokvalues<?php echo $scriptcondition['field']; ?> = <?php echo json_encode($scriptcondition['valid']); ?>;
-                console.debug('[checkDisplayCondition<?php echo $field["ref"]; ?>] fieldokvalues<?php echo $scriptcondition['field']; ?> = %o', fieldokvalues<?php echo $scriptcondition['field']; ?>);
-
-                <?php
-                ############################
-                ### Field type specific
-                ############################
-                if(in_array($scriptcondition['type'], $FIXED_LIST_FIELD_TYPES))
-                    {
-                    $jquery_condition_selector = "input[name=\"nodes[{$scriptcondition['field']}][]\"]";
-                    $js_conditional_statement  = "fieldokvalues{$scriptcondition['field']}.indexOf(element.value) != -1";
-
-                    if(FIELD_TYPE_CHECK_BOX_LIST == $scriptcondition['type'])
-                        {
-                        $js_conditional_statement = "element.checked && {$js_conditional_statement}";
-                        }
-
-                    if(FIELD_TYPE_DROP_DOWN_LIST == $scriptcondition['type'])
-                        {
-                        $jquery_condition_selector = "select[name=\"nodes[{$scriptcondition['field']}]\"] option:selected";
-                        }
-
-                    if(FIELD_TYPE_RADIO_BUTTONS == $scriptcondition['type'])
-                        {
-                        $jquery_condition_selector = "input[name=\"nodes[{$scriptcondition['field']}]\"]:checked";
-                        }
+                if(is_field_displayed(get_field($scriptcondition['field']))) {
+                    /* Example of $scriptconditions:
+                        [{"field":"73","type":"3","display_as_dropdown":"0","valid":["267","266"]}]
+                    */
                     ?>
-                        jQuery('<?php echo $jquery_condition_selector; ?>').each(function(index, element)
-                            {
-                            if(<?php echo $js_conditional_statement; ?>)
-                                {
-                                field<?php echo $field['ref']; ?>valuefound = true;
-                                }
-                            });
+
+                    field<?php echo (int) $field['ref']; ?>valuefound = false;
+                    fieldokvalues<?php echo (int) $scriptcondition['field']; ?> = <?php echo json_encode($scriptcondition['valid']); ?>;
+                    console.debug('[checkDisplayCondition<?php echo (int) $field["ref"]; ?>] fieldokvalues<?php echo (int) $scriptcondition['field']; ?> = %o', fieldokvalues<?php echo (int) $scriptcondition['field']; ?>);
 
                     <?php
+                    ############################
+                    ### Field type specific
+                    ############################
+                    if(in_array($scriptcondition['type'], $FIXED_LIST_FIELD_TYPES))
+                        {
+                        $jquery_condition_selector = "input[name=\"nodes[{$scriptcondition['field']}][]\"]";
+                        $js_conditional_statement  = "fieldokvalues{$scriptcondition['field']}.indexOf(element.value) != -1";
+
+                        if(FIELD_TYPE_CHECK_BOX_LIST == $scriptcondition['type'])
+                            {
+                            $js_conditional_statement = "element.checked && {$js_conditional_statement}";
+                            }
+
+                        if(FIELD_TYPE_DROP_DOWN_LIST == $scriptcondition['type'])
+                            {
+                            $jquery_condition_selector = "select[name=\"nodes[{$scriptcondition['field']}]\"] option:selected";
+                            }
+
+                        if(FIELD_TYPE_RADIO_BUTTONS == $scriptcondition['type'])
+                            {
+                            $jquery_condition_selector = "input[name=\"nodes[{$scriptcondition['field']}]\"]:checked";
+                            }
+                        ?>
+                            jQuery('<?php echo $jquery_condition_selector; ?>').each(function(index, element)
+                                {
+                                if(<?php echo $js_conditional_statement; ?>)
+                                    {
+                                    field<?php echo (int) $field['ref']; ?>valuefound = true;
+                                    }
+                                });
+
+                        <?php
+                        }
+                    ?>
+                    if(!field<?php echo (int) $field['ref']; ?>valuefound)
+                        {
+                        field<?php echo (int) $field['ref']; ?>visibility = false;
+                        }
+    <?php
+                    } else {
+                        $current_nodes = get_resource_nodes($resource_ref, $scriptcondition['field'], false);
+                        echo count(array_intersect($current_nodes, $scriptcondition['valid'])) > 0 ? '' : "field{$field['ref']}visibility = false;";
                     }
-                ?>
-                if(!field<?php echo $field['ref']; ?>valuefound)
-                    {
-                    field<?php echo $field['ref']; ?>visibility = false;
-                    }
-<?php
                 }
                 ?>
 
                 // Is field to be displayed
-                if(field<?php echo $field['ref']; ?>visibility)
+                if(field<?php echo (int) $field['ref']; ?>visibility)
                     {
-                    newfield<?php echo $field['ref']; ?>status = 'block';
+                    newfield<?php echo (int) $field['ref']; ?>status = 'block';
                     }
 
                 // If display status changed then toggle the visibility
-                if(newfield<?php echo $field['ref']; ?>status != field<?php echo $field['ref']; ?>status)
+                if(newfield<?php echo (int) $field['ref']; ?>status != field<?php echo (int) $field['ref']; ?>status)
                     {
-                    jQuery('<?php echo escape($question_id); ?>').css("display", newfield<?php echo $field['ref']; ?>status); 
+                    jQuery('<?php echo escape($question_id); ?>').css("display", newfield<?php echo (int) $field['ref']; ?>status); 
                     // The visibility status (block/none) will be sent to the server in the following field
-                    jQuery('#field_<?php echo $field['ref']; ?>_displayed').attr("value",newfield<?php echo $field['ref']; ?>status);
+                    jQuery('#field_<?php echo (int) $field['ref']; ?>_displayed').attr("value",newfield<?php echo (int) $field['ref']; ?>status);
 
                 <?php
                 // Batch edit mode
@@ -6064,6 +6072,38 @@ function render_fixed_text_question(string $label, string $text, string $helptex
 function escape(string $unsafe): string
 {
     return htmlspecialchars($unsafe, ENT_QUOTES | ENT_SUBSTITUTE);
+}
+
+/**
+ * Output encoding for Javascript (JS) context. Allows PHP code to embed data as a JS value by producing a JS-compatible
+ * literal for the common JSON types.
+ * IMPORTANT: encoding failures result in NULL. 
+ *
+ * @example echo 'const x = ' . encode_js_value($value) . ';';
+ * @see https://www.resourcespace.com/knowledge-base/developers/security/injection
+ */
+function encode_js_value(mixed $unsafe): string
+{
+    $use_error_exception_cache = $GLOBALS['use_error_exception'] ?? false;
+    $GLOBALS['use_error_exception'] = true;
+    try {
+        $encoded_val = json_encode(
+            $unsafe,
+            JSON_HEX_TAG
+            | JSON_HEX_AMP
+            | JSON_HEX_QUOT
+            | JSON_HEX_APOS
+            | JSON_UNESCAPED_SLASHES
+            | JSON_INVALID_UTF8_SUBSTITUTE
+            | JSON_THROW_ON_ERROR
+        );
+    } catch (\JsonException $e) {
+        debug("Failed to encode value for JS context. Reason: {$e}");
+        $encoded_val = 'null';
+    }
+    $GLOBALS['use_error_exception'] = $use_error_exception_cache;
+
+    return $encoded_val;
 }
 
 

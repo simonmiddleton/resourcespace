@@ -1314,6 +1314,7 @@ function create_previews($ref, $thumbonly = false, $extension = "jpg", $previewo
             "previewonly" => $previewonly,
             "previewbased" => $previewbased,
             "ingested" => $ingested],
+            true
         );
     }
 
@@ -2564,6 +2565,10 @@ function delete_previews($resource, $alternative = -1)
         $extension = $resource_data["file_extension"];
     }
 
+    if (resource_file_readonly($resource)) {
+        return;
+    }
+
     $fullsizejpgpath = get_resource_path($resource, true, "", false, "jpg", -1, 1, false, "", $alternative);
     // Delete the full size original if not a JPG resource
     if ($extension !== "" && strtolower((string) $extension) != "jpg" && file_exists($fullsizejpgpath) && $alternative == -1) {
@@ -3275,7 +3280,12 @@ function start_previews(int $ref, string $extension = ""): int
 
     $minimal_previews = false;
     $resource_data = get_resource_data($ref, false);
-    delete_previews($resource_data);
+    $preview_based = false;
+    if (resource_has_preview_source($ref, $extension)) {
+        delete_previews($resource_data);   
+    } else {
+        $preview_based = true;
+    }
     if (trim($extension) == "") {
         $extension = $resource_data["file_extension"];
     }
@@ -3286,7 +3296,7 @@ function start_previews(int $ref, string $extension = ""): int
             'thumbonly' => false,
             'extension' => $resource_data["file_extension"],
             'previewonly' => false,
-            'previewbased' => false,
+            'previewbased' => $preview_based,
             'alternative' => -1,
             'ignoremaxsize' => true,
         ];
@@ -3310,7 +3320,7 @@ function start_previews(int $ref, string $extension = ""): int
                 false, 
                 in_array($extension, NON_PREVIEW_EXTENSIONS) ? 'jpg' : $extension, 
                 false, 
-                in_array($extension, NON_PREVIEW_EXTENSIONS), 
+                $preview_based || in_array($extension, NON_PREVIEW_EXTENSIONS), 
                 -1, 
                 true, 
                 $ingested, 
@@ -3328,7 +3338,7 @@ function start_previews(int $ref, string $extension = ""): int
         false, 
         in_array($resource_data["file_extension"], NON_PREVIEW_EXTENSIONS) ? 'jpg' : $resource_data["file_extension"],  
         false, 
-        in_array($resource_data["file_extension"], NON_PREVIEW_EXTENSIONS), 
+        $preview_based || in_array($resource_data["file_extension"], NON_PREVIEW_EXTENSIONS), 
         -1, 
         false, 
         $ingested);
@@ -3626,7 +3636,7 @@ function transform_apply_icc_profile(int $ref, string $original_file_path): arra
         return array();
     }
 
-    global $icc_preview_options, $icc_preview_profile_embed, $icc_preview_profile, $imagemagick_preserve_profiles;
+    global $icc_preview_options, $icc_preview_profile_embed, $icc_preview_profile, $imagemagick_preserve_profiles, $icc_embed_source_profile;
 
     if ($imagemagick_preserve_profiles) {
         // Don't touch the ICC profile
@@ -3635,7 +3645,7 @@ function transform_apply_icc_profile(int $ref, string $original_file_path): arra
 
     $targetprofile = __DIR__ . '/../iccprofiles/' . $icc_preview_profile;
 
-    $transform_actions['icc_profile']['command'] = " -strip -profile %%ICCPATH%% " . $icc_preview_options . " -profile %%TARGETPROFILE%% " . ($icc_preview_profile_embed ? " " : " -strip ");
+    $transform_actions['icc_profile']['command'] = " -strip -profile %%ICCPATH%% " . ($icc_embed_source_profile ? " " : $icc_preview_options . " -profile %%TARGETPROFILE%% ") . ($icc_preview_profile_embed ? " " : " -strip ");
     $transform_actions['icc_profile']['cmdparams']["%%ICCPATH%%"] = new CommandPlaceholderArg($iccpath, 'is_valid_rs_path');
     $transform_actions['icc_profile']['cmdparams']["%%TARGETPROFILE%%"] = new CommandPlaceholderArg($targetprofile, 'file_exists');
 
@@ -4044,10 +4054,10 @@ function create_previews_using_im(
                     && file_exists($iccpath)
                     && (!$imagemagick_mpr || ($imagemagick_mpr_preserve_profiles && in_array($id, ["pre","thm","col","scr"])))
                 ) {
-                    global $icc_preview_profile_embed;
+                    global $icc_preview_profile_embed, $icc_embed_source_profile;
                     // we have an extracted ICC profile, so use it as source
                     $targetprofile = __DIR__ . '/../iccprofiles/' . $icc_preview_profile;
-                    $profile = " -strip -profile %%ICCPATH%% " . $icc_preview_options . " -profile %%TARGETPROFILE%% ";
+                    $profile = " -strip -profile %%ICCPATH%% " . ($icc_embed_source_profile ? " " : $icc_preview_options . " -profile %%TARGETPROFILE%% ");
 
                     if ($imagemagick_mpr && $mpr_metadata_profiles !== '') {
                         $profile .= " +profile %%MPR_METADATA_PROFILES%%";
@@ -4324,10 +4334,11 @@ function create_previews_using_im(
             create_image_alternatives(
                 $ref,
                 ["extension" => $extension,
-                "file" => $file,
+                "file" => $origfile,
                 "previewonly" => $previewonly,
                 "previewbased" => $previewbased,
                 "ingested" => $ingested],
+                true
             );
         }
         hook('afterpreviewcreation', '', array($ref, $alternative, $generateall));

@@ -260,7 +260,11 @@ function get_resource_path(
     if ($extension == 'icc') {
         $size = '';
         $icc = true;
-        $extension = ps_value("select file_extension value from resource where ref=?", array("i",$ref), 'jpg');
+        if ($alternative > 0) {
+            $extension = ps_value("SELECT file_extension value FROM resource_alt_files WHERE ref = ?", array("i", $alternative), 'jpg');
+        } else {
+            $extension = ps_value("SELECT file_extension value FROM resource WHERE ref = ?", array("i", $ref), 'jpg');
+        } 
     }
 
     $filefolder = $sdir . $path_suffix . $folder;
@@ -7721,7 +7725,7 @@ function get_nopreview_html(string $extension, $resource_type = null): string
 function get_resource_type_fields($restypes = "", $field_order_by = "ref", $field_sort = "asc", $find = "", $fieldtypes = array(), $include_inactive = false)
 {
     debug_function_call(__FUNCTION__, func_get_args());
-    if ($field_order_by != "ref") {
+    if (!in_array($field_order_by, ["ref", "title"])) {
         // Default order by is not being used so check order by columns supplied are valid for the table
         $fields = columns_in("resource_type_field", null, null, true);
         $fields[] = "tab_name";
@@ -9142,4 +9146,19 @@ function can_upload_preview_image(int $ref): bool
         && !checkperm("xupr")
         && !resource_file_readonly($ref) 
         && !$GLOBALS['custompermshowfile'];
+}
+
+/**
+ * Check if a resource has a file to derive previews from.
+ *  
+ * @param int       $ref        Resource ID
+ * @param string    $extension  Resource file extension
+ */
+function resource_has_preview_source(int $ref, string $extension) : bool
+{
+    return file_exists( 
+            in_array($extension, NON_PREVIEW_EXTENSIONS) ? 
+                get_preview_source_file($ref, 'jpg', false, true, -1, false) : 
+                get_resource_path($ref, true, '', false,  $extension)
+        );
 }

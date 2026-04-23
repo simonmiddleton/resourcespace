@@ -1921,7 +1921,7 @@ $upload_methods = array(
 // $unoconv_path="/usr/local/bin";
 // Files with these extensions will be passed to unoserver (if enabled above) for conversion to PDF and auto thumb-preview generation.
 // Default list taken from http://svn.rpmforge.net/svn/trunk/tools/unoconv/docs/formats.txt
-$unoconv_extensions = array("ods","xls","xlsx","doc","docx","odt","odp","html","rtf","txt","ppt","pptx","sxw","sdw","psw","sdw","pdb","bib","ltx","sdd","sda","odg","sdc","potx","key");
+$unoconv_extensions = array("ods","xls","xlsx","doc","docx","odt","odp","html","rtf","txt","ppt","pptx","sxw","sdw","psw","sdw","pdb","bib","ltx","sdd","sda","odg","sdc","potx","key","dotx");
 
 // Set path to Libre/OpenOffic's packaged python (required for Windows only).
 // $unoconv_python_path='';
@@ -2211,6 +2211,10 @@ $icc_preview_options = '-intent perceptual -black-point-compensation';
 
 // Embed the target preview profile?
 $icc_preview_profile_embed = false;
+
+// Enable to keep the original images ICC profile and avoid conversion to sRGB
+// Requires $icc_preview_profile_embed, $icc_extraction
+$icc_embed_source_profile = false;
 
 // play videos/audio on hover instead of on click
 $video_search_play_hover = false; // search.php
