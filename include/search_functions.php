@@ -3251,7 +3251,7 @@ function prepare_regex_search_string(string $keyword): string
 /**
  * Utility converter between sumitted date input and ResourceSpace search query
  *
- * @param array{ref: int, name: string, type: int} $field Field information relevant for the submitted data ()
+ * @param array{ref: int, name: string, type: int} $field Field information relevant for the submitted data
  * @param array{html_field_name?: string} $ctx
  *
  * @return string The constructed search query string (based on the input/submitted data).
