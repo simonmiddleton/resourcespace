@@ -2762,21 +2762,24 @@ function copy_filter($filter)
 */
 function update_search_from_request($search)
 {
-    debug(sprintf('[q13511][line:%s] $search = %s', __LINE__, json_encode($search)));
     global $config_separators,$resource_field_verbatim_keyword_regex;
     reset($_POST);
     reset($_GET);
 
     $simple_search_fields = get_simple_search_fields();
-    $find_simple_search_field = fn(string $name) => array_filter(
+    $find_simple_search_field = static fn(string $name) => array_filter(
         $simple_search_fields,
-        fn($V) => str_starts_with($name, "field_{$V['name']}")
+        static fn($V) => str_starts_with($name, "field_{$V['name']}")
     );
+
+    /** @var array<int, bool> List of submitted form fields. Helps to avoid processing the same field multiple times
+     * when the information is broken in multiple data points (e.g. a date range is broken in field_X_start-d,
+     * field_X_start-m and field_X_start-y and its field_X_end-* counterparts) */
+    $processed_fields = [];
 
     foreach (array_merge($_GET, $_POST) as $key => $value) {
         if (is_string($value)) {
             $value = trim($value);
-            debug(sprintf('[q13511][line:%s] GET/POST %s = %s', __LINE__, $key, json_encode($value)));
         }
 
         if ($value != "") {
@@ -2784,21 +2787,15 @@ function update_search_from_request($search)
             $field = reset($field);
 
             if ($field) {
-                if (in_array($field['type'], $GLOBALS['DATE_FIELD_TYPES'])) {
-                    debug(sprintf('[q13511][line:%s] Date field %s', __LINE__, json_encode($key)));
-
-                    // todo: FIX date range searche filter work alongside other filters
-                    // memo: it might be the split_keywords because you get multiple input processed for one date range. 
-                    // consider keeping track of what date field was processed so we can skip it once done once. 
-                    $search .= convert_search_form_date_to_search_query(
-                        $field,
-                        ['html_field_name' => "field_{$field['name']}"]
-                    );
-                    // $search = (($search == '') ? '' : join(', ', split_keywords($search)) . ', ')
-                    //     . convert_search_form_date_to_search_query(
-                    //         $field,
-                    //         ['html_field_name' => "field_{$field['name']}"]
-                    //     );
+                if (isset($processed_fields[$field['ref']])) {
+                    continue;
+                } elseif (in_array($field['type'], $GLOBALS['DATE_FIELD_TYPES'])) {
+                    $search = ($search == '' ? '' : join(', ', split_keywords($search, false, false, false, false, true)) . ', ')
+                        . convert_search_form_date_to_search_query(
+                            $field,
+                            ['html_field_name' => "field_{$field['name']}"]
+                        );
+                    $processed_fields[$field['ref']] = true;
                 } elseif (strpos($key, "_drop_") !== false) {
                     # Dropdown field
                     # Add keyword exactly as it is as the full value is indexed as a single keyword for dropdown boxes.
