@@ -454,6 +454,8 @@ if (!checkperm("c")) {
                         <div class="clearerleft"></div>
                     </div>               
 
+                    <input type="hidden" id="id_column" name="id_column" value="-1">
+
                     <div class="QuestionSubmit NoPaddingSaveClear QuestionSticky">
                         <input type="button" id="back" value="<?php echo escape($lang["back"]); ?>"  onClick="CentralSpaceLoad('<?php echo generateURL($_SERVER["SCRIPT_NAME"], array("csvstep" => $csvstep - 1)); ?>',true);return false;" > 
                         <input type="submit" id="submit" value="<?php echo escape($lang["next"]); ?>">
@@ -821,6 +823,7 @@ if (!checkperm("c")) {
                                     $csv_set_options_found = false;
 
                                     if (in_array($csv_column, $selected_columns)) {
+                                        debug("BANG " . $csv_column);
                                         continue;
                                     }
 
