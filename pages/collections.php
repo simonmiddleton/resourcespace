@@ -131,7 +131,262 @@ if (($k == "" || $internal_share_access) && (($userref == $cinfo["user"]) || ($c
     $allow_reorder = true;
 }
 
+# Reordering capability
+if ($allow_reorder) {
+    # Also check for the parameter and reorder as necessary.
+    $reorder = getval("reorder", false);
+    if ($reorder) {
+        $neworder = json_decode(getval("order", false));
+        update_collection_order($neworder, $usercollection);
+        exit("SUCCESS");
+    }
+}
 
+# Include function for reordering
+if ($allow_reorder) {
+    global $usersession;
+    ?>
+
+    <script type="text/javascript">
+        function ReorderResourcesInCollection(idsInOrder) {
+            var newOrder = [];
+            jQuery.each(idsInOrder, function() {
+                newOrder.push(this.substring(13));
+            }); 
+
+            jQuery.ajax({
+                type: 'POST',
+                url: '<?php echo $baseurl_short?>pages/collections.php?collection=<?php echo urlencode($usercollection) ?>&search=<?php echo urlencode($search)?>&reorder=true',
+                data: {
+                    order:JSON.stringify(newOrder),
+                    <?php echo generateAjaxToken('reorder_collection'); ?>
+                },
+                success: function() {
+                    /*
+                    * Reload the top results if we're looking at the user's current collection.
+                    * The !collectionX part may be urlencoded, or not, depending on how the page was reached.
+                    */
+                    var results = new RegExp('[\\?&amp;]' + 'search' + '=([^&amp;#]*)').exec(window.location.href);
+                    // var ref = new RegExp('[\\?&amp;]' + 'ref' + '=([^&amp;#]*)').exec(window.location.href);
+
+                    if ((results !== null) &&
+                        ('<?php echo urlencode("!collection" . $usercollection); ?>' === results[1]
+                        ||
+                        '<?php echo "!collection" . (int) $usercollection; ?>' === results[1])) {
+                            CentralSpaceLoad('<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!collection" . $usercollection); ?>',true);
+                    }
+                }
+            });
+        }
+
+        jQuery(document).ready(function() {
+            if (is_touch_device()) {
+                return false;
+            }
+
+            jQuery('.collection-bar-thumbnail-row').sortable({
+                distance: 20,
+                appendTo: 'body',
+                zIndex: 99000,
+                forcePlaceholderSize: true,
+                helper: function(event, ui) {
+                    //Hack to append the element to the body (visible above others divs), 
+                    //but still belonging to the scrollable container
+                    jQuery('.collection-bar-thumbnail-row').append('<div id="CollectionSpaceClone" class="ui-state-default">' + ui[0].outerHTML + '</div>');   
+                    jQuery('#CollectionSpaceClone').hide();
+                    setTimeout(function() {
+                        jQuery('#CollectionSpaceClone').appendTo('body'); 
+                        jQuery('#CollectionSpaceClone').show();
+                    }, 1);
+                    return jQuery('#CollectionSpaceClone');
+                },
+                items: '.collection-bar-resource-card[data-draggable="yes"]',
+
+                start: function (event, ui) {
+                    InfoBoxEnabled=false;
+                    if (jQuery('#InfoBoxCollection')) {
+                        jQuery('#InfoBoxCollection').hide();
+                    }
+                },
+
+                stop: function(event, ui) {
+                    InfoBoxEnabled=true;
+                    var idsInOrder = jQuery('.collection-bar-thumbnail-row').sortable("toArray");
+                    ReorderResourcesInCollection(idsInOrder);
+                }
+            });
+
+            jQuery('.CollectionPanelShell').disableSelection();
+
+            jQuery('.collection-bar-resource-card:not([data-draggable="yes"]) a')
+                .on('dragstart', function(e){
+                    e.preventDefault();
+            });
+        });
+    </script>
+
+    <?php
+} else {
+    ?>
+    <script type="text/javascript">
+        jQuery(document).ready(function() {
+            jQuery('.ui-sortable').sortable('disable');
+            jQuery('.CollectionPanelShell').enableSelection();          
+        }); 
+    </script>
+    <?php
+}
+?>
+
+<!-- Drag and Drop -->
+<script>
+    jQuery('#CentralSpace').on('prepareDragDrop', function() {
+        jQuery('#CollectionDiv').droppable({
+            accept: '.resource-card',
+
+            drop: function(event, ui) {
+                var query_strings = getQueryStrings();
+                if (is_special_search('!collection', 11) && !is_empty(query_strings) && query_strings.search.substring(11) == usercollection) {
+                    // No need to re-add this resource since we are looking at the same collection in both CentralSpace and CollectionDiv
+                    return false;
+                }
+
+                var resource_id = jQuery(ui.draggable).attr("id");
+                resource_id = resource_id.replace('ResourceShell', '');
+
+                // jQuery('#trash_bin').hide();
+                // AddResourceToCollection includes a reload of CollectionDiv 
+                AddResourceToCollection(event, ui, resource_id, '');
+            }
+        });
+
+        // jQuery('#trash_bin').droppable({
+        //     accept: '.CollectionPanelShell, .resource-card',
+        //     activeClass: "ui-droppable-active ui-state-hover",
+        //     hoverClass: "ui-state-active",
+
+        //     drop: function(event, ui) {
+        //         var resource_id = ui.draggable.attr("id");
+        //         resource_id = resource_id.replace('ResourceShell', '');
+        //         jQuery('#trash_bin_delete_dialog').dialog({
+        //             autoOpen: false,
+        //             modal: true,
+        //             resizable: false,
+        //             dialogClass: 'delete-dialog no-close',
+        //             open: function(event,ui) {
+        //                 jQuery(this)
+        //                     .closest(".ui-dialog")
+        //                     .find(".ui-dialog-title")
+        //                     .html("<?php echo escape($lang["trash_bin_delete_dialog_title"]) . "<br>(" . $lang["from"]; ?> " + jQuery(this).data('collection_name') + ")");
+        //             },
+        //             buttons: {
+        //                 // Confirm removal of this resource from the resolved collection
+        //                 "<?php echo escape($lang['yes']); ?>": function() {
+        //                     var class_of_drag = jQuery(this).data('class_of_drag');
+        //                     var resource_id = jQuery(this).data("resource_id");
+        //                     var collection_id = jQuery(this).data('collection_id');
+        //                     var collection_name = jQuery(this).data('collection_name');
+
+        //                     if (collection_id == "") {
+        //                         console.error('RS_debug: Unable to resolve from which collection drag and drop resource removal is being requested.');
+        //                         jQuery(this).dialog('close');
+        //                     }
+        //                     // RemoveResourceFromCollection includes call to CollectionDivLoad
+
+        //                     RemoveResourceFromCollection(event, resource_id, '<?php echo $pagename; ?>', collection_id);
+        //                     // Remove resource from search results if this is not a collection search   
+        //                     if (is_special_search('!collection', 11)) {
+        //                         jQuery('#ResourceShell' + resource_id).fadeOut();
+        //                     }
+        //                     jQuery(this).dialog('close');
+        //                 },
+        //                 // Cancel resource removal
+        //                 "<?php echo escape($lang['no']); ?>": function() {
+        //                     var class_of_drag = jQuery(this).data('class_of_drag');
+        //                     var resource_id = jQuery(this).data("resource_id");
+        //                     var collection_id = jQuery(this).data('collection_id');
+        //                     var collection_name = jQuery(this).data('collection_name');
+
+        //                     if (collection_id == "") {
+        //                         console.error('RS_debug: Unable to resolve which collection to reload following cancellation of resource removal.');
+        //                         jQuery(this).dialog('close');
+        //                     }
+
+        //                     // If resource was dragged from the CollectionPanelShell then refresh the current collection within the CollectionDiv
+        //                     if (class_of_drag.indexOf("CollectionPanelShell") >= 0) {
+        //                         collection_id = jQuery("#collection").val();
+        //                         CollectionDivLoad('<?php echo $baseurl; ?>/pages/collections.php?collection=' + collection_id);
+        //                     }
+        //                     jQuery(this).dialog('close');
+        //                 }
+        //             }
+        //         });
+
+        //         // Resolve the collection depending on the origin of the resource been dragged
+        //         var class_of_drag = ui.draggable.attr("class");
+        //         var collection_id = "";
+        //         var collection_name = "";
+
+        //         // If resource is dragged from the ResourcePanel (ie. CentralSpace) then collection is in querystring
+        //         if (class_of_drag.indexOf("ResourcePanel") >= 0) {
+        //             var query_strings = getQueryStrings();
+        //             if (!is_empty(query_strings)) {
+        //                 collection_id = query_strings.search.substring(11);
+        //                 // Collection name now stored in custom attribute
+        //                 collection_name = jQuery("#CentralSpaceResources").attr("collectionsearchname").trim();
+        //             }
+        //         }
+
+        //         // If resource is dragged from the CollectionPanelShell then use the collection from within the CollectionDiv
+        //         if (class_of_drag.indexOf("CollectionPanelShell") >= 0) {
+        //             collection_id = jQuery("#collection").val();
+        //             collection_name = jQuery("#collection option:selected").text().trim();
+        //         }
+
+        //         jQuery('#trash_bin').hide();
+
+        //         // Cancel re-order in case it was triggered
+        //         if (jQuery('#CentralSpace').hasClass('ui-sortable')) {
+        //             jQuery('#CentralSpace').sortable('cancel');
+        //         }
+
+        //         if (jQuery('#CollectionSpace').hasClass('ui-sortable')) {
+        //             jQuery('#CollectionSpace').sortable('cancel');
+        //         }
+
+        //         // Process drop request without dialog when resource is being dragged from bottom collection panel
+        //         if (class_of_drag.indexOf("CollectionPanelShell") >= 0) {
+        //             // Handle different cases such as Saved searches
+        //             if (ui.draggable.data('savedSearch') === 'yes') {
+        //                 CollectionDivLoad('<?php echo $baseurl; ?>/pages/collections.php?removesearch=' + resource_id + '&nc=<?php echo time(); ?>');
+        //             } else {
+        //                 RemoveResourceFromCollection(event, resource_id, '<?php echo $pagename; ?>', collection_id, <?php echo htmlspecialchars(generate_csrf_js_object('remove_resource_from_collection'), ENT_NOQUOTES); ?>);
+        //                 // Remove resource from search results if this is not a collection search   
+        //                 if (is_special_search('!collection', 11)) {
+        //                     jQuery('#ResourceShell' + resource_id).fadeOut();
+        //                 }
+        //             }
+        //         } else {
+        //             // Show confirmation dialog when resource is being dragged from top (ie. CentralSpace)
+        //             jQuery('#trash_bin_delete_dialog').data('class_of_drag',class_of_drag)
+        //                 .data('resource_id',resource_id)
+        //                 .data('collection_id',collection_id)
+        //                 .data('collection_name',collection_name);
+
+        //             jQuery('#trash_bin_delete_dialog').dialog('open');
+        //         }
+        //     }
+        // });
+    });
+
+    jQuery(document).ready(function() {
+        jQuery('#CentralSpace').trigger('prepareDragDrop');
+    });
+
+    registerResourceSelectDeselectHandlers();
+</script>
+<!-- End of Drag and Drop -->
+ <?php
 
 $addarray = array();
 $add = getval("add", "");
@@ -372,6 +627,8 @@ $feedback = $cinfo ? $cinfo["request_feedback"] : 0;
 ?>
 <script type="text/javascript">
 jQuery(function () {
+    
+    // Collection bar state toggle
     var $bar = jQuery('.collection-bar-holder');
     var $toggleThumbsBtn = jQuery('.show-thumbs-button');
 
@@ -405,6 +662,125 @@ jQuery(function () {
             $toggleThumbsBtn.find('span').text('Hide thumbnails');
         }
     });
+
+    // Collection bar scroll buttons
+
+jQuery(function () {
+    var $scroller = jQuery(".collection-bar-thumbnail-row");
+    var $leftBtn = jQuery(".thumbnail-row-arrow.left");
+    var $rightBtn = jQuery(".thumbnail-row-arrow.right");
+
+    function getCards() {
+        return $scroller.find(".collection-bar-resource-card");
+    }
+
+    function getScrollerPaddingLeft() {
+        var scrollerEl = $scroller[0];
+        return parseFloat(window.getComputedStyle(scrollerEl).paddingLeft) || 0;
+    }
+
+    function getCardPositions() {
+        var scrollerEl = $scroller[0];
+        var paddingLeft = getScrollerPaddingLeft();
+        var positions = [];
+
+        getCards().each(function (index) {
+            var extraOffset = index === 0 ? 0 : 6;
+            positions.push(this.offsetLeft - paddingLeft + extraOffset);
+        });
+
+        return {
+            positions: positions,
+            maxScroll: scrollerEl.scrollWidth - scrollerEl.clientWidth
+        };
+    }
+
+    function getFullyVisibleIndexes() {
+        var scrollerEl = $scroller[0];
+        var scrollerLeft = scrollerEl.scrollLeft;
+        var scrollerRight = scrollerLeft + scrollerEl.clientWidth;
+        var paddingLeft = getScrollerPaddingLeft();
+        var visibleIndexes = [];
+
+        getCards().each(function (index) {
+            var cardLeft = this.offsetLeft - paddingLeft + (index === 0 ? 0 : 6);
+            var cardRight = cardLeft + this.offsetWidth;
+
+            if (cardLeft >= scrollerLeft && cardRight <= scrollerRight) {
+                visibleIndexes.push(index);
+            }
+        });
+
+        return visibleIndexes;
+    }
+
+    function getFirstVisibleIndex(positions) {
+        var currentScroll = $scroller.scrollLeft();
+        var tolerance = 2;
+
+        for (var i = 0; i < positions.length; i++) {
+            if (positions[i] >= currentScroll - tolerance) {
+                return i;
+            }
+        }
+
+        return positions.length - 1;
+    }
+
+    function updateButtons() {
+        var el = $scroller[0];
+        if (!el) return;
+
+        var maxScrollLeft = el.scrollWidth - el.clientWidth;
+        var tolerance = 2;
+
+        if (el.scrollLeft <= tolerance) {
+            $leftBtn.hide();
+        } else {
+            $leftBtn.show();
+        }
+
+        if (el.scrollLeft >= maxScrollLeft - tolerance) {
+            $rightBtn.hide();
+        } else {
+            $rightBtn.show();
+        }
+    }
+
+    function scrollPage(direction) {
+        var metrics = getCardPositions();
+        if (!metrics.positions.length) return;
+
+        var fullyVisibleIndexes = getFullyVisibleIndexes();
+        var visibleCount = Math.max(1, fullyVisibleIndexes.length);
+        var moveBy = Math.max(1, visibleCount - 1);
+
+        var currentIndex = getFirstVisibleIndex(metrics.positions);
+        var nextIndex = direction === "right"
+            ? currentIndex + moveBy
+            : currentIndex - moveBy;
+
+        nextIndex = Math.max(0, Math.min(nextIndex, metrics.positions.length - 1));
+
+        var target = metrics.positions[nextIndex];
+        target = Math.max(0, Math.min(target, metrics.maxScroll));
+
+        $scroller.stop().animate({ scrollLeft: target }, 300, updateButtons);
+    }
+
+    $leftBtn.on("click", function () {
+        scrollPage("left");
+    });
+
+    $rightBtn.on("click", function () {
+        scrollPage("right");
+    });
+
+    $scroller.on("scroll", updateButtons);
+    jQuery(window).on("resize", updateButtons);
+
+    updateButtons();
+});
 
 });
 </script>
@@ -527,7 +903,7 @@ jQuery(function () {
                     $url = $baseurl_short . "pages/search.php?search=" . urlencode($searches[$n]["search"]) . "&restypes=" . urlencode($searches[$n]["restypes"]) . "&archive=" . urlencode($searches[$n]["archive"]);
                     ?>
                      <!--Resource Panel-->
-                    <div class="collection-bar-resource-card" data-saved-search="yes">
+                    <div class="collection-bar-resource-card" data-saved-search="yes" data-draggable="no">
                         <a class="collection-bar-resource-card-link" 
                                onclick="return CentralSpaceLoad(this,true);" 
                                href="<?php echo $url?>"
@@ -576,7 +952,7 @@ jQuery(function () {
 
                     ?>
                     <!--Resource Panel-->
-                    <div class="collection-bar-resource-card" id="ResourceShell<?php echo urlencode($ref) ?>">
+                    <div class="collection-bar-resource-card" id="ResourceShell<?php echo urlencode($ref) ?>"  data-draggable="yes">
 
                         <a
                             class="collection-bar-resource-card-link"
@@ -684,7 +1060,29 @@ jQuery(function () {
                         </div>
                     </div>
                 <?php
-                } } ?>
+                }
+            }
+
+            if ($count_result > $max_collection_thumbs) {
+                ?>
+                <div class="collection-bar-resource-card" data-draggable="no">
+                    <a class="collection-bar-resource-card-link" 
+                        onclick="return CentralSpaceLoad(this,true);" 
+                        href="<?php echo $baseurl_short?>pages/search.php?search=!collection<?php echo $usercollection?>&k=<?php echo urlencode($k) ?>"
+                        aria-label="<?php echo escape($lang['viewall'])?>">
+                    </a>
+                    <div class="collection-bar-resource-card-image">
+                        <i class="icon-eye"></i>
+                        <span><?php echo escape($lang['viewall'])?></span>
+                        <div class="collection-bar-resource-card-image-overlay"></div>
+                    </div>
+                    <div class="collection-bar-resource-card-title">
+                    </div>
+                </div>
+                <?php
+            }
+
+            ?>
             </div>
             <button class="thumbnail-row-arrow right" aria-label="Scroll right">
                 <i class="icon-chevron-right"></i>
