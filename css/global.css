@@ -3464,17 +3464,16 @@ header.LoginHeader {
 }
 
 .header-search-field #search-filters-panel {
-    display: grid;
-    grid-template-columns:
-        1fr               /* left flexible space */
-        min(1366px, 100%) /* centered content */
-        1fr;              /* right flexible space (for the button to stretch to the far right) */
-    gap: var(--space-16);
+    display: none;
+    padding: var(--space-16);
+    padding-right: var(--space-4);
+    max-height: 65vh;
+    overflow-y: auto;
+    /* gap: var(--space-16); */
     position: absolute;
     top: 100%;
     left: 0;
     width: 100%;
-    padding: var(--space-24) var(--space-32) var(--space-16) var(--space-32);
     opacity: 0;
     visibility: hidden;
     transform: translateY(-12px);
@@ -3489,41 +3488,51 @@ header.LoginHeader {
 }
 
 .header-search-field #simple_search_form.filters-open #search-filters-panel {
+    display: grid;
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
-    max-height: 65vh;
-    overflow-y: auto;
+}
+
+.header-search-field #search-filters-panel .field-input:has(.date-range-search) {
+    gap: var(--space-4);
+}
+
+.header-search-field #search-filters-panel .date-range-search {
+    width: 100%;
+    text-align: left;
+}
+
+.header-search-field #search-filters-panel .date-range-search:first-of-type {
+    margin-top: var(--space-4);
+}
+
+.header-search-field #search-filters-panel .date-range-search select[name$="_start-d"],
+.header-search-field #search-filters-panel .date-range-search select[name$="_end-d"] {
+    width: 28%;
+}
+
+.header-search-field #search-filters-panel .date-range-search select[name$="_start-m"],
+.header-search-field #search-filters-panel .date-range-search select[name$="_end-m"] {
+    width: 40%;
+}
+
+.header-search-field #search-filters-panel .date-range-search select[name$="_start-y"],
+.header-search-field #search-filters-panel .date-range-search select[name$="_end-y"] {
+    width: 28%;
+}
+
+.header-search-field #search-filters-panel .date-range-search label{
+    display: inline-block;
+    width: 100%;
+}
+
+.header-search-field #search-filters-panel .field-input:has(.date-range-search) .clearerleft {
+    display: none;
 }
 
 .header-search-field #search-filters-panel > button {
-    grid-column: 3;
-    justify-self: end;
-    display: flex;
-    width: var(--space-48);
-    height: var(--space-48);
-    justify-content: center;
-    align-items: center;
-    border-radius: var(--space-4);
-    font-size: 28px;
-    font-weight: inherit;
-    color: var(--colour-neutral-700);
-    background: var(--colour-surface-300);
-    box-shadow: none;
-}
-
-.header-search-field #search-filters-panel > button:hover {
-    color: var(--colour-surface-50);
-    background: var(--colour-surface-700);
-}
-
-.header-search-field #search-filters-panel #SearchBoxPanel {
-    grid-column: 2;
-    max-width: 1366px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-20);
+    display: none;
 }
 
 .header-search-field #search-panel-main {
@@ -3545,7 +3554,7 @@ header.LoginHeader {
 
 .header-search-field #search-panel-main > .field-input .MiniCategoryBox {
     width: 100%;
-    height: calc(2 * var(--form-field-min-height) - 24px); /* 24px is for the show/hide tree toggle link */
+    height: calc(2 * var(--form-field-min-height));
     padding: unset;
     background-color: var(--form-form-field-background);
     text-align: left;
@@ -3848,48 +3857,6 @@ header.LoginHeader {
 }
 
 
-/* ### WIP ### */
-/* todo: move these rules in the correct place (i.e. the #search-filters-panel) */
-.header-search-field #search-filters-panel .field-input:has(.date-range-search) {
-    gap: var(--space-4);
-    grid-column: span 2;
-}
-
-.header-search-field #search-filters-panel .date-range-search {
-    width: 100%;
-    text-align: left;
-}
-
-.header-search-field #search-filters-panel .date-range-search:first-of-type {
-    margin-top: var(--space-4);
-}
-
-.header-search-field #search-filters-panel .date-range-search select[name$="_start-d"],
-.header-search-field #search-filters-panel .date-range-search select[name$="_end-d"] {
-    width: 78px;
-}
-
-.header-search-field #search-filters-panel .date-range-search select[name$="_start-m"],
-.header-search-field #search-filters-panel .date-range-search select[name$="_end-m"] {
-    width: 135px;
-}
-
-.header-search-field #search-filters-panel .date-range-search select[name$="_start-y"],
-.header-search-field #search-filters-panel .date-range-search select[name$="_end-y"] {
-    width: 90px;
-}
-
-.header-search-field #search-filters-panel .date-range-search label{
-    display: inline-block;
-    width: 130px;
-}
-
-.header-search-field #search-filters-panel .field-input:has(.date-range-search) .clearerleft {
-    display: none;
-}
-/* ### WIP ### */
-
-
 /* ===== Responsive layouts ===== */
 /* ===== Breakpoints =====
    - mobile:  360px (base)
@@ -3969,37 +3936,12 @@ header.LoginHeader {
         width: 100%;
     }
 
-    .header-search-field #search-filters-panel {
-        display: unset;
-        padding: var(--space-16);
-        padding-right: var(--space-4);
-    }
-
     .header-search-field #search-filters-panel #SearchBoxPanel {
         gap: var(--space-32);
     }
 
     .header-search-field #search-panel-main {
         justify-content: unset;
-    }
-
-    #searchbarrt,
-    .header-search-field #search-panel-main > .field-input input,
-    .header-search-field #search-panel-main > .field-input select {
-        width: 234px;
-    }
-
-    .header-search-field #search-panel-main > .field-input .MiniCategoryBox {
-        width: 210px;
-    }
-
-    .header-search-field #search-panel-main > .field-input #cattree_categorytreefield {
-        max-width: 225px;
-        max-height: 225px;
-    }
-
-    .header-search-field #search-filters-panel > button {
-        display: none;
     }
 
     .header-search-field #simplesearchbuttons > input {
@@ -4152,20 +4094,6 @@ header.LoginHeader {
         gap: var(--space-16);
     }
 
-    .header-search-field #search-panel-main > .field-input input,
-    .header-search-field #search-panel-main > .field-input select {
-        width: 100%;
-    }
-
-    .header-search-field #search-panel-main > .field-input #cattree_categorytreefield {
-        max-width: 316px;
-    }
-
-    .header-search-field #search-panel-main > .field-input .MiniCategoryBox {
-        width: 302px;
-        height: calc(2 * var(--form-field-min-height));
-    }
-
     .header-search-field #simplesearchbuttons {
         flex-direction: column;
         align-items: flex-start;
@@ -4188,6 +4116,71 @@ header.LoginHeader {
 
 /* Desktop */
 @media (min-width: 1366px) {
+    .header-search-field #search-filters-panel {
+        grid-template-columns:
+            1fr               /* left flexible space */
+            min(1366px, 100%) /* centered content */
+            1fr;              /* right flexible space (for the button to stretch to the far right) */
+        gap: var(--space-16);
+        padding: var(--space-24) var(--space-32) var(--space-16) var(--space-32);
+    }
+
+    .header-search-field #search-filters-panel #SearchBoxPanel {
+        grid-column: 2;
+        max-width: 1366px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-20);
+    }
+
+    .header-search-field #search-filters-panel .field-input:has(.date-range-search) {
+        grid-column: span 2;
+    }
+
+    .header-search-field #search-filters-panel .date-range-search select[name$="_start-d"],
+    .header-search-field #search-filters-panel .date-range-search select[name$="_end-d"] {
+        width: 20%;
+    }
+
+    .header-search-field #search-filters-panel .date-range-search select[name$="_start-m"],
+    .header-search-field #search-filters-panel .date-range-search select[name$="_end-m"] {
+        width: 30%;
+    }
+
+    .header-search-field #search-filters-panel .date-range-search select[name$="_start-y"],
+    .header-search-field #search-filters-panel .date-range-search select[name$="_end-y"] {
+        width: 20%;
+    }
+
+    .header-search-field #search-filters-panel .date-range-search label{
+        width: 130px;
+    }
+
+    .header-search-field #search-panel-main > .field-input .MiniCategoryBox {
+        height: calc(2 * var(--form-field-min-height) - 24px); /* 24px is for the show/hide tree toggle link */
+    }
+
+    .header-search-field #search-filters-panel > button {
+        grid-column: 3;
+        justify-self: end;
+        display: flex;
+        width: var(--space-48);
+        height: var(--space-48);
+        justify-content: center;
+        align-items: center;
+        border-radius: var(--space-4);
+        font-size: 28px;
+        font-weight: inherit;
+        color: var(--colour-neutral-700);
+        background: var(--colour-surface-300);
+        box-shadow: none;
+    }
+
+    .header-search-field #search-filters-panel > button:hover {
+        color: var(--colour-surface-50);
+        background: var(--colour-surface-700);
+    }
 }
 
 
