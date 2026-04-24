@@ -823,7 +823,6 @@ if (!checkperm("c")) {
                                     $csv_set_options_found = false;
 
                                     if (in_array($csv_column, $selected_columns)) {
-                                        debug("BANG " . $csv_column);
                                         continue;
                                     }
 
