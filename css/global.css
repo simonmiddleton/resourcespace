@@ -3891,6 +3891,11 @@ header.LoginHeader {
 
 
 /* ===== Responsive layouts ===== */
+/* ===== Breakpoints =====
+   - mobile:  360px (base)
+   - tablet:  768px
+   - desktop: 1366px
+*/
 
 @media(max-width: 1366px) {
     /* Login page small desktop layout */
@@ -4175,6 +4180,14 @@ header.LoginHeader {
     #header-container .primary-navigation ul.menu-panel > li {
         max-width: unset;
     } */
+}
+
+/* Tablet */
+@media (min-width: 768px) {
+}
+
+/* Desktop */
+@media (min-width: 1366px) {
 }
 
 
