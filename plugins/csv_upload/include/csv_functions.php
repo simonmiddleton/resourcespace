@@ -808,7 +808,7 @@ function csv_upload_process($filename, &$meta, $resource_types, &$messages, $csv
                     $logtext = "Filename for alternative file: $filename with extension $extension";
                     csv_upload_log($logfile, $logtext);
                     array_push($messages, $logtext);
-                    if ($csv_set_options["alternative_file_name_column"]) {
+                    if ($csv_set_options["alternative_file_name_column"] > 0) {
                         $name = $line[$csv_set_options["alternative_file_name_column"]] ?? "";
                         if ($name != "") {
                             $logtext = "Name for alternative file: $name";
@@ -816,7 +816,7 @@ function csv_upload_process($filename, &$meta, $resource_types, &$messages, $csv
                             array_push($messages, $logtext);
                         }
                     }
-                    if ($csv_set_options["alternative_file_description_column"]) {
+                    if ($csv_set_options["alternative_file_description_column"] > 0) {
                         $description = $line[$csv_set_options["alternative_file_description_column"]] ?? "";
                         if ($description != "") {
                             $logtext = "Description for alternative file: $description";

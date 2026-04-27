@@ -636,7 +636,7 @@ if (!checkperm("c")) {
                 </form>
                 <?php
             } elseif ($csv_set_options["csv_mode"] == "create_alternatives") {
-                // Step 2(b) Update existing
+                // Step 2(c) Create alternative file records
                 if ($offline_limit) {
                     echo "<div class='PageInformal'>" . $offline_text . "</div>";
                 }
@@ -719,7 +719,7 @@ if (!checkperm("c")) {
                                         (($csv_set_options["alternative_file_filename_column"] ?? "") != ""
                                         && $csv_set_options["alternative_file_filename_column"] == $csv_column)
                                     ) {
-                                        //echo " selected ";
+                                        echo " selected ";
                                     }
                                     echo  ">" . escape($csv_field_data["header"]) . "</option>\n";
                                 }
@@ -734,7 +734,7 @@ if (!checkperm("c")) {
                                 name="alternative_file_name_column"
                                 class="stdwidth columnselect"
                                 >
-                                <option value="0"><?php echo escape($lang["select"]); ?></option>
+                                <option value="-1"><?php echo escape($lang["select"]); ?></option>
                                 <?php
                                 foreach ($csv_info as $csv_column => $csv_field_data) {
                                     echo "<option value=\"" . $csv_column . "\" >" . escape($csv_field_data["header"]) . "</option>\n";
@@ -751,7 +751,7 @@ if (!checkperm("c")) {
                                 name="alternative_file_description_column"
                                 class="stdwidth columnselect"
                                 >
-                                <option value="0"><?php echo escape($lang["select"]); ?></option>
+                                <option value="-1"><?php echo escape($lang["select"]); ?></option>
                                 <?php
                                 foreach ($csv_info as $csv_column => $csv_field_data) {
                                     echo "<option value=\"" . $csv_column . "\" >" . escape($csv_field_data["header"]) . "</option>\n";
