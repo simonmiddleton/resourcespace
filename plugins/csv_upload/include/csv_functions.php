@@ -365,7 +365,7 @@ function csv_upload_process($filename, &$meta, $resource_types, &$messages, $csv
         }
         // Create resources or Update resource data
         if (in_array($csv_set_options["csv_mode"], ["create_new", "update_existing"])) {
-            if ($processcsv && $csv_set_options["csv_mode"] == "update_existing") {
+            if ($csv_set_options["csv_mode"] == "update_existing") {
                 // Get status to set
                 if (trim($csv_set_options["status_column"]) != "" && in_array($csv_set_options["status_column"], array_keys($line))) {
                     $setstatus = $line[$csv_set_options["status_column"]];
@@ -382,7 +382,7 @@ function csv_upload_process($filename, &$meta, $resource_types, &$messages, $csv
                         $messages[] = "Invalid resource workflow state, using default value";
                     }
                     // Run the check again as there might not be a default set
-                    if (!checkperm('z' . $setstatus) && is_numeric($setstatus) && in_array($setstatus, $archivestates)) {
+                    if ($processcsv &&!checkperm('z' . $setstatus) && is_numeric($setstatus) && in_array($setstatus, $archivestates)) {
                         update_archive_status($resourcerefs, $setstatus);
                     }
 
@@ -406,7 +406,7 @@ function csv_upload_process($filename, &$meta, $resource_types, &$messages, $csv
                     }
 
                     // Run the check again as there might not be a default set
-                    if (!checkperm('rws' . $setaccess) && is_numeric($setaccess) && in_array($setaccess, $accessstates)) {
+                    if ($processcsv && !checkperm('rws' . $setaccess) && is_numeric($setaccess) && in_array($setaccess, $accessstates)) {
                         $chunks = db_chunk_id_list($resourcerefs);
                         foreach ($chunks as $resource_batch) {
                             // Get old access for logging purposes
