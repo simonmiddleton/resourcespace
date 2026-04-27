@@ -82,6 +82,10 @@ include "../../include/header.php";
             $sort_order_fields['resourceid'] = $lang['resourceid'];
         }
 
+        if ($random_sort) {
+            $sort_order_fields['random'] = $lang['random'];
+        }
+
         $sort_order_fields['resourcetype'] = $lang['type'];
 
         // Add thumbs_display_fields to sort order links for thumbs views
