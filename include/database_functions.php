@@ -904,7 +904,7 @@ function CheckDBStruct($path, $verbose = false)
                     if ($sql .= "") {
                         $sql .= ", ";
                     }
-                    $sql .= $col[0] . " " . str_replace("§", ",", $col[1]);
+                    $sql .= "`{$col[0]}` " . str_replace("§", ",", $col[1]);
 
                     if (
                         strtolower(substr($col[1], 0, 3)) == "int"
