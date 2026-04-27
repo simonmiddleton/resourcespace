@@ -210,9 +210,6 @@ jQuery(document).ready(function() {
 
     jQuery('input[name="batch_replace_alternatives"]').on('change', alternativesChanged);
     jQuery('input[name="use_resourceid"]').on('change', filenameChanged);
-
-    alternativesChanged();
-    filenameChanged();
 });
 </script>
 

@@ -382,7 +382,7 @@ function csv_upload_process($filename, &$meta, $resource_types, &$messages, $csv
                         $messages[] = "Invalid resource workflow state, using default value";
                     }
                     // Run the check again as there might not be a default set
-                    if ($processcsv &&!checkperm('z' . $setstatus) && is_numeric($setstatus) && in_array($setstatus, $archivestates)) {
+                    if ($processcsv && !checkperm('z' . $setstatus) && is_numeric($setstatus) && in_array($setstatus, $archivestates)) {
                         update_archive_status($resourcerefs, $setstatus);
                     }
 
