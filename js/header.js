@@ -76,8 +76,10 @@ ResourceSpace.Modules.Header = (() => {
     function toggleSearchPanel(e) {
         e.stopPropagation();
 
+        // todo: rewrite media query to match display breakpoints, this is meant to cover both mobile & tablet (or in other words, not Desktop)
         const mq_tablet = window.matchMedia('(max-width: 768px)');
         const is_small_screen = mq_tablet.matches;
+        console.debug(`is_small_screen = ${is_small_screen}`);
 
         const form = e.target.closest('form');
         const panel = document.getElementById('search-filters-panel');
@@ -94,7 +96,9 @@ ResourceSpace.Modules.Header = (() => {
         } else {
             panel.addEventListener(
                 'transitionend',
-                () => {
+                (event) => {
+                    if (event.propertyName !== 'opacity') return;
+
                     if (!form.classList.contains('filters-open')) {
                         panel.hidden = true;
 

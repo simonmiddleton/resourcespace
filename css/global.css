@@ -3464,7 +3464,7 @@ header.LoginHeader {
 }
 
 .header-search-field #search-filters-panel {
-    display: none;
+    display: grid;
     padding: var(--space-16);
     padding-right: var(--space-4);
     max-height: 65vh;
@@ -3488,7 +3488,6 @@ header.LoginHeader {
 }
 
 .header-search-field #simple_search_form.filters-open #search-filters-panel {
-    display: grid;
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
