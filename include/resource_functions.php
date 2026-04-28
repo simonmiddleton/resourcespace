@@ -4233,7 +4233,8 @@ function get_exiftool_fields($resource_type, string $option_separator = ",", boo
                   f.exiftool_field,
                   f.exiftool_filter,
                   f.name,
-                  f.read_only
+                  f.read_only,
+                  f.geomapping
              FROM resource_type_field AS f
         LEFT JOIN resource_type_field_resource_type rtfrt ON f.ref=rtfrt.resource_type_field
             WHERE length(exiftool_field) > 0

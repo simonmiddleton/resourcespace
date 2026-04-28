@@ -665,9 +665,12 @@ function extract_exif_comment($ref, $extension = "")
             $metadata['STRIPPEDFILENAME'] = strip_extension($metadata['FILENAME']);
         }
 
+        $location_set = false;
         # Geolocation Metadata Support
         if (!$disable_geocoding && $dec_long != 0 && $dec_lat != 0) {
             ps_query("UPDATE resource SET geo_long= ?,geo_lat= ? WHERE ref= ?", ['d', $dec_long, 'd', $dec_lat, 'i', $ref]);
+            update_geolocation_fields($ref, [$dec_lat, $dec_long]);
+            $location_set = true;
         }
 
         # Update portrait_landscape_field (when reverting metadata this was getting lost)
@@ -736,6 +739,78 @@ function extract_exif_comment($ref, $extension = "")
                         }
                     }
 
+                    if ($read_from[$i]["geomapping"] > 0) {
+                        if ($location_set) {
+                            debug("EXIF - location field set from Geolocation");
+                            continue;
+                        }
+
+                        if ($read_from[$i]["geomapping"] == FIELD_GEO_LOCATION::latitude->value) {
+                            // Latitude field, use decimal values
+                            if (preg_match("/^(?<degrees>\d+) deg (?<minutes>\d+)' (?<seconds>\d+\.?\d*)\"/", $value, $latitude)) {
+                                $dec_lat = $latitude['degrees'] + ($latitude['minutes'] / 60) + ($latitude['seconds'] / (60 * 60));
+                                if (strpos($value, 'S') !== false) {
+                                    $dec_lat = -1 * $dec_lat;
+                                }
+                                $value = $dec_lat;
+                            }
+
+                            if (
+                                !is_float_loose($value) || $value === false
+                                || (float) $value > 90 || (float) $value < -90
+                            ) {
+                                debug("EXIF - invalid latitude value: " . $value);
+                                continue;
+                            }
+                        } elseif ($read_from[$i]["geomapping"] == FIELD_GEO_LOCATION::longitude->value) {
+                            // Longitude field, use decimal values
+                            if (preg_match("/^(?<degrees>\d+) deg (?<minutes>\d+)' (?<seconds>\d+\.?\d*)\"/", $value, $longitude)) {
+                                $dec_long = $longitude['degrees'] + ($longitude['minutes'] / 60) + ($longitude['seconds'] / (60 * 60));
+                                if (strpos($value, 'W') !== false) {
+                                    $dec_long = -1 * $dec_long;
+                                }
+                                $value = $dec_long;
+                            }
+
+                            if (
+                                !is_float_loose($value) || $value === false
+                                || (float) $value > 180 || (float) $value < -180
+                            ) {
+                                debug("EXIF - invalid latitude value: " . $value);
+                                continue;
+                            }
+                        } elseif ($read_from[$i]["geomapping"] == FIELD_GEO_LOCATION::both->value) {
+                            // Longitude field, use decimal values
+                            $pattern = "/(?<degrees>\d+) deg (?<minutes>\d+)' (?<seconds>\d+\.?\d*)/";
+                            if (preg_match_all($pattern, $value, $matches, PREG_SET_ORDER) && count($matches) == 2) {
+                                $dec_lat = $matches[0]['degrees'] + ($matches[0]['minutes'] / 60) + ($matches[0]['seconds'] / (60 * 60));
+                                $dec_long = $matches[1]['degrees'] + ($matches[1]['minutes'] / 60) + ($matches[1]['seconds'] / (60 * 60));
+                                if (strpos($value, 'S') !== false) {
+                                    $dec_lat = -1 * $dec_lat;
+                                }
+                                if (strpos($value, 'W') !== false) {
+                                    $dec_long = -1 * $dec_long;
+                                }
+                                $value = round($dec_lat, 6) . ", " . round($dec_long, 6);
+                            }
+
+                            $pattern = '/
+                                ^
+                                (-?\d{1,3}(?:\.\d+)?) # Latitude capture
+                                ,\s*                  # Comma + whitespace
+                                (-?\d{1,3}(?:\.\d+)?) # Longitude capture
+                                $
+                                /x';
+                            if (
+                                !preg_match($pattern, $value) || $value === false
+                                || (float) $dec_lat > 90 || (float) $dec_lat < -90
+                                || (float) $dec_long > 180 || (float) $dec_long < -180
+                            ) {
+                                debug("EXIF - invalid location value: " . $value);
+                                continue;
+                            }
+                        }
+                    }
                     # Read the data.
                     if ($read) {
                         if ($read_from[$i]['exiftool_filter'] != "") {
