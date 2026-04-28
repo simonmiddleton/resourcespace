@@ -3469,7 +3469,6 @@ header.LoginHeader {
     padding-right: var(--space-4);
     max-height: 65vh;
     overflow-y: auto;
-    /* gap: var(--space-16); */
     position: absolute;
     top: 100%;
     left: 0;
@@ -3485,6 +3484,15 @@ header.LoginHeader {
     border-bottom: 1px solid var(--colour-surface-400);
     box-sizing: border-box;
     z-index: 200;
+}
+
+.header-search-field #search-filters-panel #SearchBoxPanel {
+    margin: 0 auto;
+    max-width: 1366px;
+    display: flex;
+    flex-direction: column;
+    grid-column: 2;
+    gap: var(--space-16);
 }
 
 .header-search-field #simple_search_form.filters-open #search-filters-panel {
@@ -3537,7 +3545,7 @@ header.LoginHeader {
 .header-search-field #search-panel-main {
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: var(--space-16);
 }
 
@@ -3877,6 +3885,7 @@ header.LoginHeader {
         flex: 0 1 clamp(320px, 38vw, 399px);
     }
 
+    /* todo: is this still needed? */
     .header-search-field #search-filters-panel > button {
         position: unset;
         right: unset;
@@ -3933,14 +3942,6 @@ header.LoginHeader {
     #header-container .header-search-field {
         grid-area: search;
         width: 100%;
-    }
-
-    .header-search-field #search-filters-panel #SearchBoxPanel {
-        gap: var(--space-32);
-    }
-
-    .header-search-field #search-panel-main {
-        justify-content: unset;
     }
 
     .header-search-field #simplesearchbuttons > input {
@@ -4089,10 +4090,6 @@ header.LoginHeader {
         flex-wrap: nowrap;
     }
 
-    .header-search-field #search-filters-panel #SearchBoxPanel {
-        gap: var(--space-16);
-    }
-
     .header-search-field #simplesearchbuttons {
         flex-direction: column;
         align-items: flex-start;
@@ -4111,6 +4108,15 @@ header.LoginHeader {
 
 /* Tablet */
 @media (min-width: 768px) {
+    .header-search-field #search-filters-panel #SearchBoxPanel {
+        gap: var(--space-32);
+    }
+
+    .header-search-field #search-panel-main {
+        grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+        row-gap: var(--space-32);
+        column-gap: var(--space-16);
+    }
 }
 
 /* Desktop */
@@ -4122,15 +4128,6 @@ header.LoginHeader {
             1fr;              /* right flexible space (for the button to stretch to the far right) */
         gap: var(--space-16);
         padding: var(--space-24) var(--space-32) var(--space-16) var(--space-32);
-    }
-
-    .header-search-field #search-filters-panel #SearchBoxPanel {
-        grid-column: 2;
-        max-width: 1366px;
-        margin: 0 auto;
-        display: flex;
-        flex-direction: column;
-        gap: var(--space-20);
     }
 
     .header-search-field #search-filters-panel .field-input:has(.date-range-search) {
@@ -4154,6 +4151,10 @@ header.LoginHeader {
 
     .header-search-field #search-filters-panel .date-range-search label{
         width: 130px;
+    }
+
+    .header-search-field #search-panel-main {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
     }
 
     .header-search-field #search-panel-main > .field-input .MiniCategoryBox {
