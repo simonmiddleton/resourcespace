@@ -3892,12 +3892,6 @@ header.LoginHeader {
     #header-container .header-search-field {
         flex: 0 1 clamp(320px, 38vw, 399px);
     }
-
-    /* todo: is this still needed? */
-    .header-search-field #search-filters-panel > button {
-        position: unset;
-        right: unset;
-    }
 }
 
 /* Login page tablet/mobile layout */
@@ -3950,11 +3944,6 @@ header.LoginHeader {
     #header-container .header-search-field {
         grid-area: search;
         width: 100%;
-    }
-
-    .header-search-field #simplesearchbuttons > input {
-        margin-left: auto;
-        flex-shrink: 0;
     }
 
     #header-container > .primary-navigation {
