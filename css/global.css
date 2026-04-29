@@ -3468,7 +3468,8 @@ header.LoginHeader {
     padding: var(--space-16);
     padding-right: var(--space-4);
     max-height: 65vh;
-    overflow-y: auto;
+    overflow-y: scroll;
+    scrollbar-gutter: stable;
     position: absolute;
     top: 100%;
     left: 0;
@@ -3487,11 +3488,9 @@ header.LoginHeader {
 }
 
 .header-search-field #search-filters-panel #SearchBoxPanel {
-    margin: 0 auto;
     max-width: 1366px;
     display: flex;
     flex-direction: column;
-    grid-column: 2;
     gap: var(--space-16);
 }
 
@@ -4127,13 +4126,9 @@ header.LoginHeader {
 
 /* Desktop */
 @media (min-width: 1366px) {
-    .header-search-field #search-filters-panel {
-        grid-template-columns:
-            1fr               /* left flexible space */
-            min(1366px, 100%) /* centered content */
-            1fr;              /* right flexible space (for the button to stretch to the far right) */
-        gap: var(--space-16);
-        padding: var(--space-24) var(--space-32) var(--space-16) var(--space-32);
+    .header-search-field #search-filters-panel #SearchBoxPanel {
+        margin: 0 auto;
+        grid-column: 2;
     }
 
     .header-search-field #search-filters-panel .field-input:has(.date-range-search) {
@@ -4171,6 +4166,7 @@ header.LoginHeader {
         grid-column: 3;
         justify-self: end;
         display: flex;
+        margin-left: var(--space-16);
         width: var(--space-48);
         height: var(--space-48);
         justify-content: center;
