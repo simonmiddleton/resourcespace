@@ -3993,10 +3993,6 @@ header.LoginHeader {
         display: none;
     }
 
-    /* WIP for q13511 - dropping searchbar (allows for other tests to be carried out much easier */
-    .collection-bar--minimised #UICenter { width: unset; }
-    
-
     /* TODO */
     /*.resource-card.normal, .resource-card.xl {
         width: 360px;
