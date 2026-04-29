@@ -821,28 +821,31 @@ $selected_search_tab = getval("selected_search_tab", "search");
                 ?>
                 </div>
                 <div id="simplesearchbuttons">
-                    <input name="Submit" id="searchbutton" class="searchbutton" type="submit" value="<?php echo escape($lang['searchbutton']); ?>" onclick="SimpleSearchFieldsHideOrShow();">
-                    <a href="#" onclick="<?php
-                        if ($basic_simple_search) {
-                            echo "document.getElementById('ssearchbox').value='';";
-                        } else {
-                            printf(
-                                'unsetCookie(\'search_form_submit\', baseurl_short);
-                                document.getElementById(\'ssearchbox\').value=\'\';
-                                %s
-                                %s
-                                %s
-                                ResetTicks(); SimpleSearchFieldsHideOrShow();
-                                return false;',
-                                $simple_search_date ? "document.getElementById('basicyear').value='';document.getElementById('basicmonth').value='';" : '',
-                                $searchbyday && $simple_search_date ? "document.getElementById('basicday').value='';" : '',
-                                $resourceid_simple_search ? "document.getElementById('searchresourceid').value='';" : ''
-                            );
-                        }
-                    ?>">
-                        <?php render_icon_wrapper_component(Icon::CircleX); ?>
-                        <span><?php echo escape($lang["clearbutton"]); ?></span>
-                    </a>
+                    <div class="search-actions-primary">
+                        <input name="Submit" id="searchbutton" class="searchbutton" type="submit" value="<?php echo escape($lang['searchbutton']); ?>" onclick="SimpleSearchFieldsHideOrShow();">
+                        <a href="#" onclick="<?php
+                            if ($basic_simple_search) {
+                                echo "document.getElementById('ssearchbox').value='';";
+                            } else {
+                                printf(
+                                    'unsetCookie(\'search_form_submit\', baseurl_short);
+                                    document.getElementById(\'ssearchbox\').value=\'\';
+                                    %s
+                                    %s
+                                    %s
+                                    ResetTicks(); SimpleSearchFieldsHideOrShow();
+                                    return false;',
+                                    $simple_search_date ? "document.getElementById('basicyear').value='';document.getElementById('basicmonth').value='';" : '',
+                                    $searchbyday && $simple_search_date ? "document.getElementById('basicday').value='';" : '',
+                                    $resourceid_simple_search ? "document.getElementById('searchresourceid').value='';" : ''
+                                );
+                            }
+                        ?>">
+                            <?php render_icon_wrapper_component(Icon::CircleX); ?>
+                            <span><?php echo escape($lang["clearbutton"]); ?></span>
+                        </a>
+                    </div>
+                    <div class="search-actions-secondary">
                 <?php
                 hook("searchbarbeforebottomlinks");
 
@@ -875,6 +878,7 @@ $selected_search_tab = getval("selected_search_tab", "search");
                     <?php
                 }
                 ?>
+                    </div>
                 </div>
             </div>
             <button type="button" class="<?php echo Icon::X->value; ?>" aria-label="<?php echo escape(text('close')); ?>"></button>

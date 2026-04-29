@@ -3575,14 +3575,31 @@ header.LoginHeader {
 }
 
 .header-search-field #simplesearchbuttons {
-    display: flex;
-    gap: var(--space-20);
-    align-items: center;
-    flex-wrap: wrap;
-    flex-direction: row-reverse;
+    display: grid;
 }
 
-.header-search-field #simplesearchbuttons > a {
+.header-search-field #simplesearchbuttons div.search-actions-primary {
+    margin-bottom: var(--space-20);
+    display: grid;
+    gap: var(--space-24);
+}
+
+.header-search-field #simplesearchbuttons div.search-actions-secondary {
+    display: grid;
+    gap: var(--space-20);
+}
+
+.header-search-field #searchbutton {
+    margin: unset;
+    width: 100%;
+    height: var(--space-48);
+    padding: var(--space-12) var(--space-16);
+    border-radius: var(--space-4);
+    background: var(--colour-brand-primary-default);
+    box-shadow: unset;
+}
+
+.header-search-field #simplesearchbuttons a {
     display: inline-flex;
     align-items: flex-start;
     gap: var(--space-4);
@@ -3592,7 +3609,7 @@ header.LoginHeader {
     line-height: 150%; /* 24px */
 }
 
-.header-search-field #simplesearchbuttons > a:hover {
+.header-search-field #simplesearchbuttons a:hover {
     color: var(--colour-brand-primary-darkest);
 }
 
@@ -3605,15 +3622,6 @@ header.LoginHeader {
     justify-content: center;
     align-items: center;
     font-size: var(--space-20);
-}
-
-.header-search-field #searchbutton {
-    margin: unset;
-    height: var(--space-48);
-    padding: var(--space-12) var(--space-16);
-    border-radius: var(--space-4);
-    background: var(--colour-brand-primary-default);
-    box-shadow: unset;
 }
 
 #header-container .primary-navigation {
@@ -4106,6 +4114,30 @@ header.LoginHeader {
     } */
 }
 
+@media (min-width: 500px) {
+    .header-search-field #searchbutton {
+        width: unset;
+    }
+
+    .header-search-field #simplesearchbuttons div.search-actions-primary {
+        margin-bottom: var(--space-32);
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+        gap: var(--space-20);
+        align-content: center;
+        justify-content: space-between;
+    }
+
+    .header-search-field #simplesearchbuttons div.search-actions-secondary {
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: flex-start;
+        gap: var(--space-20);
+        flex-wrap: wrap;
+    }
+}
+
 /* Tablet */
 @media (min-width: 768px) {
     .header-search-field #search-filters-panel #SearchBoxPanel {
@@ -4180,6 +4212,13 @@ header.LoginHeader {
     .header-search-field #search-filters-panel > button:hover {
         color: var(--colour-surface-50);
         background: var(--colour-surface-700);
+    }
+
+    .header-search-field #simplesearchbuttons {
+        display: flex;
+        align-items: baseline;
+        flex-direction: row-reverse;
+        gap: var(--space-20);
     }
 }
 
