@@ -3087,7 +3087,7 @@ div.slide:not([style]) {
 #menu-overlay {
     position: fixed;
     inset: 0;
-    background: var(--colour-transparency-black-40);
+    background: var(--colour-transparency-black-80);
     z-index: 1000;
 }
 
@@ -3377,12 +3377,42 @@ header.LoginHeader {
 }
 
 #header-container {
-    display: flex;
-    margin: 0 auto;
-    max-width: 1366px;
     padding: var(--space-16);
-    align-items: center;
-    gap: var(--space-32);
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+        "logo"
+        "actions"
+        "search";
+    transition: gap 0.2s ease;
+    gap: var(--space-16);
+}
+
+/* When the logo & actions are collapsed (for the sticky header; see header.js, is-compact is driven by JS) */
+#header-container.is-compact {
+    gap: 0;
+}
+
+/* Collapsed state for the sticky header (see header.js, is-collapsed is driven by JS) */
+/* todo: might have to move further down! Wait until we move all header rules to mobile first */
+#header-container .is-collapsed {
+    /* max-height: 0 !important;
+    opacity: 0;
+    margin: 0 !important;
+    padding: 0 !important; */
+}
+
+/* Base state for the sticky header (see header.js) */
+#header-container .logo,
+#header-container .actions {
+    max-height: 48px;
+    opacity: 1;
+    /* overflow: hidden; */
+    transition:
+        max-height 0.25s ease,
+        opacity 0.2s ease,
+        margin 0.2s ease,
+        padding 0.2s ease;
 }
 
 #header-container .logo {
@@ -3391,6 +3421,9 @@ header.LoginHeader {
     max-height: 48px;
     align-items: center;
     line-height: initial;
+
+    /* from 360 */
+    justify-self: center;
 }
 
 #header-container .logo img {
@@ -3728,7 +3761,9 @@ header.LoginHeader {
 #header-container .actions {
     display: flex;
     align-items: center;
-    gap: var(--space-24);
+    justify-content: space-between;
+    gap: var(--space-12);
+    grid-area: actions;
 }
 
 #header-container .actions > .primary-navigation {
@@ -3804,6 +3839,7 @@ header.LoginHeader {
 #header-container a.UploadButton,
 #header-container a.LoginButton {
     display: flex;
+    margin-left: auto;
     height: var(--space-48);
     padding: 0 var(--space-16);
     justify-content: center;
@@ -3887,10 +3923,6 @@ header.LoginHeader {
     .login-slide {
         inset: 0 0 0 498px;
     }
-
-    #header-container .header-search-field {
-        flex: 0 1 clamp(320px, 38vw, 399px);
-    }
 }
 
 /* Login page tablet/mobile layout */
@@ -3926,16 +3958,6 @@ header.LoginHeader {
         transition: opacity 600ms ease;
     }
 
-    #header-container {
-        display: grid;
-        grid-template-columns: 1fr auto;
-        grid-template-areas:
-            "logo actions"
-            "search search";
-        align-items: center;
-        gap: var(--space-16);
-    }
-
     #header-container .logo {
         grid-area: logo;
     }
@@ -3947,12 +3969,6 @@ header.LoginHeader {
 
     #header-container > .primary-navigation {
         display: none;
-    }
-
-    #header-container .actions {
-        grid-area: actions;
-        gap: var(--space-12);
-        justify-self: end;
     }
 
     #header-container .actions > .primary-navigation {
@@ -4013,10 +4029,6 @@ header.LoginHeader {
 }
 
 @media(max-width: 360px) {
-    #menu-overlay {
-        background: var(--colour-transparency-black-80);
-    }
-
     .menu-panel {
         /* Left is normally managed by JS (see MenuOverlay module) but in this case we want to control its left & right
         boundaries to make it stretch (while having some "space" on the sides. */
@@ -4028,49 +4040,6 @@ header.LoginHeader {
         position: fixed;
         right: 16px;
         z-index: 1001; /* On top of the #menu-overlay */
-    }
-
-    #header-container {
-        grid-template-columns: 1fr;
-        grid-template-areas:
-            "logo"
-            "actions"
-            "search";
-        transition: gap 0.2s ease;
-    }
-
-    /* When the logo & actions are collapsed (for the sticky header; see header.js, is-compact is driven by JS) */
-    #header-container.is-compact {
-        gap: 0;
-    }
-
-    /* Base state for the sticky header (see header.js) */
-    #header-container .logo,
-    #header-container .actions {
-        max-height: 48px;
-        opacity: 1;
-        /* overflow: hidden; */
-        transition:
-            max-height 0.25s ease,
-            opacity 0.2s ease,
-            margin 0.2s ease,
-            padding 0.2s ease;
-    }
-
-    /* Collapsed state for the sticky header (see header.js, is-collapsed is driven by JS) */
-    #header-container .is-collapsed {
-        max-height: 0 !important;
-        opacity: 0;
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-
-    #header-container .logo {
-        justify-self: center;
-    }
-
-    #header-container .actions {
-        justify-self: stretch;
     }
 
     #header-container .actions .UploadButton {
@@ -4109,6 +4078,19 @@ header.LoginHeader {
 
 /* Tablet */
 @media (min-width: 768px) {
+    #menu-overlay {
+        background: var(--colour-transparency-black-40);
+    }
+
+    /* todo: Testing at 768 and beyond looks like in the design. memo: some rules might be missing/needed/have to be moved too */
+    #header-container {
+        grid-template-columns: 1fr auto;
+        grid-template-areas:
+            "logo actions"
+            "search search";
+        /* align-items: center; */
+    }
+
     .header-search-field #search-filters-panel #SearchBoxPanel {
         gap: var(--space-32);
     }
@@ -4122,6 +4104,14 @@ header.LoginHeader {
 
 /* Desktop */
 @media (min-width: 1366px) {
+    #header-container {
+        display: flex;
+        /* margin: 0 auto; */
+        /* max-width: 1366px; */
+        /* align-items: center; */
+        gap: var(--space-32);
+    }
+
     .header-search-field #search-filters-panel #SearchBoxPanel {
         margin: 0 auto;
         grid-column: 2;
