@@ -4042,10 +4042,6 @@ header.LoginHeader {
         z-index: 1001; /* On top of the #menu-overlay */
     }
 
-    #header-container .actions .UploadButton {
-        margin-left: auto;
-    }
-
     /* todo: fix menu items following r28445
     #header-container .primary-navigation ul.menu-panel > li {
         max-width: unset;
