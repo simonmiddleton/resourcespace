@@ -36,7 +36,7 @@ ResourceSpace.Modules.MenuOverlay = (() => {
     const overlay = document.getElementById('menu-overlay');
     const templateMenuCloseBtn = document.getElementById('menu-overlay-close-button');
     let openMenu = null;
-    const mq_mobile = window.matchMedia('(max-width: 360px)');
+    const mq_mobile = ResourceSpace.media.max('tablet');
 
     function init() {
         if (!overlay) return;
@@ -114,7 +114,7 @@ ResourceSpace.Modules.MenuOverlay = (() => {
         let left = r.right - panel.offsetWidth;
 
         // Clamp into viewport with a small margin
-        const margin = 8;
+        const margin = 16;
         const vw = window.innerWidth;
         const vh = window.innerHeight;
 
