@@ -3866,7 +3866,6 @@ header.LoginHeader {
     display: flex;
     margin-left: auto;
     height: var(--space-48);
-    padding: 0 var(--space-16);
     justify-content: center;
     align-items: center;
     border-radius: var(--space-4);
@@ -3877,7 +3876,10 @@ header.LoginHeader {
 
 #header-container a.UploadButton {
     width: var(--space-48);
-    padding: unset;
+}
+
+#header-container a.LoginButton {
+    padding: 0 var(--space-16);
 }
 
 #header-container a.UploadButton i {
@@ -4171,6 +4173,15 @@ header.LoginHeader {
         align-items: center;
         gap: var(--space-12);
         white-space: nowrap;
+    }
+
+    #header-container a.UploadButton {
+        width: unset;
+        padding: 0 var(--space-16);
+    }
+
+    #header-container a.UploadButton span {
+        display: flex;
     }
 }
 
