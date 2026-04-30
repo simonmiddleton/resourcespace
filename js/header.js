@@ -11,7 +11,7 @@ ResourceSpace.Modules.Header = (() => {
 
     function bindEvents() {
         // For mobile devices, make only the header search be "sticky"
-        const mq_mobile = window.matchMedia('(max-width: 360px)');
+        const mq_mobile = ResourceSpace.media.max('tablet');
         mq_mobile.addEventListener('change', makeStickyHeader);
         makeStickyHeader(mq_mobile);
 
