@@ -3,6 +3,11 @@ ResourceSpace.Modules.Header = (() => {
     const uiCenter = document.getElementById('UICenter');
     let stickyHeaderLastScrollTop = 0;
 
+    const nav = document.querySelector('#header-container > nav.primary-navigation');
+    const primaryNavOverflow = {
+
+    };
+
     function init() {
         if (!header) return;
 
@@ -36,6 +41,12 @@ ResourceSpace.Modules.Header = (() => {
                 toggleSearchPanel(e);
             }
         });
+
+        // todo: work on overflowing some of the link if they don't fit on screen
+        // Primary navigation links will overflow on smaller desktop sizes (e.g. 1366 - 1500px) 
+        window.addEventListener('resize', handlePrimaryNavigationOverflow);
+        // window.addEventListener('load', handlePrimaryNavigationOverflow);
+        handlePrimaryNavigationOverflow();
     }
 
     function makeStickyHeader(e) {
@@ -134,6 +145,26 @@ ResourceSpace.Modules.Header = (() => {
         });
 
         return;
+    }
+
+    function handlePrimaryNavigationOverflow() {
+        console.debug('calling handlePrimaryNavigationOverflow...');
+        console.debug('nav = %o', nav);
+
+        // note (useful or not): at 1366, the nav can only be about 25% width wise - maybe use it to simplify calculations
+        // restorePrimaryNavOverflowItems();
+    }
+
+    function restorePrimaryNavOverflowItems() {
+        items
+        .sort((a, b) => a.dataset.navIndex - b.dataset.navIndex)
+        .forEach((item) => {
+            item.classList.remove('menu-item');
+            const anchor = item.querySelector('a');
+            anchor?.removeAttribute('role');
+
+            list.insertBefore(item, panel);
+        });
     }
 
     return {

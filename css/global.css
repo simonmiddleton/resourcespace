@@ -3680,16 +3680,11 @@ header.LoginHeader {
 #header-container .primary-navigation ul > li {
     margin: unset;
     padding: unset;
-    max-width: 150px;
     font-size: 16px;
     font-style: normal;
     font-weight: 600;
     line-height: 100%;
     text-wrap: auto;
-}
-
-#header-container .primary-navigation ul:has(ul) > li {
-    max-width: 123px;
 }
 
 #header-container .primary-navigation ul.menu-panel {
