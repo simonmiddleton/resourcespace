@@ -25,6 +25,7 @@ $collection      = getval('collection', '');
 $entername       = getval('entername', '');
 $res_access      = getval('access', '');
 $addsearch       = getval("addsearch", -1);
+$pulse           = getval("pulse", false);
 
 /*
 IMPORTANT NOTE: Collections should always show their resources in the order set by a user (via sortorder column
@@ -65,6 +66,8 @@ switch ($thumbs) {
     default:
         $collection_holder_state = "state-closed";
 }
+
+$pulse_enable = $collection_holder_state == "state-closed" && $pulse == true;
 
 # ------------ Change the collection, if a collection ID has been provided ----------------
 if ($collection != "" && $collection != "undefined") {
@@ -254,129 +257,10 @@ if ($allow_reorder) {
                 var resource_id = jQuery(ui.draggable).attr("id");
                 resource_id = resource_id.replace('ResourceShell', '');
 
-                // jQuery('#trash_bin').hide();
                 // AddResourceToCollection includes a reload of CollectionDiv 
                 AddResourceToCollection(event, ui, resource_id, '');
             }
         });
-
-        // jQuery('#trash_bin').droppable({
-        //     accept: '.CollectionPanelShell, .resource-card',
-        //     activeClass: "ui-droppable-active ui-state-hover",
-        //     hoverClass: "ui-state-active",
-
-        //     drop: function(event, ui) {
-        //         var resource_id = ui.draggable.attr("id");
-        //         resource_id = resource_id.replace('ResourceShell', '');
-        //         jQuery('#trash_bin_delete_dialog').dialog({
-        //             autoOpen: false,
-        //             modal: true,
-        //             resizable: false,
-        //             dialogClass: 'delete-dialog no-close',
-        //             open: function(event,ui) {
-        //                 jQuery(this)
-        //                     .closest(".ui-dialog")
-        //                     .find(".ui-dialog-title")
-        //                     .html("<?php echo escape($lang["trash_bin_delete_dialog_title"]) . "<br>(" . $lang["from"]; ?> " + jQuery(this).data('collection_name') + ")");
-        //             },
-        //             buttons: {
-        //                 // Confirm removal of this resource from the resolved collection
-        //                 "<?php echo escape($lang['yes']); ?>": function() {
-        //                     var class_of_drag = jQuery(this).data('class_of_drag');
-        //                     var resource_id = jQuery(this).data("resource_id");
-        //                     var collection_id = jQuery(this).data('collection_id');
-        //                     var collection_name = jQuery(this).data('collection_name');
-
-        //                     if (collection_id == "") {
-        //                         console.error('RS_debug: Unable to resolve from which collection drag and drop resource removal is being requested.');
-        //                         jQuery(this).dialog('close');
-        //                     }
-        //                     // RemoveResourceFromCollection includes call to CollectionDivLoad
-
-        //                     RemoveResourceFromCollection(event, resource_id, '<?php echo $pagename; ?>', collection_id);
-        //                     // Remove resource from search results if this is not a collection search   
-        //                     if (is_special_search('!collection', 11)) {
-        //                         jQuery('#ResourceShell' + resource_id).fadeOut();
-        //                     }
-        //                     jQuery(this).dialog('close');
-        //                 },
-        //                 // Cancel resource removal
-        //                 "<?php echo escape($lang['no']); ?>": function() {
-        //                     var class_of_drag = jQuery(this).data('class_of_drag');
-        //                     var resource_id = jQuery(this).data("resource_id");
-        //                     var collection_id = jQuery(this).data('collection_id');
-        //                     var collection_name = jQuery(this).data('collection_name');
-
-        //                     if (collection_id == "") {
-        //                         console.error('RS_debug: Unable to resolve which collection to reload following cancellation of resource removal.');
-        //                         jQuery(this).dialog('close');
-        //                     }
-
-        //                     // If resource was dragged from the CollectionPanelShell then refresh the current collection within the CollectionDiv
-        //                     if (class_of_drag.indexOf("CollectionPanelShell") >= 0) {
-        //                         collection_id = jQuery("#collection").val();
-        //                         CollectionDivLoad('<?php echo $baseurl; ?>/pages/collections.php?collection=' + collection_id);
-        //                     }
-        //                     jQuery(this).dialog('close');
-        //                 }
-        //             }
-        //         });
-
-        //         // Resolve the collection depending on the origin of the resource been dragged
-        //         var class_of_drag = ui.draggable.attr("class");
-        //         var collection_id = "";
-        //         var collection_name = "";
-
-        //         // If resource is dragged from the ResourcePanel (ie. CentralSpace) then collection is in querystring
-        //         if (class_of_drag.indexOf("ResourcePanel") >= 0) {
-        //             var query_strings = getQueryStrings();
-        //             if (!is_empty(query_strings)) {
-        //                 collection_id = query_strings.search.substring(11);
-        //                 // Collection name now stored in custom attribute
-        //                 collection_name = jQuery("#CentralSpaceResources").attr("collectionsearchname").trim();
-        //             }
-        //         }
-
-        //         // If resource is dragged from the CollectionPanelShell then use the collection from within the CollectionDiv
-        //         if (class_of_drag.indexOf("CollectionPanelShell") >= 0) {
-        //             collection_id = jQuery("#collection").val();
-        //             collection_name = jQuery("#collection option:selected").text().trim();
-        //         }
-
-        //         jQuery('#trash_bin').hide();
-
-        //         // Cancel re-order in case it was triggered
-        //         if (jQuery('#CentralSpace').hasClass('ui-sortable')) {
-        //             jQuery('#CentralSpace').sortable('cancel');
-        //         }
-
-        //         if (jQuery('#CollectionSpace').hasClass('ui-sortable')) {
-        //             jQuery('#CollectionSpace').sortable('cancel');
-        //         }
-
-        //         // Process drop request without dialog when resource is being dragged from bottom collection panel
-        //         if (class_of_drag.indexOf("CollectionPanelShell") >= 0) {
-        //             // Handle different cases such as Saved searches
-        //             if (ui.draggable.data('savedSearch') === 'yes') {
-        //                 CollectionDivLoad('<?php echo $baseurl; ?>/pages/collections.php?removesearch=' + resource_id + '&nc=<?php echo time(); ?>');
-        //             } else {
-        //                 RemoveResourceFromCollection(event, resource_id, '<?php echo $pagename; ?>', collection_id, <?php echo htmlspecialchars(generate_csrf_js_object('remove_resource_from_collection'), ENT_NOQUOTES); ?>);
-        //                 // Remove resource from search results if this is not a collection search   
-        //                 if (is_special_search('!collection', 11)) {
-        //                     jQuery('#ResourceShell' + resource_id).fadeOut();
-        //                 }
-        //             }
-        //         } else {
-        //             // Show confirmation dialog when resource is being dragged from top (ie. CentralSpace)
-        //             jQuery('#trash_bin_delete_dialog').data('class_of_drag',class_of_drag)
-        //                 .data('resource_id',resource_id)
-        //                 .data('collection_id',collection_id)
-        //                 .data('collection_name',collection_name);
-
-        //             jQuery('#trash_bin_delete_dialog').dialog('open');
-        //         }
-        //     }
-        // });
     });
 
     jQuery(document).ready(function() {
@@ -782,13 +666,49 @@ jQuery(function () {
     updateButtons();
 });
 
+
+
 });
+
+// New collection name entry - WIP
+jQuery(function () {
+    const input = jQuery("#myInput");
+    const clearBtn = jQuery("#clearBtn");
+    const emptyBtn = jQuery("#exitCollectionInputBtn");
+
+    function updateButtons() {
+        if (input.val().trim().length > 0) {
+            clearBtn.show();
+            emptyBtn.hide();
+        } else {
+            clearBtn.hide();
+            emptyBtn.show();
+        }
+    }
+
+    input.on("input", updateButtons);
+
+    clearBtn.on("click", function () {
+        input.val("").focus();
+        updateButtons();
+    });
+
+    emptyBtn.on("click", function () {
+        document.getElementById("collection").value = jQuery("#currentusercollection").text().trim();
+        document.getElementById('collection').style.display = 'block';
+        document.getElementById('entername').style.display = 'none';
+        document.getElementById('collection').focus();
+    });
+    
+    updateButtons();
+});
+
 </script>
 <div class="collection-bar-holder <?php echo $collection_holder_state; ?>">
     <div style="display:none;" id="currentusercollection"><?php echo (int) $usercollection; ?></div>
     <script>usercollection='<?php echo escape($usercollection) ?>';</script>
-    <div class="collection-bar-toggle-button"><i class="icon-layout-dashboard"></i></div>
-    <div class="collection-bar-actions-section">   
+    <div class="collection-bar-toggle-button <?php echo $pulse_enable ? "pulse-animation" : ""; ?>"><i class="icon-layout-dashboard"></i></div>
+    <div class="collection-bar-actions-section">
         <div class="collection-bar-actions-form">
             <div class="field current-collections-field">
                 <div class="label-holder">
@@ -800,12 +720,26 @@ jQuery(function () {
                     </div>
                 </div>
                 <div class="wrapper">
-                    <select
+                    <form method="get" id="colselect" onsubmit="newcolname=encodeURIComponent(jQuery('#myInput').val());CollectionDivLoad('<?php echo $baseurl_short?>pages/collections.php?collection=new&search=<?php echo urlencode($search)?>&k=<?php echo urlencode($k) ?>&entername='+newcolname);return false;">
+                    <div id="entername" class="collection-bar-name-input">
+                        <input id="myInput" type="text" 
+                            class="SearchWidth"
+                            placeholder="Enter a collection name"></input>
+                        <button id="clearBtn" type="button" aria-label="Clear input">
+                            <i class="icon-x"></i>
+                        </button>
+                        <button id="exitCollectionInputBtn" type="button" aria-label="Cancel entering a new collection">
+                            <i class="icon-arrow-left"></i>
+                        </button>
+                    </div>
+                    </form>
+                    <select 
                         name="collection"
                         id="collection"
                         aria-label="<?php echo escape($lang["collections"]) ?>"
                         onchange="if (document.getElementById('collection').value == 'new') {
-                            document.getElementById('entername').style.display = 'block';
+                            document.getElementById('collection').style.display = 'none';
+                            document.getElementById('entername').style.display = 'flex';
                             document.getElementById('entername').focus();
                             return false;
                             } 
