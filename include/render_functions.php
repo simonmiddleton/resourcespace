@@ -7804,7 +7804,10 @@ function render_header_links(array $ctx): void
     // Group links into primary and overflown. For the responsive mode, all the links will be overflown by design.
     // (note: the overflow menu logic is handled by the MenuOverlay module in JS)
     $force_overflow = $ctx['force_overflow'] ?? false;
-    $nav_groupings = !$force_overflow && count($nav_links) > 3 ? [array_slice($nav_links, 0, 3), array_slice($nav_links, 3)] : [$nav_links];
+    $max_links_to_show = 6;
+    $nav_groupings = !$force_overflow && count($nav_links) > $max_links_to_show
+        ? [array_slice($nav_links, 0, $max_links_to_show), array_slice($nav_links, $max_links_to_show)]
+        : [$nav_links];
     ?>
     <nav class="primary-navigation menu" aria-label="<?php echo escape(text('mainmenu')); ?>" data-menu>
         <ul>
