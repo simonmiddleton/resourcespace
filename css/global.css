@@ -3468,8 +3468,6 @@ header.LoginHeader {
     padding: 0px;
     width: auto;
     height: 24px;
-    min-width: 200px;
-    min-height: unset;
     border: unset;
     box-shadow: none;
     flex: 1 1 auto;
