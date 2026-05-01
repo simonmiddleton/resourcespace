@@ -3,11 +3,6 @@ ResourceSpace.Modules.Header = (() => {
     const uiCenter = document.getElementById('UICenter');
     let stickyHeaderLastScrollTop = 0;
 
-    const nav = document.querySelector('#header-container > nav.primary-navigation');
-    const primaryNavOverflow = {
-
-    };
-
     function init() {
         if (!header) return;
 
@@ -42,8 +37,8 @@ ResourceSpace.Modules.Header = (() => {
             }
         });
 
-        // todo: work on overflowing some of the link if they don't fit on screen
-        // Primary navigation links will overflow on smaller desktop sizes (e.g. 1366 - 1500px) 
+        // Overflow primary navigation links on smaller desktop sizes (e.g. 1366 - 1500px) since there won't be enough
+        // space for maximum six links (see render_header_links()).
         window.addEventListener('resize', handlePrimaryNavigationOverflow);
         // window.addEventListener('load', handlePrimaryNavigationOverflow);
         handlePrimaryNavigationOverflow();
@@ -147,15 +142,62 @@ ResourceSpace.Modules.Header = (() => {
         return;
     }
 
+    const nav = header?.querySelector('nav.primary-navigation');
+    const list = nav?.querySelector(':scope > ul');
+    const panel = nav?.querySelector('ul.menu-panel');
+    const trigger = nav?.querySelector('[data-menu-trigger]');
+
     function handlePrimaryNavigationOverflow() {
-        console.debug('calling handlePrimaryNavigationOverflow...');
         console.debug('nav = %o', nav);
 
-        // note (useful or not): at 1366, the nav can only be about 25% width wise - maybe use it to simplify calculations
-        // restorePrimaryNavOverflowItems();
+        if (!list || !panel || !trigger) return;
+
+        const items = [...list.children].filter((el) => el.matches('li') && !el.closest('.menu-panel'));
+        console.debug('items = %o', items);
+
+        // const maxNavWidth = Math.min(header.getBoundingClientRect().width * 0.25, getAvailableNavWidth());
+        const maxNavWidth = getAvailableNavWidth();
+        console.debug('- maxNavWidth = %o', maxNavWidth);
+
+        // restorePrimaryNavOverflowItems(items);
+
+        while (items.length && nav.getBoundingClientRect().width > maxNavWidth) {
+            console.debug('-- nav.getBoundingClientRect().width = %o', nav.getBoundingClientRect().width);
+            const lastItem = items.pop();
+            moveToPanel(lastItem);
+        }
     }
 
-    function restorePrimaryNavOverflowItems() {
+    function getAvailableNavWidth() {
+        const headerBB = header.getBoundingClientRect();
+        const headerStyle = getComputedStyle(header);
+
+        const gap = parseFloat(headerStyle.columnGap || headerStyle.gap || 0);
+        const totalGapWidth = gap * (header.children.length - 1);
+
+        const siblingWidths = [...header.children]
+            .filter((el) => el !== nav)
+            .reduce((total, el) => {
+                console.debug('checking el = %o (size = %o)', el, (
+                    el.getBoundingClientRect().width
+                ));
+                return total + el.getBoundingClientRect().width;
+            }, 0);
+
+        return headerBB.width - totalGapWidth - siblingWidths;
+    }
+
+    function moveToPanel(item) {
+        console.debug('--- moveToPanel(%o)', item);
+        item.classList.add('menu-item');
+        item.querySelector('a')?.setAttribute('role', 'menuitem');
+        panel.prepend(item);
+    }
+
+    function restorePrimaryNavOverflowItems(items) {
+        console.debug('restore items = %o', items);
+        return;
+
         items
         .sort((a, b) => a.dataset.navIndex - b.dataset.navIndex)
         .forEach((item) => {
