@@ -71,6 +71,12 @@ include "../../include/header.php";
             )); ?>
         </p>
 
+        <ul>
+            <?php foreach ($remote_system["querydata"] as $key) { ?>
+                <li><?php echo escape($lang[$key] ?? $key); ?></li>
+            <?php } ?>
+        </ul>
+
         <form
             method="post" 
             action="<?php echo generateURL("{$baseurl_short}pages/user/user_api_session.php", ['system' => $system]); ?>"
