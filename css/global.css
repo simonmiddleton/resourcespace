@@ -3403,15 +3403,6 @@ header.LoginHeader {
     gap: 0;
 }
 
-/* Collapsed state for the sticky header (see header.js, is-collapsed is driven by JS) */
-/* todo: might have to move further down! Wait until we move all header rules to mobile first */
-#header-container .is-collapsed {
-    /* max-height: 0 !important;
-    opacity: 0;
-    margin: 0 !important;
-    padding: 0 !important; */
-}
-
 /* Base state for the sticky header (see header.js) */
 #header-container .logo,
 #header-container .actions {
@@ -3853,6 +3844,14 @@ header.LoginHeader {
 #header-container .actions .get-menu-content .wrap-icon:has(img.ProfileImage) > .Pill {
     top: -12px;
     right: -12px;
+}
+
+/* Collapsed state for the sticky header (see header.js, is-collapsed is driven by JS) */
+#header-container .is-collapsed {
+    max-height: 0;
+    opacity: 0;
+    margin: 0;
+    padding: 0;
 }
 
 #header-container a.UploadButton,
