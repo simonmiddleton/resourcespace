@@ -146,7 +146,7 @@ ResourceSpace.Modules.Header = (() => {
     const panel = nav?.querySelector('ul.menu-panel');
 
     function handlePrimaryNavigationOverflow() {
-        if (!list || !panel) return;
+        if (!list || !panel || ResourceSpace.media.max('desktop').matches) return;
 
         restorePrimaryNavOverflowItems();
 
