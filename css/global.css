@@ -3095,7 +3095,6 @@ div.slide:not([style]) {
     position: fixed; /* IMPORTANT: we actually position with JS using viewport coords */
     /* Left is normally managed by JS (see MenuOverlay module) but in this case we want to control its left & right
     boundaries to make it stretch (while having some "space" on the sides. On bigger screens this is unset. */
-    /* left: var(--space-16); */
     right: var(--space-16);
     z-index: 1001; /* On top of the #menu-overlay */
     min-width: 15rem;
@@ -4048,10 +4047,6 @@ header.LoginHeader {
         background: var(--colour-transparency-black-40);
     }
 
-    .menu-panel {
-        left: unset !important;
-    }
-
     /* todo: Testing at 768 and beyond looks like in the design. memo: some rules might be missing/needed/have to be moved too */
     #header-container {
         grid-template-columns: 1fr auto;
@@ -4078,6 +4073,10 @@ header.LoginHeader {
         grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
         row-gap: var(--space-32);
         column-gap: var(--space-16);
+    }
+
+    #header-container .primary-navigation ul.menu-panel {
+        right: unset;
     }
 }
 
