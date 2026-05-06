@@ -1,6 +1,7 @@
 ResourceSpace.Modules.Header = (() => {
     const header = document.getElementById('header-container');
     const uiCenter = document.getElementById('UICenter');
+    const primaryNavOverflowThreshold = 6;
     let stickyHeaderLastScrollTop = 0;
 
     function init() {
@@ -150,11 +151,16 @@ ResourceSpace.Modules.Header = (() => {
 
         restorePrimaryNavOverflowItems();
 
-        const items = [...list.children]
-            .filter((el) => el.matches('li') && !el.classList.contains('menu-overflow') && !el.closest('.menu-panel'));
+        const items = getPrimaryNavigationLinkItems();
         const maxNavWidth = getAvailableNavWidth();
 
-        while (items.length && nav.getBoundingClientRect().width > maxNavWidth) {
+        while (
+            items.length
+            && (
+                items.length > primaryNavOverflowThreshold
+                || nav.getBoundingClientRect().width > maxNavWidth
+            )
+        ) {
             const lastItem = items.pop();
             moveToPanel(lastItem);
         }
@@ -184,6 +190,12 @@ ResourceSpace.Modules.Header = (() => {
         return headerBB.width - totalGapWidth - siblingWidths;
     }
 
+    function getPrimaryNavigationLinkItems() {
+        return [...list.children].filter(
+            (el) => el.matches('li') && !el.classList.contains('menu-overflow') && !el.closest('.menu-panel')
+        );
+    }
+
     function moveToPanel(item) {
         item.classList.add('menu-item');
         item.querySelector('a')?.setAttribute('role', 'menuitem');
@@ -195,9 +207,13 @@ ResourceSpace.Modules.Header = (() => {
         const listItemMenuOverflow = panel.closest('li.menu-overflow');
 
         items.forEach((item) => {
-            item.classList.remove('menu-item');
-            item.querySelector('a')?.removeAttribute('role');
-            list.insertBefore(item, listItemMenuOverflow);
+            const listItems = getPrimaryNavigationLinkItems();
+            if (listItems.length && listItems.length < primaryNavOverflowThreshold) {
+                console.debug('restoring item %o', item.querySelector('a'));
+                item.classList.remove('menu-item');
+                item.querySelector('a')?.removeAttribute('role');
+                list.insertBefore(item, listItemMenuOverflow);
+            }
         });
     }
 
