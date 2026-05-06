@@ -3753,7 +3753,7 @@ header.LoginHeader {
 }
 
 /* Hide the button when not overflowing nav links */
-#header-container .primary-navigation ul:not(:has(ul)) + button {
+#header-container .primary-navigation > ul:not(:has(> li.menu-overflow > ul.menu-panel > li)) + button {
     display: none;
 }
 

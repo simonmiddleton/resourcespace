@@ -7818,7 +7818,7 @@ function render_header_links(array $ctx): void
                 $role_menuitem = '';
 
                 if ($overflow) {
-                    echo '<ul class="menu-panel" data-menu-panel role="menu" hidden>';
+                    echo '<li class="menu-overflow"><ul class="menu-panel" data-menu-panel role="menu" hidden>';
                     $li_class = 'menu-item';
                     $role_menuitem = ' role="menuitem"';
                 }
@@ -7852,7 +7852,7 @@ function render_header_links(array $ctx): void
                 }
 
                 if ($overflow) {
-                    echo '</ul>';
+                    echo '</ul></li>';
                 }
             }
         ?>

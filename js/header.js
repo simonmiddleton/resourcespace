@@ -40,7 +40,6 @@ ResourceSpace.Modules.Header = (() => {
         // Overflow primary navigation links on smaller desktop sizes (e.g. 1366 - 1500px) since there won't be enough
         // space for maximum six links (see render_header_links()).
         window.addEventListener('resize', handlePrimaryNavigationOverflow);
-        // window.addEventListener('load', handlePrimaryNavigationOverflow);
         handlePrimaryNavigationOverflow();
     }
 
@@ -145,17 +144,15 @@ ResourceSpace.Modules.Header = (() => {
     const nav = header?.querySelector('nav.primary-navigation');
     const list = nav?.querySelector(':scope > ul');
     const panel = nav?.querySelector('ul.menu-panel');
-    const trigger = nav?.querySelector('[data-menu-trigger]');
 
     function handlePrimaryNavigationOverflow() {
-        console.debug('nav = %o', nav);
+        if (!list || !panel) return;
 
-        if (!list || !panel || !trigger) return;
+        restorePrimaryNavOverflowItems();
 
-        const items = [...list.children].filter((el) => el.matches('li') && !el.closest('.menu-panel'));
+        const items = [...list.children]
+            .filter((el) => el.matches('li') && !el.classList.contains('menu-overflow') && !el.closest('.menu-panel'));
         const maxNavWidth = getAvailableNavWidth();
-
-        // restorePrimaryNavOverflowItems(items);
 
         while (items.length && nav.getBoundingClientRect().width > maxNavWidth) {
             const lastItem = items.pop();
@@ -188,24 +185,19 @@ ResourceSpace.Modules.Header = (() => {
     }
 
     function moveToPanel(item) {
-        console.debug('--- moveToPanel(%o)', item);
         item.classList.add('menu-item');
         item.querySelector('a')?.setAttribute('role', 'menuitem');
         panel.prepend(item);
     }
 
-    function restorePrimaryNavOverflowItems(items) {
-        console.debug('restore items = %o', items);
-        return;
+    function restorePrimaryNavOverflowItems() {
+        const items = [...panel.children];
+        const listItemMenuOverflow = panel.closest('li.menu-overflow');
 
-        items
-        .sort((a, b) => a.dataset.navIndex - b.dataset.navIndex)
-        .forEach((item) => {
+        items.forEach((item) => {
             item.classList.remove('menu-item');
-            const anchor = item.querySelector('a');
-            anchor?.removeAttribute('role');
-
-            list.insertBefore(item, panel);
+            item.querySelector('a')?.removeAttribute('role');
+            list.insertBefore(item, listItemMenuOverflow);
         });
     }
 

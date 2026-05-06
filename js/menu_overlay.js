@@ -8,6 +8,7 @@
  * - role="menuitem" - to help keyboard users focus on the first item (and navigate through them) when the menu opens;
  *
  * The generic styling is done using the following elements: #menu-overlay, .menu-panel, .menu.is-open .menu-panel, .menu-item. 
+ * The li.menu-overflow is used purely to create valid HTML.
  *
  * Example HTML structure used for the primary navigation overflown links:
 * ```html
@@ -19,14 +20,16 @@
 *         <li>
 *             <a href="/pages/search.php?search=%21last1000&amp;order_by=resourceid&amp;sort=desc" onclick="return CentralSpaceLoad(this, true);">Browse</a>
 *         </li>
-*         <ul class="menu-panel" data-menu-panel role="menu" hidden>
-*             <li class="menu-item">
-*                 <a href="https://example.com" target="_blank" rel="noopener noreferrer" role="menuitem">Example external link</a>
-*             </li>
-*             <li class="menu-item">
-*                 <a href="/pages/contact.php" onclick="return CentralSpaceLoad(this, true);" role="menuitem">Contact us</a>
-*             </li>
-*         </ul>
+*         <li class="menu-overflow">
+*             <ul class="menu-panel" data-menu-panel role="menu" hidden>
+*                 <li class="menu-item">
+*                     <a href="https://example.com" target="_blank" rel="noopener noreferrer" role="menuitem">Example external link</a>
+*                 </li>
+*                 <li class="menu-item">
+*                     <a href="/pages/contact.php" onclick="return CentralSpaceLoad(this, true);" role="menuitem">Contact us</a>
+*                 </li>
+*             </ul>
+*         </li>
 *     </ul>
 *     <button type="button" class="icon-ellipsis-vertical" data-menu-trigger aria-haspopup="menu" aria-expanded="false"></button>
 * </nav>
