@@ -153,16 +153,11 @@ ResourceSpace.Modules.Header = (() => {
         if (!list || !panel || !trigger) return;
 
         const items = [...list.children].filter((el) => el.matches('li') && !el.closest('.menu-panel'));
-        console.debug('items = %o', items);
-
-        // const maxNavWidth = Math.min(header.getBoundingClientRect().width * 0.25, getAvailableNavWidth());
         const maxNavWidth = getAvailableNavWidth();
-        console.debug('- maxNavWidth = %o', maxNavWidth);
 
         // restorePrimaryNavOverflowItems(items);
 
         while (items.length && nav.getBoundingClientRect().width > maxNavWidth) {
-            console.debug('-- nav.getBoundingClientRect().width = %o', nav.getBoundingClientRect().width);
             const lastItem = items.pop();
             moveToPanel(lastItem);
         }
@@ -171,17 +166,22 @@ ResourceSpace.Modules.Header = (() => {
     function getAvailableNavWidth() {
         const headerBB = header.getBoundingClientRect();
         const headerStyle = getComputedStyle(header);
-
         const gap = parseFloat(headerStyle.columnGap || headerStyle.gap || 0);
         const totalGapWidth = gap * (header.children.length - 1);
 
         const siblingWidths = [...header.children]
             .filter((el) => el !== nav)
             .reduce((total, el) => {
-                console.debug('checking el = %o (size = %o)', el, (
-                    el.getBoundingClientRect().width
-                ));
-                return total + el.getBoundingClientRect().width;
+                let elWidth = el.getBoundingClientRect().width; 
+
+                if (el.classList.contains('logo')) {
+                    elWidth = parseInt(getComputedStyle(el).maxWidth, 10);
+                } else if(el.classList.contains('header-search-field')) {
+                    // Same as CSS clamp rule for `#header-container .header-search-field`
+                    elWidth = Math.min(Math.max(320, headerBB.width * 0.38), 400);
+                }
+
+                return total + elWidth;
             }, 0);
 
         return headerBB.width - totalGapWidth - siblingWidths;
