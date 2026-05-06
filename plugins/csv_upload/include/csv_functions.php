@@ -794,13 +794,13 @@ function csv_upload_process($filename, &$meta, $resource_types, &$messages, $csv
                     csv_upload_log($logfile, $logtext);
                     array_push($messages, $logtext);
                     $error_count++;
-                    continue;
-                } elseif (in_array(strtolower($extension), $banned_extensions)) {
+                    continue 2;
+                } elseif (is_banned_extension($extension)) {
                     $logtext = ("Error: Filename $filename contains banned extension in line $line_count");
                     csv_upload_log($logfile, $logtext);
                     array_push($messages, $logtext);
                     $error_count++;
-                    continue;
+                    continue 2;
                 } elseif (!empty(get_alternative_files_by_filename($filename, 0,$resource_id, $resource_id))) {
                     $logtext = ("Error: Filename $filename already exists for resource $resource_id in line $line_count");
                     csv_upload_log($logfile, $logtext);
