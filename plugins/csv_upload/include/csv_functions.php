@@ -17,7 +17,7 @@ include_once __DIR__ . "/../../../include/definitions.php";
  */
 function csv_upload_process($filename, &$meta, $resource_types, &$messages, $csv_set_options, $max_error_count = 100, $processcsv = false)
 {
-    global $DATE_FIELD_TYPES, $FIXED_LIST_FIELD_TYPES, $userref,$username, $category_tree_add_parents, $lang, $search_all_workflow_states;
+    global $DATE_FIELD_TYPES, $FIXED_LIST_FIELD_TYPES, $userref,$username, $category_tree_add_parents, $lang, $search_all_workflow_states, $banned_extensions;
 
     // Ensure that the searchs are across all states
     $search_all_workflow_states_cache = $search_all_workflow_states;
@@ -791,6 +791,12 @@ function csv_upload_process($filename, &$meta, $resource_types, &$messages, $csv
                 $extension = parse_filename_extension($filename);
                 if ($extension == "") {
                     $logtext = ("Error: Filename $filename unable to extract extension in line $line_count");
+                    csv_upload_log($logfile, $logtext);
+                    array_push($messages, $logtext);
+                    $error_count++;
+                    continue;
+                } elseif (in_array(strtolower($extension), $banned_extensions)) {
+                    $logtext = ("Error: Filename $filename contains banned extension in line $line_count");
                     csv_upload_log($logfile, $logtext);
                     array_push($messages, $logtext);
                     $error_count++;
