@@ -209,7 +209,6 @@ ResourceSpace.Modules.Header = (() => {
         items.forEach((item) => {
             const listItems = getPrimaryNavigationLinkItems();
             if (listItems.length && listItems.length < primaryNavOverflowThreshold) {
-                console.debug('restoring item %o', item.querySelector('a'));
                 item.classList.remove('menu-item');
                 item.querySelector('a')?.removeAttribute('role');
                 list.insertBefore(item, listItemMenuOverflow);
