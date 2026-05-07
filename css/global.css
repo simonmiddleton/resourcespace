@@ -3250,6 +3250,7 @@ label {
     position: fixed;
     bottom: 0px;
     pointer-events: none;
+    z-index: 4;
 }
 
 #toggleThumbsLink i {
@@ -4046,6 +4047,7 @@ a.text-link:visited {
     background-color: var(--colour-brand-primary-default);
     font-size: 48px;
     pointer-events: auto;
+    z-index: 4;
 }
 
 .collection-bar-holder .collection-bar-toggle-button:hover {
@@ -4083,7 +4085,7 @@ a.text-link:visited {
 }
 
 .state-actions {
-    transform: translateY(calc(100% - (var(--space-32) + (2* var(--space-72)))));
+    transform: translateY(calc(100% - (var(--space-72) + 110px)));
 }
 
 .state-thumbs {
@@ -4099,7 +4101,6 @@ a.text-link:visited {
     color: var(--colour-neutral-50);
     background: var(--colour-neutral-900);
     pointer-events: auto;
-    
 }
 
 .collection-bar-actions-form {
@@ -4137,7 +4138,7 @@ a.text-link:visited {
 }
 
 .collection-bar-actions-form select {
-    width: 356px;
+    width: 358px;
     min-height: var(--form-field-min-height);
     padding: 0 12px;
     margin: 0;
@@ -4203,6 +4204,7 @@ a.text-link:visited {
     height: var(--space-48);
     padding: var(--space-12) 18px;
     align-items: center;
+    justify-content: center;
     gap: var(--space-6);
     margin: 0;
     background: var(--colour-brand-primary-default);
@@ -4210,7 +4212,7 @@ a.text-link:visited {
     border-radius: var(--space-4);
     color: var(--colour-global-white);
     text-align: center;
-    font-size: 18px;
+    font-size: 20px;
     font-style: normal;
     font-weight: 500;
     line-height: 100%;
@@ -4231,7 +4233,7 @@ a.text-link:visited {
 .collection-bar-thumbs-section {
     background: var(--colour-neutral-900);
     color: var(--colour-neutral-100);
-    height: 200px;
+    height: 196px;
     pointer-events: auto;
 }
 
@@ -4422,28 +4424,143 @@ a.text-link:visited {
     text-overflow: ellipsis;
 }
 
+.ui-droppable-active .collection-bar-actions-section, .ui-droppable-active .collection-bar-thumbs-section {
+    background-color: var(--colour-neutral-800);
+}
+
 /* fix for drag and drop placeholder in collection bar */
 .ui-sortable-placeholder {
     flex: 0 0 140px;
     box-sizing: border-box;
 }
 
+/* padding fix for bottom search results being obscured */
 #UICenter {
     transition: padding-bottom 0.25s ease;
 }
 
-body:has(.collection-bar-holder.state-actions) #UICenter {
+body:has(.collection-bar-holder.state-actions):not(:has(.QuestionSticky)) #UICenter {
     padding-bottom: 172px;
 }
 
-body:has(.collection-bar-holder.state-thumbs) #UICenter {
+body:has(.collection-bar-holder.state-thumbs):not(:has(.QuestionSticky)) #UICenter {
     padding-bottom: 372px;
 }
 
-.ui-droppable-active .collection-bar-actions-section, .ui-droppable-active .collection-bar-thumbs-section {
-    background-color: var(--colour-neutral-800);
+/* sticky bar fix for fullscreen edit and advanced search */
+.QuestionSticky {
+    bottom: 0px;
+    transition: padding-bottom 0.25s ease;
+    padding-bottom: calc(var(--space-72) + var(--space-16));
 }
 
-.ui-droppable-hover .collection-bar-actions-section, .ui-droppable-hover .collection-bar-thumbs-section {
-    background-color: var(--colour-neutral-700);
+body:has(.collection-bar-holder.state-actions) .QuestionSticky {
+    padding-bottom: 198px;
 }
+
+body:has(.collection-bar-holder.state-thumbs) .QuestionSticky {
+    padding-bottom: 398px;
+}
+
+/* ===== Responsive layouts ===== */
+@media(max-width: 1366px) {
+
+    .collection-bar-holder .collection-bar-toggle-button {
+        height: var(--space-48);
+        width: var(--space-48);
+        background-color: red;
+        font-size: 30px;
+    }
+
+    .state-closed {
+        transform: translateY(calc(100% - var(--space-48)));
+    }
+
+    .state-actions {
+        transform: translateY(calc(100% - (var(--space-48) + 110px)));
+    }
+
+    .collection-bar-thumbs-section {
+        height: 128px;
+    }
+
+    .thumbnail-row-arrow {
+        top: calc(var(--space-32) + var(--space-16));
+        width: var(--space-32);
+        height: var(--space-32);
+        font-size: 24px;
+    }
+
+    .collection-bar-resource-card {
+        height: 112px;
+        width: 92px;
+    }
+
+    .collection-bar-resource-card-image {
+        width: 92px;
+        height: 92px;
+    }
+
+    .collection-bar-resource-card-title {
+        font-size: 12px;
+        height: var(--space-20);
+        line-height: var(--space-20);
+    }
+
+}
+
+@media(max-width: 1000px) {
+
+    .collection-bar-actions-form select {
+        width: 328px;
+    }
+    
+    .show-thumbs-button {
+        width: var(--space-48);
+        font-size: 32px;
+        padding: var(--space-8);
+    }
+
+    .show-thumbs-button span {
+        display: none;
+    }
+}
+
+@media(max-width: 768px) {
+    
+    .state-actions {
+        transform: translateY(calc(100% - (var(--space-48) + 268px)));
+    }
+
+    .collection-bar-actions-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .show-thumbs-button {
+        width: unset;
+        font-size: 20px;
+        padding: var(--space-12) 18px;
+    }
+
+    .show-thumbs-button span {
+        display: block;
+    }
+
+    .collection-bar-actions-form select {
+        width: 100%;
+    }
+
+}
+
+/* * {
+  outline: 1px solid red;
+} */
+
+/* #HeaderLinksContainer {
+    display: none !important;
+}
+
+.ActionsContainer.InpageNavLeftBlock select {
+    width: 50px;
+} */

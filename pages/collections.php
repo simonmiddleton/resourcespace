@@ -11,7 +11,7 @@ if (checkperm("b")) {
     exit($lang["error-permissiondenied"]);
 }
 
-include_once __DIR__ . "/../include/research_functions.php";
+// include_once __DIR__ . "/../include/research_functions.php";
 
 $sort            = getval('sort', 'ASC');
 $search          = getval('search', '');
@@ -41,6 +41,11 @@ $change_col_url = "search=" . urlencode($search) . "&order_by=" . urlencode($ord
 
 // Set a flag for logged in users if $external_share_view_as_internal is set and logged on user is accessing an external share
 $internal_share_access = internal_share_access();
+
+// No bar for anonymous users
+if($k != "" && !$internal_share_access) {
+    exit;
+}
 
 // Remove all from collection
 $emptycollection = getval("emptycollection", "", true);
@@ -995,6 +1000,8 @@ jQuery(function () {
                     </div>
                 <?php
                 }
+            } else {
+                echo "No resources in collection";
             }
 
             if ($count_result > $max_collection_thumbs) {
