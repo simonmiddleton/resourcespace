@@ -526,7 +526,6 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
 }
 
 #CentralSpaceContainer {
-    margin:0 15px 20px;
     padding:0 0 0 0;
     text-align:left;
     }
@@ -888,7 +887,7 @@ input[type="number"].NumberSearchWidth {width:80px; margin: 0 10px;}
 .RecordPanel p{padding:0; margin:0.5em 0 0.5em 0;}
 
 /* Basic page */
-.BasicsBox {margin: 15px 15px 10px 0;}
+.BasicsBox {margin: 15px 15px 15px 20px;}
 .BasicsBox h1 {padding: 0 0 0.5em;}
 .BasicsBox h2 {font-size: 1.2em;margin-bottom: 4px;}
 .BasicsBox .HorizontalNav ul {padding:0.2em 0;margin:0 0 1.5em;list-style:none;}
@@ -2964,6 +2963,12 @@ input[type="text"]#iconpicker-input {
     max-width: 656px;
 }
 
+#HomeSiteTextInner h1 {
+    font-weight: 700;
+    line-height: 105%;
+    letter-spacing: -0.64px;
+}
+
 #HomeSiteText h1,
 #HomeSiteText p {
     display: flex;
@@ -3030,10 +3035,6 @@ input[type="text"]#iconpicker-input {
         z-index: -1; /* Not display:none to keep progress timer running and in sync */
     }
 
-    #HomeSiteTextInner p {
-        display: none;
-    }
-
     #HomeSiteTextInner {
         display: flex;
         flex-direction: column;
@@ -3048,9 +3049,6 @@ input[type="text"]#iconpicker-input {
         width: 352px;
         padding-bottom: var(--space-20, 20px);
         font-size: 32px;
-        font-weight: 700;
-        line-height: 105%;
-        letter-spacing: -0.64px;
         color: var(--Colour-Global-White, #FFF);
     }
 }
@@ -3086,9 +3084,6 @@ input[type="text"]#iconpicker-input {
     #HomeSiteTextInner h1 {
         padding-bottom: var(--space-20, 20px);
         font-size: 32px;
-        font-weight: 700;
-        line-height: 105%;
-        letter-spacing: -0.64px;
         color: var(--Colour-Global-White, #FFF);
         align-self: stretch;
     }

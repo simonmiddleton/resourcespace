@@ -1,7 +1,7 @@
 #remote_assist {
   display: flex;
   margin: 24px 20px;
-  min-height: var(--space-48, 48px);
+  min-height: var(--space-24, 24px);
   padding: var(--space-12, 12px);
   align-items: center;
   gap: 10px;
@@ -16,6 +16,7 @@
   color: var(--Colour-Feedback-Warning-Dark, #7F530D);
   font-size: 14px;
   font-style: normal;
+  font-weight: 500;
 }
 
 #remote_assist p {
@@ -34,6 +35,7 @@
 
 #remote_assist i.icon-x {
   font-size: 14px !important;
-  padding-left: 10px;
+  padding: 12px;
   margin-left: auto;
+  cursor: pointer;
 }
