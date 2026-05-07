@@ -18,37 +18,39 @@ $batch_replace_min = getval("batch_replace_min", 0, true);
 $batch_replace_max = getval("batch_replace_max", 0, true);
 $batch_replace_col = getval("batch_replace_col", 0, true);
 $mode = getval("batch_replace_mode", "upload");
+$batch_replace_alternatives = getval("batch_replace_alternatives", 0, true);
 $submitted = getval("submit", "") != "";
 
 if ($submitted) {
     if ($mode == "upload") {
         $upload_params = array();
-        $upload_params["replace"]           = "true";
-        $upload_params["filename_field"]    = $filename_field;
-        $upload_params["batch_replace_col"] = $batch_replace_col;
-        $upload_params["batch_replace_min"] = $batch_replace_min;
-        $upload_params["batch_replace_max"] = $batch_replace_max;
-        $upload_params["no_exif"]           = $no_exif;
+        $upload_params["replace"]               = "true";
+        $upload_params["filename_field"]        = $filename_field;
+        $upload_params["batch_replace_col"]     = $batch_replace_col;
+        $upload_params["batch_replace_min"]     = $batch_replace_min;
+        $upload_params["batch_replace_max"]     = $batch_replace_max;
+        $upload_params["no_exif"]               = $no_exif;
+        $upload_params["replace_alternatives"]  = $batch_replace_alternatives;
 
         redirect(generateURL($baseurl_short . "pages/upload_batch.php", $upload_params));
         exit();
     } elseif ($mode == "fetch_local" && $offline_job_queue) {
         // Create offline job to retrieve files
         $replace_batch_local_data = array(
-            'import_path'       => $batch_replace_local_folder,
-            'filename_field'    => $filename_field,
-            'batch_replace_col' => $batch_replace_col,
-            'batch_replace_min' => $batch_replace_min,
-            'batch_replace_max' => $batch_replace_max,
-            'no_exif'           => $no_exif
+            'import_path'           => $batch_replace_local_folder,
+            'filename_field'        => $filename_field,
+            'batch_replace_col'     => $batch_replace_col,
+            'batch_replace_min'     => $batch_replace_min,
+            'batch_replace_max'     => $batch_replace_max,
+            'no_exif'               => $no_exif
         );
 
         job_queue_add(
-            'replace_batch_local',
+            $batch_replace_alternatives ? 'replace_batch_local_alternatives' : 'replace_batch_local',
             $replace_batch_local_data,
             '',
             '',
-            $lang["oj-batch-replace-local-success-text"],
+            $lang["oj-batch-replace-local-alternatives-success-text"],
             $lang["oj-batch-replace-local-failure-text"]
         );
 
@@ -80,14 +82,46 @@ if (isset($info_text)) { ?>
     <?php generateFormToken("upload_replace_batch"); ?>
     <input id="batch_replace_mode" type="hidden" name="batch_replace_mode" value="<?php echo escape($mode); ?>" />
     <input id="submit" type="hidden" name="submit" value="true" />
-        
+
     <div class="Question">
+        <label for="batch_replace_alternatives"><?php echo escape($lang["batch_replace_alternatives"]); ?></label>
+        <table>
+            <tr>
+                <td>
+                    <label>
+                        <input
+                            type="radio"
+                            id="batch_replace_alternatives_0"
+                            name="batch_replace_alternatives"
+                            value="0"
+                        >
+                        <?php echo escape($lang["batch_replace_upload_resources"]); ?>
+                    </label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label>
+                        <input
+                            type="radio"
+                            id="batch_replace_alternatives_1"
+                            name="batch_replace_alternatives"
+                            value="1"
+                        >
+                        <?php echo escape($lang["batch_replace_upload_alternatives"]); ?>
+                    </label>
+                </td>
+            </tr>
+        </table>
+    </div>
+        
+    <div class="Question replace_originals">
         <label for="use_resourceid"><?php echo escape($lang["batch_replace_use_resourceid"]); ?></label>
-        <input type="checkbox" value="yes" <?php echo ($filename_field == 0) ? " checked " : ''; ?> name="use_resourceid" id="use_resourceid" onclick="if(this.checked){jQuery('#question_filename_field').slideUp(); jQuery('#filename_field').prop('disabled',true);}else{jQuery('#question_filename_field').slideDown();jQuery('#filename_field').prop('disabled',false);}" />
+        <input type="checkbox" value="yes" <?php echo ($filename_field == 0) ? " checked " : ''; ?> name="use_resourceid" id="use_resourceid"/>
         <div class="clearerleft"></div>
     </div>
 
-    <div class="Question" id="question_filename_field" <?php echo ($filename_field == 0) ? "style='display:none;'" : ''; ?>>
+    <div class="Question replace_originals" id="question_filename_field" <?php echo ($filename_field == 0) ? "style='display:none;'" : ''; ?>>
         <label for="filename_field"><?php echo escape($lang["batch_replace_filename_field_select"]); ?></label>
         <select  class="stdwidth" name="filename_field" id="filename_field">
             <option value="0">
@@ -101,24 +135,27 @@ if (isset($info_text)) { ?>
     </div>
 
     <div class="Question">
-        <label for="batch_replace_col"><?php echo escape($lang["replacebatch_collection"]); ?></label>
+        <label class="replace_originals" for="batch_replace_col"><?php echo escape($lang["replacebatch_collection"]); ?></label>
+        <label class="replace_alternatives" for="batch_replace_col"><?php echo escape($lang["replacebatch_collection_alternatives"]); ?></label>
         <input type="text" class="shrtwidth" value="<?php echo ($batch_replace_col > 0) ? escape($batch_replace_col) : ""; ?>" name="batch_replace_col" id="batch_replace_col" />
         <div class="clearerleft"></div>
     </div>
 
     <div class="Question">
-        <label for="batch_replace_min"><?php echo escape($lang["replacebatch_resource_min"]); ?></label>
+        <label class="replace_originals" for="batch_replace_min"><?php echo escape($lang["replacebatch_resource_min"]); ?></label>
+        <label class="replace_alternatives" for="batch_replace_min"><?php echo escape($lang["replacebatch_resource_min_alternatives"]); ?></label>
         <input type="text" class="shrtwidth" value="<?php echo ($batch_replace_min > 0) ? escape($batch_replace_min) : ""; ?>" name="batch_replace_min" id="batch_replace_min" />
         <div class="clearerleft"></div>
     </div>
 
     <div class="Question">
-        <label for="batch_replace_max"><?php echo escape($lang["replacebatch_resource_max"]); ?></label>
+        <label class="replace_originals" for="batch_replace_max"><?php echo escape($lang["replacebatch_resource_max"]); ?></label>
+        <label class="replace_alternatives" for="batch_replace_max"><?php echo escape($lang["replacebatch_resource_max_alternatives"]); ?></label>
         <input type="text" class="shrtwidth" value="<?php echo ($batch_replace_max > 0) ?  escape($batch_replace_max) : ""; ?>" name="batch_replace_max" id="batch_replace_max" />
         <div class="clearerleft"></div>
     </div>
 
-    <div class="Question">
+    <div class="Question replace_originals">
         <label for="no_exif"><?php echo escape($lang["no_exif"]); ?></label>
         <input type=checkbox checked id="no_exif" name="no_exif" value="yes">
         <div class="clearerleft"></div>
@@ -137,6 +174,44 @@ if (isset($info_text)) { ?>
         <div class="clearerleft"></div>
     </div>
 </form>
+
+<script>
+jQuery(document).ready(function() {
+    function alternativesChanged() {
+        var alternatives = jQuery('input[name="batch_replace_alternatives"]:checked').val()
+        var $originals_fields = jQuery('.replace_originals');
+        var $alternatives_fields = jQuery('.replace_alternatives');
+
+        if (alternatives === '1') {
+            $originals_fields.hide();
+            $alternatives_fields.show();
+        } else {
+            $originals_fields.show();
+            $alternatives_fields.hide();
+        }
+    }
+
+    function filenameChanged() {
+        var useResourceID = jQuery('#use_resourceid').is(':checked');
+        if(useResourceID){
+            jQuery('#question_filename_field').slideUp();
+            jQuery('#filename_field').prop('disabled',true);
+        } else {
+            jQuery('#question_filename_field').slideDown();
+            jQuery('#filename_field').prop('disabled',false);
+        }
+    }
+
+    // Initialise page
+    var $checked = jQuery('input[name="batch_replace_alternatives"]:checked');
+    if ($checked.length === 0) {
+        jQuery('input[name="batch_replace_alternatives"][value="0"]').prop('checked', true);
+    }
+
+    jQuery('input[name="batch_replace_alternatives"]').on('change', alternativesChanged);
+    jQuery('input[name="use_resourceid"]').on('change', filenameChanged);
+});
+</script>
 
 <?php
 include "../include/footer.php";

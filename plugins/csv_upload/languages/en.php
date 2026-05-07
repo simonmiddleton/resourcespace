@@ -20,7 +20,9 @@ $lang["check_line_count"] = "At least two rows found in CSV file";
 $lang["csv_upload_file"] = "Select CSV file";
 $lang["csv_upload_default"] = "Default";
 $lang["csv_upload_error_no_header"]             = "No header row found in file";
-$lang["csv_upload_update_existing"]             = "Update existing resources? If this is unchecked then new resources will be created based on the CSV data";
+$lang["csv_upload_create_new"]                  = "Create new resources";
+$lang["csv_upload_update_existing"]             = "Update existing resources";
+$lang["csv_upload_create_alternatives"]         = "Create alternative file records";
 $lang["csv_upload_update_existing_collection"]  = "Only update resources in a specific collection?";
 $lang["csv_upload_process"]                     = "Process";
 $lang["csv_upload_add_to_collection"]           = "Add newly created resources to current collection?";
@@ -34,6 +36,8 @@ $lang["csv_upload_update_existing_title"]       = "Update existing resources";
 $lang["csv_upload_update_existing_notes"]       = "Select the options required to update existing resources";
 $lang["csv_upload_create_new_title"]            = "Create new resources";
 $lang["csv_upload_create_new_notes"]            = "Select the options required to create new resources";
+$lang["csv_upload_create_alternatives_title"]   = "Create alternative file records";
+$lang["csv_upload_create_alternatives_notes"]   = "Select the options required to create new alternative file records";
 
 $lang["csv_upload_map_fields_notes"]            = "Match the columns in the CSV to the required metadata fields. Clicking 'Next' will check the CSV without actually changing data";
 $lang["csv_upload_map_fields_auto_notes"]       = "Metadata fields have been pre-selected based on names or titles but please check that these are correct";
@@ -46,6 +50,9 @@ $lang["csv_upload_resource_type_default"]       = "Default resource type if no c
 $lang["csv_upload_resource_match_column"]       = "Select the column that contains the resource identifier";
 $lang["csv_upload_match_type"]                  = "Match resource based on resource ID or metadata field value?";
 $lang["csv_upload_multiple_match_action"]       = "Action to take if multiple matching resources are found";
+$lang["csv_upload_multiple_match_all"]          = "Update all matching";
+$lang["csv_upload_multiple_match_none"]         = "Update none";
+
 $lang["csv_upload_validation_notes"]            = "Check the validation messages below before proceeding. Click Process to commit the changes";
 $lang["csv_upload_upload_another"]              = "Upload another CSV";
 $lang["csv_upload_mapping config"]              = "CSV column mapping settings";
@@ -83,3 +90,7 @@ $lang['csv_upload_processing'] = 'Processing';
 $lang['processing_batch_edit_save'] = 'row [row_number] of [rows_count]';
 
 $lang["page-title_csv_upload_csv_upload"] = "Upload CSV";
+
+$lang["csv_upload_alternative_file_filename_column"]    = "Select the column that contains the filename for the alternative file";
+$lang["csv_upload_alternative_file_name_column"]        = "Select the column that contains the name to use for the alternative file record (optional)";
+$lang["csv_upload_alternative_file_description_column"] = "Select the column that contains the description for the alternative file record (optional)";

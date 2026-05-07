@@ -4662,6 +4662,45 @@ function get_alternative_files($resource, $order_by = "", $sort = "", $type = ""
 }
 
 /**
+ * Search the alternative file records for matching filenames
+ * Alternative files can be optionally filtered by the Resource ID or by collection
+ *
+ * @param  string $filename Filename of the alternative file(s) to search for
+ * @param  int $collection Collection ID to filter resources, use 0 to ignore
+ * @param  int $min Minimum Resource ID to consider, use 0 to ignore
+ * @param  int $max Maximum Resource ID to consider, use 0 to ignore
+ * 
+ * @return array All matching alternative file records with corresponding:
+ *               resource ID, filename, file size, extension, name, and description
+ */
+function get_alternative_files_by_filename(string $filename, int $collection, int $min, int $max) : array
+{
+    $sql = new PreparedStatementQuery(
+        "SELECT ref, resource, file_name, file_size, file_extension, name, description FROM resource_alt_files WHERE file_name = ?",
+        ["s", $filename]
+    );
+
+    if ($collection) {
+        $sql->sql .= " AND resource IN (SELECT resource FROM collection_resource WHERE collection = ?)";
+        $sql->parameters[] = "i";
+        $sql->parameters[] = $collection;
+    } elseif ($min || $max) {
+        if ($min) {
+            $sql->sql .= " AND resource >= ?";
+            $sql->parameters[] = "i";
+            $sql->parameters[] = $min;
+        }
+        if ($max) {
+            $sql->sql .= " AND resource <= ?";
+            $sql->parameters[] = "i";
+            $sql->parameters[] = $max;
+        }
+    }
+
+    return ps_query($sql->sql, $sql->parameters);
+}
+
+/**
 * Add alternative file
 *
 * @param integer $resource
