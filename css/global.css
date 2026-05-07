@@ -3126,8 +3126,8 @@ button[data-menu-trigger-close] {
 }
 
 .menu-item:hover,
-.menu-item:focus {
-    outline: none;
+.menu-item:focus,
+.menu-item:active { 
     background: var(--colour-surface-300);
 }
 
@@ -4516,14 +4516,6 @@ header.LoginHeader {
 
 .menu-item + .menu-item {
     margin-top: 1px;
-}
-
-.menu-item:hover { 
-    background: var(--colour-surface-300);
-}
-
-.menu-item:active { 
-    background: var(--colour-surface-300);
 }
 
 .menu-item-danger:hover {  
