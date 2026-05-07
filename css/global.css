@@ -4041,13 +4041,11 @@ header.LoginHeader {
         background: var(--colour-transparency-black-40);
     }
 
-    /* todo: Testing at 768 and beyond looks like in the design. memo: some rules might be missing/needed/have to be moved too */
     #header-container {
         grid-template-columns: 1fr auto;
         grid-template-areas:
             "logo actions"
             "search search";
-        /* align-items: center; */
     }
 
     #header-container .logo {
