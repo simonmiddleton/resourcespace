@@ -196,6 +196,8 @@ $page_title = get_page_title($pagename, pluginname());
         <!--Leaflet.js files-->
         <link rel="stylesheet" href="<?php echo $baseurl; ?>/lib/leaflet/leaflet.css?css_reload_key=<?php echo $css_reload_key; ?>"/>
         <script src="<?php echo $baseurl; ?>/lib/leaflet/leaflet.js?<?php echo $css_reload_key; ?>"></script>
+        <link href="<?php echo $baseurl; ?>/lib/select2/select2.min.css?css_reload_key=<?php echo $css_reload_key; ?>" rel="stylesheet">
+        <script src="<?php echo $baseurl; ?>/lib/select2/select2.min.js?<?php echo $css_reload_key; ?>"></script>
 
         <?php
         if (!$disable_geocoding) {
@@ -255,9 +257,9 @@ $page_title = get_page_title($pagename, pluginname());
         <script>jQuery('.plugincss').attr('class','plugincss0');</script>
         
         <!-- ResourceSpace front-end bootstrap -->
-        <script src="<?php echo $baseurl_short?>js/app.js?css_reload_key=<?php echo (int) $css_reload_key; ?>"></script>
-        <script src="<?php echo $baseurl_short?>js/header.js?css_reload_key=<?php echo (int) $css_reload_key; ?>" defer></script>
-        <script src="<?php echo $baseurl_short?>js/menu_overlay.js?css_reload_key=<?php echo (int) $css_reload_key; ?>" defer></script>
+        <script src="<?php echo $baseurl_short; ?>js/app.js?css_reload_key=<?php echo (int) $css_reload_key; ?>"></script>
+        <script src="<?php echo $baseurl_short; ?>js/header.js?css_reload_key=<?php echo (int) $css_reload_key; ?>" defer></script>
+        <script src="<?php echo $baseurl_short; ?>js/menu_overlay.js?css_reload_key=<?php echo (int) $css_reload_key; ?>" defer></script>
     </head>
 
     <body lang="<?php echo escape($language); ?>">

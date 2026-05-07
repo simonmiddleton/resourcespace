@@ -276,6 +276,9 @@ const files = [
         dest: 'plugins/transform/lib/jcrop',
         filter: { patterns: ['css/*.gif', 'css/*.min.css', 'js/jquery.Jcrop.min.js', 'MIT-LICENSE.txt'] }
     },
+    { src: 'node_modules/select2/dist/js/select2.min.js', dest: 'lib/select2/select2.min.js' }, 
+    { src: 'node_modules/select2/dist/css/select2.min.css', dest: 'lib/select2/select2.min.css' }, 
+    { src: 'node_modules/select2/LICENSE.md', dest: 'lib/select2/LICENSE.md' }, 
 ];
 
 console.log('Copying distribution files to ResourceSpace');
