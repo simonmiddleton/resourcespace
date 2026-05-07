@@ -3679,20 +3679,21 @@ header.LoginHeader {
 
 #header-container .primary-navigation ul.menu-panel {
     gap: unset;
-    /* todo: fix menu items following r28445 - this is commented more to make it obvious the styling is broken!
-    background: var(--colour-surface-50); */
 }
 
 #header-container .primary-navigation ul.menu-panel > li {
-    /* todo: fix menu items following r28445
-    max-width: 250px; */
-    max-width: unset;
+    width: unset;
     height: var(--space-36);
     padding: 0 var(--space-12);
     display: flex;
     gap: var(--space-12);
     align-items: center;
     align-self: stretch;
+    background: var(--colour-surface-200);
+}
+
+#header-container .primary-navigation ul.menu-panel > li:hover {
+    background: var(--colour-surface-300);
 }
 
 #header-container .primary-navigation ul.menu-panel > li > a {
@@ -4008,13 +4009,6 @@ header.LoginHeader {
         padding-left: var(--space-16);
         padding-right: var(--space-16);
     }
-}
-
-@media(max-width: 360px) {
-    /* todo: fix menu items following r28445
-    #header-container .primary-navigation ul.menu-panel > li {
-        max-width: unset;
-    } */
 }
 
 @media (min-width: 500px) {
