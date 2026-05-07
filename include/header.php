@@ -179,6 +179,8 @@ $page_title = get_page_title($pagename, pluginname());
         $extrafooterhtml = "";
         ?>
 
+        <link href="<?php echo $baseurl; ?>/lib/select2/select2.min.css?css_reload_key=<?php echo $css_reload_key; ?>" rel="stylesheet">
+        <script src="<?php echo $baseurl; ?>/lib/select2/select2.min.js?<?php echo $css_reload_key; ?>"></script>
         <!--- Lucide for icons-->
         <link rel="stylesheet" href="<?php echo $baseurl; ?>/lib/lucide/lucide.css?css_reload_key=<?php echo $css_reload_key; ?>">
         <!-- Structure Stylesheet -->
@@ -196,8 +198,6 @@ $page_title = get_page_title($pagename, pluginname());
         <!--Leaflet.js files-->
         <link rel="stylesheet" href="<?php echo $baseurl; ?>/lib/leaflet/leaflet.css?css_reload_key=<?php echo $css_reload_key; ?>"/>
         <script src="<?php echo $baseurl; ?>/lib/leaflet/leaflet.js?<?php echo $css_reload_key; ?>"></script>
-        <link href="<?php echo $baseurl; ?>/lib/select2/select2.min.css?css_reload_key=<?php echo $css_reload_key; ?>" rel="stylesheet">
-        <script src="<?php echo $baseurl; ?>/lib/select2/select2.min.js?<?php echo $css_reload_key; ?>"></script>
 
         <?php
         if (!$disable_geocoding) {
