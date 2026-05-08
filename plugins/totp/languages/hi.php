@@ -17,3 +17,4 @@ $lang["totp_date_binding_m"] = 'वर्तमान महीना';
 $lang["totp_date_binding_y"] = 'वर्तमान वर्ष';
 $lang["page-title_totp_setup"] = 'TOTP प्लगइन सेटअप करें';
 $lang["page-title_totp_totp"] = 'TOTP';
+$lang["totp_saml"] = 'SAML के माध्यम से पहले से प्रमाणीकरण किए गए उपयोगकर्ताओं के लिए TOTP अक्षम करें (सामग्री SAML प्लगइन आवश्यक है)';

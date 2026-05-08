@@ -38,3 +38,4 @@ $lang["weekday-4"] = 'Khamis';
 $lang["weekday-5"] = 'Jumaat';
 $lang["weekday-6"] = 'Sabtu';
 $lang["page-title_action_dates_setup"] = 'Tetapkan Plugin Tarikh Tindakan';
+$lang["action_dates_additional_settings_email_admin_days"] = 'Beritahu pentadbir ini berapa hari sebelum tindakan berlaku (Tetapkan kosong untuk nyahaktifkan)';

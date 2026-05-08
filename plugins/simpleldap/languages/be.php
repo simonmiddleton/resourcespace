@@ -52,3 +52,4 @@ $lang["origin_simpleldap"] = 'SimpleLDAP плагін';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"] = 'Не правяце праверку FQDN сервера супраць CN сертыфіката';
 $lang["page-title_simpleldap_ajax_test_auth"] = 'Тэст LDAP аўтэнтыфікацыі';
 $lang["page-title_simpleldap_setup"] = 'Наладзіць просты плагін LDAP';
+$lang["simpleldap_userlimit_error"] = 'Карыстальнік не можа быць створаны, бо дасягнуты ліміт карыстальнікаў. Калі ласка, звяжыцеся з вашым адміністратарам.';

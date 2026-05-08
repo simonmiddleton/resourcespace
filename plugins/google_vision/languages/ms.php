@@ -25,3 +25,7 @@ $lang["page-title_google_vision_process_existing"] = 'Proses Google Vision Sedia
 $lang["page-title_google_vision_setup"] = 'Pasang Plugin Google Vision';
 $lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
 $lang["page-title_google_vision_test"] = 'Google Vision Test';
+$lang["google_vision"] = 'Penglihatan Google';
+$lang["google_vision_process_existing"] = 'Proses sumber tidak diproses';
+$lang["google_vision_process_existing_configure"] = 'Konfigurasi tugasan untuk memproses sumber yang tidak diproses';
+$lang["google_vision_process_existing_collection_refs_help"] = 'Menetapkan pilihan ini akan bermakna hanya sumber dalam koleksi yang disenaraikan akan diproses. Jika tiada koleksi yang ditetapkan, SEMUA sumber yang sesuai akan diproses. Koleksi boleh ditetapkan menggunakan senarai berasingan dengan koma serta julat contohnya 100,105,110-115';

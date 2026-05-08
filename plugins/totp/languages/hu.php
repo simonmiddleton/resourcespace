@@ -17,3 +17,4 @@ $lang["totp_date_binding_m"] = 'A jelenlegi hónap';
 $lang["totp_date_binding_y"] = 'A jelenlegi év';
 $lang["page-title_totp_setup"] = 'TOTP bővítmény beállítása';
 $lang["page-title_totp_totp"] = 'TOTP';
+$lang["totp_saml"] = 'TOTP kikapcsolása a SAML-on keresztül hitelesített felhasználóknál (SAML plugin szükséges)';

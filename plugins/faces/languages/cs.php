@@ -22,3 +22,10 @@ $lang["faces_count_missing"] = 'Obrázky k zpracování';
 $lang["faces-tag-field-not-set"] = 'Pole pro označování není nakonfigurováno.';
 
 $lang["page-title_faces_setup"] = 'Nastavení pluginu Faces';
+$lang["faces_insight_faces"] = 'InsightFaces';
+$lang["faces_detect_faces"] = 'Detekce obličejů';
+$lang["faces_tag_faces"] = 'Označit obličeje';
+$lang["faces_detect_faces_configure"] = 'Nastavit úlohu pro detekci obličejů';
+$lang["faces_tag_faces_configure"] = 'Nastavit úlohu pro označení obličejů';
+$lang["faces_detect_faces_intro"] = 'Vytvořte úlohu pro zahájení detekce obličejů zde - tato úloha nevyžaduje žádné parametry, takže ji lze spustit, pokud neprobíhají jiné úlohy tohoto typu.';
+$lang["faces_tag_faces_collection_refs_help"] = 'Nastavením této možnosti budou aktualizovány pouze zdroje v uvedených kolekcích. Pokud nejsou kolekce uvedeny, bude označování obličejů aktualizováno pro VŠECHNY vhodné zdroje. Kolekce lze uvést pomocí seznamu odděleného čárkami nebo rozsahů, např. 100,105,110-115';

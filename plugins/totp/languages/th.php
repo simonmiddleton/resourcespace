@@ -17,3 +17,4 @@ $lang["totp_date_binding_m"] = 'เดือนปัจจุบัน';
 $lang["totp_date_binding_y"] = 'ปีปัจจุบัน';
 $lang["page-title_totp_setup"] = 'ตั้งค่า TOTP Plugin';
 $lang["page-title_totp_totp"] = 'TOTP';
+$lang["totp_saml"] = 'ปิดใช้งาน TOTP สำหรับผู้ใช้ที่ได้รับการรับรองแล้วผ่าน SAML (ต้องใช้ปลั๊กอิน SAML)';

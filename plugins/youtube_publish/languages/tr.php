@@ -53,3 +53,4 @@ $lang["plugin-youtube_publish-title"]='YouTube Yayınla';
 $lang["plugin-youtube_publish-desc"]='Yapılandırılmış YouTube hesabına video kaynağını yayınlar.';
 $lang["page-title_youtube_publish_setup"] = 'Eklenti Kurulum';
 $lang["page-title_youtube_publish_youtube_upload"] = 'Kaynağı Youtube\'a Yayınla';
+$lang["youtube_publish_video_title"] = 'Video başlığı (maksimum 100 karakter)';

@@ -40,3 +40,4 @@ $lang["plugin-action_dates-title"] = 'Datumi dejanj';
 $lang["plugin-action_dates-desc"] = 'Omogoča načrtovano brisanje ali omejitev virov na podlagi datumskih polj';
 
 $lang["page-title_action_dates_setup"] = 'Nastavenie pluginu pre akčné dátumy';
+$lang["action_dates_additional_settings_email_admin_days"] = 'Upozorni administrátorov tento počet dní pred uskutočnením akcie (Nechať prázdne na vypnutie)';

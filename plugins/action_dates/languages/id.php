@@ -40,3 +40,4 @@ $lang["plugin-action_dates-title"] = 'Tanggal Tindakan';
 $lang["plugin-action_dates-desc"] = 'Memungkinkan penghapusan atau pembatasan sumber daya yang dijadwalkan berdasarkan bidang tanggal';
 
 $lang["page-title_action_dates_setup"] = 'Plugin Tanggal Tindakan Pengaturan';
+$lang["action_dates_additional_settings_email_admin_days"] = 'Beritahu admin ini berapa hari sebelumnya sebelum tindakan dilakukan (Kosongkan untuk menonaktifkan)';

@@ -40,3 +40,4 @@ $lang["plugin-action_dates-title"] = 'Aktionsdaten';
 $lang["plugin-action_dates-desc"] = 'Ermöglicht die geplante Löschung oder Einschränkung von Ressourcen basierend auf Datumsfeldern';
 
 $lang["page-title_action_dates_setup"] = 'Aktionstermine-Plugin einrichten';
+$lang["action_dates_additional_settings_email_admin_days"] = 'Admins diese Anzahl von Tagen vor der Aktion benachrichtigen (Leer lassen zum Deaktivieren)';

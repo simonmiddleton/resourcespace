@@ -40,3 +40,4 @@ $lang["plugin-action_dates-title"] = 'Dates d\'Acció';
 $lang["plugin-action_dates-desc"] = 'Permet la supressió o restricció programada de recursos basats en camps de data';
 
 $lang["page-title_action_dates_setup"] = 'Configurar el complement de dates d\'acció';
+$lang["action_dates_additional_settings_email_admin_days"] = ' Notifica als administradors aquest nombre de dies abans que tingui lloc l\'acció (Deixa en blanc per desactivar)';

@@ -52,3 +52,4 @@ $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='Не перевіряйте FQD
 $lang["ldap_encoding"]='Кодування даних, отриманих від сервера LDAP (встановіть, якщо не UTF-8 і дані не відображаються належним чином - наприклад, відображуване ім\'я)';
 $lang["page-title_simpleldap_ajax_test_auth"] = 'Тестування LDAP автентифікації';
 $lang["page-title_simpleldap_setup"] = 'Налаштування простого плагіна LDAP';
+$lang["simpleldap_userlimit_error"] = 'Користувача не вдалося створити, оскільки досягнуто ліміт користувачів. Будь ласка, зверніться до адміністратора.';

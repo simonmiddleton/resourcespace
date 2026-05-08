@@ -10,3 +10,8 @@ $lang["whisper_transcript"] = 'Generer en transkriptionsfil og tilføj som alter
 $lang["whisper_transcript_name"] = 'Automatisk genereret transkript';
 
 $lang["page-title_whisper_setup"] = 'Opsæt Whisper Plugin';
+$lang["whisper_cron_enable"] = 'Aktivér behandling af ubehandlede ressourcer via planlagt Cron-job';
+$lang["whisper"] = 'Whisper';
+$lang["whisper_process_existing"] = 'Behandl ubehandlede ressourcer';
+$lang["whisper_process_existing_intro"] = 'Opret et job for at starte Whisper-lydbehandling her - dette job kræver ingen parametre, så det kan startes, så længe der ikke er andre udestående jobs af denne type.';
+$lang["whisper_process_existing_configure"] = 'Konfigurer job til at behandle filer med Whisper';

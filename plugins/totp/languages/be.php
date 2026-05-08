@@ -17,3 +17,4 @@ $lang["totp_date_binding_m"] = 'Цяперашні месяц';
 $lang["totp_date_binding_y"] = 'Сёлетні год';
 $lang["page-title_totp_setup"] = 'Наладка плагіна TOTP';
 $lang["page-title_totp_totp"] = 'TOTP';
+$lang["totp_saml"] = 'Адключыць TOTP для карыстальнікаў, якія ўжо прайшлі аўтэнтыфікацыю праз SAML (патрэбны плагін SAML)';

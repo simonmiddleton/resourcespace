@@ -53,3 +53,4 @@ $lang["plugin-youtube_publish-title"]='YouTube 发布';
 $lang["plugin-youtube_publish-desc"]='将视频资源发布到配置的YouTube账户。';
 $lang["page-title_youtube_publish_setup"] = '设置插件';
 $lang["page-title_youtube_publish_youtube_upload"] = '将资源发布到YouTube';
+$lang["youtube_publish_video_title"] = '视频标题（最多100个字符)';

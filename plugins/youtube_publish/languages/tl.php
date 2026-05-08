@@ -51,3 +51,4 @@ $lang["youtube_chunk_size"] = 'Sukat ng piraso na gagamitin kapag nag-upload sa 
 $lang["youtube_publish_add_anchor"] = 'Magdagdag ng anchor tags sa URL kapag nagse-save sa YouTube URL metadata field?';
 $lang["page-title_youtube_publish_setup"] = 'I-set up ang Plugin';
 $lang["page-title_youtube_publish_youtube_upload"] = 'I-publish ang Yaman sa Youtube';
+$lang["youtube_publish_video_title"] = 'Pamagat ng video (hanggang 100 karakter)';

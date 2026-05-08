@@ -81,3 +81,4 @@ $lang["cropper_preset_sizes"] = 'ਪੂਰਵ ਨਿਰਧਾਰਿਤ ਆਕਾ
 $lang["page-title_transform_collection_transform"] = 'ਸੰਸਾਧਨ ਨੂੰ ਬਦਲੋ';
 $lang["page-title_transform_crop"] = 'ਕ੍ਰਾਪ ਰਿਸੋਰਸ';
 $lang["page-title_transform_setup"] = 'ਟ੍ਰਾਂਸਫਾਰਮ ਪਲੱਗਇਨ ਸੈਟਅਪ ਕਰੋ';
+$lang["use_filename_as_title"] = 'ਫਾਇਲ ਨਾਮ ਨੂੰ ਸਿਰਲੇਖ ਵਜੋਂ ਵਰਤੋ';

@@ -4,74 +4,180 @@ include dirname(__DIR__, 2) . '/include/boot.php';
 command_line_only();
 
 $restrict = $argv[1] ?? false;
-// Models to use in the order to try them in. The same model can be attempted twice as results often differ between requests.
-$models = ["gpt-4o-mini","gpt-4o-mini","gpt-4o","gpt-3.5-turbo"];
 
-// Try the below to clear any that couldn't be translated by the default model
-//$model="gpt-3.5-turbo";
+// Models to use in the order to try them in.
+$models = ["gpt-4.1-nano", "gpt-4.1-mini", "gpt-4o-mini", "gpt-4o"];
 
-if (substr($restrict, 0, 6) == "model:") {
-    $model = substr($restrict, 6);
+// Parallel request count
+$parallel = 16;
+
+// Smaller batches are usually faster overall
+$batch_size = 15;
+
+if (substr((string)$restrict, 0, 6) == "model:") {
+    $models = [substr($restrict, 6)];
     $restrict = false;
-} // Option to set model
+}
 
-function generateChatCompletions($apiKey, $model, $temperature = 0, $max_tokens = 2048, $messages = array(), $uid = "")
+function buildChatCompletionHandle($apiKey, $model, $messages = array(), $uid = "")
 {
-    // Set the endpoint URL
     $endpoint = "https://api.openai.com/v1/chat/completions";
 
-    // Encode the completion options as JSON
-    // $completion_options_json = json_encode($completion_options);
-
-    // Set the headers for the request
     $headers = [
         "Content-Type: application/json",
         "Authorization: Bearer $apiKey",
     ];
 
-    // Set the data to send with the request
     $data = [
         "model" => $model,
         "messages" => $messages,
-        "temperature" => $temperature,
-        "max_tokens" => $max_tokens,
+        "temperature" => 0,
+        "max_tokens" => 4096,
+        "response_format" => ["type" => "json_object"],
         "user" => $uid,
     ];
 
-    // Initialize cURL
     $ch = curl_init($endpoint);
 
-    // Set the options for the request
     curl_setopt_array($ch, [
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_POST => true,
-        CURLOPT_TIMEOUT => 10,
+        CURLOPT_TIMEOUT => 120,
         CURLOPT_HTTPHEADER => $headers,
         CURLOPT_POSTFIELDS => json_encode($data),
         CURLOPT_SSL_VERIFYPEER => false,
         CURLOPT_SSL_VERIFYHOST => false,
     ]);
 
-    // Send the request and get the response
-    $response = curl_exec($ch);
+    return $ch;
+}
 
+function run_parallel_translations($requests)
+{
+    $mh = curl_multi_init();
 
-    // Decode the response as JSON
-    $response_data = json_decode($response, true);
-
-    // Return the completions
-    //return print_r($response_data,true);
-    if (isset($response_data["choices"][0]["message"]["content"])) {
-        return $response_data["choices"][0]["message"]["content"];
+    foreach ($requests as $id => $request) {
+        curl_multi_add_handle($mh, $request["handle"]);
     }
-    // Response was not expected. Return the raw response.
-    return print_r($response_data, true);
+
+    $running = null;
+
+do {
+
+    do {
+        $status = curl_multi_exec($mh, $running);
+    } while ($status === CURLM_CALL_MULTI_PERFORM);
+
+    echo "\rParallel requests active: {$running}   ";
+    flush();
+
+    if ($running > 0) {
+        curl_multi_select($mh, 1);
+    }
+
+} while ($running > 0);
+
+echo "\n";
+
+    $results = [];
+
+    foreach ($requests as $id => $request) {
+
+        $response = curl_multi_getcontent($request["handle"]);
+
+        if ($response === false) {
+            $results[$id] = null;
+        } else {
+            $response_data = json_decode($response, true);
+
+            $results[$id] =
+                $response_data["choices"][0]["message"]["content"]
+                ?? null;
+        }
+
+        curl_multi_remove_handle($mh, $request["handle"]);
+        curl_close($request["handle"]);
+    }
+
+    curl_multi_close($mh);
+
+    return $results;
+}
+
+function extract_json_object($text)
+{
+    $text = trim((string)$text);
+
+    if (str_starts_with($text, "```")) {
+        $text = preg_replace('/^```(?:json)?\s*/', '', $text);
+        $text = preg_replace('/\s*```$/', '', $text);
+    }
+
+    $decoded = json_decode($text, true);
+
+    if (is_array($decoded)) {
+        return $decoded;
+    }
+
+    $start = strpos($text, "{");
+    $end = strrpos($text, "}");
+
+    if ($start !== false && $end !== false && $end > $start) {
+        $json = substr($text, $start, $end - $start + 1);
+        $decoded = json_decode($json, true);
+
+        if (is_array($decoded)) {
+            return $decoded;
+        }
+    }
+
+    return null;
+}
+
+function placeholders_match($source, $translation)
+{
+    preg_match_all("/\[([a-zA-Z0-9_]*)\]/", (string)$source, $source_params);
+    preg_match_all("/\[([a-zA-Z0-9_]*)\]/", (string)$translation, $result_params);
+
+    sort($source_params[0]);
+    sort($result_params[0]);
+
+    return $source_params[0] === $result_params[0];
+}
+
+function build_translation_messages($batch, $lang_name)
+{
+    return [
+        [
+            "role" => "system",
+            "content" => "Your task is to translate language strings used by the digital asset management software ResourceSpace from English to {$lang_name}.
+
+Ensure translations accurately reflect the intended meaning in the context of digital asset management software.
+
+Return ONLY valid JSON.
+
+The JSON object must have exactly the same keys as the input JSON object.
+
+Each value must be the translated string.
+
+Do not translate the keys.
+
+Preserve placeholders in square brackets exactly.
+
+Do not output markdown or explanations."
+        ],
+        [
+            "role" => "user",
+            "content" => json_encode($batch, JSON_UNESCAPED_UNICODE)
+        ]
+    ];
 }
 
 $plugins = scandir(RESOURCESPACE_BASE_PATH . "/plugins");
 array_shift($plugins);
-array_shift($plugins); // Discard first two which are "." and ".."
-$plugins[] = ""; // Add an extra row to signify the base languages (not in a plugin)
+array_shift($plugins);
+
+$plugins[] = "";
 $plugins = array_reverse($plugins);
 
 $bad_params = 0;
@@ -79,146 +185,336 @@ $calamity = 0;
 $calamities = [];
 $bad_params_list = [];
 
-// Strings that do not translate
-$ignore = ["map_hydda_group", "_dupe", "minute-abbreviated", "hour-abbreviated", "map_tf_group", "map_esridelorme", "posixldapauth_rdn", "to-page", "emu_upload_emu_field_label", "all__emailcollectionexternal", "upload_share_email_template", "all__emaillogindetails", "all__emailnotifyresourcessubmitted", "all__emailresourcerequest", "all__emailbulk", "all__emailresource", "system_notification_email", "all__emailcollection", "all__emailnotifyresourcesunsubmitted", "all__emailresearchrequestassigned", "all__emailnotifyuploadsharenew", "email_link_expires_date", "map_esri_group", "geodragmodepan", "map_stamen_group", "field-fileextension", "fileextension-inside-brackets", "fileextension", "plugin_field_fmt", "field_ref_and_name", "ref-title", "all__file_integrity_fail_email"];
+$ignore = [
+    "map_hydda_group",
+    "_dupe",
+    "minute-abbreviated",
+    "hour-abbreviated",
+    "map_tf_group",
+    "map_esridelorme",
+    "posixldapauth_rdn",
+    "to-page",
+    "emu_upload_emu_field_label",
+    "all__emailcollectionexternal",
+    "upload_share_email_template",
+    "all__emaillogindetails",
+    "all__emailnotifyresourcessubmitted",
+    "all__emailresourcerequest",
+    "all__emailbulk",
+    "all__emailresource",
+    "system_notification_email",
+    "all__emailcollection",
+    "all__emailnotifyresourcesunsubmitted",
+    "all__emailresearchrequestassigned",
+    "all__emailnotifyuploadsharenew",
+    "email_link_expires_date",
+    "map_esri_group",
+    "geodragmodepan",
+    "map_stamen_group",
+    "field-fileextension",
+    "fileextension-inside-brackets",
+    "fileextension",
+    "plugin_field_fmt",
+    "field_ref_and_name",
+    "ref-title",
+    "all__file_integrity_fail_email"
+];
 
 foreach ($plugins as $plugin) {
+
     $plugin_path = "";
+
     if ($plugin != "") {
         $plugin_path = "plugins/" . $plugin . "/";
     }
 
-    // Get a baseline
-    $lang = array();
+    $lang = [];
     $basefile = sprintf('%s/%slanguages/en.php', RESOURCESPACE_BASE_PATH, $plugin_path);
+
     if (!file_exists($basefile)) {
         continue;
-    } // This plugin does not have any translations.
+    }
+
     include $basefile;
     $lang_en = $lang;
 
-    // Fetch a list of valid parameters using en.php as the base
-    $base = file_get_contents($basefile);
-    preg_match_all("/\[([a-zA-Z0-9_]*)\]/", $base, $params_correct);
-
     foreach ($languages as $language => $lang_name) {
-        if (in_array($language, array("en","en-US"))) {
+
+        if (in_array($language, ["en", "en-US"])) {
             continue;
         }
+
         if ($restrict !== false && $restrict != $language) {
             continue;
         }
 
-        // Process a language
-        $lang = array();
-        $langfile = "../../" . $plugin_path . "languages/" . $language . ".php";
-        $langfile = sprintf('%s/%slanguages/%s.php', RESOURCESPACE_BASE_PATH, $plugin_path, $language);
+        $lang = [];
 
-        // Create file if it doesn't exist.
+        $langfile = sprintf(
+            '%s/%slanguages/%s.php',
+            RESOURCESPACE_BASE_PATH,
+            $plugin_path,
+            $language
+        );
+
         if (!file_exists($langfile)) {
             file_put_contents($langfile, "<?php\n\n");
         }
 
-        // Include to get the lang array for this language
         include $langfile;
 
-        // Add plugin title and description from plugin YAML so it gets a translation too
         $lang_en_extended = $lang_en;
+
         if ($plugin != "") {
-            $yaml_path = sprintf('%s/%s.yaml', RESOURCESPACE_BASE_PATH, $plugin_path . $plugin);
+
+            $yaml_path = sprintf(
+                '%s/%s.yaml',
+                RESOURCESPACE_BASE_PATH,
+                $plugin_path . $plugin
+            );
+
             if (file_exists($yaml_path)) {
+
                 $yaml = get_plugin_yaml($yaml_path);
+
                 if (isset($yaml["title"])) {
                     $lang_en_extended["plugin-" . $plugin . "-title"] = $yaml["title"];
                 }
+
                 if (isset($yaml["desc"])) {
                     $lang_en_extended["plugin-" . $plugin . "-desc"] = $yaml["desc"];
                 }
             }
         }
 
-        // Work out what we're missing.
-        $missing = array_diff(array_keys($lang_en_extended), array_keys($lang));
+        $missing = array_diff(
+            array_keys($lang_en_extended),
+            array_keys($lang)
+        );
 
-        // Filter out things we won't process
-        $missing = array_filter($missing, function ($mkey) use ($lang_en_extended, $ignore) {
-            if (is_array($lang_en_extended[$mkey])) {
-                return true; // keep, will be json_encoded later
-            }
-            if (!is_string($lang_en_extended[$mkey])) {
-                return false;
-            }
-            if (strlen(trim($lang_en_extended[$mkey])) <= 1) {
-                return false;
-            }
-            if (in_array($mkey, $ignore)) {
-                return false;
-            }
-            return true;
-        });
+        $missing = array_filter(
+            $missing,
+            function ($mkey) use ($lang_en_extended, $ignore) {
 
-        $count = 0;
-        foreach ($missing as $mkey) {
-            $array = false;
-            if (is_array($lang_en_extended[$mkey])) {
-                // Process arrays as strings and reassemble at the end.
-                $lang_en_extended[$mkey] = json_encode($lang_en_extended[$mkey]);
-                $array = true;
-            }
-
-            $count++;
-            $messages = array();
-            $messages[] = array("role" => "system","content" => "Your task is to convert language strings used by the digital asset management software ResourceSpace from English to " . $lang_name . ". Ensure that the translation accurately reflects the intended meaning of the string in the context of digital asset management software, including any relevant objects/terminology used in ResourceSpace such as resources, collections, metadata, tags, users, groups, workflows and downloads.
- Where there is not an obvious translation in the DAM context, use a general context or make a best guess. Don't add the period character at the start or end of the translation if one isn't at the start or end of the value being translated.
-Text within square brackets indicates a system parameter that MUST NOT itself be translated so for example '[list]' must remain '[list]' even if translating to Swedish. If a phrase does not require translation (e.g. because it is a Proper Noun with no local translation) simply return the phrase untranslated and consider this to be a valid translation.
-In the event that you cannot provide a translation (with the exception of the cases listed above) return the word CALAMITY followed by the reason the translation could not be provided. Do not output anything that is not either a valid translation or the word CALAMITY with the reason.");
-            $messages[] = array("role" => "user","content" => "Please translate: " . $lang_en_extended[$mkey]);
-
-            foreach ($models as $model) {
-                echo $model . ": " . $plugin_path . " " . $count . "/" . count($missing) . ": Processing $mkey for language $language\n\n";
-                flush();
-                ob_flush();
-
-                echo "English       : " . $lang_en_extended[$mkey] . "\n";
-                echo str_pad(substr($lang_name, 0, 13), 13) . " : ";
-
-                $result = generateChatCompletions($openai_key, $model, 0, 2048, $messages);
-                print_r($result);
-                echo "\n\n";
-
-                // Check there are no bad parameters in the results by comparing with the master list.
-                preg_match_all("/\[([a-zA-Z0-9_]*)\]/", $result, $params);
-                $wrong = array_diff($params[0], $params_correct[0]);
-                if (count($wrong) > 0) {
-                    echo "Bad parameters were generated: ";
-                    print_r($wrong);
-                    $bad_params++;
-                    $bad_params_list[] = $mkey;
-                    continue;
+                if (is_array($lang_en_extended[$mkey])) {
+                    return true;
                 }
 
-                if (is_string($result) && strlen($result) > 0 && strpos(strtolower($result), "calamity") === false && strpos(strtolower($result), "[error]") === false) {
-                    $f = fopen($langfile, "a");
+                if (!is_string($lang_en_extended[$mkey])) {
+                    return false;
+                }
 
-                    // Convert an array back to array after being parsed as a string.
-                    if ($array) {
-                        $result = json_decode($result);
-                        if (is_null($result)) {
-                            continue;
+                if (strlen(trim($lang_en_extended[$mkey])) <= 1) {
+                    return false;
+                }
+
+                if (in_array($mkey, $ignore)) {
+                    return false;
+                }
+
+                return true;
+            }
+        );
+
+        if (count($missing) === 0) {
+            continue;
+        }
+
+        echo "\nProcessing {$plugin_path} language {$language} ({$lang_name}) - " . count($missing) . " missing strings\n\n";
+
+        $array_keys = [];
+        $output_lines = [];
+        $processed = 0;
+
+        // Build all batches first
+        $all_batches = [];
+        $current_batch = [];
+
+        foreach ($missing as $mkey) {
+
+            $value = $lang_en_extended[$mkey];
+
+            if (is_array($value)) {
+                $value = json_encode($value, JSON_UNESCAPED_UNICODE);
+                $array_keys[$mkey] = true;
+            }
+
+            $current_batch[$mkey] = $value;
+
+            if (count($current_batch) >= $batch_size) {
+                $all_batches[] = $current_batch;
+                $current_batch = [];
+            }
+        }
+
+        if (count($current_batch) > 0) {
+            $all_batches[] = $current_batch;
+        }
+
+        // Process batches in parallel groups
+        for ($i = 0; $i < count($all_batches); $i += $parallel) {
+
+            $group = array_slice($all_batches, $i, $parallel, true);
+
+            echo "Processing parallel group starting batch " . ($i + 1) . "/" . count($all_batches) . "\n";
+
+            $remaining_batches = $group;
+
+            foreach ($models as $model) {
+
+                if (count($remaining_batches) === 0) {
+                    break;
+                }
+
+                echo "Using model: {$model}\n";
+
+                $requests = [];
+
+                foreach ($remaining_batches as $batch_id => $batch) {
+
+                    $messages = build_translation_messages($batch, $lang_name);
+
+                    $requests[$batch_id] = [
+                        "batch" => $batch,
+                        "handle" => buildChatCompletionHandle(
+                            $openai_key,
+                            $model,
+                            $messages
+                        )
+                    ];
+                }
+
+                $responses = run_parallel_translations($requests);
+
+                $failed_batches = [];
+
+                foreach ($remaining_batches as $batch_id => $batch) {
+
+                    $translations = extract_json_object($responses[$batch_id]);
+
+                    if (!is_array($translations)) {
+
+                        echo "Batch failed JSON parsing with model {$model}\n";
+
+                        $failed_batches[$batch_id] = $batch;
+                        continue;
+                    }
+
+                    $batch_failed = false;
+
+                    foreach ($batch as $key => $source) {
+
+                        if (
+                            !isset($translations[$key])
+                            || !is_string($translations[$key])
+                        ) {
+                            $batch_failed = true;
+                            break;
+                        }
+
+                        $translation = $translations[$key];
+
+                        if (
+                            strlen(trim($translation)) === 0
+                            || stripos($translation, "calamity") !== false
+                            || stripos($translation, "[error]") !== false
+                        ) {
+                            $batch_failed = true;
+                            break;
+                        }
+
+                        if (!placeholders_match($source, $translation)) {
+
+                            echo "Placeholder mismatch: {$key}\n";
+
+                            $bad_params++;
+                            $bad_params_list[] = $key;
+
+                            $batch_failed = true;
+                            break;
                         }
                     }
 
-                    fwrite($f, "\n\$lang[\"" . $mkey . "\"] = " . var_export($result, true) . ";");
-                    fclose($f);
-                    continue 2; // Jump out of the models loop
-                } else {
-                    if ($model == end($models)) {
-                        $calamity++;
-                        $calamities[] = $mkey;
+                    if ($batch_failed) {
+                        $failed_batches[$batch_id] = $batch;
+                        continue;
+                    }
+
+                    // Batch succeeded
+                    foreach ($batch as $key => $source) {
+
+                        $translation = $translations[$key];
+
+                        if (isset($array_keys[$key])) {
+
+                            $decoded = json_decode($translation, true);
+
+                            if ($decoded === null) {
+
+                                echo "Failed array decode: {$key}\n";
+
+                                $calamity++;
+                                $calamities[] = $key;
+
+                                continue;
+                            }
+
+                            $translation = $decoded;
+                        }
+
+                        $output_lines[] =
+                            "\n\$lang[\"" .
+                            addslashes($key) .
+                            "\"] = " .
+                            var_export($translation, true) .
+                            ";";
+
+                        echo "{$model} translated to {$language}: {$key}\n";
+
+                        $processed++;
                     }
                 }
+
+                $remaining_batches = $failed_batches;
+            }
+
+            // Any batches still remaining failed all models
+            foreach ($remaining_batches as $batch) {
+                foreach ($batch as $key => $value) {
+                    $calamity++;
+                    $calamities[] = $key;
+
+                    echo "Failed all models: {$key}\n";
+                }
+            }
+
+            // Write after each parallel group
+            if (count($output_lines) > 0) {
+
+                file_put_contents(
+                    $langfile,
+                    implode("", $output_lines),
+                    FILE_APPEND
+                );
+
+                $output_lines = [];
             }
         }
+
+        echo "\nCompleted {$plugin_path} language {$language}; added {$processed} translations\n\n";
     }
 }
-echo "\n\nTranslations that contained bad parameters and were skipped=$bad_params\nCould not translate=$calamity\n\n";
+
+echo "\n\nTranslations that contained bad parameters and were skipped={$bad_params}\nCould not translate={$calamity}\n\n";
+
+if (count($bad_params_list) > 0) {
+    echo "Bad parameter strings:\n";
+    print_r($bad_params_list);
+    echo "\n";
+}
+
+if (count($calamities) > 0) {
+    echo "Calamities:\n";
+    print_r($calamities);
+    echo "\n";
+}

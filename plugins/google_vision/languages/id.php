@@ -27,3 +27,7 @@ $lang["page-title_google_vision_process_existing"] = 'Proses Google Vision yang 
 $lang["page-title_google_vision_setup"] = 'Siapkan Plugin Google Vision';
 $lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
 $lang["page-title_google_vision_test"] = 'Google Vision Test';
+$lang["google_vision"] = 'Google Vision';
+$lang["google_vision_process_existing"] = 'Proses sumber daya yang belum diproses';
+$lang["google_vision_process_existing_configure"] = 'Atur pekerjaan untuk memproses sumber daya yang belum diproses';
+$lang["google_vision_process_existing_collection_refs_help"] = 'Mengatur opsi ini akan berarti hanya sumber daya dalam koleksi yang terdaftar yang akan diproses. Jika tidak ada koleksi yang ditentukan, maka SEMUA sumber daya yang sesuai akan diproses. Koleksi dapat ditentukan menggunakan daftar yang dipisahkan koma maupun rentang misalnya 100,105,110-115';

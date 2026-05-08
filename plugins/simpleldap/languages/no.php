@@ -54,3 +54,4 @@ $lang["plugin-simpleldap-title"]='Enkel LDAP';
 $lang["plugin-simpleldap-desc"]='Enklere implementering av ldap-autentisering, rettet mot Active Directory men støtter også Oracle-katalog';
 $lang["page-title_simpleldap_ajax_test_auth"] = 'Test LDAP-autentisering';
 $lang["page-title_simpleldap_setup"] = 'Konfigurer enkel LDAP-plugin';
+$lang["simpleldap_userlimit_error"] = 'Brukeren kunne ikke opprettes fordi brukergjennomføringen er nådd. Vennligst kontakt administratoren din.';

@@ -8,3 +8,4 @@ $lang["sensitive_images_blur_level"]='Úroveň rozmazání citlivého obrázku<b
 $lang["plugin-sensitive_images-title"]='Rozmazání citlivého obrázku';
 $lang["plugin-sensitive_images-desc"]='Rozmaže obrázky označené jako citlivé, uživatel může kliknutím odstranit rozmazání.';
 $lang["page-title_sensitive_images_setup"] = 'Nastavení pluginu pro citlivé obrázky';
+$lang["sensitive_images_show"] = 'Klikněte na obrázek pro zobrazení.';

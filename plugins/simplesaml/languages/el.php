@@ -107,3 +107,4 @@ $lang["page-title_simplesaml_setup"] = 'Ρύθμιση Πρόσθετου Απλ
 $lang["simplesaml_error_not_configured"] = 'Το πρόσθετο SimpleSAML δεν είναι ρυθμισμένο';
 $lang["simplesaml_error_no_idp_metadata"] = 'Το πρόσθετο SimpleSAML δεν είναι πλήρως ρυθμισμένο (λείπει μεταδεδομένα IdP)';
 $lang["simplesaml_error_no_authsource"] = 'Το πρόσθετο SimpleSAML δεν είναι πλήρως ρυθμισμένο (λείπει το authsource)';
+$lang["simplesaml_userlimit_error"] = 'Δεν ήταν δυνατή η δημιουργία χρήστη καθώς έχει φτάσει το όριο χρηστών. Παρακαλούμε επικοινωνήστε με τον διαχειριστή σας.';

@@ -54,3 +54,4 @@ $lang["plugin-simpleldap-title"]='Basit LDAP';
 $lang["plugin-simpleldap-desc"]='Active Directory\'ye yönelik basitleştirilmiş ldap kimlik doğrulama uygulaması, ancak Oracle dizinini de destekler';
 $lang["page-title_simpleldap_ajax_test_auth"] = 'LDAP Kimlik Doğrulamasını Test Et';
 $lang["page-title_simpleldap_setup"] = 'Basit LDAP Eklentisini Kurun';
+$lang["simpleldap_userlimit_error"] = 'Kullanıcı oluşturulamadı çünkü kullanıcı limiti aşıldı. Lütfen yöneticinizle iletişime geçin.';

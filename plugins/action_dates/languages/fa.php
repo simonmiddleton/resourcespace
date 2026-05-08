@@ -38,3 +38,4 @@ $lang["weekday-5"] = 'جمعه';
 $lang["weekday-6"] = 'شنبه';
 
 $lang["page-title_action_dates_setup"] = 'نصب افزونه تاریخ‌های اقدام';
+$lang["action_dates_additional_settings_email_admin_days"] = 'اعلان مدیران این تعداد روز قبل از انجام عمل (برای غیرفعال کردن، خالی بگذارید)';

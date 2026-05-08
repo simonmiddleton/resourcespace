@@ -107,3 +107,4 @@ $lang["page-title_simplesaml_setup"] = 'إعداد مكون Simple SAML';
 $lang["simplesaml_error_not_configured"] = 'لم يتم تكوين مكون SimpleSAML';
 $lang["simplesaml_error_no_idp_metadata"] = 'إضافة SimpleSAML غير مُهيأة بالكامل (تفتقر إلى بيانات تعريف IdP)';
 $lang["simplesaml_error_no_authsource"] = 'إضافة SimpleSAML غير مُهيأة بالكامل (المصدر المفقود)';
+$lang["simplesaml_userlimit_error"] = 'تعذر إنشاء المستخدم لأنه تم الوصول إلى حد المستخدمين. يرجى الاتصال بالمشرف الخاص بك.';

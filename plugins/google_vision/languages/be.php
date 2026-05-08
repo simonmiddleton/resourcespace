@@ -25,3 +25,7 @@ $lang["page-title_google_vision_process_existing"] = 'Google Vision Процэс
 $lang["page-title_google_vision_setup"] = 'Наладзіць плагін Google Vision';
 $lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
 $lang["page-title_google_vision_test"] = 'Google Vision Test';
+$lang["google_vision"] = 'Google Vision';
+$lang["google_vision_process_existing"] = 'Апрацаваць неапрацаваныя рэсурсы';
+$lang["google_vision_process_existing_configure"] = 'Налада працы для апрацоўкі неапрацаваных рэсурсаў';
+$lang["google_vision_process_existing_collection_refs_help"] = 'Усталяванне гэтай опцыі азначае, што будуць апрацоўвацца толькі рэсурсы ў пералічаных калекцыях. Калі калекцыі не ўказаны, будуць апрацоўвацца ЎСЕ адпаведныя рэсурсы. Калекцыі можна ўказваць у выглядзе спісу, раздзяленага коскамі, а таксама дыяпазонаў, напрыклад 100,105,110-115';

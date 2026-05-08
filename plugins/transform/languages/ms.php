@@ -81,3 +81,4 @@ $lang["cropper_preset_sizes"] = 'Saiz yang telah ditetapkan';
 $lang["page-title_transform_collection_transform"] = 'Transform Sumber';
 $lang["page-title_transform_crop"] = 'Potong Sumber';
 $lang["page-title_transform_setup"] = 'Tetapkan Plugin Transform';
+$lang["use_filename_as_title"] = 'Gunakan nama fail sebagai tajuk';

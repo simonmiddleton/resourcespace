@@ -27,3 +27,7 @@ $lang["page-title_google_vision_process_existing"] = 'Google Vision Prosessi Ole
 $lang["page-title_google_vision_setup"] = 'Aseta Google Vision -laajennus';
 $lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
 $lang["page-title_google_vision_test"] = 'Google Vision Test';
+$lang["google_vision"] = 'Google Vision';
+$lang["google_vision_process_existing"] = 'Käsittele käsittelemättömät resurssit';
+$lang["google_vision_process_existing_configure"] = 'Määritä tehtävä käsittelemään käsittelemättömiä resursseja';
+$lang["google_vision_process_existing_collection_refs_help"] = 'Tämän asetuksen avulla käsitellään vain luetelluissa kokoelmissa olevia resursseja. Jos kokoelmia ei ole määritelty, käsitellään kaikki sopivat resurssit. Kokoelmat voidaan määritellä pilkuilla erotettuna listana tai alueina esim. 100,105,110-115';

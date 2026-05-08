@@ -70,3 +70,4 @@ $lang["plugin-youtube_publish-title"]='Publikasikan YouTube';
 $lang["plugin-youtube_publish-desc"]='Mempublikasikan sumber daya video ke akun YouTube yang dikonfigurasi.';
 $lang["page-title_youtube_publish_setup"] = 'Pengaturan Plugin';
 $lang["page-title_youtube_publish_youtube_upload"] = 'Terbitkan Sumber ke Youtube';
+$lang["youtube_publish_video_title"] = 'Judul video (maksimal 100 karakter)';

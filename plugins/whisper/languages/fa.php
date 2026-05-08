@@ -10,3 +10,8 @@ $lang["whisper_transcript"] = 'فایل رونویس را تولید کنید و
 $lang["whisper_transcript_name"] = 'ترجمه خودکار تولید شده';
 
 $lang["page-title_whisper_setup"] = 'نصب افزونه Whisper';
+$lang["whisper_cron_enable"] = 'فعال‌سازی پردازش منابع پردازش‌نشده از طریق وظیفه زمان‌بندی شده Cron';
+$lang["whisper"] = 'ویسپر';
+$lang["whisper_process_existing"] = 'پردازش منابع پردازش‌نشده';
+$lang["whisper_process_existing_intro"] = 'ایجاد یک وظیفه برای شروع پردازش صوتی ویسپر در اینجا - این وظیفه نیاز به پارامتر ندارد، بنابراین می‌تواند زمانی که وظایف دیگری از این نوع در حال اجرا نیست، شروع شود.';
+$lang["whisper_process_existing_configure"] = 'پیکربندی وظیفه برای پردازش فایل‌ها با ویسپر';

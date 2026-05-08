@@ -83,3 +83,4 @@ $lang["cropper_preset_sizes"] = 'Vooraf gedefinieerde maten';
 $lang["page-title_transform_collection_transform"] = 'Transformeer Resource';
 $lang["page-title_transform_crop"] = 'Bijsnijden Hulpbron';
 $lang["page-title_transform_setup"] = 'Instellen Transform Plugin';
+$lang["use_filename_as_title"] = 'Gebruik bestandsnaam als titel';

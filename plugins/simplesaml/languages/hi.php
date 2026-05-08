@@ -107,3 +107,4 @@ $lang["page-title_simplesaml_setup"] = 'सरल SAML प्लगइन से
 $lang["simplesaml_error_not_configured"] = 'SimpleSAML प्लगइन कॉन्फ़िगर नहीं किया गया है';
 $lang["simplesaml_error_no_idp_metadata"] = 'SimpleSAML प्लगइन पूरी तरह से कॉन्फ़िगर नहीं किया गया है (IdP मेटाडेटा गायब है)';
 $lang["simplesaml_error_no_authsource"] = 'SimpleSAML प्लगइन पूरी तरह से कॉन्फ़िगर नहीं किया गया है (authsource गायब है)';
+$lang["simplesaml_userlimit_error"] = 'उपयोगकर्ता को नहीं बनाया जा सका क्योंकि उपयोगकर्ता सीमा पहुँच गई है। कृपया अपने व्यवस्थापक से संपर्क करें।';

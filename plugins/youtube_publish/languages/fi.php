@@ -53,3 +53,4 @@ $lang["plugin-youtube_publish-title"]='YouTube Julkaisu';
 $lang["plugin-youtube_publish-desc"]='Julkaisee videoresurssin määritettyyn YouTube-tiliin.';
 $lang["page-title_youtube_publish_setup"] = 'Aseta liitännäinen';
 $lang["page-title_youtube_publish_youtube_upload"] = 'Julkaise resurssi YouTubeen';
+$lang["youtube_publish_video_title"] = 'Videon otsikko (max 100 merkkiä)';

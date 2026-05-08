@@ -8,3 +8,4 @@ $lang["sensitive_images_blur_level"]='Poziom rozmycia wrażliwego obrazu<br>(1=n
 $lang["plugin-sensitive_images-title"]='Rozmycie wrażliwego obrazu';
 $lang["plugin-sensitive_images-desc"]='Rozmywa obrazy oznaczone jako wrażliwe, umożliwiając użytkownikowi kliknięcie w celu usunięcia rozmycia.';
 $lang["page-title_sensitive_images_setup"] = 'Konfiguracja wtyczki do obrazów wrażliwych';
+$lang["sensitive_images_show"] = 'Kliknij obraz, aby wyświetlić.';

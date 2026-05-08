@@ -40,3 +40,4 @@ $lang["plugin-action_dates-title"] = 'Даты действий';
 $lang["plugin-action_dates-desc"] = 'Включает запланированное удаление или ограничение ресурсов на основе полей даты';
 
 $lang["page-title_action_dates_setup"] = 'Настройка плагина дат действий';
+$lang["action_dates_additional_settings_email_admin_days"] = 'Уведомлять администраторов за столько дней до события (оставьте пустым, чтобы отключить)';

@@ -60,3 +60,4 @@ $lang["plugin-youtube_publish-desc"]='Publicerar videorresurs till konfigurerat 
 $lang["youtube_publish_category"]='Kategori';
 $lang["page-title_youtube_publish_setup"] = 'Installera plugin';
 $lang["page-title_youtube_publish_youtube_upload"] = 'Publicera resurs till Youtube';
+$lang["youtube_publish_video_title"] = 'Videotitel (max 100 tecken)';

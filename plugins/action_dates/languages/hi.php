@@ -40,3 +40,4 @@ $lang["plugin-action_dates-title"] = 'क्रिया तिथियाँ';
 $lang["plugin-action_dates-desc"] = 'तिथि क्षेत्रों के आधार पर संसाधनों के अनुसूचित विलोपन या प्रतिबंध को सक्षम बनाता है';
 
 $lang["page-title_action_dates_setup"] = 'क्रियाएँ तिथि प्लगइन सेटअप करें';
+$lang["action_dates_additional_settings_email_admin_days"] = 'क्रिया से पहले इस कई दिनों तक व्यवस्थापकों को सूचित करें (अक्षम करने के लिए खाली छोड़ें)';

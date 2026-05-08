@@ -27,3 +27,7 @@ $lang["page-title_google_vision_process_existing"] = 'Google Vision Zpracovat Ex
 $lang["page-title_google_vision_setup"] = 'Nastavit plugin Google Vision';
 $lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
 $lang["page-title_google_vision_test"] = 'Google Vision Test';
+$lang["google_vision"] = 'Google Vision';
+$lang["google_vision_process_existing"] = 'Zpracovat nezpracované zdroje';
+$lang["google_vision_process_existing_configure"] = 'Nastavit úlohu ke zpracování nezpracovaných zdrojů';
+$lang["google_vision_process_existing_collection_refs_help"] = 'Nastavením této možnosti bude zpracováváno pouze zdroje v uvedených kolekcích. Pokud nejsou kolekce uvedeny, budou zpracovány VŠECHNY vhodné zdroje. Kolekce lze uvést pomocí seznamu odděleného čárkami nebo rozsahů např. 100,105,110-115';

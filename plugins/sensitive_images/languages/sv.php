@@ -8,3 +8,4 @@ $lang["sensitive_images_blur_level"]='Känslighetsnivå för suddning av känsli
 $lang["plugin-sensitive_images-title"]='Känslig bildoskärpa';
 $lang["plugin-sensitive_images-desc"]='Suddar bilder markerade som känsliga med användaren som kan klicka för att avsudda.';
 $lang["page-title_sensitive_images_setup"] = 'Installera plugin för känsliga bilder';
+$lang["sensitive_images_show"] = 'Klicka på bilden för att visa.';

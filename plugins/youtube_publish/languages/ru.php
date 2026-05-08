@@ -53,3 +53,4 @@ $lang["plugin-youtube_publish-title"]='Публикация на YouTube';
 $lang["plugin-youtube_publish-desc"]='Публикует видео ресурс на настроенный аккаунт YouTube.';
 $lang["page-title_youtube_publish_setup"] = 'Настройка плагина';
 $lang["page-title_youtube_publish_youtube_upload"] = 'Опубликовать ресурс на Youtube';
+$lang["youtube_publish_video_title"] = 'Название видео (максимум 100 символов)';

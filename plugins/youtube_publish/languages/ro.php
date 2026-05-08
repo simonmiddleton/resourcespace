@@ -53,3 +53,4 @@ $lang["plugin-youtube_publish-title"]='Publicare pe YouTube';
 $lang["plugin-youtube_publish-desc"]='Publică resursa video pe contul YouTube configurat.';
 $lang["page-title_youtube_publish_setup"] = 'Configurare Plugin';
 $lang["page-title_youtube_publish_youtube_upload"] = 'Publica resursa pe Youtube';
+$lang["youtube_publish_video_title"] = 'Titlul videoclipului (maxim 100 de caractere)';

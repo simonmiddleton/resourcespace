@@ -27,3 +27,7 @@ $lang["page-title_google_vision_process_existing"] = 'Procesare Google Vision ex
 $lang["page-title_google_vision_setup"] = 'Configurare Plugin Google Vision';
 $lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
 $lang["page-title_google_vision_test"] = 'Google Vision Test';
+$lang["google_vision"] = 'Viziune Google';
+$lang["google_vision_process_existing"] = 'Procesează resursele neprocesate';
+$lang["google_vision_process_existing_configure"] = 'Configurează sarcina pentru a procesa resursele neprocesate';
+$lang["google_vision_process_existing_collection_refs_help"] = 'Setarea acestei opțiuni va însemna că vor fi procesate doar resursele din colecțiile listate. Dacă nu sunt specificate colecții, vor fi procesate TOATE resursele potrivite. Colecțiile pot fi specificate folosind o listă separată prin virgule, precum și intervale, de exemplu 100,105,110-115';

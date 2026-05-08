@@ -27,3 +27,7 @@ $lang["page-title_google_vision_process_existing"] = '谷歌视觉处理现有';
 $lang["page-title_google_vision_setup"] = '设置 Google Vision 插件';
 $lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
 $lang["page-title_google_vision_test"] = 'Google Vision Test';
+$lang["google_vision"] = '谷歌视觉';
+$lang["google_vision_process_existing"] = '处理未处理的资源';
+$lang["google_vision_process_existing_configure"] = '配置任务以处理未处理的资源';
+$lang["google_vision_process_existing_collection_refs_help"] = '设置此选项将意味着只有在列出的集合中的资源才会被处理。如果未指定集合，则将处理所有符合条件的资源。集合可以使用逗号分隔的列表以及范围，例如 100,105,110-115';

@@ -51,3 +51,4 @@ $lang["youtube_chunk_size"] = 'Kích thước khối để sử dụng khi tải
 $lang["youtube_publish_add_anchor"] = 'Thêm thẻ neo vào URL khi lưu vào trường metadata URL YouTube?';
 $lang["page-title_youtube_publish_setup"] = 'Cài đặt Plugin';
 $lang["page-title_youtube_publish_youtube_upload"] = 'Xuất bản Tài nguyên lên Youtube';
+$lang["youtube_publish_video_title"] = 'Tiêu đề video (tối đa 100 ký tự)';

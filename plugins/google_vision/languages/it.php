@@ -27,3 +27,7 @@ $lang["page-title_google_vision_process_existing"] = 'Processo Google Vision Esi
 $lang["page-title_google_vision_setup"] = 'Imposta il plugin Google Vision';
 $lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
 $lang["page-title_google_vision_test"] = 'Google Vision Test';
+$lang["google_vision"] = 'Google Vision';
+$lang["google_vision_process_existing"] = 'Elabora risorse non ancora elaborate';
+$lang["google_vision_process_existing_configure"] = 'Configura il lavoro per elaborare risorse non ancora elaborate';
+$lang["google_vision_process_existing_collection_refs_help"] = 'Impostando questa opzione, verranno elaborate solo le risorse nelle collezioni elencate. Se nessuna collezione è specificata, verranno elaborate TUTTE le risorse idonee. Le collezioni possono essere specificate usando un elenco separato da virgole o intervalli, ad esempio 100,105,110-115';

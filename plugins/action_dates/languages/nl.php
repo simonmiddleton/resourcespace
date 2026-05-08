@@ -40,3 +40,4 @@ $lang["plugin-action_dates-title"] = 'Actiedata';
 $lang["plugin-action_dates-desc"] = 'Maakt geplande verwijdering of beperking van bronnen mogelijk op basis van datumvelden';
 
 $lang["page-title_action_dates_setup"] = 'Instellen Actiedatums Plugin';
+$lang["action_dates_additional_settings_email_admin_days"] = 'Beheerder(s) dit aantal dagen voor de actie op de hoogte stellen (leeg laten om uit te schakelen)';

@@ -10,3 +10,8 @@ $lang["whisper_transcript"] = 'Tengeneza faili la nakala na uongeze kama chaguo 
 $lang["whisper_transcript_name"] = 'Transkripti iliyoundwa kiotomatiki';
 
 $lang["page-title_whisper_setup"] = 'Weka Plugin ya Whisper';
+$lang["whisper_cron_enable"] = 'wezesha usindikaji wa rasilimali zisizoshughulikiwa kupitia kazi ya Cron iliyopangwa';
+$lang["whisper"] = 'Whisper';
+$lang["whisper_process_existing"] = 'Saidia rasilimali zisizoshughulikiwa';
+$lang["whisper_process_existing_intro"] = 'Unda kazi kuanzisha usindikaji wa sauti wa Whisper hapa - kazi hii haina mahitaji ya vigezo hivyo inaweza kuanzishwa mradi hakuna kazi nyingine zinazofanana zinazobaki.';
+$lang["whisper_process_existing_configure"] = 'Sanidi kazi ya kusindika faili kwa Whisper';
