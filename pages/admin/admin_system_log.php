@@ -334,7 +334,7 @@ include "../../include/header.php";
                     ?>
                     <tr>
                         <td><?php echo escape((string) nicedate($record['datetime'], true, true, true)); ?></td>
-                        <td><?php echo escape((string) $record['user']); ?></td>
+                        <td><?php echo escape($record['user'] ?? $lang["system_user_default"]); ?></td>
                         <td><?php echo escape((string) $record['operation']); ?></td>
                         <td><?php echo hook("userdisplay", "", array(array("access_key" => $record['access_key'],'username' => $record['user']))) ? "" : escape((string) $record['notes']); ?></td>
                         <td><?php echo escape((string) $record['resource_field']); ?></td>
