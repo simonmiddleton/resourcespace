@@ -4170,33 +4170,67 @@ a.text-link:visited {
 }
 
 .collection-bar-name-input {
-    width: 356px;
-    min-height: var(--form-field-min-height);
+    width: 352px;
     display: none;
+    height: var(--space-48);
     align-items: center;
-    color: var(--colour-surface-100);
-    border: 1px solid var(--colour-surface-400);
-    background: var(--colour-neutral-900);
+    gap: var(--space-8);
+    align-self: stretch;
+    padding: 0 6px 0 0;
+    outline: 1px solid var(--colour-surface-400);
     border-radius: var(--space-4);
-    overflow: hidden;
 }
 
 .collection-bar-name-input input {
     color: var(--colour-surface-100);
     background: var(--colour-neutral-900);
     flex: 1;
-    /* min-width: 0; */
-    padding: 10px 12px;
+    padding: var(--space-12);
     border: none;
     outline: none;
 }
 
-.collection-bar-name-input button {
-    background-color: var(--colour-neutral-900);
+.collection-bar-name-button-group {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
 }
 
-#clearBtn {
-    display: none;
+.collection-bar-name-input button {
+    display: flex;
+    width: var(--space-36);
+    height: var(--space-36);
+    padding: var(--space-12) var(--space-16);
+    font-size: var(--space-24);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: var(--space-4);
+}
+
+.collection-bar-name-input button.inactive {
+    background-color: var(--colour-neutral-850);
+    color: var(--colour-neutral-600);
+}
+
+.collection-bar-name-input .cancel-button {
+    background-color: var(--colour-neutral-850);
+    color: var(--colour-global-white);
+}
+
+.collection-bar-name-input .cancel-button:hover {
+    background-color: var(--colour-neutral-800);
+    color: var(--colour-global-white);
+}
+
+.collection-bar-name-input .accept-button {
+    background-color: var(--colour-brand-primary-default);
+    color: var(--colour-global-white);
+}
+
+.collection-bar-name-input button.accept-button:not(.inactive):hover {
+    background-color: var(--colour-brand-primary-hover);
+    color: var(--colour-global-white);
 }
 
 .show-thumbs-button {
@@ -4468,7 +4502,6 @@ body:has(.collection-bar-holder.state-thumbs) .QuestionSticky {
     .collection-bar-holder .collection-bar-toggle-button {
         height: var(--space-48);
         width: var(--space-48);
-        background-color: red;
         font-size: 30px;
     }
 
@@ -4552,15 +4585,3 @@ body:has(.collection-bar-holder.state-thumbs) .QuestionSticky {
     }
 
 }
-
-/* * {
-  outline: 1px solid red;
-} */
-
-/* #HeaderLinksContainer {
-    display: none !important;
-}
-
-.ActionsContainer.InpageNavLeftBlock select {
-    width: 50px;
-} */

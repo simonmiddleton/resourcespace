@@ -552,7 +552,7 @@ jQuery(function () {
         }
     });
 
-    // Collection bar scroll buttons
+// Collection bar scroll buttons
 
 jQuery(function () {
     var $scroller = jQuery(".collection-bar-thumbnail-row");
@@ -675,36 +675,35 @@ jQuery(function () {
 
 });
 
-// New collection name entry - WIP
+// New collection name entry
 jQuery(function () {
-    const input = jQuery("#myInput");
-    const clearBtn = jQuery("#clearBtn");
-    const emptyBtn = jQuery("#exitCollectionInputBtn");
+    const input = jQuery("#collection_name_input");
+    const cancel_button = jQuery("#cancel_creating_collection_button");
+    const accept_button = jQuery("#accept_creating_collection_button");
 
     function updateButtons() {
         if (input.val().trim().length > 0) {
-            clearBtn.show();
-            emptyBtn.hide();
+            accept_button.removeClass("inactive");
         } else {
-            clearBtn.hide();
-            emptyBtn.show();
+            accept_button.addClass("inactive");
         }
     }
 
     input.on("input", updateButtons);
 
-    clearBtn.on("click", function () {
-        input.val("").focus();
+    cancel_button.on("click", function () {
+        input.val("");
         updateButtons();
-    });
-
-    emptyBtn.on("click", function () {
         document.getElementById("collection").value = jQuery("#currentusercollection").text().trim();
         document.getElementById('collection').style.display = 'block';
         document.getElementById('entername').style.display = 'none';
         document.getElementById('collection').focus();
     });
-    
+
+    accept_button.on("click", function () {
+        jQuery("#colselect").submit();
+    });
+
     updateButtons();
 });
 
@@ -725,18 +724,18 @@ jQuery(function () {
                     </div>
                 </div>
                 <div class="wrapper">
-                    <form method="get" id="colselect" onsubmit="newcolname=encodeURIComponent(jQuery('#myInput').val());CollectionDivLoad('<?php echo $baseurl_short?>pages/collections.php?collection=new&search=<?php echo urlencode($search)?>&k=<?php echo urlencode($k) ?>&entername='+newcolname);return false;">
-                    <div id="entername" class="collection-bar-name-input">
-                        <input id="myInput" type="text" 
-                            class="SearchWidth"
-                            placeholder="Enter a collection name"></input>
-                        <button id="clearBtn" type="button" aria-label="Clear input">
-                            <i class="icon-x"></i>
-                        </button>
-                        <button id="exitCollectionInputBtn" type="button" aria-label="Cancel entering a new collection">
-                            <i class="icon-arrow-left"></i>
-                        </button>
-                    </div>
+                    <form method="get" id="colselect" onsubmit="newcolname=encodeURIComponent(jQuery('#collection_name_input').val());CollectionDivLoad('<?php echo $baseurl_short?>pages/collections.php?collection=new&search=<?php echo urlencode($search)?>&k=<?php echo urlencode($k) ?>&entername='+newcolname);return false;">
+                        <div id="entername" class="collection-bar-name-input">
+                            <input id="collection_name_input" type="text" class="SearchWidth"></input>
+                            <div class="collection-bar-name-button-group">
+                                <button id="cancel_creating_collection_button" class="cancel-button" type="button" aria-label="Cancel creating collection">
+                                    <i class="icon-x"></i>
+                                </button>
+                                <button id="accept_creating_collection_button" class="accept-button inactive" type="button" aria-label="Create new collection">
+                                    <i class="icon-check"></i>
+                                </button>
+                            </div>
+                        </div>
                     </form>
                     <select 
                         name="collection"
@@ -745,7 +744,7 @@ jQuery(function () {
                         onchange="if (document.getElementById('collection').value == 'new') {
                             document.getElementById('collection').style.display = 'none';
                             document.getElementById('entername').style.display = 'flex';
-                            document.getElementById('entername').focus();
+                            document.getElementById('collection_name_input').focus();
                             return false;
                             } 
                             <?php if (!checkperm('b')) { ?>
