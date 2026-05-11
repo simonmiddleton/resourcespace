@@ -157,6 +157,10 @@ function nicedate($date, $time = false, $wordy = true, $offset_tz = false)
         return "-";
     }
 
+    if ($y == "00" || $y == "0000") {
+        $y = "";
+    }
+
     $month_part = substr($date, $bce_offset + 5, 2);
     if (!is_numeric($month_part)) {
         return $y;
