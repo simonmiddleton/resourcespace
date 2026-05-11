@@ -634,7 +634,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                     {
                     if (is_numeric($collection_add))
                         {
-                        add_resource_to_collection($ref, $collection_add,false,"",$resource_type); 
+                        add_resource_to_collection($ref, $collection_add, false, "", $resource_type); 
                         }
                     # Drop this resource from the collection and either save all subsequent resources, or redirect thus picking the next resource.
                     if($external_upload)
@@ -699,7 +699,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
 
                             if (is_numeric($collection_add))
                                 {
-                                add_resource_to_collection($ref, $collection_add,false,"",$resource_type); 
+                                add_resource_to_collection($ref, $collection_add, false, "", $resource_type); 
                                 }
 
                             // Update $fields and all_selected_nodes with details of the last resource edited for locked fields
