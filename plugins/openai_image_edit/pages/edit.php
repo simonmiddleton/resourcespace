@@ -44,7 +44,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     set_processing_message($lang["openai_image_edit__preparing_images"]);
 
     $maskData = getval('mask','');    // Base64 encoded mask from the frontend
-    $mode = getval('mode',''); 
     $prompt = getval('prompt','');
 
     // Decode the mask data from base64
@@ -53,19 +52,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $maskData = base64_decode($maskData);
 
     // Prepare the OpenAI API request using multipart/form-data
-    if ($mode=="edit")
-        {
-        $url = 'https://api.openai.com/v1/images/edits';
-        $model = "gpt-image-2";
-        $content_type="multipart/form-data";
-        }
-    if ($mode=="generate")
-        {
-        $url = 'https://api.openai.com/v1/images/generations';
-        $model = "gpt-image-2";
-        $content_type="application/json";
-        }
-
+    $url = 'https://api.openai.com/v1/images/edits';
+    $model = "gpt-image-2";
+    $content_type="multipart/form-data";
+        
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
     curl_setopt($ch, CURLOPT_TIMEOUT, 300);
@@ -110,26 +100,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ];
     $tmp_dir = get_temp_dir(false, 'openai_image_edit');
 
-    $tmp_image = $tmp_dir . DIRECTORY_SEPARATOR . "{$userref}_{$ref}_{$mode}.png";
-    if (($mode=="edit") && imagepng(imagecreatefromstring($maskData), $tmp_image)) {
+    $tmp_image = $tmp_dir . DIRECTORY_SEPARATOR . "{$userref}_{$ref}_edit.png";
+    if (imagepng(imagecreatefromstring($maskData), $tmp_image)) {
         $data['image'] = new CURLFile($tmp_image, 'image/png');
     }
 
-    if ($mode=="edit" || $mode=="generate")
-        {
-        $data['prompt'] = $prompt;
-        }
+    $data['prompt'] = $prompt;
+    $maskDataSimplified = $tmp_dir . DIRECTORY_SEPARATOR . "{$userref}_{$ref}_edit_maskDataSimplified.png";
 
-    $maskDataSimplified = $tmp_dir . DIRECTORY_SEPARATOR . "{$userref}_{$ref}_{$mode}_maskDataSimplified.png";
-    if ($mode=="edit" && imagepng($mask, $maskDataSimplified))
-        {
+    if (imagepng($mask, $maskDataSimplified)) {
         $data['mask'] = new CURLFile($maskDataSimplified, 'image/png');
-        }
-
-    if ($mode=="generate")
-        {
-        $data=json_encode($data);
-        }
+    }
 
     // Attach the form data
     curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
@@ -195,6 +176,7 @@ include "../../../include/header.php";
     ]);
     ?>
 </div>
+<p class="PageIntroText"><?php echo escape($lang["openai_image_edit__introtext"]); ?></p>
 <img id="image" src="get_png.php?ref=<?php echo (int) $ref ?>" alt="" hidden>
 <div id="canvas-container" class="canvas-container" style="position: relative;visibility:hidden;">
     <canvas id="canvas"></canvas>
@@ -202,13 +184,7 @@ include "../../../include/header.php";
 </div>
 
 <div id="toolbox" class="toolbox openai-image-edit" style="visibility:hidden;">
-<div id="tools">
-<label for="editMode"><?php echo escape($lang["openai_image_edit__mode"]) ?></label><br>
-<select id="editMode">
-    <option value="edit"><?php echo escape($lang["openai_image_edit__mode_edit"]); ?></option>
-    <option value="generate"><?php echo escape($lang["openai_image_edit__mode_generate"]); ?></option>
-</select>
-<br><br>
+<div id="tools">    
 <label for="penSize"><?php echo escape($lang["openai_image_edit__pensize"]); ?></label><br>
 <input type="range" id="penSize" min="10" max="200" value="75">
 <br><br>

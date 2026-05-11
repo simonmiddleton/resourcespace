@@ -60,7 +60,6 @@ function draw(e) {
     if (document.getElementById('penSize').disabled) return false;
 
     const [x, y] = getMousePos(e);
-    const mode = document.getElementById('editMode').value;
 
     e.preventDefault();
 
@@ -89,15 +88,8 @@ function draw(e) {
     ctx.strokeStyle = 'black';
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
-
-    if (mode === 'clone' || mode === 'white' || mode === 'black') {
-        ctx.lineWidth = penSize / 3;
-        ctx.shadowColor = 'black';
-        ctx.shadowBlur = penSize / 2;
-    } else {
-        ctx.shadowColor = 'transparent';
-        ctx.shadowBlur = 0;
-    }
+    ctx.shadowColor = 'transparent';
+    ctx.shadowBlur = 0;
 
     ctx.beginPath();
     ctx.moveTo(lastX, lastY);
@@ -147,7 +139,7 @@ document.getElementById('submitBtn').addEventListener('click', async () => {
         ...csrf_pair,
         mask: mask,
         imageType: document.getElementById('downloadType').value,
-        mode: document.getElementById('editMode').value,
+        mode: 'edit',
         prompt: prompt,
         ajax: true
     });
@@ -196,16 +188,6 @@ document.getElementById('submitBtn').addEventListener('click', async () => {
         styledalert('OpenAI', error.message || error);
         CentralSpaceHideProcessing();
     }
-});
-
-// Mode selector
-document.getElementById('editMode').addEventListener('change', () => {
-    const mode = document.getElementById('editMode').value;
-    const brush = document.getElementById('penSize');
-    const prompt = document.getElementById('prompt');
-
-    brush.disabled = (mode === 'generate');
-    prompt.disabled = (mode === 'white' || mode === 'black');
 });
 
 // Download / save

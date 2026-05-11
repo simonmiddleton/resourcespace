@@ -16,10 +16,8 @@ $lang["openai_image_edit__saving_alternative"] = "Saving alternative file";
 $lang["openai_image_edit__generating_alternative_previews"] = "Generating preview images";
 $lang["openai_image_edit__preparing_image_for_editing"] = "Preparing image for editing";
 $lang["openai_image_edit__new"] = "Save as a new resource";
-$lang["openai_image_edit__mode"] = "Mode";
-$lang["openai_image_edit__mode_edit"] = "Edit image (GPT Image 2)";
-$lang["openai_image_edit__mode_generate"] = "Generate replacement (GPT Image 2)";
 $lang["openai_image_edit__creating_new_resource"] = "Creating new resource";
+$lang["openai_image_edit__introtext"] = "Enter into the prompt box a description of the changes you would like to be made to the image. Optionally, use the brush to erase parts of the image, forcing regeneration of those areas.";
 
 $lang["page-title_openai_image_edit_edit"]              = "OpenAI Edit";
 $lang["page-title_openai_image_edit_get_png"]           = "OpenAI Get PNG";
