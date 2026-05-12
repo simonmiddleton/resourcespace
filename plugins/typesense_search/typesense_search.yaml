@@ -1,0 +1,10 @@
+name: typesense_search
+title: Typesense Search
+author: Montala Limited
+version: 1.0
+desc: Optional external search provider using Typesense
+icon: fa fa-search
+config_url: /plugins/typesense_search/pages/setup.php
+category: search
+disable_group_select: false
+info_url: https://www.resourcespace.com/knowledge-base/plugins/typesense_search

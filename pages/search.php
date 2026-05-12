@@ -1765,6 +1765,8 @@ if (!hook("replacesearchheader")) # Always show search header now.
             $resource_panel_height_max = 0;            
             for ($n=0;$n<$result_count-$offset && $n<$resources_count && $n<$resourcestoretrieve;$n++)
                 {
+                if (!isset($result[$n])) {continue;}
+                
                 # Allow alternative configuration settings for this resource type.
                 resource_type_config_override($result[$n]["resource_type"]);
                 
