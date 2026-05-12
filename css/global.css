@@ -4153,7 +4153,7 @@ a.text-link:visited {
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
-    line-height: 24px;
+    line-height: var(--space-24);
 }
 
 .collection-bar-actions-form select::-webkit-scrollbar {
@@ -4546,6 +4546,10 @@ body:has(.collection-bar-holder.state-thumbs) .QuestionSticky {
 
     .collection-bar-actions-form select {
         width: 328px;
+    }
+
+    .collection-bar-name-input {
+        width: 322px;
     }
     
     .show-thumbs-button {
