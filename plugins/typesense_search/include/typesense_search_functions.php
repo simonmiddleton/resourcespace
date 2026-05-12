@@ -150,6 +150,7 @@ function typesense_search_get_refs(
     $params = array(
         'q' => $search,
         'query_by' => 'title,text',
+        'query_by_weights' => '10,2',
         'per_page' => $per_page,
     );
 
