@@ -281,7 +281,36 @@ $selected_search_tab = getval("selected_search_tab", "search");
                         ?>
 
                         <input type="hidden" name="resetrestypes" value="yes">
-                        <div id="searchbarrt" <?php echo $simpleSearchFieldsAreHidden ? 'style="display:none;"' : ''; ?>>
+
+
+                        <!-- WIP on replacing the old tick boxes for RTs with a multi select dropdown -->
+                        <!-- <div class="field-input">
+                            <label for="field_test_select2"><?php echo escape($lang['resourcetypes']); ?></label>
+                            <select name="nodes_searched[9500][]" id="field_test_select2" class="SearchWidth" multiple="multiple" onchange="" style="width: 100%;">
+                                <option value="allRTs" selected>All resource types</option>
+                                <option value="364">RT 1</option>
+                                <option value="365">RT 2</option>
+                                <option value="366">RT 3</option>
+                                <option value="367">RT 4</option>
+                                <option value="368">RT 5</option>
+                                <option value="369">RT 6</option>
+                            </select>
+                            <div class="clearerleft"></div>
+                        </div> -->
+                        <?php
+                        render_dropdown_question(
+                            label: $lang['resourcetypes'],
+                            inputname: 'field_test_select2',
+                            options: array_column($types, 'name', 'ref'),
+                            // Style needed for the width - @see https://select2.org/appearance#container-width
+                            extra: ' multiple="multiple" style="width: 100%;"',
+                            ctx: ['div_class' => ['field-input']]
+                        );
+                        ?>
+
+
+
+                        <div class="field-input" <?php echo $simpleSearchFieldsAreHidden ? 'style="display:none;"' : ''; ?>>
                             <?php if ($searchbar_selectall) { ?>
                                 <script type="text/javascript"> 
                                     function resetTickAll() {

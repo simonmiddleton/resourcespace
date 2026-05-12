@@ -42,6 +42,9 @@ ResourceSpace.Modules.Header = (() => {
         // space for maximum six links (see render_header_links()).
         window.addEventListener('resize', handlePrimaryNavigationOverflow);
         handlePrimaryNavigationOverflow();
+
+        jQuery('#field_test_select2').select2({
+        });
     }
 
     function makeStickyHeader(e) {
@@ -137,6 +140,8 @@ ResourceSpace.Modules.Header = (() => {
                     ChosenDropdownInit(this, '#SearchBox select');
                 });
             }
+
+            jQuery('#field_test_select2').select2();
         });
 
         return;
