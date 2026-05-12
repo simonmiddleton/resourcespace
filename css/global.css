@@ -3245,6 +3245,7 @@ button[data-menu-trigger-close] {
 /* Multi-select input */
 .select2-container {
     border-radius: var(--space-4);
+    /* width: 100%; */
 }
 .select2-container--default .select2-selection--multiple,
 .select2-container--default.select2-container--focus .select2-selection--multiple {
@@ -3707,7 +3708,6 @@ header.LoginHeader {
     padding-bottom: unset;
 }
 
-#searchbarrt,
 .header-search-field #search-panel-main > .field-input input,
 .header-search-field #search-panel-main > .field-input select {
     width: 100%;
@@ -4136,6 +4136,10 @@ header.LoginHeader {
 }
 
 @media (min-width: 500px) {
+    .header-search-field #search-filters-panel .field-input:has(.select2-container) {
+        grid-column: span 2;
+    }
+
     .header-search-field #searchbutton {
         width: unset;
     }
