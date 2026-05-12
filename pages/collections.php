@@ -250,7 +250,12 @@ if ($allow_reorder) {
 <script>
     jQuery('#CentralSpace').on('prepareDragDrop', function() {
         jQuery('#CollectionDiv').droppable({
-            accept: '.resource-card',
+            accept: function(draggable) {
+                return (
+                    jQuery(draggable).hasClass('resource-card') &&
+                    jQuery('#CollectionDiv .collection-bar-holder').hasClass('state-thumbs')
+                );
+            },
 
             drop: function(event, ui) {
                 var query_strings = getQueryStrings();
