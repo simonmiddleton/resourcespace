@@ -479,7 +479,7 @@ function typesense_search_get_document_data(int $resource)
         return false;
     }
 
-    $indexed_values = array();
+    $indexed_values = array($resource); // Always index the resource ID itself.
     $title = '';
 
     foreach ($fields as $field) {
