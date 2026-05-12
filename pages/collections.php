@@ -823,10 +823,12 @@ jQuery(function () {
                     ?>
                 </div>
             </div>
-            <button class="show-thumbs-button">
-                <i class="icon-images"></i>
-                <span><?php echo ($collection_holder_state == "state-thumbs") ? "Hide thumbnails" : "Show thumbnails"; ?></span>
-            </button>
+            <div class="show-thunbs-button-holder">
+                <button class="show-thumbs-button">
+                    <i class="icon-images"></i>
+                    <span><?php echo ($collection_holder_state == "state-thumbs") ? "Hide thumbnails" : "Show thumbnails"; ?></span>
+                </button>
+            </div>
         </div>
     </div>
     <div class="collection-bar-thumbs-section">

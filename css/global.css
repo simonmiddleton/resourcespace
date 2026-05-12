@@ -4055,6 +4055,10 @@ a.text-link:visited {
     font-size: 48px;
     pointer-events: auto;
     z-index: 4;
+    transition: height 0.25s ease,
+                width 0.25s ease,
+                font-size 0.25s ease,
+                margin-left 0.25s ease;
 }
 
 .collection-bar-holder .collection-bar-toggle-button:hover {
@@ -4161,6 +4165,7 @@ a.text-link:visited {
     font-style: normal;
     font-weight: 400;
     line-height: var(--space-24);
+    transition: width 0.25s ease;
 }
 
 .collection-bar-actions-form select::-webkit-scrollbar {
@@ -4186,6 +4191,7 @@ a.text-link:visited {
     padding: 0 6px 0 0;
     outline: 1px solid var(--colour-surface-400);
     border-radius: var(--space-4);
+    transition: width 0.25s ease;
 }
 
 .collection-bar-name-input input {
@@ -4555,13 +4561,19 @@ body:has(.collection-bar-holder.state-thumbs) #UICenter {
         --actions-height: 268px;
     }
 
+    .collection-bar-holder .collection-bar-toggle-button {
+        margin-left: calc(50% - (var(--toggle-height) / 2));
+    }
+
     .collection-bar-actions-form {
         flex-direction: column;
         align-items: stretch;
+        width: 100%;
     }
 
     .show-thumbs-button {
-        width: unset;
+        width: 100%;
+        max-width: unset;
         font-size: 20px;
         padding: var(--space-12) 18px;
     }
@@ -4574,4 +4586,12 @@ body:has(.collection-bar-holder.state-thumbs) #UICenter {
         width: 100%;
     }
 
+}
+
+#HeaderLinksContainer {
+display: none !important;
+}
+
+#Header {
+    height: 56px !important;
 }
