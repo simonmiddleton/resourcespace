@@ -94,20 +94,15 @@ function typesense_search_do_search(
     PreparedStatementQuery $sql_join,
     PreparedStatementQuery $select
 ) {
-    $refs = typesense_search_get_refs($search, $keywords, $restypes, $archive, $fetchrows, $sort);
+    $result = typesense_search_get_refs($search, $keywords, $restypes, $archive, $fetchrows, $sort);
 
-    if ($refs === false) {
+    if ($result === false) {
         return false;
     }
 
-    // If typesense_search_get_refs() is still returning the temporary structured form,
-    // unwrap it here.
-    if (isset($refs['refs']) && is_array($refs['refs'])) {
-        $refs = $refs['refs'];
-    }
-
     return typesense_search_hydrate_refs(
-        $refs,
+        $result['refs'],
+        $result['total'],
         $fetchrows,
         $return_refs_only,
         $sql_filter,
@@ -141,16 +136,27 @@ function typesense_search_get_refs(
 
     setup_search_chunks($fetchrows, $chunk_offset, $search_chunk_size);
 
-    $per_page = $search_chunk_size === -1
-        ? 250
-        : max(50, $chunk_offset + $search_chunk_size);
+    $per_page = $search_chunk_size === -1 ? 250 : $search_chunk_size;
+    $page = $search_chunk_size > 0
+        ? (int)floor($chunk_offset / $search_chunk_size) + 1
+        : 1;
 
     $filter_by = typesense_search_filter_by($restypes, $archive);
+
+    $prefix = "false,false";
+    // Turn on prefix matching for wildcards.
+    if (substr($search, -1) === '*') {
+        $prefix = "true,true";
+        $search = substr($search, 0, -1);
+    }
 
     $params = array(
         'q' => $search,
         'query_by' => 'title,text',
         'query_by_weights' => '10,2',
+        'num_typos' => 0,
+        'prefix' => $prefix,
+        'page' => $page,
         'per_page' => $per_page,
     );
 
@@ -243,6 +249,7 @@ function typesense_search_filter_by($restypes, array $archive): string
  */
 function typesense_search_hydrate_refs(
     array $refs,
+    int $total,
     $fetchrows,
     bool $return_refs_only,
     PreparedStatementQuery $sql_filter,
@@ -276,31 +283,23 @@ function typesense_search_hydrate_refs(
     if ($return_refs_only) {
         $query->sql =
             'SELECT r.ref'
-            . ' FROM resource r '
-            . $sql_join->sql
-            . ' WHERE r.ref IN (' . $ref_placeholders . ')';
+            . ' FROM resource r'
+            . ' WHERE r.ref IN (' . $ref_placeholders . ')'
+            . ' AND r.ref > 0';
 
-        $query->parameters = array_merge(
-            $sql_join->parameters,
-            $ref_params
-        );
+        $query->parameters = $ref_params;
     } else {
         $query->sql =
             'SELECT r.hit_count score, ' . $select->sql
-            . ' FROM resource r '
-            . $sql_join->sql
-            . ' WHERE r.ref IN (' . $ref_placeholders . ')';
+            . ' FROM resource r'
+            . ' JOIN resource_type AS rty ON r.resource_type = rty.ref'
+            . ' WHERE r.ref IN (' . $ref_placeholders . ')'
+            . ' AND r.ref > 0';
 
         $query->parameters = array_merge(
             $select->parameters,
-            $sql_join->parameters,
             $ref_params
         );
-    }
-
-    if ($sql_filter->sql !== '') {
-        $query->sql .= ' AND ' . $sql_filter->sql;
-        $query->parameters = array_merge($query->parameters, $sql_filter->parameters);
     }
 
     $query->sql .=
@@ -314,14 +313,7 @@ function typesense_search_hydrate_refs(
     debug('typesense_search_hydrate_refs(): params=' . print_r($query->parameters, true));
 
     $rows = ps_query($query->sql, $query->parameters);
-
-    $total = count($rows);
-
-    if ($search_chunk_size === -1) {
-        $paged_rows = array_slice($rows, $chunk_offset);
-    } else {
-        $paged_rows = array_slice($rows, $chunk_offset, $search_chunk_size);
-    }
+    $paged_rows = $rows;
 
     if ($return_refs_only) {
         $paged_rows = array_map(
@@ -332,14 +324,8 @@ function typesense_search_hydrate_refs(
         );
     }
 
-    if (is_array($fetchrows)) {
-        return array(
-            'total' => $total,
-            'data' => $paged_rows,
-        );
-    }
+    return array('total' => $total, 'data' => $paged_rows);
 
-    return $paged_rows;
 }
 
 
@@ -662,6 +648,28 @@ function typesense_search_sync_related_keywords(): bool
 {
     global $typesense_search_collection;
 
+    $synonyms_endpoint =
+        '/collections/'
+        . rawurlencode($typesense_search_collection)
+        . '/synonyms';
+
+    $existing = typesense_search_request('GET', $synonyms_endpoint);
+
+    if ($existing !== false && isset($existing['synonyms']) && is_array($existing['synonyms'])) {
+        foreach ($existing['synonyms'] as $synonym) {
+            $id = $synonym['id'] ?? '';
+
+            if (strpos($id, 'rs_related_') !== 0) {
+                continue;
+            }
+
+            typesense_search_request(
+                'DELETE',
+                $synonyms_endpoint . '/' . rawurlencode($id)
+            );
+        }
+    }
+
     $groups = get_grouped_related_keywords('');
 
     foreach ($groups as $group) {
@@ -683,14 +691,15 @@ function typesense_search_sync_related_keywords(): bool
             continue;
         }
 
+        sort($keywords);
+
         $payload = array(
             'synonyms' => $keywords,
         );
 
         $endpoint =
-            '/collections/'
-            . rawurlencode($typesense_search_collection)
-            . '/synonyms/'
+            $synonyms_endpoint
+            . '/'
             . rawurlencode('rs_related_' . md5(implode('|', $keywords)));
 
         typesense_search_request('PUT', $endpoint, $payload);
