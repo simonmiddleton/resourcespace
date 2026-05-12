@@ -30,3 +30,4 @@ $lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
 $lang["page-title_openai_image_edit_get_png"] = 'OpenAI Lấy PNG';
 $lang["page-title_openai_image_edit_save_alternative"] = 'Lưu thay thế OpenAI';
 $lang["page-title_openai_image_edit_save_new"] = 'OpenAI Lưu Mới';
+$lang["openai_image_edit__introtext"] = 'Nhập mô tả các thay đổi bạn muốn thực hiện đối với hình ảnh vào ô nhắc. Tùy chọn, sử dụng cọ để xóa các phần của hình ảnh, buộc tạo lại các khu vực đó.';

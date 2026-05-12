@@ -30,3 +30,4 @@ $lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
 $lang["page-title_openai_image_edit_get_png"] = 'OpenAI Get PNG';
 $lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI บันทึกทางเลือก';
 $lang["page-title_openai_image_edit_save_new"] = 'OpenAI บันทึกใหม่';
+$lang["openai_image_edit__introtext"] = 'ป้อนคำอธิบายของการเปลี่ยนแปลงที่คุณต้องการให้ทำกับภาพในกล่องคำสั่ง ตัวเลือก ใช้แปรงเพื่อ ลบส่วนของภาพ เพื่อบังคับให้สร้างใหม่ในบริเวณเหล่านั้น.';

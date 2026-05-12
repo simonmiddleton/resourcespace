@@ -30,3 +30,4 @@ $lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
 $lang["page-title_openai_image_edit_get_png"] = 'OpenAI PNG Al';
 $lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI Alternatifini Kaydet';
 $lang["page-title_openai_image_edit_save_new"] = 'OpenAI Yeni Kaydet';
+$lang["openai_image_edit__introtext"] = 'Görüntüde yapılmasını istediğiniz değişikliklerin açıklamasını istem kutusuna girin. İsterseniz, fırçayı kullanarak görüntünün belirli bölümlerini silebilir ve bu alanların yeniden oluşturulmasını sağlayabilirsiniz.';

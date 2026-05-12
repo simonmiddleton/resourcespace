@@ -145,3 +145,12 @@ function HookTypesense_searchAllAftersaveresourcedata()
 
     return false;
 }
+
+function HookTypesense_searchAllAfter_save_related_keywords(string $keyword, string $related)
+{
+    debug('typesense_search: syncing Typesense synonyms after related keyword update');
+
+    typesense_search_sync_related_keywords();
+
+    return false;
+}

@@ -30,3 +30,4 @@ $lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
 $lang["page-title_openai_image_edit_get_png"] = 'OpenAI Get PNG';
 $lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI Speichern Alternative';
 $lang["page-title_openai_image_edit_save_new"] = 'OpenAI Speichern Neu';
+$lang["openai_image_edit__introtext"] = 'Geben Sie in das Eingabefeld eine Beschreibung der Änderungen ein, die am Bild vorgenommen werden sollen. Optional können Sie den Pinsel verwenden, um Teile des Bildes zu löschen und die Regeneration dieser Bereiche zu erzwingen.';

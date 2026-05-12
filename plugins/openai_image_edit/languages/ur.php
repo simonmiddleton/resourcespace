@@ -30,3 +30,4 @@ $lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
 $lang["page-title_openai_image_edit_get_png"] = 'OpenAI PNG حاصل کریں';
 $lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI محفوظ کریں متبادل';
 $lang["page-title_openai_image_edit_save_new"] = 'OpenAI نیا محفوظ کریں';
+$lang["openai_image_edit__introtext"] = 'پہنچیں اور تصویر میں تبدیلی کے لیے اپنی خواہش کا بیان کریں۔ اختیاری طور پر، برش کا استعمال کریں تاکہ تصویر کے حصوں کو مٹا دیا جائے، اور ان حصوں کی دوبارہ تخلیق کو مجبور کریں۔';

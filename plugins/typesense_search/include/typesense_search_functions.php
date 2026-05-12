@@ -647,3 +647,54 @@ function typesense_search_index_document(array $document): bool
 
     return typesense_search_request('POST', $endpoint, $document) !== false;
 }
+
+
+/**
+ * Synchronise ResourceSpace related keywords to Typesense synonyms.
+ *
+ * Creates or updates synonym groups in the configured Typesense collection
+ * based on ResourceSpace related keyword relationships so that searches
+ * automatically match related terms using OR-style expansion.
+ *
+ * @return bool True if the sync completed successfully.
+ */
+function typesense_search_sync_related_keywords(): bool
+{
+    global $typesense_search_collection;
+
+    $groups = get_grouped_related_keywords('');
+
+    foreach ($groups as $group) {
+        $keywords = array();
+
+        $keywords[] = trim((string)$group['keyword']);
+
+        foreach (explode(',', (string)$group['related']) as $related) {
+            $related = trim($related);
+
+            if ($related !== '') {
+                $keywords[] = $related;
+            }
+        }
+
+        $keywords = array_values(array_unique(array_filter($keywords)));
+
+        if (count($keywords) < 2) {
+            continue;
+        }
+
+        $payload = array(
+            'synonyms' => $keywords,
+        );
+
+        $endpoint =
+            '/collections/'
+            . rawurlencode($typesense_search_collection)
+            . '/synonyms/'
+            . rawurlencode('rs_related_' . md5(implode('|', $keywords)));
+
+        typesense_search_request('PUT', $endpoint, $payload);
+    }
+
+    return true;
+}

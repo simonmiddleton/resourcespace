@@ -30,3 +30,4 @@ $lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
 $lang["page-title_openai_image_edit_get_png"] = 'OpenAI Hent PNG';
 $lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI Gem Alternativ';
 $lang["page-title_openai_image_edit_save_new"] = 'OpenAI Gem Ny';
+$lang["openai_image_edit__introtext"] = 'Indtast en beskrivelse af de ændringer, du gerne vil have foretaget i billedet i promptboksen. Brug eventuelt børsten til at slette dele af billedet, hvilket tvinger genoprettelse af disse områder.';

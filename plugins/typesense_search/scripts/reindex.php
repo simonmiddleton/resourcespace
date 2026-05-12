@@ -23,6 +23,9 @@ if (!typesense_search_ensure_collection()) {
     exit(1);
 }
 
+// Sync the related keywords.
+typesense_search_sync_related_keywords();
+
 echo 'Starting Typesense reindex'
     . ' | Batch size: ' . $batch_size
     . ' | Starting after ref: ' . $after
