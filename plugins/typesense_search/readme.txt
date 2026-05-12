@@ -86,20 +86,14 @@ Plugin Installation
 
 2. Enable the plugin in ResourceSpace.
 
-3. Configure the plugin settings in:
+3. Configure the plugin settings via the plugin setup page. Examples:
 
-    plugins/typesense_search/config/config.php
-
-Example configuration:
-
-    <?php
-
-    $typesense_search_host = '127.0.0.1';
-    $typesense_search_port = 8108;
-    $typesense_search_protocol = 'http';
-    $typesense_search_api_key = 'YOUR_SECURE_API_KEY';
-    $typesense_search_collection = 'resources';
-    $typesense_search_timeout = 2;
+    Host: 127.0.0.1
+    Port: 8108
+    Protocol: http
+    API key: YOUR_SECURE_API_KEY
+    Collection: resources
+    Timeout seconds: 2
 
 4. Ensure PHP cURL is enabled:
 

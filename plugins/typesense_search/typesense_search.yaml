@@ -8,3 +8,4 @@ config_url: /plugins/typesense_search/pages/setup.php
 category: search
 disable_group_select: false
 info_url: https://www.resourcespace.com/knowledge-base/plugins/typesense_search
+config_url: /plugins/typesense_search/pages/setup.php

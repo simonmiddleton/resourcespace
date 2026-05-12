@@ -444,8 +444,8 @@ function typesense_search_ensure_collection(): bool
         'name' => $typesense_search_collection,
         'fields' => array(
             array('name' => 'resource', 'type' => 'int32'),
-            array('name' => 'title', 'type' => 'string'),
-            array('name' => 'text', 'type' => 'string'),
+            array('name' => 'title', 'type' => 'string', 'stem' => true),
+            array('name' => 'text', 'type' => 'string', 'stem' => true),
             array('name' => 'resource_type', 'type' => 'int32', 'facet' => true),
             array('name' => 'archive', 'type' => 'int32', 'facet' => true),
         ),
