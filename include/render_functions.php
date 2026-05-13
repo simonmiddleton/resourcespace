@@ -1676,13 +1676,11 @@ function render_split_text_question($label, $inputs = array(), $additionaltext="
 * @param string $label     Label of question
 * @param string $inputname Name of input field
 * @param array  $options   Array of options (value and text pairs) (eg. array('pixelwidthmin'=>'From','pixelwidthmin'=>'To')
-* @param string $current   The current selected value
+* @param string|list<int> $current The current selected value. For a multiple selector, a list of currently selected values.
 * @param string $extra     Extra attributes used on the selector element
 * @param array  $ctx       Rendering context. Should be used to inject different elements (e.g set the div class, add onchange for select)
-* 
-* @return void
 */
-function render_dropdown_question($label, $inputname, $options = array(), $current="", $extra="", array $ctx = array())
+function render_dropdown_question($label, $inputname, $options = array(), string|array $current="", $extra="", array $ctx = array()): void
     {
     $input_name_escaped = escape($inputname);
     $div_class = isset($ctx["no_div_class_question"]) ? [] : ["Question"];
@@ -1696,6 +1694,10 @@ function render_dropdown_question($label, $inputname, $options = array(), $curre
     $onchange = ($onchange != "" ? sprintf("onchange=\"%s\"", $onchange) : "");
 
     $extra .= " {$onchange}";
+
+    $is_option_selected = static fn (string $option): bool => is_array($current)
+        ? in_array($option, $current)
+        : trim((string) $option) === trim((string) $current);
     ?>
     <div class="<?php echo escape(implode(" ", $div_class)); ?>">
         <label for="<?php echo $input_name_escaped; ?>"><?php echo escape($label); ?></label>
@@ -1704,7 +1706,7 @@ function render_dropdown_question($label, $inputname, $options = array(), $curre
         foreach ($options as $optionvalue=>$optiontext)
             {
             ?>
-            <option value="<?php echo escape(trim((string)$optionvalue))?>" <?php if (trim((string)$optionvalue)==trim((string)$current)) {?>selected<?php } ?>><?php echo escape(trim((string)$optiontext))?></option>
+            <option value="<?php echo escape(trim((string)$optionvalue))?>" <?php if ($is_option_selected($optionvalue)) {?>selected<?php } ?>><?php echo escape(trim((string)$optiontext))?></option>
             <?php
             }
         ?>
