@@ -1686,8 +1686,6 @@ $lang["smartcollection"] = "Smart collection";
 $lang["dosavedsearch"] = "Do saved search";
 
 $lang["all"] = "All";
-$lang["allresourcessearchbar"] = "All resources";
-$lang["allcollectionssearchbar"] = "All collections";
 $lang["backtoresults"] = "Back to results";
 $lang["continuetoresults"] = "Continue to results";
 

@@ -1191,8 +1191,6 @@ $lang["dosavedsearch"] = "Utför sparad sökning";
 
 
 $lang["all"] = "Alla";
-$lang["allresourcessearchbar"] = "Alla material";
-$lang["allcollectionssearchbar"] = "Alla samlingar";
 $lang["backtoresults"] = "Tillbaka: Sökresultat";
 $lang["continuetoresults"] = "Fortsätt: Sökresultat";
 

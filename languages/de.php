@@ -1206,8 +1206,6 @@ $lang["markers"] = "Markierungen";
 
 
  $lang["all"] = "Alle";
- $lang["allresourcessearchbar"] = "Alle Ressourcen";
- $lang["allcollectionssearchbar"] = "Alle Kollektionen";
  $lang["backtoresults"] = "Zurück zu den Suchergebnissen";
  $lang["continuetoresults"] = "Weiter zu den Suchergebnissen";
 

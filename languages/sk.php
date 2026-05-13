@@ -1403,8 +1403,6 @@ $lang["dosavedsearch"] = "Uložené vyhľadávanie";
 
 
 $lang["all"] = "Všetko";
-$lang["allresourcessearchbar"] = "Všetky zdroje";
-$lang["allcollectionssearchbar"] = "Všetky zbierky";
 $lang["backtoresults"] = "Späť na výsledky";
 $lang["continuetoresults"] = "Pokračujte k výsledkom";
 
