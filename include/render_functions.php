@@ -1684,7 +1684,7 @@ function render_split_text_question($label, $inputs = array(), $additionaltext="
 */
 function render_dropdown_question($label, $inputname, $options = array(), $current="", $extra="", array $ctx = array())
     {
-    $div_class = array("Question");
+    $div_class = isset($ctx["no_div_class_question"]) ? [] : ["Question"];
     if(isset($ctx["div_class"]) && is_array($ctx["div_class"]) && !empty($ctx["div_class"]))
         {
         $div_class = array_merge($div_class, $ctx["div_class"]);
