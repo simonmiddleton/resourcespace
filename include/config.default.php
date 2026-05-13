@@ -202,10 +202,6 @@ $header_link_style_override = '';
 // Used for specifying custom colours for home page elements (site text, dash tiles, simple search)
 $home_colour_style_override = '';
 
-// Used for specifying custom colours for collection bar elements
-$collection_bar_background_override = '';
-$collection_bar_foreground_override = '';
-
 // Used for changing colour of default blue buttons
 $button_colour_override = '';
 

@@ -1188,8 +1188,6 @@ $lang["setup-structuralplugins"] = "Šablóny systému";
 $lang["setup-headercolourstyleoverride"] = "Vlastná farba pozadia hlavičky";
 $lang["setup-headerlinkstyleoverride"] = "Vlastná farba odkazu v hlavičke";
 $lang["setup-homecolourstyleoverride"] = "Vlastná farba úvodného textu, dlaždíc na palubovke, panelu prehľadávania a jednoduchého vyhľadávania";
-$lang["setup-collectionbarbackground"] = "Základná farba lišty vlastnej kolekcie";
-$lang["setup-collectionbarforeground"] = "Sekundárna farba lišty vlastnej kolekcie";
 
 # Collection log - actions
 $lang["collectionlog"] = "Denník kolekcie";

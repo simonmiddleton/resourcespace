@@ -15,8 +15,7 @@ if ((is_array($k) || trim($k) === '') && getval('noauth', '') != true) {
 
 header("Content-type: text/css");
 
-global $header_colour_style_override, $header_link_style_override, $home_colour_style_override,
-$collection_bar_background_override, $collection_bar_foreground_override, $button_colour_override;
+global $header_colour_style_override, $header_link_style_override, $home_colour_style_override, $button_colour_override;
 
 // Dark mode styling
 if (isset($user_pref_appearance) && !(isset($high_contrast_mode) && $high_contrast_mode)) {
@@ -525,31 +524,6 @@ if (isset($home_colour_style_override) && $home_colour_style_override != '') { ?
     #SearchBox, #HomeSiteText.dashtext, .HomePanelIN, #BrowseBar, #NewsPanel.BasicsBox, #remote_assist #SearchBoxPanel,
     .SearchBarTab.SearchBarTabSelected {
         background: <?php echo $home_colour_style_override; ?>;
-    } <?php
-}
-
-# Override the collection bar background colour
-if (isset($collection_bar_background_override) && $collection_bar_background_override != '') { ?>
-    .CollectBack {
-        background: <?php echo $collection_bar_background_override; ?>;
-    } <?php
-}
-
-/**
- * Override the collection bar foreground colour
- *
- * optgroup and option background-color set to #474747 for consistency across platforms as
- * Firefox/Windows does not recognise rgb() colour properties for optgroup element
- * */
-
-if (isset($collection_bar_foreground_override) && $collection_bar_foreground_override != '') { ?>
-    .CollectionPanelShell, #CollectionDiv select {
-        background-color: <?php echo $collection_bar_foreground_override; ?>;
-    }
-    #CollectionDiv option, #CollectionDiv optgroup {
-        font-style:normal;
-        background-color: #474747;
-        color: #fff;
     } <?php
 }
 

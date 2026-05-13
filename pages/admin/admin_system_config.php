@@ -115,22 +115,6 @@ $page_def[] = config_add_colouroverride_input(
     "jQuery('#SearchBox').css('background',value); jQuery('#HomeSiteText.dashtext').css('background',value); jQuery('.HomePanelIN').css('background',value); jQuery('#BrowseBar').css('background',value); jQuery('.SearchBarTab.SearchBarTabSelected').css('background', value);"
 );
 $page_def[] = config_add_colouroverride_input(
-    'collection_bar_background_override',
-    $lang["setup-collectionbarbackground"],
-    '',
-    null,
-    true,
-    "jQuery('.CollectBack').css('background',value);"
-);
-$page_def[] = config_add_colouroverride_input(
-    'collection_bar_foreground_override',
-    $lang["setup-collectionbarforeground"],
-    '',
-    null,
-    true,
-    "jQuery('.CollectionPanelShell').css('background-color',value);jQuery('#CollectionDiv select').css('background-color',value);"
-);
-$page_def[] = config_add_colouroverride_input(
     'button_colour_override',
     $lang["setup-buttoncolouroverride"],
     '',
