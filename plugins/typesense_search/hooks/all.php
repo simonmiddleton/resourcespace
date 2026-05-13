@@ -61,18 +61,9 @@ function HookTypesense_searchAllExternal_search(
             $keywords,
             $node_bucket,
             $node_bucket_not,
-            $restypes,
-            $order_by,
-            $archive,
-            $fetchrows,
-            $sort,
-            $access_override,
-            $ignore_filters,
             $return_disk_usage,
-            $return_refs_only,
             $editable_only,
             $returnsql,
-            $access,
             $smartsearch
         )
     ) {
@@ -81,14 +72,10 @@ function HookTypesense_searchAllExternal_search(
 
     return typesense_search_do_search(
         $search,
-        $keywords,
         $restypes,
         $archive,
         $fetchrows,
-        $sort,
         $return_refs_only,
-        $sql_filter,
-        $sql_join,
         $select,
         $order_by
     );
@@ -130,7 +117,7 @@ function HookTypesense_searchAllAfternodedelete(int $node): void
 /**
  * Reindex resource after metadata has been saved.
  *
- * @return void
+ * @return false
  */
 function HookTypesense_searchAllAftersaveresourcedata()
 {
@@ -147,6 +134,15 @@ function HookTypesense_searchAllAftersaveresourcedata()
     return false;
 }
 
+
+/**
+ * Sync Typesense related keyword synonyms after related keywords have been saved.
+ *
+ * @param string $keyword Keyword that was updated.
+ * @param string $related Related keyword string.
+ *
+ * @return false
+ */
 function HookTypesense_searchAllAfter_save_related_keywords(string $keyword, string $related)
 {
     debug('typesense_search: syncing Typesense synonyms after related keyword update');

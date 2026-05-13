@@ -7,18 +7,9 @@
  * @param array $keywords Parsed search keywords.
  * @param array $node_bucket Included node search buckets.
  * @param array $node_bucket_not Excluded node search buckets.
- * @param mixed $restypes Resource type filter.
- * @param mixed $order_by Requested sort field.
- * @param mixed $archive Archive state filter.
- * @param mixed $fetchrows Result limit or chunk details.
- * @param string $sort Sort direction.
- * @param bool $access_override Whether normal access filtering is bypassed.
- * @param bool $ignore_filters Whether search filters are ignored.
  * @param bool $return_disk_usage Whether disk usage totals are requested.
- * @param bool $return_refs_only Whether only resource refs should be returned.
  * @param bool $editable_only Whether only editable resources should be returned.
  * @param bool $returnsql Whether SQL should be returned instead of results.
- * @param mixed $access Resource access filter.
  * @param bool $smartsearch Whether smart search mode is active.
  *
  * @return bool True if Typesense can handle the search, otherwise false.
@@ -28,18 +19,9 @@ function typesense_search_supported(
     array $keywords,
     array $node_bucket,
     array $node_bucket_not,
-    $restypes,
-    $order_by,
-    $archive,
-    $fetchrows,
-    string $sort,
-    bool $access_override,
-    bool $ignore_filters,
     bool $return_disk_usage,
-    bool $return_refs_only,
     bool $editable_only,
     bool $returnsql,
-    $access,
     bool $smartsearch
 ): bool {
     if (substr($search, 0, 1) === "!") {
@@ -70,43 +52,35 @@ function typesense_search_supported(
  * Run a ResourceSpace search using Typesense and return ResourceSpace-compatible results.
  *
  * @param string $search Search string.
- * @param array $keywords Parsed search keywords.
  * @param mixed $restypes Resource type filter.
  * @param array $archive Archive state filter.
  * @param mixed $fetchrows Result limit or chunk details.
- * @param string $sort Sort direction.
  * @param bool $return_refs_only Whether only resource refs should be returned.
- * @param PreparedStatementQuery $sql_filter Existing ResourceSpace SQL filter.
- * @param PreparedStatementQuery $sql_join Existing ResourceSpace JOIN SQL.
  * @param PreparedStatementQuery $select Existing ResourceSpace SELECT fields.
+ * @param string $order_by The order by SQL from the standard ResourceSpace search construction.
  *
  * @return array|false ResourceSpace-compatible results, or false to fall back to core search.
  */
 function typesense_search_do_search(
     string $search,
-    array $keywords,
     $restypes,
     array $archive,
     $fetchrows,
-    string $sort,
     bool $return_refs_only,
-    PreparedStatementQuery $sql_filter,
-    PreparedStatementQuery $sql_join,
     PreparedStatementQuery $select,
     string $order_by
 ) {
-    $result = typesense_search_get_refs($search, $keywords, $restypes, $archive, $fetchrows, $sort);
+    $result = typesense_search_get_refs($search, $restypes, $archive, $fetchrows);
 
     if ($result === false) {
         return false;
     }
+
     return typesense_search_hydrate_refs(
         $result['refs'],
         $result['total'],
         $fetchrows,
         $return_refs_only,
-        $sql_filter,
-        $sql_join,
         $select,
         $order_by
     );
@@ -117,21 +91,17 @@ function typesense_search_do_search(
  * Query Typesense and return matching resource refs in relevance order.
  *
  * @param string $search Search string.
- * @param array $keywords Parsed search keywords.
  * @param mixed $restypes Resource type filter.
  * @param array $archive Archive state filter.
  * @param mixed $fetchrows Result limit or chunk details.
- * @param string $sort Sort direction.
  *
  * @return array|false Ordered resource refs, or false if Typesense should be bypassed.
  */
 function typesense_search_get_refs(
     string $search,
-    array $keywords,
     $restypes,
     array $archive,
-    $fetchrows,
-    string $sort
+    $fetchrows
 ) {
     global $typesense_search_collection;
 
@@ -240,10 +210,9 @@ function typesense_search_filter_by($restypes, array $archive): string
  * Hydrate Typesense resource refs into the standard ResourceSpace search result structure.
  *
  * @param array $refs Ordered resource refs from Typesense.
+ * @param int $total Total number of matches reported by Typesense.
  * @param mixed $fetchrows Result limit or chunk details.
  * @param bool $return_refs_only Whether only resource refs should be returned.
- * @param PreparedStatementQuery $sql_filter Existing ResourceSpace SQL filter.
- * @param PreparedStatementQuery $sql_join Existing ResourceSpace JOIN SQL.
  * @param PreparedStatementQuery $select Existing ResourceSpace SELECT fields.
  * @param string $order_by The order by SQL from the standard ResourceSpace search construction.
  *
@@ -254,8 +223,6 @@ function typesense_search_hydrate_refs(
     int $total,
     $fetchrows,
     bool $return_refs_only,
-    PreparedStatementQuery $sql_filter,
-    PreparedStatementQuery $sql_join,
     PreparedStatementQuery $select,
     string $order_by
 ): array {
@@ -267,7 +234,6 @@ function typesense_search_hydrate_refs(
 
     setup_search_chunks($fetchrows, $chunk_offset, $search_chunk_size);
 
-
     $ref_placeholders = ps_param_insert(count($refs), 'i');
     $field_placeholders = ps_param_insert(count($refs), 'i');
 
@@ -275,11 +241,11 @@ function typesense_search_hydrate_refs(
     $field_params = array();
 
     // If "relevance" (order by score first) then use the ref order from Typesense. Otherwise use the provided order by SQL.
-    $set_field_params=false;
-    if (substr($order_by,0,5)=="score") {
-        $order_by='FIELD(r.ref, ' . $field_placeholders . ')';
-        $set_field_params=true; // placeholders not needed
-    } 
+    $set_field_params = false;
+    if (substr($order_by, 0, 5) == "score") {
+        $order_by = 'FIELD(r.ref, ' . $field_placeholders . ')';
+        $set_field_params = true;
+    }
 
     foreach ($refs as $ref) {
         $ref_params[] = 'i';
@@ -337,8 +303,12 @@ function typesense_search_hydrate_refs(
         );
     }
 
-    return array('total' => $total, 'data' => $paged_rows);
-
+    if (is_array($fetchrows)) {
+        return array('total' => $total, 'data' => $paged_rows);
+    }
+    else  {
+        return $paged_rows;
+    }
 }
 
 
@@ -587,6 +557,14 @@ function typesense_search_reindex_node_resources(int $node): int
 }
 
 
+/**
+ * Reindex resources in batches.
+ *
+ * @param int $limit Maximum number of resources to index in this batch.
+ * @param int $after Only index resources with refs greater than this value.
+ *
+ * @return array Batch indexing summary.
+ */
 function typesense_search_reindex_all(int $limit = 100, int $after = 0): array
 {
     $resources = ps_array(
@@ -627,6 +605,7 @@ function typesense_search_reindex_all(int $limit = 100, int $after = 0): array
         'complete' => count($resources) < $limit,
     );
 }
+
 
 /**
  * Index a Typesense document.
