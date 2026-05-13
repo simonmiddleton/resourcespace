@@ -3,7 +3,7 @@
 define('RESOURCESPACE_BASE_PATH', dirname(__DIR__));
 
 // current upgrade level of ResourceSpace (used for migration scripts, will set sysvar using this if not already defined)
-define('SYSTEM_UPGRADE_LEVEL', 29);
+define('SYSTEM_UPGRADE_LEVEL', 30);
 
 // PHP VERSION AND MINIMUM SUPPORTED
 if (!defined('PHP_VERSION_ID')) {

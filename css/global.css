@@ -4213,13 +4213,26 @@ a.text-link:visited {
     display: flex;
     width: var(--space-36);
     height: var(--space-36);
-    padding: var(--space-12) var(--space-16);
-    font-size: var(--space-24);
     flex-direction: column;
     justify-content: center;
     align-items: center;
     border-radius: var(--space-4);
 }
+
+.collection-bar-name-input button::before {
+    content: "";
+    width: 24px;
+    height: 24px;
+    display: block;
+    background-color: currentColor;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    -webkit-mask-size: contain;
+}
+
 
 .collection-bar-name-input button.inactive {
     background-color: var(--colour-neutral-850);
@@ -4231,6 +4244,10 @@ a.text-link:visited {
     color: var(--colour-global-white);
 }
 
+.collection-bar-name-input .cancel-button::before {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 6L6 18'/%3E%3Cpath d='M6 6L18 18'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 6L6 18'/%3E%3Cpath d='M6 6L18 18'/%3E%3C/svg%3E");
+}
 .collection-bar-name-input .cancel-button:hover {
     background-color: var(--colour-neutral-800);
     color: var(--colour-global-white);
@@ -4239,6 +4256,11 @@ a.text-link:visited {
 .collection-bar-name-input .accept-button {
     background-color: var(--colour-brand-primary-default);
     color: var(--colour-global-white);
+}
+
+.collection-bar-name-input .accept-button::before {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17L4 12'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17L4 12'/%3E%3C/svg%3E");
 }
 
 .collection-bar-name-input button.accept-button:not(.inactive):hover {
@@ -4325,24 +4347,43 @@ a.text-link:visited {
     align-items: center;
     background: var(--colour-transparency-white-80);
     color: var(--colour-neutral-900);
-    font-size: 40px;    
     cursor: pointer;
     opacity: 0;
     transition: opacity 0.25s ease;
 }
 
+.thumbnail-row-arrow::before {
+    content: "";
+    width: 40px;
+    height: 40px;
+    display: block;
+    background-color: currentColor;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    -webkit-mask-size: contain;
+}
+
 .thumbnail-row-arrow.left {
     left: 0;
-    padding-right: var(--space-6);
+    padding-right: var(--space-4);
+}
+
+.thumbnail-row-arrow.left::before {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 18L9 12L15 6'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 18L9 12L15 6'/%3E%3C/svg%3E");
 }
 
 .thumbnail-row-arrow.right {
     right: 0;
-    padding-left: var(--space-6);
+    padding-left: var(--space-4);
 }
 
-.thumbnail-row-arrow i {
-    width: unset;
+.thumbnail-row-arrow.right::before {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18L15 12L9 6'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18L15 12L9 6'/%3E%3C/svg%3E");
 }
 
 .collection-bar-thumbnails:hover .thumbnail-row-arrow {

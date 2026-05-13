@@ -521,48 +521,11 @@ $feedback = $cinfo ? $cinfo["request_feedback"] : 0;
 ?>
 <script type="text/javascript">
 jQuery(function () {
-    
-    // Collection bar state toggle
-    var $bar = jQuery('.collection-bar-holder');
-    var $toggleThumbsBtn = jQuery('.show-thumbs-button');
 
-    function setBarState(state) {
-        $bar.removeClass('state-closed state-actions state-thumbs')
-            .addClass(state);
-        if (state == 'state-thumbs') {
-            SetCookie('thumbs',"show",1000);
-        } else if (state == 'state-actions') {
-            SetCookie('thumbs',"actions",1000);
-        } else {
-            SetCookie('thumbs',"hide",1000);
-        }
-    }
-
-    jQuery('.collection-bar-toggle-button').on('click', function () {
-        if ($bar.hasClass('state-closed')) {
-            setBarState('state-actions');
-        } else {
-            setBarState('state-closed');
-            $toggleThumbsBtn.find('span').text('Show thumbnails');
-        }
-    });
-
-    jQuery('.show-thumbs-button').on('click', function () {
-        if ($bar.hasClass('state-thumbs')) {
-            setBarState('state-actions');
-            $toggleThumbsBtn.find('span').text('Show thumbnails');
-        } else {
-            setBarState('state-thumbs');
-            $toggleThumbsBtn.find('span').text('Hide thumbnails');
-        }
-    });
-
-// Collection bar scroll buttons
-
-jQuery(function () {
-    var $scroller = jQuery(".collection-bar-thumbnail-row");
-    var $leftBtn = jQuery(".thumbnail-row-arrow.left");
-    var $rightBtn = jQuery(".thumbnail-row-arrow.right");
+    // Collection bar scroll buttons
+    const $scroller = jQuery(".collection-bar-thumbnail-row");
+    const $leftBtn = jQuery(".thumbnail-row-arrow.left");
+    const $rightBtn = jQuery(".thumbnail-row-arrow.right");
 
     function getCards() {
         return $scroller.find(".collection-bar-resource-card");
@@ -621,7 +584,7 @@ jQuery(function () {
         return positions.length - 1;
     }
 
-    function updateButtons() {
+    function updateScrollButtons() {
         var el = $scroller[0];
         if (!el) return;
 
@@ -659,7 +622,7 @@ jQuery(function () {
         var target = metrics.positions[nextIndex];
         target = Math.max(0, Math.min(target, metrics.maxScroll));
 
-        $scroller.stop().animate({ scrollLeft: target }, 300, updateButtons);
+        $scroller.stop().animate({ scrollLeft: target }, 300, updateScrollButtons);
     }
 
     $leftBtn.on("click", function () {
@@ -670,18 +633,10 @@ jQuery(function () {
         scrollPage("right");
     });
 
-    $scroller.on("scroll", updateButtons);
-    jQuery(window).on("resize", updateButtons);
+    $scroller.on("scroll", updateScrollButtons);
+    jQuery(window).on("resize", updateScrollButtons);
 
-    updateButtons();
-});
-
-
-
-});
-
-// New collection name entry
-jQuery(function () {
+    // New collection name entry
     const input = jQuery("#collection_name_input");
     const cancel_button = jQuery("#cancel_creating_collection_button");
     const accept_button = jQuery("#accept_creating_collection_button");
@@ -709,9 +664,47 @@ jQuery(function () {
         jQuery("#colselect").submit();
     });
 
-    updateButtons();
-});
+    // Collection bar state toggle
+    const $bar = jQuery('.collection-bar-holder');
+    const $toggleThumbsBtn = jQuery('.show-thumbs-button');
 
+    function setBarState(state) {
+        $bar.removeClass('state-closed state-actions state-thumbs')
+            .addClass(state);
+        if (state == 'state-thumbs') {
+            SetCookie('thumbs',"show",1000);
+        } else if (state == 'state-actions') {
+            SetCookie('thumbs',"actions",1000);
+        } else {
+            SetCookie('thumbs',"hide",1000);
+            cancel_button.trigger("click");
+        }
+    }
+
+    jQuery('.collection-bar-toggle-button').on('click', function () {
+        if ($bar.hasClass('state-closed')) {
+            setBarState('state-actions');
+        } else {
+            setBarState('state-closed');
+            $toggleThumbsBtn.find('span').text('Show thumbnails');
+        }
+    });
+
+    jQuery('.show-thumbs-button').on('click', function () {
+        if ($bar.hasClass('state-thumbs')) {
+            setBarState('state-actions');
+            $toggleThumbsBtn.find('span').text('Show thumbnails');
+        } else {
+            setBarState('state-thumbs');
+            $toggleThumbsBtn.find('span').text('Hide thumbnails');
+        }
+    });
+    
+    // Update scroll and name entry buttons on load
+    updateScrollButtons();
+    updateButtons();
+
+});
 </script>
 <div class="collection-bar-holder <?php echo $collection_holder_state; ?>">
     <div style="display:none;" id="currentusercollection"><?php echo (int) $usercollection; ?></div>
@@ -734,10 +727,8 @@ jQuery(function () {
                             <input id="collection_name_input" type="text" class="SearchWidth"></input>
                             <div class="collection-bar-name-button-group">
                                 <button id="cancel_creating_collection_button" class="cancel-button" type="button" aria-label="Cancel creating collection">
-                                    <i class="icon-x"></i>
                                 </button>
                                 <button id="accept_creating_collection_button" class="accept-button inactive" type="button" aria-label="Create new collection">
-                                    <i class="icon-check"></i>
                                 </button>
                             </div>
                         </div>
@@ -835,7 +826,6 @@ jQuery(function () {
         </script>
         <div class="collection-bar-thumbnails">
             <button class="thumbnail-row-arrow left" aria-label="Scroll left">
-                <i class="icon-chevron-left"></i>
             </button>
             <div class="collection-bar-thumbnail-row">
             <?php
@@ -1030,7 +1020,6 @@ jQuery(function () {
             ?>
             </div>
             <button class="thumbnail-row-arrow right" aria-label="Scroll right">
-                <i class="icon-chevron-right"></i>
             </button>
         </div>
     </div>
