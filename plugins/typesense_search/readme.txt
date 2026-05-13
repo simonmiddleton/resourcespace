@@ -49,29 +49,12 @@ Installing Typesense on Ubuntu
 
     sudo dpkg -i typesense-server.deb
 
-4. Create data directory:
-
-    sudo mkdir -p /var/lib/typesense
-    sudo chown typesense:typesense /var/lib/typesense
-
-5. Edit the Typesense configuration:
-
-    sudo nano /etc/typesense/typesense-server.ini
-
-Example configuration:
-
-    data-dir = /var/lib/typesense
-    api-key = YOUR_SECURE_API_KEY
-    listen-address = 127.0.0.1
-    listen-port = 8108
-    enable-cors = true
-
-6. Enable and start the service:
+4. Enable and start the service:
 
     sudo systemctl enable typesense-server
     sudo systemctl start typesense-server
 
-7. Verify the service is running:
+5. Verify the service is running:
 
     curl http://127.0.0.1:8108/health
 
