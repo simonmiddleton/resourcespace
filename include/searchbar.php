@@ -274,24 +274,37 @@ $selected_search_tab = getval("selected_search_tab", "search");
                     hook("aftersearchbox");
 
                     if (!$basic_simple_search && !$hide_search_resource_types) {
+                        $rt = is_array($restypes) ? $restypes : explode(",", $restypes);
+                        $resource_type_filter_options = array_filter(
+                            array_column($types, 'name', 'ref'),
+                            static fn($V, $ref) => !in_array($ref, $hide_resource_types),
+                            ARRAY_FILTER_USE_BOTH
+                        );
+                        $all_resource_type_filter_options = (
+                            ['allRTs' => $lang['all_resource_types']]
+                            + $resource_type_filter_options
+                        );
+                        $current_rt_options = array_keys(
+                            array_filter(
+                                $resource_type_filter_options,
+                                static fn ($V, $ref) => (count($rt) == 1 && $rt[0] == "")
+                                    || $restypes == "Global"
+                                    || in_array($ref, $rt),
+                                ARRAY_FILTER_USE_BOTH
+                            )
+                        );
                         ?>
                         <input type="hidden" name="resetrestypes" value="yes">
                         <?php
-                        // WIP on replacing the old tick boxes for RTs with a multi select dropdown
                         render_dropdown_question(
                             label: $lang['resourcetypes'],
                             inputname: 'field_test_select2[]',
-                            options: array_merge(
-                                ['allRTs' => $lang['all_resource_types']],
-                                array_filter(
-                                    array_column($types, 'name', 'ref'),
-                                    static fn($V, $ref) => !in_array($ref, $hide_resource_types),
-                                    ARRAY_FILTER_USE_BOTH
-                                )
-                            ),
-                            current: 'allRTs',
+                            options: $all_resource_type_filter_options,
+                            current: $current_rt_options === array_keys($resource_type_filter_options)
+                                ? ['allRTs']
+                                : $current_rt_options,
                             // Style needed for the width - @see https://select2.org/appearance#container-width
-                            extra: ' multiple="multiple" onchange="SimpleSearchFieldsHideOrShow(true);" style="width: 100%;"',
+                            extra: 'multiple="multiple" onchange="SimpleSearchFieldsHideOrShow(true);" style="width: 100%;"',
                             ctx: [
                                 'div_class' => ['field-input'],
                                 'no_div_class_question' => true,
