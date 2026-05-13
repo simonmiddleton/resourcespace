@@ -1529,7 +1529,7 @@ if ($comments_resource_enable && ($k=="" || $internal_share_access))
     {
     include_once "../include/comment_resources.php";
     }
-debug("BANG " . __LINE__);
+
 hook("w2pspawn");
 // include collections listing
 if ($view_resource_collections && !checkperm('b')){ ?>
@@ -1566,7 +1566,6 @@ if ($view_resource_collections && !checkperm('b')){ ?>
     ?>); 
     </script>
     <?php }
-debug("BANG " . __LINE__);
 if ($metadata_report && isset($exiftool_path) && ($k=="" || $internal_share_access))
     {
     ?>
@@ -1600,7 +1599,7 @@ if ($metadata_report && isset($exiftool_path) && ($k=="" || $internal_share_acce
     }
 
 hook("customrelations"); //For future template/spawned relations in Web to Print plugin
-debug("BANG " . __LINE__);
+
 # -------- Related Resources (must be able to search for this to work)
 if($enable_related_resources && !isset($relatedresources))
     {
@@ -1616,7 +1615,7 @@ if($enable_related_resources && !isset($relatedresources))
     $relatedtypes_shown = array();
     $related_resources_shown = 0;
     }
-debug("BANG " . __LINE__);
+
 // Show related resources section
 if($enable_related_resources)
     {
@@ -1665,7 +1664,7 @@ if ($show_related_themes)
         </div><?php
         }
     }
-debug("BANG " . __LINE__);
+
 if($annotate_enabled)
     {
     ?>
@@ -1685,7 +1684,7 @@ if($annotate_enabled)
     <!-- End of Annotorious -->
     <?php
     }
-debug("BANG " . __LINE__);
+
 if($GLOBALS["image_preview_zoom"])
     {
     ?>
@@ -1693,7 +1692,7 @@ if($GLOBALS["image_preview_zoom"])
     <?php
     }
     ?>
-debug("BANG " . __LINE__);
+
 <script>
 function updateSizeInfo(ns, selected_size)
 {
@@ -1778,7 +1777,6 @@ function updateDownloadLink(ns, selected_size, picker)
 
     jQuery('document').ready(function(){
         /* Call SelectTab upon page load to select first tab*/
-        return;
         SelectMetaTab(<?php echo $ref.",0,".($modal ? "true" : "false") ?>);
         registerCollapsibleSections(false);
     });
@@ -1787,4 +1785,4 @@ function updateDownloadLink(ns, selected_size, picker)
     }); 
 </script>
 
-<?php debug("BANG " . __LINE__);include "../include/footer.php";
+<?php include "../include/footer.php";

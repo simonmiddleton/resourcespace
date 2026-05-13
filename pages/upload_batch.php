@@ -1828,11 +1828,9 @@ function postUploadActions()
     if($context==="Modal"){?>
         loadAsModal=true;
     <?php
-    debug("BANG " . __LINE__);
     } else {?>
         loadAsModal=false;
     <?php
-    debug("BANG " . __LINE__ . " \$context: $context");
     }
 
     if ($redirecturl != "")
