@@ -103,7 +103,7 @@ function typesense_search_get_refs(
     array $archive,
     $fetchrows
 ) {
-    global $typesense_search_collection;
+    global $typesense_search_collection, $typesense_search_global_filter;
 
     setup_search_chunks($fetchrows, $chunk_offset, $search_chunk_size);
 
@@ -112,7 +112,7 @@ function typesense_search_get_refs(
         ? (int)floor($chunk_offset / $search_chunk_size) + 1
         : 1;
 
-    $filter_by = typesense_search_filter_by($restypes, $archive);
+    $filter_by = typesense_search_filter_by($restypes, $archive) . $typesense_search_global_filter;
 
     $prefix = "false,false";
     // Turn on prefix matching for wildcards.
