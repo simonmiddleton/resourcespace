@@ -282,7 +282,7 @@ function typesense_search_hydrate_refs(
     }
 
     $query->sql .=
-        ' GROUP BY r.ref, user_access, group_access'
+        ' GROUP BY r.ref'
         . ' ORDER BY ' . $order_by;
 
     $query->parameters = array_merge($query->parameters, $field_params);
