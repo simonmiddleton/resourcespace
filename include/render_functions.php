@@ -1684,6 +1684,7 @@ function render_split_text_question($label, $inputs = array(), $additionaltext="
 */
 function render_dropdown_question($label, $inputname, $options = array(), $current="", $extra="", array $ctx = array())
     {
+    $input_name_escaped = escape($inputname);
     $div_class = isset($ctx["no_div_class_question"]) ? [] : ["Question"];
     if(isset($ctx["div_class"]) && is_array($ctx["div_class"]) && !empty($ctx["div_class"]))
         {
@@ -1697,8 +1698,8 @@ function render_dropdown_question($label, $inputname, $options = array(), $curre
     $extra .= " {$onchange}";
     ?>
     <div class="<?php echo escape(implode(" ", $div_class)); ?>">
-        <label><?php echo escape($label); ?></label>
-        <select  name="<?php echo escape($inputname); ?>" class="<?php echo escape($input_class); ?>" id="<?php echo escape($inputname); ?>" <?php echo $extra; ?>>
+        <label for="<?php echo $input_name_escaped; ?>"><?php echo escape($label); ?></label>
+        <select  name="<?php echo $input_name_escaped; ?>" class="<?php echo escape($input_class); ?>" id="<?php echo $input_name_escaped; ?>" <?php echo $extra; ?>>
         <?php
         foreach ($options as $optionvalue=>$optiontext)
             {

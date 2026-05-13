@@ -283,33 +283,27 @@ $selected_search_tab = getval("selected_search_tab", "search");
                         <input type="hidden" name="resetrestypes" value="yes">
 
 
-                        <!-- WIP on replacing the old tick boxes for RTs with a multi select dropdown -->
-                        <!-- <div class="field-input">
-                            <label for="field_test_select2"><?php echo escape($lang['resourcetypes']); ?></label>
-                            <select name="nodes_searched[9500][]" id="field_test_select2" class="SearchWidth" multiple="multiple" onchange="" style="width: 100%;">
-                                <option value="allRTs" selected>All resource types</option>
-                                <option value="364">RT 1</option>
-                                <option value="365">RT 2</option>
-                                <option value="366">RT 3</option>
-                                <option value="367">RT 4</option>
-                                <option value="368">RT 5</option>
-                                <option value="369">RT 6</option>
-                            </select>
-                            <div class="clearerleft"></div>
-                        </div> -->
                         <?php
+                        // WIP on replacing the old tick boxes for RTs with a multi select dropdown
                         render_dropdown_question(
                             label: $lang['resourcetypes'],
                             inputname: 'field_test_select2',
-                            options: array_column($types, 'name', 'ref'),
+                            // todo: prepend the all RTs option (made up; fake). See above example
+                            options: array_merge(
+                                ['allRTs' => $lang['all_resource_types']],
+                                array_column($types, 'name', 'ref')
+                            ),
+                            current: 'allRTs',
                             // Style needed for the width - @see https://select2.org/appearance#container-width
                             extra: ' multiple="multiple" style="width: 100%;"',
-                            ctx: ['div_class' => ['field-input']]
+                            ctx: [
+                                'div_class' => ['field-input'],
+                                'no_div_class_question' => true,
+                                'input_class' => 'SearchWidth',
+                            ]
                         );
+                        // todo: drop the below code once done with the WIP above
                         ?>
-
-
-
                         <div class="field-input" <?php echo $simpleSearchFieldsAreHidden ? 'style="display:none;"' : ''; ?>>
                             <?php if ($searchbar_selectall) { ?>
                                 <script type="text/javascript"> 
