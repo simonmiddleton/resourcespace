@@ -4133,7 +4133,7 @@ a.text-link:visited {
 }
 
 .collection-bar-actions-form .field label {
-    color: var(--colour-surface-50);
+    color: var(--colour-global-white);
     font-size: 16px;
     font-style: normal;
     font-weight: 600;
@@ -4142,7 +4142,7 @@ a.text-link:visited {
 
 .collection-bar-actions-form .meta {
     margin-left: auto;
-    color: var(--colour-surface-200);
+    color: #f5f5f5; /* hardcoded due to dark mode flip */
     font-size: 13px;
     font-style: normal;
     font-weight: 400;
@@ -4153,7 +4153,7 @@ a.text-link:visited {
     min-height: var(--form-field-min-height);
     padding: 0 12px;
     margin: 0;
-    color: var(--colour-surface-100);
+    color: #fafafa; /* hardcoded due to dark mode flip */
     background: var(--colour-neutral-900);
     border-radius: var(--space-4);
     border: 1px solid var(--colour-surface-400);
@@ -4194,8 +4194,8 @@ a.text-link:visited {
     transition: width 0.25s ease;
 }
 
-.collection-bar-name-input input {
-    color: var(--colour-surface-100);
+.collection-bar-name-input input[type="text"] {
+    color: #fafafa; /* hardcoded due to dark mode flip */
     background: var(--colour-neutral-900);
     flex: 1;
     padding: var(--space-12);
@@ -4349,6 +4349,10 @@ a.text-link:visited {
     opacity: 1;
 }
 
+.thumbnail-row-arrow:hover {
+    background: var(--colour-transparency-white-90);
+}
+
 @media (hover: none) and (pointer: coarse) {
     .thumbnail-row-arrow {
         display: none !important;
@@ -4413,7 +4417,7 @@ a.text-link:visited {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.1);
+    background: var(--colour-transparency-black-10);
     transition: opacity 0.25s ease;
     pointer-events: none;
 }
@@ -4440,17 +4444,18 @@ a.text-link:visited {
     right: 0;
     border-radius: 0 2px 0 0;
     background: var(--colour-transparency-white-70);
-    color: var(--colour-neutral-900);
+    color: #0c0d0c; /* hardcoded due to dark mode flip */
     font-size: 20px;
     transition: background 0.25s ease;
     z-index: 5;
 }
 
 .collection-bar-resource-card-remove:hover {
-    background: var(--colour-neutral-50);
+    background: var(--colour-global-white);
 }
 
 .collection-bar-resource-card-remove a,
+.collection-bar-resource-card-remove a:link,
 .collection-bar-resource-card-remove a:visited,
 .collection-bar-resource-card-remove a:hover,
 .collection-bar-resource-card-remove a:active {
