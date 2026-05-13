@@ -89,7 +89,8 @@ function HookTypesense_searchAllExternal_search(
         $return_refs_only,
         $sql_filter,
         $sql_join,
-        $select
+        $select,
+        $order_by
     );
 }
 

@@ -92,14 +92,14 @@ function typesense_search_do_search(
     bool $return_refs_only,
     PreparedStatementQuery $sql_filter,
     PreparedStatementQuery $sql_join,
-    PreparedStatementQuery $select
+    PreparedStatementQuery $select,
+    string $order_by
 ) {
     $result = typesense_search_get_refs($search, $keywords, $restypes, $archive, $fetchrows, $sort);
 
     if ($result === false) {
         return false;
     }
-
     return typesense_search_hydrate_refs(
         $result['refs'],
         $result['total'],
@@ -107,7 +107,8 @@ function typesense_search_do_search(
         $return_refs_only,
         $sql_filter,
         $sql_join,
-        $select
+        $select,
+        $order_by
     );
 }
 
@@ -244,6 +245,7 @@ function typesense_search_filter_by($restypes, array $archive): string
  * @param PreparedStatementQuery $sql_filter Existing ResourceSpace SQL filter.
  * @param PreparedStatementQuery $sql_join Existing ResourceSpace JOIN SQL.
  * @param PreparedStatementQuery $select Existing ResourceSpace SELECT fields.
+ * @param string $order_by The order by SQL from the standard ResourceSpace search construction.
  *
  * @return array ResourceSpace-compatible search results.
  */
@@ -254,7 +256,8 @@ function typesense_search_hydrate_refs(
     bool $return_refs_only,
     PreparedStatementQuery $sql_filter,
     PreparedStatementQuery $sql_join,
-    PreparedStatementQuery $select
+    PreparedStatementQuery $select,
+    string $order_by
 ): array {
     if (count($refs) === 0) {
         return is_array($fetchrows)
@@ -264,18 +267,28 @@ function typesense_search_hydrate_refs(
 
     setup_search_chunks($fetchrows, $chunk_offset, $search_chunk_size);
 
+
     $ref_placeholders = ps_param_insert(count($refs), 'i');
     $field_placeholders = ps_param_insert(count($refs), 'i');
 
     $ref_params = array();
     $field_params = array();
 
+    // If "relevance" (order by score first) then use the ref order from Typesense. Otherwise use the provided order by SQL.
+    $set_field_params=false;
+    if (substr($order_by,0,5)=="score") {
+        $order_by='FIELD(r.ref, ' . $field_placeholders . ')';
+        $set_field_params=true; // placeholders not needed
+    } 
+
     foreach ($refs as $ref) {
         $ref_params[] = 'i';
         $ref_params[] = (int)$ref;
 
-        $field_params[] = 'i';
-        $field_params[] = (int)$ref;
+        if ($set_field_params) {
+            $field_params[] = 'i';
+            $field_params[] = (int)$ref;
+        }
     }
 
     $query = new PreparedStatementQuery();
@@ -304,7 +317,7 @@ function typesense_search_hydrate_refs(
 
     $query->sql .=
         ' GROUP BY r.ref, user_access, group_access'
-        . ' ORDER BY FIELD(r.ref, ' . $field_placeholders . ')';
+        . ' ORDER BY ' . $order_by;
 
     $query->parameters = array_merge($query->parameters, $field_params);
 
