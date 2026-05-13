@@ -43,7 +43,7 @@ ResourceSpace.Modules.Header = (() => {
         window.addEventListener('resize', handlePrimaryNavigationOverflow);
         handlePrimaryNavigationOverflow();
 
-        jQuery('#field_test_select2').select2({
+        jQuery('#field_test_select2\\[\\]').select2({
         });
     }
 
@@ -141,7 +141,7 @@ ResourceSpace.Modules.Header = (() => {
                 });
             }
 
-            jQuery('#field_test_select2').select2();
+            jQuery('#field_test_select2\\[\\]').select2();
         });
 
         return;

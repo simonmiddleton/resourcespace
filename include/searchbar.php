@@ -276,25 +276,26 @@ $selected_search_tab = getval("selected_search_tab", "search");
                     if (!$basic_simple_search && !$hide_search_resource_types) {
                         ?>
                         <input type="hidden" name="resetrestypes" value="yes">
-
-
                         <?php
                         // WIP on replacing the old tick boxes for RTs with a multi select dropdown
                         render_dropdown_question(
                             label: $lang['resourcetypes'],
-                            inputname: 'field_test_select2',
-                            // todo: prepend the all RTs option (made up; fake). See above example
+                            inputname: 'field_test_select2[]',
                             options: array_merge(
                                 ['allRTs' => $lang['all_resource_types']],
-                                array_column($types, 'name', 'ref')
+                                array_filter(
+                                    array_column($types, 'name', 'ref'),
+                                    static fn($V, $ref) => !in_array($ref, $hide_resource_types),
+                                    ARRAY_FILTER_USE_BOTH
+                                )
                             ),
                             current: 'allRTs',
                             // Style needed for the width - @see https://select2.org/appearance#container-width
-                            extra: ' multiple="multiple" style="width: 100%;"',
+                            extra: ' multiple="multiple" onchange="SimpleSearchFieldsHideOrShow(true);" style="width: 100%;"',
                             ctx: [
                                 'div_class' => ['field-input'],
                                 'no_div_class_question' => true,
-                                'input_class' => 'SearchWidth',
+                                'input_class' => '',
                             ]
                         );
                         // todo: drop the below code once done with the WIP above
