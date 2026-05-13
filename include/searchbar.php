@@ -274,12 +274,7 @@ $selected_search_tab = getval("selected_search_tab", "search");
                     hook("aftersearchbox");
 
                     if (!$basic_simple_search && !$hide_search_resource_types) {
-                        # More than 5 types? Always display the 'select all' option.
-                        if (count($types) > 5) {
-                            $searchbar_selectall = true;
-                        }
                         ?>
-
                         <input type="hidden" name="resetrestypes" value="yes">
 
 
@@ -305,56 +300,7 @@ $selected_search_tab = getval("selected_search_tab", "search");
                         // todo: drop the below code once done with the WIP above
                         ?>
                         <div class="field-input" <?php echo $simpleSearchFieldsAreHidden ? 'style="display:none;"' : ''; ?>>
-                            <?php if ($searchbar_selectall) { ?>
-                                <script type="text/javascript"> 
-                                    function resetTickAll() {
-                                        var checkcount = 0;
-                                        // set tickall to false, then check if it should be set to true.
-                                        jQuery('#rttickallres').prop('checked',false);
-
-                                        var tickboxes = jQuery('#simple_search_form .tickbox');
-                                            jQuery(tickboxes).each(function (elem) {
-                                                if (tickboxes[elem].checked) {
-                                                    checkcount = checkcount + 1;
-                                                }
-                                            });
-
-                                        if (checkcount == tickboxes.length) { 
-                                            jQuery('#rttickallres').prop('checked',true);
-                                        }    
-                                    }
-
-                                    function resetTickAllColl() {
-                                        var checkcount = 0;
-                                        // set tickall to false, then check if it should be set to true.
-                                        jQuery('#rttickallcoll').prop('checked',false);
-                                        var tickboxes = jQuery('#simple_search_form .tickboxcoll');
-                                            jQuery(tickboxes).each(function (elem) {
-                                                if (tickboxes[elem].checked) {
-                                                    checkcount = checkcount + 1;
-                                                }
-                                            });
-
-                                        if (checkcount == tickboxes.length) {
-                                            jQuery('#rttickallcoll').prop('checked',true);
-                                        }
-                                    }
-                                </script>
-
-                                <div class="tick">
-                                    <input
-                                        type='checkbox'
-                                        id='rttickallres'
-                                        name='rttickallres'
-                                        checked
-                                        onclick='jQuery("#simple_search_form .tickbox").each(function(index,Element) {jQuery(Element).prop("checked",(jQuery("#rttickallres").prop("checked")));}); SimpleSearchFieldsHideOrShow(true);'
-                                    />
-                                        &nbsp;
-                                        <?php echo escape($lang['allresourcessearchbar']); ?>
-                                </div>
-                                <?php
-                            }
-
+                            <?php
                             $rt = is_array($restypes) ? $restypes : explode(",", $restypes);
                             $clear_function = "SetCookie('search','');SetCookie('restypes','');SetCookie('ssearchhiddenfields','');SetCookie('saved_offset','');SetCookie('saved_archive','');";
                             hook('clearsearchcookies');
@@ -369,14 +315,7 @@ $selected_search_tab = getval("selected_search_tab", "search");
                                 $inputBoxClass = "tickbox";
                                 $resetTickAllCall = "";
                                 $clear_function .= "jQuery('#TickBox" . $types[$n]["ref"] . "').prop('checked',true);";
-
-                                if ($searchbar_selectall) {
-                                    $tickBoxClass .= " tickindent";
-                                    $resetTickAllCall .= "resetTickAll();";
-                                    $clear_function .= "resetTickAll();";
-                                }
                                 ?>
-
                                 <div class="<?php echo $tickBoxClass; ?>">
                                     <input
                                         class="<?php echo $inputBoxClass; ?>"
@@ -401,21 +340,7 @@ $selected_search_tab = getval("selected_search_tab", "search");
                             ?>
                             
                             <div class="spacer"></div>
-                            <?php if ($searchbar_selectall && $search_includes_themes) { ?>
-                                <div class="tick">
-                                    <input
-                                        type='checkbox'
-                                        id='rttickallcoll'
-                                        name='rttickallcoll'
-                                        checked
-                                        onclick='jQuery("#simple_search_form .tickboxcoll").each(function(index,Element) {jQuery(Element).prop("checked",(jQuery("#rttickallcoll").prop("checked")));}); SimpleSearchFieldsHideOrShow(true);'
-                                    />
-                                        &nbsp;
-                                        <?php echo escape($lang['allcollectionssearchbar']); ?>
-                                </div>
-                                <?php
-                            }
-                            
+                            <?php
                             if ($clear_button_unchecks_collections) {
                                 $colcheck = "false";
                             } else {
@@ -423,7 +348,7 @@ $selected_search_tab = getval("selected_search_tab", "search");
                             }
 
                             if ($search_includes_themes) { ?>
-                                <div class="tick <?php echo $searchbar_selectall ? 'tickindent' : ''; ?>">
+                                <div class="tick">
                                     <input
                                         class="tickboxcoll"
                                         id="TickBoxFeaturedCollections"
@@ -433,16 +358,12 @@ $selected_search_tab = getval("selected_search_tab", "search");
                                         <?php if (((count($rt) == 1) && ($rt[0] == "")) || (in_array("FeaturedCollections", $rt))) { ?>
                                             checked="checked"
                                         <?php } ?>
-                                        onClick="SimpleSearchFieldsHideOrShow(true);<?php echo $searchbar_selectall ? 'resetTickAllColl();' : ''; ?>"
+                                        onClick="SimpleSearchFieldsHideOrShow(true);"
                                     />
                                     <label for="TickBoxFeaturedCollections">&nbsp;<?php echo escape($lang["findcollectionthemes"]); ?></label>
                                 </div>
                                 <?php
                                 $clear_function .= "jQuery('#TickBoxFeaturedCollections').prop('checked'," . $colcheck . ");";
-
-                                if ($searchbar_selectall) {
-                                    $clear_function .= "resetTickAllColl();";
-                                }
                             }
                     } elseif ($restypes == '') {
                         # We still need a way to pass restypes based on simple search settings or things like search crumbs will be incorrect
@@ -458,12 +379,6 @@ $selected_search_tab = getval("selected_search_tab", "search");
                         ?>
 
                         <input type="hidden" name="restypes" id="restypes" value="<?php echo escape($restypes); ?>" />
-                        <?php
-                    }
-
-                    if ($searchbar_selectall) {
-                        ?>
-                        <script type="text/javascript">resetTickAll();resetTickAllColl();</script>
                         <?php
                     }
 

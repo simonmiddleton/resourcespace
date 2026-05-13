@@ -916,9 +916,6 @@ $watermark_open_search = false;
 // Set to 'true' to make the simple search bar more basic, with just the single search box.
 $basic_simple_search = false;
 
-// include an "all" toggle checkbox for Resource Types in Search bar
-$searchbar_selectall = false;
-
 // Hide the resource type selector on the simple search and advanced search pages
 $hide_search_resource_types = false;
 
