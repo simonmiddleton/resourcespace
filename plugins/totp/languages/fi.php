@@ -17,3 +17,4 @@ $lang["totp_date_binding_m"] = 'Nykyinen kuukausi';
 $lang["totp_date_binding_y"] = 'Nykyinen vuosi';
 $lang["page-title_totp_setup"] = 'Aseta TOTP-laajennus';
 $lang["page-title_totp_totp"] = 'TOTP';
+$lang["totp_saml"] = 'Poista TOTP käytöstä käyttäjiltä, jotka on jo todennettu SAML:n kautta (vaatii SAML-lisäosan)';

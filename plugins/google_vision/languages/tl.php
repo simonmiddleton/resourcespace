@@ -25,3 +25,7 @@ $lang["page-title_google_vision_process_existing"] = 'Google Vision Proseso Umii
 $lang["page-title_google_vision_setup"] = 'I-set up ang Google Vision Plugin';
 $lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
 $lang["page-title_google_vision_test"] = 'Google Vision Test';
+$lang["google_vision"] = 'Google Vision';
+$lang["google_vision_process_existing"] = 'Proseso ang mga hindi pa na-proseso na mga resources';
+$lang["google_vision_process_existing_configure"] = 'I-configure ang trabaho upang i-proseso ang mga hindi pa na-proseso na mga resources';
+$lang["google_vision_process_existing_collection_refs_help"] = 'Ang pagtatakda ng opsyong ito ay nangangahulugang tanging ang mga resources sa nakalistang mga koleksyon ang ipoproseso. Kung walang nakalistang koleksyon, lahat ng angkop na resources ay ipoproseso. Maaaring tukuyin ang mga koleksyon gamit ang listahan na pinaghihiwalay ng kuwit pati na rin ang mga saklaw hal. 100,105,110-115';

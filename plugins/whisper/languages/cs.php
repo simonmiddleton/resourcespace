@@ -10,3 +10,8 @@ $lang["whisper_transcript"] = 'Vytvořte soubor s přepisem a přidejte ho jako 
 $lang["whisper_transcript_name"] = 'Automaticky generovaný přepis';
 
 $lang["page-title_whisper_setup"] = 'Nastavení pluginu Whisper';
+$lang["whisper_cron_enable"] = 'Povolit zpracování nezpracovaných zdrojů prostřednictvím naplánované úlohy Cron';
+$lang["whisper"] = 'Šepot';
+$lang["whisper_process_existing"] = 'Zpracovat nezpracované zdroje';
+$lang["whisper_process_existing_intro"] = 'Vytvořte úlohu pro spuštění zpracování zvuku Whisper zde - tato úloha nevyžaduje žádné parametry, takže ji lze spustit, pokud neprobíhají žádné jiné úlohy tohoto typu.';
+$lang["whisper_process_existing_configure"] = 'Nastavit úlohu pro zpracování souborů pomocí Whisper';

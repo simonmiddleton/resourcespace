@@ -10,3 +10,8 @@ $lang["whisper_transcript"] = 'Genereer een transcriptiebestand en voeg toe als 
 $lang["whisper_transcript_name"] = 'Automatisch gegenereerd transcript';
 
 $lang["page-title_whisper_setup"] = 'Installeer Whisper Plugin';
+$lang["whisper_cron_enable"] = 'Schakel verwerking van niet-verwerkte bronnen in via geplande Cron-taak';
+$lang["whisper"] = 'Fluister';
+$lang["whisper_process_existing"] = 'Verwerk niet-verwerkte bronnen';
+$lang["whisper_process_existing_intro"] = 'Maak een taak aan om hier de Whisper-audioverwerking te starten - deze taak vereist geen parameters en kan worden gestart zolang er geen andere openstaande taken van dit type zijn.';
+$lang["whisper_process_existing_configure"] = 'Configureer taak om bestanden met Whisper te verwerken';

@@ -1265,7 +1265,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                     !in_array($resource['resource_type'], $data_only_resource_types)
                                                     && !resource_file_readonly($ref) 
                                                     && (checkperm("c") || checkperm("d"))
-                                                    && !resource_is_template($ref)
+                                                    && !resource_file_readonly($ref)
                                                 ) { ?>
                                                     <li>
                                                         <a id="view_replace_link" href="<?php echo generateURL($baseurl_short . "pages/upload_" . $replace_upload_type . ".php", $urlparams, array("replace_resource"=>$ref, "resource_type"=>$resource['resource_type'])); ?>" 
@@ -1440,7 +1440,7 @@ foreach ($pushed as $pushed_resource)
 
 function RenderPushedMetadata($resource, $field_data, $all_field_data)
     {
-    global $k,$view_title_field,$lang, $internal_share_access, $fields_all, $fields, $ref, $access, $userpermissions, $upload_then_edit, $urlparams;
+    global $k,$view_title_field,$lang, $internal_share_access, $fields_all, $fields, $ref, $access, $userpermissions, $upload_then_edit, $urlparams, $baseurl;
     // Save currentt resource data
     $reset_ref          = $ref;
     $reset_access       = $access;
@@ -1461,7 +1461,7 @@ function RenderPushedMetadata($resource, $field_data, $all_field_data)
     ?>
     <div class="RecordBox PushedRecordBox">
         <div class="RecordPanel PushedRecordPanel">
-            <div class="backtoresults">&gt;<a href="view.php?ref=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo escape($lang["view"]); ?></a>
+            <div class="backtoresults">&gt;<a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo escape($lang["view"]); ?></a>
         </div>
         <div class="Title"><?php echo i18n_get_translated($resource["resource_type_name"]) . " : " . $resource["field" . $view_title_field] ?></div>
             <?php
@@ -1529,7 +1529,7 @@ if ($comments_resource_enable && ($k=="" || $internal_share_access))
     {
     include_once "../include/comment_resources.php";
     }
-
+debug("BANG " . __LINE__);
 hook("w2pspawn");
 // include collections listing
 if ($view_resource_collections && !checkperm('b')){ ?>
@@ -1566,7 +1566,7 @@ if ($view_resource_collections && !checkperm('b')){ ?>
     ?>); 
     </script>
     <?php }
-
+debug("BANG " . __LINE__);
 if ($metadata_report && isset($exiftool_path) && ($k=="" || $internal_share_access))
     {
     ?>
@@ -1600,7 +1600,7 @@ if ($metadata_report && isset($exiftool_path) && ($k=="" || $internal_share_acce
     }
 
 hook("customrelations"); //For future template/spawned relations in Web to Print plugin
-
+debug("BANG " . __LINE__);
 # -------- Related Resources (must be able to search for this to work)
 if($enable_related_resources && !isset($relatedresources))
     {
@@ -1616,7 +1616,7 @@ if($enable_related_resources && !isset($relatedresources))
     $relatedtypes_shown = array();
     $related_resources_shown = 0;
     }
-
+debug("BANG " . __LINE__);
 // Show related resources section
 if($enable_related_resources)
     {
@@ -1665,7 +1665,7 @@ if ($show_related_themes)
         </div><?php
         }
     }
-
+debug("BANG " . __LINE__);
 if($annotate_enabled)
     {
     ?>
@@ -1685,7 +1685,7 @@ if($annotate_enabled)
     <!-- End of Annotorious -->
     <?php
     }
-
+debug("BANG " . __LINE__);
 if($GLOBALS["image_preview_zoom"])
     {
     ?>
@@ -1693,7 +1693,7 @@ if($GLOBALS["image_preview_zoom"])
     <?php
     }
     ?>
-
+debug("BANG " . __LINE__);
 <script>
 function updateSizeInfo(ns, selected_size)
 {
@@ -1778,6 +1778,7 @@ function updateDownloadLink(ns, selected_size, picker)
 
     jQuery('document').ready(function(){
         /* Call SelectTab upon page load to select first tab*/
+        return;
         SelectMetaTab(<?php echo $ref.",0,".($modal ? "true" : "false") ?>);
         registerCollapsibleSections(false);
     });
@@ -1785,4 +1786,5 @@ function updateDownloadLink(ns, selected_size, picker)
         window.location='#Header';
     }); 
 </script>
-<?php include "../include/footer.php";
+
+<?php debug("BANG " . __LINE__);include "../include/footer.php";

@@ -53,3 +53,4 @@ $lang["plugin-youtube_publish-title"]='Publicar no YouTube';
 $lang["plugin-youtube_publish-desc"]='Publica recurso de vídeo na conta do YouTube configurada.';
 $lang["page-title_youtube_publish_setup"] = 'Configurar Plugin';
 $lang["page-title_youtube_publish_youtube_upload"] = 'Publicar Recurso no Youtube';
+$lang["youtube_publish_video_title"] = 'Título do vídeo (máximo de 100 caracteres)';

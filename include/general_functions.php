@@ -157,6 +157,10 @@ function nicedate($date, $time = false, $wordy = true, $offset_tz = false)
         return "-";
     }
 
+    if ($y == "00" || $y == "0000") {
+        $y = "";
+    }
+
     $month_part = substr($date, $bce_offset + 5, 2);
     if (!is_numeric($month_part)) {
         return $y;
@@ -2308,7 +2312,7 @@ function error_alert($error, $back = true, $code = 403)
  */
 function format_display_field($value)
 {
-    global $results_title_trim,$results_title_wordwrap,$df,$x,$search;
+    global $df,$x;
 
     $value = strip_tags_and_attributes($value);
 

@@ -105,3 +105,4 @@ $lang["page-title_simplesaml_setup"] = 'نصب افزونه SAML ساده';
 $lang["simplesaml_error_not_configured"] = 'پلاگین SimpleSAML پیکربندی نشده است';
 $lang["simplesaml_error_no_idp_metadata"] = 'پلاگین SimpleSAML به طور کامل پیکربندی نشده است (متاداده IdP گم شده است)';
 $lang["simplesaml_error_no_authsource"] = 'پلاگین SimpleSAML به طور کامل پیکربندی نشده است (authsource گم شده است)';
+$lang["simplesaml_userlimit_error"] = 'کاربر نمی‌تواند ایجاد شود زیرا محدودیت کاربر به پایان رسیده است. لطفاً با مدیر سیستم خود تماس بگیرید.';

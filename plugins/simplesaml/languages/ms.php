@@ -105,3 +105,4 @@ $lang["page-title_simplesaml_setup"] = 'Pasang Plugin SAML Ringkas';
 $lang["simplesaml_error_not_configured"] = 'Plugin SimpleSAML tidak dikonfigurasi';
 $lang["simplesaml_error_no_idp_metadata"] = 'Plugin SimpleSAML tidak dikonfigurasi sepenuhnya (metadata IdP hilang)';
 $lang["simplesaml_error_no_authsource"] = 'Plugin SimpleSAML tidak dikonfigurasi sepenuhnya (authsource hilang)';
+$lang["simplesaml_userlimit_error"] = 'Pengguna tidak dapat dibuat kerana had pengguna telah dicapai. Sila hubungi pentadbir anda.';

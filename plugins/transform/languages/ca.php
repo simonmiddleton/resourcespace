@@ -87,3 +87,4 @@ $lang["cropper_preset_sizes"] = 'Mides predefinides';
 $lang["page-title_transform_collection_transform"] = 'Transformar Recurso';
 $lang["page-title_transform_crop"] = 'Retallar Recurso';
 $lang["page-title_transform_setup"] = 'Configuració del plugin de transformació';
+$lang["use_filename_as_title"] = 'Utilitza el nom de fitxer com a títol';

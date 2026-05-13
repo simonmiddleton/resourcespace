@@ -55,3 +55,4 @@ $lang["plugin-youtube_publish-title"]='Publicar a YouTube';
 $lang["plugin-youtube_publish-desc"]='Publica el recurs de vídeo al compte de YouTube configurat.';
 $lang["page-title_youtube_publish_setup"] = 'Configuració del complement';
 $lang["page-title_youtube_publish_youtube_upload"] = 'Publicar Recurso a Youtube';
+$lang["youtube_publish_video_title"] = 'Títol del vídeo (màxim 100 caràcters)';

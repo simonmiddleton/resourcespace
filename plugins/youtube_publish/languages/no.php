@@ -53,3 +53,4 @@ $lang["plugin-youtube_publish-title"]='YouTube Publiser';
 $lang["plugin-youtube_publish-desc"]='Publiserer videoressurs til konfigurert YouTube-konto.';
 $lang["page-title_youtube_publish_setup"] = 'Installer plugin';
 $lang["page-title_youtube_publish_youtube_upload"] = 'Publiser ressurs til Youtube';
+$lang["youtube_publish_video_title"] = 'Videotittel (maks 100 tegn)';

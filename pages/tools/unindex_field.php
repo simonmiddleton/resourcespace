@@ -7,12 +7,6 @@
 #
 
 include "../../include/boot.php";
-include "../../include/authenticate.php";
-
-if (!checkperm("a")) {
-    exit("Permission denied");
-}
-
 include "../../include/image_processing.php";
 
 set_time_limit(0);
@@ -43,7 +37,7 @@ if (PHP_SAPI != 'cli') {
 if (PHP_SAPI == 'cli' || (getval("submit", "") != "" && enforcePostRequest(false))) {
     // Delete existing keywords index for this field
     remove_field_keywords($field);
-    $result = PHP_SAPI == 'cli' ? "Keywords removed from field $field\n\n" : "<div class='PageInfoMessage'>Keywords removed from " . escape($fieldinfo["title"]) . "</div>";
+    $result = PHP_SAPI == 'cli' ? "Keywords removed from field " . (int) $field . "\n\n" : "<div class='PageInfoMessage'>Keywords removed from " . escape($fieldinfo["title"]) . "</div>";
     echo $result;
 }
 

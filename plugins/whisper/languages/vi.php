@@ -10,3 +10,8 @@ $lang["whisper_transcript"] = 'Tạo một tệp bản sao và thêm vào như l
 $lang["whisper_transcript_name"] = 'Biên bản tự động được tạo ra';
 
 $lang["page-title_whisper_setup"] = 'Cài đặt Plugin Whisper';
+$lang["whisper_cron_enable"] = 'Bật xử lý tài nguyên chưa xử lý qua tác vụ Cron theo lịch trình';
+$lang["whisper"] = 'Thì thầm';
+$lang["whisper_process_existing"] = 'Xử lý tài nguyên chưa xử lý';
+$lang["whisper_process_existing_intro"] = 'Tạo một tác vụ để bắt đầu xử lý âm thanh Whisper tại đây - tác vụ này không yêu cầu tham số nào nên có thể bắt đầu miễn là không có tác vụ nào khác cùng loại đang chờ xử lý.';
+$lang["whisper_process_existing_configure"] = 'Cấu hình tác vụ để xử lý tệp với Whisper';

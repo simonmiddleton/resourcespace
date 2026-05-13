@@ -8,3 +8,4 @@ $lang["sensitive_images_blur_level"]='Hassas görüntü bulanıklık seviyesi<br
 $lang["plugin-sensitive_images-title"]='Hassas görüntü bulanıklaştırma';
 $lang["plugin-sensitive_images-desc"]='Kullanıcıların tıklayarak bulanıklığı giderebileceği şekilde hassas olarak işaretlenmiş görüntüleri bulanıklaştırır.';
 $lang["page-title_sensitive_images_setup"] = 'Hassas Görüntüler Eklentisini Ayarla';
+$lang["sensitive_images_show"] = 'Görüntülemek için resmi tıklayın.';

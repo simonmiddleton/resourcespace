@@ -2335,7 +2335,8 @@ function resolve_user_emails($user_list)
  */
 function mark_email_as_invalid(string $email)
 {
-    if ($email == "") {
+    $email = trim($email);
+    if ($email === "") {
         return false;
     }
 
@@ -2343,9 +2344,18 @@ function mark_email_as_invalid(string $email)
     $matched_user = false;
 
     foreach ($users as $user) {
-        if (strtolower($email) == strtolower($user["email"])) {
+        if (mb_strtolower($email) === mb_strtolower($user["email"])) {
             $matched_user = true;
             ps_query("UPDATE user SET email_invalid = 1 WHERE ref = ?", ["i",$user["ref"]]);
+            log_activity(
+                log_code: LOG_CODE_EDITED,
+                remote_table: 'user',
+                remote_column: 'email_invalid',
+                remote_ref: $user['ref'],
+                value_new: 1,
+                value_old: $user['email_invalid'],
+                generate_diff: true,
+            );
         }
     }
 

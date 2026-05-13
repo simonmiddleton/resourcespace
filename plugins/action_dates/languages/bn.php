@@ -38,3 +38,4 @@ $lang["weekday-5"] = 'শুক্রবার';
 $lang["weekday-6"] = 'শনিবার';
 
 $lang["page-title_action_dates_setup"] = 'অ্যাকশন তারিখ প্লাগইন সেটআপ করুন';
+$lang["action_dates_additional_settings_email_admin_days"] = 'অ্যাকশন ঘটার আগে কত দিন আগে প্রশাসকদের জানাবেন (অক্ষম করতে খালি রাখুন)';

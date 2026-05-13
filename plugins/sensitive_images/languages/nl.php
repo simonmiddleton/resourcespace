@@ -8,3 +8,4 @@ $lang["sensitive_images_blur_level"]='Gevoeligheidsniveau van beeldvervaging<br>
 $lang["plugin-sensitive_images-title"]='Gevoelige afbeelding vervagen';
 $lang["plugin-sensitive_images-desc"]='Vervaagt afbeeldingen die als gevoelig zijn gemarkeerd, waarbij de gebruiker kan klikken om te ontvervagen.';
 $lang["page-title_sensitive_images_setup"] = 'Instellen van de Gevoelige Afbeeldingen Plugin';
+$lang["sensitive_images_show"] = 'Klik op de afbeelding om te tonen.';

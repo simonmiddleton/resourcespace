@@ -38,3 +38,4 @@ $lang["weekday-5"] = 'วันศุกร์';
 $lang["weekday-6"] = 'วันเสาร์';
 
 $lang["page-title_action_dates_setup"] = 'ตั้งค่าปลั๊กอินวันที่การดำเนินการ';
+$lang["action_dates_additional_settings_email_admin_days"] = 'แจ้งผู้ดูแลระบบล่วงหน้ากี่วันก่อนดำเนินการ (เว้นว่างเพื่อปิดการใช้งาน)';

@@ -22,3 +22,10 @@ $lang["faces_count_missing"] = 'Afbeeldingen te verwerken';
 $lang["faces-tag-field-not-set"] = 'Taggingveld is niet geconfigureerd.';
 
 $lang["page-title_faces_setup"] = 'Instellen van de Faces Plugin';
+$lang["faces_insight_faces"] = 'InsightFaces';
+$lang["faces_detect_faces"] = 'Gezichten detecteren';
+$lang["faces_tag_faces"] = 'Gezichten taggen';
+$lang["faces_detect_faces_configure"] = 'Configureer taak om gezichten te detecteren';
+$lang["faces_tag_faces_configure"] = 'Configureer taak om gezichten te taggen';
+$lang["faces_detect_faces_intro"] = 'Maak een taak aan om gezichten te detecteren. Deze taak vereist geen parameters en kan worden gestart zolang er geen andere lopende taken van dit type zijn.';
+$lang["faces_tag_faces_collection_refs_help"] = 'Het instellen van deze optie betekent dat alleen resources in de genoemde collecties worden bijgewerkt. Als er geen collecties zijn opgegeven, wordt gezichts-tagging bijgewerkt voor ALLE geschikte resources. Collecties kunnen worden gespecificeerd met een komma-gescheiden lijst of bereiken, bijv. 100,105,110-115.';

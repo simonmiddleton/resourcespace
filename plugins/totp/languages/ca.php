@@ -17,3 +17,4 @@ $lang["totp_date_binding_m"] = 'El mes actual';
 $lang["totp_date_binding_y"] = 'L\'any actual';
 $lang["page-title_totp_setup"] = 'Configuració del plugin TOTP';
 $lang["page-title_totp_totp"] = 'TOTP';
+$lang["totp_saml"] = 'Desactivar TOTP per a usuaris ja autenticats via SAML (Requereix el plugin SAML)';

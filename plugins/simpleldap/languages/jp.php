@@ -54,3 +54,4 @@ $lang["plugin-simpleldap-title"]='シンプルLDAP';
 $lang["plugin-simpleldap-desc"]='[高度] Active Directoryを対象とした、Oracleディレクトリもサポートするシンプルなldap認証の実装';
 $lang["page-title_simpleldap_ajax_test_auth"] = 'LDAP認証のテスト';
 $lang["page-title_simpleldap_setup"] = 'シンプルLDAPプラグインの設定';
+$lang["simpleldap_userlimit_error"] = 'ユーザー制限に達したため、ユーザーを作成できませんでした。管理者に連絡してください。';

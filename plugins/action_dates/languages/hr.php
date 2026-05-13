@@ -40,3 +40,4 @@ $lang["plugin-action_dates-title"] = 'Datumi radnji';
 $lang["plugin-action_dates-desc"] = 'Omogućuje zakazano brisanje ili ograničenje resursa na temelju polja s datumima';
 
 $lang["page-title_action_dates_setup"] = 'Postavljanje dodatka za akcijske datume';
+$lang["action_dates_additional_settings_email_admin_days"] = 'Obavijesti administratore ovim brojem dana prije nego što se radnja dogodi (Ostavite prazno za onemogućavanje)';

@@ -107,3 +107,4 @@ $lang["page-title_simplesaml_setup"] = 'Postavljanje Simple SAML dodatka';
 $lang["simplesaml_error_not_configured"] = 'SimpleSAML dodatak nije konfiguriran';
 $lang["simplesaml_error_no_idp_metadata"] = 'SimpleSAML dodatak nije potpuno konfiguriran (nedostaje IdP metapodatak)';
 $lang["simplesaml_error_no_authsource"] = 'SimpleSAML dodatak nije potpuno konfiguriran (nedostaje authsource)';
+$lang["simplesaml_userlimit_error"] = 'Korisnik nije mogao biti kreiran jer je dosegnut maksimalni broj korisnika. Molimo kontaktirajte svog administratora.';

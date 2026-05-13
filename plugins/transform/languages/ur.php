@@ -81,3 +81,4 @@ $lang["cropper_preset_sizes"] = 'پہلے سے طے شدہ سائز';
 $lang["page-title_transform_collection_transform"] = 'وسائل کو تبدیل کریں';
 $lang["page-title_transform_crop"] = 'کٹائی کا وسیلہ';
 $lang["page-title_transform_setup"] = 'ٹرانسفارم پلگ ان سیٹ اپ کریں';
+$lang["use_filename_as_title"] = 'فائل کا نام عنوان کے طور پر استعمال کریں';

@@ -27,3 +27,7 @@ $lang["page-title_google_vision_process_existing"] = 'Google Vision Proces Istni
 $lang["page-title_google_vision_setup"] = 'Skonfiguruj wtyczkę Google Vision';
 $lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
 $lang["page-title_google_vision_test"] = 'Google Vision Test';
+$lang["google_vision"] = 'Google Vision';
+$lang["google_vision_process_existing"] = 'Przetwarzaj nieprzetworzone zasoby';
+$lang["google_vision_process_existing_configure"] = 'Skonfiguruj zadanie do przetwarzania nieprzetworzonych zasobów';
+$lang["google_vision_process_existing_collection_refs_help"] = 'Ustawienie tej opcji oznacza, że będą przetwarzane tylko zasoby z wymienionych kolekcji. Jeśli nie zostaną podane żadne kolekcje, zostaną przetworzone WSZYSTKIE odpowiednie zasoby. Kolekcje można określić za pomocą listy oddzielonej przecinkami lub zakresów, np 100,105,110-115';

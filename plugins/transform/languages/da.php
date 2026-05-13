@@ -85,3 +85,4 @@ $lang["cropper_preset_sizes"] = 'Foruddefinerede størrelser';
 $lang["page-title_transform_collection_transform"] = 'Transformér ressource';
 $lang["page-title_transform_crop"] = 'Beskær Ressource';
 $lang["page-title_transform_setup"] = 'Opsæt Transform Plugin';
+$lang["use_filename_as_title"] = 'Brug filnavn som titel';

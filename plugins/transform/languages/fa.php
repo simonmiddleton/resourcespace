@@ -81,3 +81,4 @@ $lang["cropper_preset_sizes"] = 'اندازه‌های از پیش تعریف ش
 $lang["page-title_transform_collection_transform"] = 'تبدیل منبع';
 $lang["page-title_transform_crop"] = 'برش منبع';
 $lang["page-title_transform_setup"] = 'تنظیم پلاگین تبدیل';
+$lang["use_filename_as_title"] = 'استفاده از نام فایل به عنوان عنوان';

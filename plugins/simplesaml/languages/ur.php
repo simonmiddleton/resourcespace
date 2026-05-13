@@ -105,3 +105,4 @@ $lang["page-title_simplesaml_setup"] = 'سادہ SAML پلگ ان سیٹ اپ ک
 $lang["simplesaml_error_not_configured"] = 'SimpleSAML پلگ ان ترتیب نہیں دیا گیا';
 $lang["simplesaml_error_no_idp_metadata"] = 'SimpleSAML پلگ ان مکمل طور پر ترتیب نہیں دیا گیا ہے (IdP میٹا ڈیٹا غائب ہے)';
 $lang["simplesaml_error_no_authsource"] = 'SimpleSAML پلگ ان مکمل طور پر ترتیب نہیں دیا گیا ہے (authsource غائب ہے)';
+$lang["simplesaml_userlimit_error"] = 'یوزر کو تخلیق نہیں کیا جا سکا کیونکہ یوزر کی حد پوری ہو چکی ہے۔ براہ کرم اپنے ایڈمنسٹریٹر سے رابطہ کریں۔';

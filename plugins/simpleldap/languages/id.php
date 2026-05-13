@@ -54,3 +54,4 @@ $lang["plugin-simpleldap-title"]='LDAP Sederhana';
 $lang["plugin-simpleldap-desc"]='Implementasi lebih sederhana dari autentikasi ldap, ditargetkan pada Active Directory tetapi juga mendukung direktori Oracle';
 $lang["page-title_simpleldap_ajax_test_auth"] = 'Uji Autentikasi LDAP';
 $lang["page-title_simpleldap_setup"] = 'Pengaturan Plugin LDAP Sederhana';
+$lang["simpleldap_userlimit_error"] = 'Pengguna tidak dapat dibuat karena batas pengguna telah tercapai. Silakan hubungi administrator Anda.';

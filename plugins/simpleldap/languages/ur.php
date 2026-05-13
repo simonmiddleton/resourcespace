@@ -52,3 +52,4 @@ $lang["origin_simpleldap"]='SimpleLDAP پلگ ان';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='سرور کے FQDN کو سرٹیفکیٹ کے CN کے خلاف چیک نہ کریں۔';
 $lang["page-title_simpleldap_ajax_test_auth"] = 'LDAP تصدیق کی جانچ کریں';
 $lang["page-title_simpleldap_setup"] = 'سادہ LDAP پلگ ان سیٹ اپ کریں';
+$lang["simpleldap_userlimit_error"] = 'صارف کو تخلیق نہیں کیا جا سکا کیونکہ صارف کی حد پوری ہو چکی ہے۔ براہ کرم اپنے ایڈمنسٹریٹر سے رابطہ کریں۔';

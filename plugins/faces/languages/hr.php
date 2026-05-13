@@ -22,3 +22,10 @@ $lang["faces_count_missing"] = 'Slike za obradu';
 $lang["faces-tag-field-not-set"] = 'Polje za označavanje nije konfigurirano.';
 
 $lang["page-title_faces_setup"] = 'Postavljanje Faces dodatka';
+$lang["faces_insight_faces"] = 'InsightFaces';
+$lang["faces_detect_faces"] = 'Prepoznaj lica';
+$lang["faces_tag_faces"] = 'Označi lica';
+$lang["faces_detect_faces_configure"] = 'Konfigurirajte zadatak za prepoznavanje lica';
+$lang["faces_tag_faces_configure"] = 'Konfigurirajte zadatak za označavanje lica';
+$lang["faces_detect_faces_intro"] = 'Ovdje stvorite zadatak za pokretanje prepoznavanja lica - ovaj zadatak ne zahtijeva nikakve parametre, pa ga možete pokrenuti sve dok nema drugih aktivnih zadataka tog tipa.';
+$lang["faces_tag_faces_collection_refs_help"] = 'Postavljanje ove opcije značit će da će se ažurirati samo resursi u navedenim kolekcijama. Ako nisu specificirane kolekcije, označavanje lica će se ažurirati za SVE prikladne resurse. Kolekcije se mogu navesti koristeći popis odvojene zarezom, kao i raspone npr 100,105,110-115';

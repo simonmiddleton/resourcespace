@@ -6,3 +6,4 @@ $lang["sensitive_images_help"] = 'Укажыце поле метададзены
 $lang["sensitive_images_field"] = 'Поле метададзеных, якое ўтрымлівае прычыну, чаму малюнак з\'яўляецца адчувальным';
 $lang["sensitive_images_blur_level"] = 'Раўнамернасць размыцця адчувальных малюнкаў<br>(1=мінімум, 6=максімум)';
 $lang["page-title_sensitive_images_setup"] = 'Наладка плагіна для адчувальных малюнкаў';
+$lang["sensitive_images_show"] = 'Націсніце на малюнак, каб паказаць.';

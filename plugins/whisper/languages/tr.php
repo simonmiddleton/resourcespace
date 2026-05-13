@@ -10,3 +10,8 @@ $lang["whisper_transcript"] = 'Transkript dosyası oluşturun ve alternatif dosy
 $lang["whisper_transcript_name"] = 'Otomatik olarak oluşturulan transkript';
 
 $lang["page-title_whisper_setup"] = 'Whisper Eklentisini Kurun';
+$lang["whisper_cron_enable"] = 'İşlenmemiş kaynakların zamanlanmış Cron göreviyle işlenmesini etkinleştir';
+$lang["whisper"] = 'Fısıltı';
+$lang["whisper_process_existing"] = 'İşlenmemiş kaynakları işle';
+$lang["whisper_process_existing_intro"] = 'Burada Fısıltı ses işleme başlatmak için bir iş oluşturun - bu iş herhangi bir parametre gerektirmez, bu nedenle bu tür başka bekleyen işler yoksa başlatılabilir.';
+$lang["whisper_process_existing_configure"] = 'Fısıltı ile dosyaları işlemek için görevi yapılandır';

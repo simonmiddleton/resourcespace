@@ -22,3 +22,10 @@ $lang["faces_count_missing"] = 'Képek feldolgozásra';
 $lang["faces-tag-field-not-set"] = 'A címkéző mező nincs konfigurálva.';
 
 $lang["page-title_faces_setup"] = 'Arcfelismerő bővítmény beállítása';
+$lang["faces_insight_faces"] = 'InsightFaces';
+$lang["faces_detect_faces"] = 'Arcok felismerése';
+$lang["faces_tag_faces"] = 'Arcok címkézése';
+$lang["faces_detect_faces_configure"] = 'Feladat konfigurálása arcok felismeréséhez';
+$lang["faces_tag_faces_configure"] = 'Feladat konfigurálása arcok címkézéséhez';
+$lang["faces_detect_faces_intro"] = 'Hozzon létre egy feladatot az arcok felismerésének megkezdéséhez itt - ez a feladat nem igényel paramétereket, így elindítható, amíg nincs más, ezzel a típussal kapcsolatos függőben lévő feladat.';
+$lang["faces_tag_faces_collection_refs_help"] = 'Ennek a beállításnak az aktiválásával csak a felsorolt gyűjtemények erőforrásai frissülnek. Ha nem ad meg gyűjteményeket, akkor az arcok címkézése minden alkalmas erőforrásra vonatkozik. A gyűjteményeket vesszővel elválasztott listaként, illetve tartományként is megadhatja pl. 100,105,110-115';

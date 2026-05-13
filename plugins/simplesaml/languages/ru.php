@@ -107,3 +107,4 @@ $lang["page-title_simplesaml_setup"] = 'Настройка плагина Simple
 $lang["simplesaml_error_not_configured"] = 'Плагин SimpleSAML не настроен';
 $lang["simplesaml_error_no_idp_metadata"] = 'Плагин SimpleSAML не полностью настроен (отсутствуют метаданные IdP)';
 $lang["simplesaml_error_no_authsource"] = 'Плагин SimpleSAML не полностью настроен (отсутствует authsource)';
+$lang["simplesaml_userlimit_error"] = 'Пользователь не может быть создан, так как достигнут лимит пользователей. Пожалуйста, обратитесь к вашему администратору.';

@@ -54,3 +54,4 @@ $lang["plugin-simpleldap-title"]='सरल LDAP';
 $lang["plugin-simpleldap-desc"]='[उन्नत] Active Directory को लक्षित करते हुए ldap प्रमाणीकरण का सरल कार्यान्वयन, लेकिन Oracle निर्देशिका का भी समर्थन करता है';
 $lang["page-title_simpleldap_ajax_test_auth"] = 'LDAP प्रमाणीकरण का परीक्षण करें';
 $lang["page-title_simpleldap_setup"] = 'सरल LDAP प्लगइन सेटअप करें';
+$lang["simpleldap_userlimit_error"] = 'उपयोगकर्ता को नहीं बनाया जा सका क्योंकि उपयोगकर्ता सीमा पहुँच गई है। कृपया अपने व्यवस्थापक से संपर्क करें।';

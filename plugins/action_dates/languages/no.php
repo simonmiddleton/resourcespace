@@ -40,3 +40,4 @@ $lang["plugin-action_dates-title"] = 'Handlingsdatoer';
 $lang["plugin-action_dates-desc"] = 'Aktiverer planlagt sletting eller begrensning av ressurser basert på datofelt';
 
 $lang["page-title_action_dates_setup"] = 'Konfigurer Handlingsdatoer Plugin';
+$lang["action_dates_additional_settings_email_admin_days"] = 'Varsle administratorer dette antallet dager før handlingen finner sted (Sett tom for å deaktivere)';

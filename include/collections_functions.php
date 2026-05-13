@@ -461,6 +461,10 @@ function add_resource_to_collection(
             collection_log($collection, LOG_CODE_COLLECTION_ADDED_RESOURCE, $resource);
         }
 
+        if ($collection_data['type'] === COLLECTION_TYPE_FEATURED) {
+            clear_query_cache("featured_collections");
+        }
+
         // Clear theme image cache
         clear_query_cache("themeimage");
         clear_query_cache('col_total_ref_count_w_perm');
@@ -2491,8 +2495,9 @@ function add_saved_search_items(
         ]),
         $fc_branch_path_keys
     );
-    $resourcesnotadded = array(); # record the resources that are not added so we can display to the user
+    $resourcesnotadded = array(); # Record the resources that are not added due to archive state
     $blockedtypes = array();# Record the resource types that are not added
+    $blockedshares = array(); # Record the resources that are not added due to share permissions
 
     foreach ($results["data"] as $result) {
         $resource = $result["ref"];
@@ -2504,8 +2509,13 @@ function add_saved_search_items(
         }
 
         if (count($keys) > 0) {
-            if (($archivestatus < 0 && !$collection_allow_not_approved_share) || !can_share_resource($resource)) {
+            if ($archivestatus < 0 && !$collection_allow_not_approved_share) {
                 $resourcesnotadded[$resource] = $result;
+                continue;
+            }
+
+            if (!can_share_resource($resource)) { 
+                $blockedshares[$resource] = $result;
                 continue;
             }
 
@@ -2551,7 +2561,7 @@ function add_saved_search_items(
         $n = 0;
         foreach ($results["data"] as $result) {
             $resource = $result["ref"];
-            if (!isset($resourcesnotadded[$resource]) && !in_array($result["resource_type"], $collection_block_restypes)) {
+            if (!isset($resourcesnotadded[$resource]) && !in_array($result["resource_type"], $collection_block_restypes) && !isset($blockedshares[$resource])) {
                 ps_query("DELETE FROM collection_resource WHERE resource=? AND collection=?", array("i",$resource,"i",$collection));
                 ps_query("INSERT INTO collection_resource(resource,collection,sortorder) VALUES (?,?,?)", array("i",$resource,"i",$collection,"s",$n));
 
@@ -2566,12 +2576,15 @@ function add_saved_search_items(
     clear_query_cache('themeimage');
     clear_query_cache('col_total_ref_count_w_perm');
 
-    if (!empty($resourcesnotadded) || count($blockedtypes) > 0) {
+    if (!empty($resourcesnotadded) || count($blockedtypes) > 0 || !empty($blockedshares)) {
         # Translate to titles only for displaying them to the user
         global $view_title_field;
         $titles = array();
         foreach ($resourcesnotadded as $resource) {
             $titles[] = i18n_get_translated($resource['field' . $view_title_field]);
+        }
+        foreach ($blockedshares as $resource) {
+            $titles['blockedshares'][] = i18n_get_translated($resource['field' . $view_title_field]);
         }
         if (count($blockedtypes) > 0) {
             $blocked_restypes = array_unique($blockedtypes);
@@ -5843,7 +5856,26 @@ function compute_featured_collections_access_control()
         return $CACHE_FC_ACCESS_CONTROL;
     }
 
-    $all_fcs = ps_query("SELECT ref, parent FROM collection WHERE `type` = ?", ['i', COLLECTION_TYPE_FEATURED], "featured_collections");
+    $mysql_version = ps_query('SELECT LEFT(VERSION(), 3) AS ver');
+    if (version_compare($mysql_version[0]['ver'], '8.0', '>=')) {
+        $all_fcs = ps_query("
+        WITH RECURSIVE cte(ref,parent, level) AS
+        (
+            SELECT  ref, parent, 1 AS level
+            FROM  collection
+                WHERE parent IS NULL AND type = ?
+        UNION ALL
+            SELECT  c.ref, c.parent, level + 1 AS LEVEL
+            FROM  collection c
+            INNER JOIN  cte
+                ON  cte.ref = c.parent
+        )
+        SELECT cte.ref, cte.parent FROM cte ORDER BY level
+        ", ['i', COLLECTION_TYPE_FEATURED], "featured_collections");
+    } else {
+        $all_fcs = ps_query("SELECT ref, parent FROM collection WHERE `type` = ?", ['i', COLLECTION_TYPE_FEATURED], "featured_collections");
+    }
+
     $all_fcs_rp = reshape_array_by_value_keys($all_fcs, 'ref', 'parent');
     // Set up arrays to store permitted/blocked featured collections
     $includerefs = array();

@@ -27,3 +27,7 @@ $lang["page-title_google_vision_process_existing"] = 'Google Vision Prozess Best
 $lang["page-title_google_vision_setup"] = 'Google Vision Plugin einrichten';
 $lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
 $lang["page-title_google_vision_test"] = 'Google Vision Test';
+$lang["google_vision"] = 'Google Vision';
+$lang["google_vision_process_existing"] = 'Unverarbeitete Ressourcen verarbeiten';
+$lang["google_vision_process_existing_configure"] = 'Aufgabe konfigurieren, um unverarbeitete Ressourcen zu verarbeiten';
+$lang["google_vision_process_existing_collection_refs_help"] = 'Wenn diese Option aktiviert ist, werden nur Ressourcen in den aufgelisteten Sammlungen verarbeitet. Wenn keine Sammlungen angegeben sind, werden alle geeigneten Ressourcen verarbeitet. Sammlungen können entweder durch eine durch Kommas getrennte Liste oder durch Bereiche z.B. 100,105,110-115 angegeben werden.';

@@ -83,3 +83,4 @@ $lang["cropper_preset_sizes"] = 'Předdefinované velikosti';
 $lang["page-title_transform_collection_transform"] = 'Transformovat zdroj';
 $lang["page-title_transform_crop"] = 'Oříznout zdroj';
 $lang["page-title_transform_setup"] = 'Nastavení transformace pluginu';
+$lang["use_filename_as_title"] = 'Použít název souboru jako titulek';

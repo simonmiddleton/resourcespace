@@ -10,3 +10,8 @@ $lang["whisper_transcript"] = 'Generálj egy átirat fájlt, és add hozzá alte
 $lang["whisper_transcript_name"] = 'Automatikusan generált átirat';
 
 $lang["page-title_whisper_setup"] = 'Whisper Plugin beállítása';
+$lang["whisper_cron_enable"] = 'Az feldolgozatlan erőforrások feldolgozásának engedélyezése ütemezett Cron feladaton keresztül';
+$lang["whisper"] = 'Whisper';
+$lang["whisper_process_existing"] = 'Feldolgozatlan erőforrások feldolgozása';
+$lang["whisper_process_existing_intro"] = 'Hozzon létre egy feladatot a Whisper hangfeldolgozás elindításához itt - ez a feladat nem igényel paramétereket, így elindítható, amíg nincs más, ezzel a típussal kapcsolatos függőben lévő feladat.';
+$lang["whisper_process_existing_configure"] = 'Feladat konfigurálása fájlok Whisperrel történő feldolgozásához';

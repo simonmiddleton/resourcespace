@@ -54,3 +54,4 @@ $lang["plugin-simpleldap-title"]='간단한 LDAP';
 $lang["plugin-simpleldap-desc"]='[고급] Active Directory를 대상으로 하지만 Oracle 디렉토리도 지원하는 간단한 ldap 인증 구현';
 $lang["page-title_simpleldap_ajax_test_auth"] = 'LDAP 인증 테스트';
 $lang["page-title_simpleldap_setup"] = '간단한 LDAP 플러그인 설정';
+$lang["simpleldap_userlimit_error"] = '사용자를 생성할 수 없습니다. 사용자 제한에 도달했습니다. 관리자에게 문의하세요.';

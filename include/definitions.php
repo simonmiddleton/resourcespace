@@ -775,7 +775,6 @@ const SENSITIVE_VARIABLE_NAMES = [
     'ldapauth',
     'tms_link_user',
     'tms_link_password',
-    'wordpress_sso_secret',
     'youtube_publish_username',
     'youtube_publish_password',
     'vimeo_publish_client_id',
@@ -786,14 +785,14 @@ const SENSITIVE_VARIABLE_NAMES = [
     'emu_email_notify',
 ];
 
-const WORKFLOW_DEFAULT_ICON = "cog";
+const WORKFLOW_DEFAULT_ICON = "workflow";
 const WORKFLOW_DEFAULT_ICONS = [
-    '-2'    => 'file-input',
-    '-1'    => 'eye',
+    '-2'    => 'clock-arrow-up',
+    '-1'    => 'clock-fading',
     '0'     => 'check',
-    '1'     => 'clock',
-    '2'     => 'archive',
-    '3'     => 'trash-2',
+    '1'     => 'file-clock',
+    '2'     => 'file-archive',
+    '3'     => 'file-x',
     ];
 
 // File extensions that can be natively viewed in the browser
@@ -896,6 +895,13 @@ const API_ISSUE_VALID_DESTINATIONS = [
     "linkrui" => [
         "name" => "LinkrUI",
         "url" => "https://resourcespace.linkrui.com/saml",
+        "querydata" => ["username"],
+        "stateparam" => "state",
+    ],
+    "tagquest" => [
+        "name" => "TagQuest",
+        "url" => "https://resourcespace.tagquest.io/api/auth/rs-callback",
+        "querydata" => ["username", "email", "fullname"],
         "stateparam" => "state",
     ],
 ];
@@ -1092,7 +1098,7 @@ const FIELD_SORT_METHODS = [
 // The preview attempts for a resource are reset if preview generation is manually initiated
 const SYSTEM_MAX_PREVIEW_ATTEMPTS = 5;
 
-const NON_PREVIEW_EXTENSIONS = ['zip'];
+const NON_PREVIEW_EXTENSIONS = ['zip','fla'];
 
 $offline_job_list = [
     0 => ['name' => 'Core',

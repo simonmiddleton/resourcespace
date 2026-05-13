@@ -81,3 +81,4 @@ $lang["cropper_preset_sizes"] = 'Előre definiált méretek';
 $lang["page-title_transform_collection_transform"] = 'Erőforrás átalakítása';
 $lang["page-title_transform_crop"] = 'Képvágás Erőforrás';
 $lang["page-title_transform_setup"] = 'Állítsa be a Transform Plugint';
+$lang["use_filename_as_title"] = 'Fájlnév használata címként';

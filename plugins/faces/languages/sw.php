@@ -22,3 +22,10 @@ $lang["faces_count_missing"] = 'Picha za kushughulikia';
 $lang["faces-tag-field-not-set"] = 'Sehemu ya kuweka lebo haijawekwa sawa.';
 
 $lang["page-title_faces_setup"] = 'Weka Plugin za Uso';
+$lang["faces_insight_faces"] = 'InsightFaces';
+$lang["faces_detect_faces"] = 'Gundua nyuso';
+$lang["faces_tag_faces"] = 'Leba nyuso';
+$lang["faces_detect_faces_configure"] = 'Sanidi kazi ya kugundua nyuso';
+$lang["faces_tag_faces_configure"] = 'Sanidi kazi ya leba nyuso';
+$lang["faces_detect_faces_intro"] = 'Unda kazi ya kuanza kugundua nyuso hapa - kazi hii haina mahitaji ya vigezo hivyo inaweza kuanzishwa mradi hakuna kazi nyingine zinazofanana zinazobaki.';
+$lang["faces_tag_faces_collection_refs_help"] = 'Kuweka chaguo hili kutamaanisha kuwa rasilimali pekee zilizomo kwenye makusanyo yaliyoorodheshwa zitaboreshwa. Ikiwa hakuna makusanyo yaliyobainishwa basi leba ya nyuso itaboreshwa kwa RASILIMALI ZOTE zinazofaa. Makusanyo yanaweza kubainishwa kwa kutumia orodha iliyo na koma pamoja na mipaka mfano 100,105,110-115';

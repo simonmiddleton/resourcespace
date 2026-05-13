@@ -22,3 +22,10 @@ $lang["faces_count_faces"] = 'Kabuuang mukha na natukoy';
 $lang["faces_count_missing"] = 'Mga larawan na iproseso';
 
 $lang["page-title_faces_setup"] = 'I-set up ang Faces Plugin';
+$lang["faces_insight_faces"] = 'InsightFaces';
+$lang["faces_detect_faces"] = 'Tuklasin ang mga mukha';
+$lang["faces_tag_faces"] = 'I-tag ang mga mukha';
+$lang["faces_detect_faces_configure"] = 'I-configure ang trabaho upang tuklasin ang mga mukha';
+$lang["faces_tag_faces_configure"] = 'I-configure ang trabaho upang i-tag ang mga mukha';
+$lang["faces_detect_faces_intro"] = 'Lumikha ng isang trabaho upang simulan ang pagtuklas ng mga mukha dito - ang trabahong ito ay hindi nangangailangan ng anumang mga parameter kaya maaari itong simulan hangga\'t walang ibang nakabinbing trabaho ng ganitong uri.';
+$lang["faces_tag_faces_collection_refs_help"] = 'Ang pagtatakda ng opsyong ito ay nangangahulugang tanging ang mga resources sa nakalistang mga koleksyon ang ia-update. Kung walang nakalistang koleksyon, ang pag-tag ng mukha ay ia-update para sa LAHAT ng angkop na mga resources. Maaaring tukuyin ang mga koleksyon gamit ang isang listahan na pinaghihiwalay ng kuwit pati na rin ang mga saklaw tulad ng 100,105,110-115';

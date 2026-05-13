@@ -22,3 +22,10 @@ $lang["faces_count_faces"] = 'Jumlah wajah yang dikesan';
 $lang["faces_count_missing"] = 'Imej untuk diproses';
 
 $lang["page-title_faces_setup"] = 'Tetapkan Plugin Wajah';
+$lang["faces_insight_faces"] = 'InsightFaces';
+$lang["faces_detect_faces"] = 'Kenal pasti muka';
+$lang["faces_tag_faces"] = 'Tandai muka';
+$lang["faces_detect_faces_configure"] = 'Konfigurasi kerja untuk mengesan muka';
+$lang["faces_tag_faces_configure"] = 'Konfigurasi kerja untuk menandai muka';
+$lang["faces_detect_faces_intro"] = 'Buat kerja untuk memulakan pengesanan muka di sini - kerja ini tidak memerlukan parameter apa pun jadi boleh dimulakan selagi tiada kerja lain yang tertunggak dari jenis ini.';
+$lang["faces_tag_faces_collection_refs_help"] = 'Menetapkan pilihan ini akan bermakna hanya sumber dalam koleksi yang disenaraikan akan dikemas kini. Jika tiada koleksi yang ditetapkan, penandaan muka akan dikemas kini untuk SEMUA sumber yang sesuai. Koleksi boleh ditetapkan menggunakan senarai berasingan dengan koma serta julat seperti 100,105,110-115';

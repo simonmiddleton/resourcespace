@@ -95,92 +95,173 @@ if (!$hide_geolocation_panel || isset($geolocation_panel_only)) { ?>
         <?php include __DIR__ . '/map_processing.php'; ?>
         <!--Determine basemaps and map groups for user selection-->
         <?php include __DIR__ . '/map_basemaps.php'; ?>        
-
-        jQuery(document).ready(function ()
-            {
-            // Setup and define the Leaflet map with the initial view using leaflet.js and L.Control.Zoomslider.js
-            var <?php echo $map_container_obj; ?>_geo_lat = <?php echo $resource['geo_lat']; ?>;
-            var <?php echo $map_container_obj; ?>_geo_long = <?php echo $resource['geo_long']; ?>;
-            var <?php echo $map_container_obj; ?>_zoom = <?php echo $zoom; ?>;
-        
-            if (typeof <?php echo $map_container_obj; ?> !== "undefined")
-                {
-                <?php echo $map_container_obj; ?>.remove();
-                }
-            var <?php echo $map_container_obj; ?> = new L.map(<?php echo $map_container; ?>, {
-            preferCanvas: true,
-                renderer: L.canvas(),
-                zoomsliderControl: <?php echo $zoomslider?>,
-                zoomControl: <?php echo $zoomcontrol?>
-                }).setView([<?php echo $map_container_obj; ?>_geo_lat, <?php echo $map_container_obj; ?>_geo_long], <?php echo $map_container_obj; ?>_zoom);
-            <?php echo $map_container_obj; ?>.invalidateSize(); 
-
-            // Define default Leaflet basemap layer using leaflet.js, leaflet.providers.js, and L.TileLayer.PouchDBCached.js
-    
-            var defaultLayer = new L.tileLayer.provider('<?php echo $map_default;?>', {
-                useCache: '<?php echo $map_default_cache;?>', <!--Use browser caching of tiles (recommended)?-->
-                detectRetina: '<?php echo $map_retina;?>', <!--Use retina high resolution map tiles?-->
-                attribution: default_attribute
-            }).addTo(<?php echo $map_container_obj; ?>);
-            <?php echo $map_container_obj; ?>.invalidateSize(true);
-
-            // Set styled layer control options for basemaps and add to the Leaflet map using styledLayerControl.js
-            var options = {
-                container_maxHeight: "<?php echo $layer_controlheight?>px",
-                group_maxHeight: "180px",
-                exclusive: false
-            };
-
-            var control = L.Control.styledLayerControl(baseMaps,options);
-            <?php echo $map_container_obj; ?>.addControl(control);
-
-            // Show zoom history navigation bar and add to Leaflet map using Leaflet.NavBar.min.js
-            <?php if ($map_zoomnavbar && $view_mapheight >= 400) { ?>
-                L.control.navbar().addTo(<?php echo $map_container_obj; ?>); <?php
-            } ?>
-
-            // Add a scale bar to the Leaflet map using leaflet.min.js
-            new L.control.scale().addTo(<?php echo $map_container_obj; ?>);
-
-            // Add a KML overlay to the Leaflet map using leaflet-omnivore.min.js
-                <?php if ($map_kml) { ?>
-                omnivore.kml('<?php echo $baseurl?>/filestore/system/<?php echo $map_kml_file?>').addTo(<?php echo $map_container_obj; ?>); <?php
-                } ?>
-
-            // Limit geocoordinate values to six decimal places for display on marker hover
-            function georound(num) {
-                return +(Math.round(num + "e+6") + "e-6");
+        // Setup and define the Leaflet map with the initial view
+        var <?php echo $map_container_obj; ?>_geo_lat = <?php echo $resource['geo_lat']; ?>;
+        var <?php echo $map_container_obj; ?>_geo_long = <?php echo $resource['geo_long']; ?>;
+        var <?php echo $map_container_obj; ?>_zoom = <?php echo $zoom; ?>;
+        function initialise_<?php echo $map_container_obj; ?>(lat, lng, zoom) {
+            console.log("Checking requirements...");
+            
+            var container = document.getElementById('<?php echo $map_container; ?>');
+            if (!container) {
+                console.error('Map container not found');
+                return false;
+            }
+            
+            if (!container.parentNode) {
+                console.error('Map container not attached to DOM');
+                return false;
+            }
+            
+            var rect = container.getBoundingClientRect();
+            if (rect.width === 0 || rect.height === 0) {
+                console.error('Map container has no dimensions:', rect);
+                return false;
+            }
+            
+            if (typeof L === 'undefined' || !L.map || !L.Map) {
+                console.error('Leaflet not ready');
+                return false;
             }
 
-            // Add a marker for the resource
-            L.marker([<?php echo $map_container_obj; ?>_geo_lat, <?php echo $map_container_obj; ?>_geo_long], {
+            // Clear any existing map instance
+            if (container._leaflet_id) {
+                console.log("Clearing existing map instance");
+                container._leaflet_id = null;
+                container.innerHTML = '';
+            }
+
+            try {
+                console.log("Initializing map on container:", container);
+
+                // Create the map
+                var <?php echo $map_container_obj; ?> = new L.map('<?php echo $map_container; ?>', {
+                    preferCanvas: true,
+                    renderer: L.canvas(),
+                    zoomsliderControl: <?php echo $zoomslider?>,
+                    zoomControl: <?php echo $zoomcontrol?>
+                }).setView([lat, lng], zoom);
+
+                // Store map reference globally
+                window.<?php echo $map_container_obj; ?> = <?php echo $map_container_obj; ?>;
+
+                // Define default Leaflet basemap layer - ADD IT HERE INSIDE THE FUNCTION
+                var defaultLayer = new L.tileLayer.provider('<?php echo $map_default;?>', {
+                    useCache: '<?php echo $map_default_cache;?>',
+                    detectRetina: '<?php echo $map_retina;?>',
+                    attribution: default_attribute
+                }).addTo(<?php echo $map_container_obj; ?>);
+
+                // Set styled layer control options for basemaps
+                var options = {
+                    container_maxHeight: "<?php echo $layer_controlheight?>px",
+                    group_maxHeight: "180px",
+                    exclusive: false
+                };
+
+                var control = L.Control.styledLayerControl(baseMaps, options);
+                <?php echo $map_container_obj; ?>.addControl(control);
+
+                <?php if ($map_zoomnavbar && $view_mapheight >= 400) { ?>
+                    L.control.navbar().addTo(<?php echo $map_container_obj; ?>);
+                <?php } ?>
+
+                // Add scale bar
+                new L.control.scale().addTo(<?php echo $map_container_obj; ?>);
+
+                <?php if ($map_kml) { ?>
+                    omnivore.kml('<?php echo $baseurl?>/filestore/system/<?php echo $map_kml_file?>').addTo(<?php echo $map_container_obj; ?>);
+                <?php } ?>
+
+                // Add marker for the resource
+                L.marker([<?php echo $map_container_obj; ?>_geo_lat, <?php echo $map_container_obj; ?>_geo_long], {
                     <?php
                     $maprestype = get_resource_types($resource['resource_type']);
                     $markercolour = (isset($maprestype[0]) && isset($MARKER_COLORS[$maprestype[0]["colour"]])) ? (int)$maprestype[0]["colour"] : ($resource['resource_type'] % count($MARKER_COLORS));
                     echo "icon: " . strtolower($MARKER_COLORS[$markercolour])  . "Icon,\n";
                     ?>
-                title: georound(<?php echo $map_container_obj; ?>_geo_lat) + ", " + georound(<?php echo $map_container_obj; ?>_geo_long) + " (WGS84)"
-            }).addTo(<?php echo $map_container_obj; ?>);
+                    title: georound(<?php echo $map_container_obj; ?>_geo_lat) + ", " + georound(<?php echo $map_container_obj; ?>_geo_long) + " (WGS84)"
+                }).addTo(<?php echo $map_container_obj; ?>);
 
-            // Add the resource footprint polygon to the map and pan/zoom to the polygon
+                // Add the resource footprint polygon to the map and pan/zoom to the polygon
                 <?php if (is_numeric($map_polygon_field)) {
                     $polygon = leaflet_polygon_parsing($fields, false);
                     if (!is_null($polygon['values']) && $polygon['values'] != "" && $polygon['values'] != "[]") { ?>
-                    var refPolygon = L.polygon([<?php echo $polygon['values']; ?>]).addTo(<?php echo $map_container_obj; ?>);
-                        <?php echo $map_container_obj; ?>.fitBounds(refPolygon.getBounds(), {
-                        padding: [25, 25]
-                    }); <?php
+                var refPolygon = L.polygon([<?php echo $polygon['values']; ?>]).addTo(<?php echo $map_container_obj; ?>);
+                <?php echo $map_container_obj; ?>.fitBounds(refPolygon.getBounds(), {
+                    padding: [25, 25]
+                });
+                <?php
                     }
-                } else // Pan to the marker location.
-                { ?>
-                    <?php echo $map_container_obj; ?>.setView([<?php echo $map_container_obj; ?>_geo_lat, <?php echo $map_container_obj; ?>_geo_long], <?php echo $map_container_obj; ?>_zoom); <?php
+                } else { ?>
+                <?php echo $map_container_obj; ?>.setView([<?php echo $map_container_obj; ?>_geo_lat, <?php echo $map_container_obj; ?>_geo_long], <?php echo $map_container_obj; ?>_zoom);
+                <?php } ?>
+
+                // Fix for Microsoft Edge and Internet Explorer browsers
+                //<?php echo $map_container_obj; ?>.invalidateSize(true);
+                console.log("Map initialized successfully");
+                
+                // Return the map object so layers can be added after
+                return <?php echo $map_container_obj; ?>;
+            } catch (e) {
+                console.error('Map initialization failed:', e);
+                console.error('Error stack:', e.stack);
+                return false;
+            }
+        }
+
+        function waitForLeaflet() {
+            var container = document.getElementById('<?php echo $map_container; ?>');
+            
+            console.log("Checking readiness:");
+            console.log("- Container exists:", !!container);
+            console.log("- Container attached:", container && !!container.parentNode);
+            console.log("- Leaflet exists:", typeof L !== 'undefined');
+            console.log("- L.map exists:", typeof L !== 'undefined' && !!L.map);
+            
+            if (container && container.parentNode && typeof L !== 'undefined' && L.map && L.Map) {
+                // Check if container has dimensions
+                var rect = container.getBoundingClientRect();
+                console.log("- Container dimensions:", rect.width, "x", rect.height);
+                
+                if (rect.width > 0 && rect.height > 0) {
+                    console.log("Everything is ready, initializing map...");
+                    if (typeof window['initialise_<?php echo $map_container_obj; ?>'] === 'function') {
+                        var mapInstance = window['initialise_<?php echo $map_container_obj; ?>'](
+                            <?php echo $map_container_obj; ?>_geo_lat, 
+                            <?php echo $map_container_obj; ?>_geo_long, 
+                            <?php echo $map_container_obj; ?>_zoom
+                        );
+                        
+                        // If map was successfully created, trigger any pending layer additions
+                        if (mapInstance) {
+                            console.log("Map ready for layer additions");
+                            // You can add a custom event here if needed
+                            jQuery(document).trigger('mapReady', [mapInstance]);
+                        }
+                    }
+                } else {
+                    console.log("Container has no dimensions, waiting...");
+                    setTimeout(waitForLeaflet, 100);
                 }
+            } else {
+                console.log("Not ready yet, waiting...");
+                setTimeout(waitForLeaflet, 100);
+            }
+        }
 
-                ?>
-            // Fix for Microsoft Edge and Internet Explorer browsers
-                <?php echo $map_container_obj; ?>.invalidateSize(true);
-            });
+        // Limit geocoordinate values to six decimal places for display on marker hover
+        function georound(num) {
+            return +(Math.round(num + "e+6") + "e-6");
+        }
 
+        jQuery(document).ready(function () {
+            // Store the initialization function globally
+            window['initialise_<?php echo $map_container_obj; ?>'] = initialise_<?php echo $map_container_obj; ?>;
+            
+            // Start the initialisation process after page load
+            waitForLeaflet();
+        });
         </script>
 
         <!--Show resource geolocation value-->

@@ -10,3 +10,8 @@ $lang["whisper_transcript"] = 'Δημιουργήστε ένα αρχείο απ
 $lang["whisper_transcript_name"] = 'Αυτόματα παραγόμενη μεταγραφή';
 
 $lang["page-title_whisper_setup"] = 'Ρύθμιση Πρόσθετου Whisper';
+$lang["whisper_cron_enable"] = 'Ενεργοποίηση επεξεργασίας ανεπεξέργαστων πόρων μέσω προγραμματισμένης εργασίας Cron';
+$lang["whisper"] = 'Whisper';
+$lang["whisper_process_existing"] = 'Επεξεργασία ανεπεξέργαστων πόρων';
+$lang["whisper_process_existing_intro"] = 'Δημιουργήστε μια εργασία για να ξεκινήσετε την επεξεργασία ήχου Whisper εδώ - αυτή η εργασία δεν απαιτεί παραμέτρους, οπότε μπορεί να ξεκινήσει όσο δεν υπάρχουν άλλες εκκρεμείς εργασίες αυτού του τύπου.';
+$lang["whisper_process_existing_configure"] = 'Διαμόρφωση εργασίας για επεξεργασία αρχείων με Whisper';

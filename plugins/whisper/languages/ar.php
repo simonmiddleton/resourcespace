@@ -10,3 +10,8 @@ $lang["whisper_transcript"] = 'إنشاء ملف نصي وإضافته كملف 
 $lang["whisper_transcript_name"] = 'نص تلقائي التوليد';
 
 $lang["page-title_whisper_setup"] = 'إعداد مكون Whisper';
+$lang["whisper_cron_enable"] = 'تمكين معالجة الموارد غير المعالجة عبر مهمة مجدولة Cron';
+$lang["whisper"] = 'همس';
+$lang["whisper_process_existing"] = 'معالجة الموارد غير المعالجة';
+$lang["whisper_process_existing_intro"] = 'إنشاء مهمة لبدء معالجة صوت Whisper هنا - هذه المهمة لا تتطلب أية معلمات لذلك يمكن بدءها طالما لا توجد مهام أخرى معلقة من هذا النوع.';
+$lang["whisper_process_existing_configure"] = 'تكوين المهمة لمعالجة الملفات باستخدام Whisper';

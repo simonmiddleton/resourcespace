@@ -10,3 +10,8 @@ $lang["whisper_transcript"] = 'Gumawa ng transcript file at idagdag bilang alter
 $lang["whisper_transcript_name"] = 'Awtomatikong nabuo na transcript';
 
 $lang["page-title_whisper_setup"] = 'I-set up ang Whisper Plugin';
+$lang["whisper_cron_enable"] = 'Paganahin ang pagproseso ng mga hindi pa na-proseso na mga mapagkukunan sa pamamagitan ng naka-schedule na Cron na trabaho';
+$lang["whisper"] = 'Whisper';
+$lang["whisper_process_existing"] = 'Proseso ang mga hindi pa na-proseso na mga mapagkukunan';
+$lang["whisper_process_existing_intro"] = 'Lumikha ng isang trabaho upang simulan ang Whisper audio processing dito - ang trabahong ito ay hindi nangangailangan ng anumang mga parameter kaya maaari itong simulan hangga\'t walang ibang nakabinbing mga trabaho ng ganitong uri.';
+$lang["whisper_process_existing_configure"] = 'I-configure ang trabaho upang i-proseso ang mga file gamit ang Whisper';

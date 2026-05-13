@@ -10,3 +10,8 @@ $lang["whisper_transcript"] = 'Generirajte datoteku transkripta i dodajte je kao
 $lang["whisper_transcript_name"] = 'Automatski generirani transkript';
 
 $lang["page-title_whisper_setup"] = 'Postavite Whisper Plugin';
+$lang["whisper_cron_enable"] = 'Omogući obradu neobrađenih resursa putem zakazanog Cron posla';
+$lang["whisper"] = 'Šaputanje';
+$lang["whisper_process_existing"] = 'Obrada neobrađenih resursa';
+$lang["whisper_process_existing_intro"] = 'Stvori zadatak za pokretanje obrade zvuka pomoću Whisper - ovaj zadatak ne zahtijeva nikakve parametre, pa ga je moguće pokrenuti sve dok nema drugih aktivnih zadataka tog tipa.';
+$lang["whisper_process_existing_configure"] = 'Konfiguriraj zadatak za obradu datoteka pomoću Whisper';

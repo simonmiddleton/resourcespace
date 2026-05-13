@@ -40,3 +40,4 @@ $lang["plugin-action_dates-title"] = '操作日期';
 $lang["plugin-action_dates-desc"] = '启用基于日期字段的资源定期删除或限制';
 
 $lang["page-title_action_dates_setup"] = '设置操作日期插件';
+$lang["action_dates_additional_settings_email_admin_days"] = '在操作发生前多少天通知管理员（留空以禁用）';

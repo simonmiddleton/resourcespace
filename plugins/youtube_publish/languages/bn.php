@@ -51,3 +51,4 @@ $lang["youtube_chunk_size"]='ইউটিউবে আপলোড করার 
 $lang["youtube_publish_add_anchor"]='ইউটিউব URL মেটাডেটা ফিল্ডে সংরক্ষণ করার সময় URL-এ অ্যাঙ্কর ট্যাগ যোগ করবেন?';
 $lang["page-title_youtube_publish_setup"] = 'প্লাগইন সেটআপ';
 $lang["page-title_youtube_publish_youtube_upload"] = 'Youtube-এ সম্পদ প্রকাশ করুন';
+$lang["youtube_publish_video_title"] = 'ভিডিও শিরোনাম (সর্বোচ্চ ১০০ অক্ষর)';

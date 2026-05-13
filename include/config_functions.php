@@ -1288,7 +1288,7 @@ function config_single_ftype_select($name, $label, $current, $width = 300, $rtyp
         $rtype = '';
     }
 
-    $fields = get_resource_type_fields($rtype, 'title, name', 'asc', '', $ftypes, true);
+    $fields = get_resource_type_fields($rtype, 'title, name', 'asc', '', $ftypes, false);
     ?>
 
     <div class="Question">

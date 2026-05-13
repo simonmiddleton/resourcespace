@@ -101,7 +101,15 @@ function HookOpenai_gptAdmin_resource_type_field_editAdmin_field_replace_questio
  */
 function HookOpenai_gptAllUpdate_field($resource, $field, $value, $existing, $fieldinfo,$newnodes,$newvalues)
     {
-    global $valid_ai_field_types, $gpt_fields_processed;
+    global $valid_ai_field_types, $gpt_fields_processed, $gpt_processing_ref;
+
+    // Keep track of the resource currently being processed and reset fields if this changes
+    if (!isset($gpt_processing_ref)) {
+        $gpt_processing_ref = $resource;
+    } elseif ($resource != $gpt_processing_ref) {
+        $gpt_fields_processed = [];
+        $gpt_processing_ref = $resource;
+    }
 
     // Keep track of the fields that we have processed so that we can avoid infinite update_field loops
     if (!isset($gpt_fields_processed)) {
@@ -174,7 +182,7 @@ function HookOpenai_gptAllAftersaveresourcedata($r, $all_nodes_to_add, $all_node
                     {
                     if(count($updated_resources[$ref][$field["ref"]]) == 1 && trim($updated_resources[$ref][$field["ref"]][0]) == "")
                         {
-                        if (trim($field["value"]) == "") 
+                        if (trim($field["value"] ?? "") == "")
                             {
                                 continue;
                             }
@@ -278,9 +286,9 @@ function HookOpenai_gptAllAddtriggerablejob(): array
     }
 
     $scripts = [
-        0 => ['name' => 'OpenAI GPT', 'lang_string' => 'openai_gpt', 'type' => 'group_start'],
+        0 => ['name' => 'OpenAI/Ollama metadata processing', 'lang_string' => 'openai_gpt', 'type' => 'group_start'],
         1 => ['name' => 'Process existing GPT fields', 'lang_string' => 'openai_gpt_process_existing', 'script_name' => 'process_gpt_existing', 'plugin' => 'openai_gpt'],
-        2 => ['name' => 'OpenAI GPT', 'type' => 'group_end'],
+        2 => ['name' => 'OpenAI/Ollama metadata processing', 'type' => 'group_end'],
     ];
 
     return array_merge($existing_scripts, $scripts);

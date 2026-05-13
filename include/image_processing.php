@@ -1389,6 +1389,7 @@ function create_previews($ref, $thumbonly = false, $extension = "jpg", $previewo
             "previewonly" => $previewonly,
             "previewbased" => $previewbased,
             "ingested" => $ingested],
+            true
         );
     }
 
@@ -2611,6 +2612,11 @@ function upload_file_by_url(int $ref, bool $no_exif = false, bool $revert = fals
     }
 
     $upload_result = upload_file($ref, $no_exif, $revert, $autorotate, $file_path);   # Process as a normal upload...
+
+    if (!$upload_result && file_exists($file_path)) {
+        unlink($file_path);
+        debug("upload_file_by_url failed. Deleting temp file: $file_path");
+    }
     remove_empty_temp_directory($file_path);
 
     return $upload_result;
@@ -2637,6 +2643,10 @@ function delete_previews($resource, $alternative = -1)
             return;
         }
         $extension = $resource_data["file_extension"];
+    }
+
+    if (resource_file_readonly($resource)) {
+        return;
     }
 
     $fullsizejpgpath = get_resource_path($resource, true, "", false, "jpg", -1, 1, false, "", $alternative);
@@ -3350,7 +3360,12 @@ function start_previews(int $ref, string $extension = ""): int
 
     $minimal_previews = false;
     $resource_data = get_resource_data($ref, false);
-    delete_previews($resource_data);
+    $preview_based = false;
+    if (resource_has_preview_source($ref, $extension)) {
+        delete_previews($resource_data);   
+    } else {
+        $preview_based = true;
+    }
     if (trim($extension) == "") {
         $extension = $resource_data["file_extension"];
     }
@@ -3361,7 +3376,7 @@ function start_previews(int $ref, string $extension = ""): int
             'thumbonly' => false,
             'extension' => $resource_data["file_extension"],
             'previewonly' => false,
-            'previewbased' => false,
+            'previewbased' => $preview_based,
             'alternative' => -1,
             'ignoremaxsize' => true,
         ];
@@ -3385,7 +3400,7 @@ function start_previews(int $ref, string $extension = ""): int
                 false, 
                 in_array($extension, NON_PREVIEW_EXTENSIONS) ? 'jpg' : $extension, 
                 false, 
-                in_array($extension, NON_PREVIEW_EXTENSIONS), 
+                $preview_based || in_array($extension, NON_PREVIEW_EXTENSIONS), 
                 -1, 
                 true, 
                 $ingested, 
@@ -3403,7 +3418,7 @@ function start_previews(int $ref, string $extension = ""): int
         false, 
         in_array($resource_data["file_extension"], NON_PREVIEW_EXTENSIONS) ? 'jpg' : $resource_data["file_extension"],  
         false, 
-        in_array($resource_data["file_extension"], NON_PREVIEW_EXTENSIONS), 
+        $preview_based || in_array($resource_data["file_extension"], NON_PREVIEW_EXTENSIONS), 
         -1, 
         false, 
         $ingested);
@@ -3701,7 +3716,7 @@ function transform_apply_icc_profile(int $ref, string $original_file_path): arra
         return array();
     }
 
-    global $icc_preview_options, $icc_preview_profile_embed, $icc_preview_profile, $imagemagick_preserve_profiles;
+    global $icc_preview_options, $icc_preview_profile_embed, $icc_preview_profile, $imagemagick_preserve_profiles, $icc_embed_source_profile;
 
     if ($imagemagick_preserve_profiles) {
         // Don't touch the ICC profile
@@ -3710,7 +3725,7 @@ function transform_apply_icc_profile(int $ref, string $original_file_path): arra
 
     $targetprofile = __DIR__ . '/../iccprofiles/' . $icc_preview_profile;
 
-    $transform_actions['icc_profile']['command'] = " -strip -profile %%ICCPATH%% " . $icc_preview_options . " -profile %%TARGETPROFILE%% " . ($icc_preview_profile_embed ? " " : " -strip ");
+    $transform_actions['icc_profile']['command'] = " -strip -profile %%ICCPATH%% " . ($icc_embed_source_profile ? " " : $icc_preview_options . " -profile %%TARGETPROFILE%% ") . ($icc_preview_profile_embed ? " " : " -strip ");
     $transform_actions['icc_profile']['cmdparams']["%%ICCPATH%%"] = new CommandPlaceholderArg($iccpath, 'is_valid_rs_path');
     $transform_actions['icc_profile']['cmdparams']["%%TARGETPROFILE%%"] = new CommandPlaceholderArg($targetprofile, 'file_exists');
 
@@ -4119,10 +4134,10 @@ function create_previews_using_im(
                     && file_exists($iccpath)
                     && (!$imagemagick_mpr || ($imagemagick_mpr_preserve_profiles && in_array($id, ["pre","thm","col","scr"])))
                 ) {
-                    global $icc_preview_profile_embed;
+                    global $icc_preview_profile_embed, $icc_embed_source_profile;
                     // we have an extracted ICC profile, so use it as source
                     $targetprofile = __DIR__ . '/../iccprofiles/' . $icc_preview_profile;
-                    $profile = " -strip -profile %%ICCPATH%% " . $icc_preview_options . " -profile %%TARGETPROFILE%% ";
+                    $profile = " -strip -profile %%ICCPATH%% " . ($icc_embed_source_profile ? " " : $icc_preview_options . " -profile %%TARGETPROFILE%% ");
 
                     if ($imagemagick_mpr && $mpr_metadata_profiles !== '') {
                         $profile .= " +profile %%MPR_METADATA_PROFILES%%";
@@ -4357,32 +4372,35 @@ function create_previews_using_im(
             run_command($mpr_command);
         }
 
-         # For the thumbnail image, call extract_mean_colour() to save the colour/size information
-         $thumbpath = get_resource_path($ref, true, "thm", false, "jpg", -1, 1, false, "", $alternative);
-        if (file_exists($thumbpath)) {
-            $GLOBALS["use_error_exception"] = true;
-            try {
-                $target = imagecreatefromjpeg($thumbpath);
-            } catch (Throwable $e) {
+        if (count($onlysizes) === 0 || count(array_diff($GLOBALS['minimal_previews_sizes'], $onlysizes)) === 0) {
+            # Only when creating all previews or minimal previews - not for individual previews.
+            # For the thumbnail image, call extract_mean_colour() to save the colour/size information
+            $thumbpath = get_resource_path($ref, true, "thm", false, "jpg", -1, 1, false, "", $alternative);
+            if (file_exists($thumbpath)) {
+                $GLOBALS["use_error_exception"] = true;
+                try {
+                    $target = imagecreatefromjpeg($thumbpath);
+                } catch (Throwable $e) {
+                    $target = false;
+                    debug('Error when opening thm size for calling extract_mean_colour(): ' . $e->getMessage());
+                }
+                unset($GLOBALS["use_error_exception"]);
+            } else {
                 $target = false;
-                debug('Error when opening thm size for calling extract_mean_colour(): ' . $e->getMessage());
             }
-            unset($GLOBALS["use_error_exception"]);
-        } else {
-            $target = false;
-        }
 
-        $resource_data = get_resource_data($ref);
-        if ($target && $alternative == -1) {
-            // Do not run for alternative uploads
-            extract_mean_colour($target, $ref);
-            // Flag database. If this was run for e.g. a video or PDF it is not the full set of previews
-            $has_image = (($resource_data["file_extension"] ?? "") === $extension && $generateall) || $previewonly ? RESOURCE_PREVIEWS_ALL : RESOURCE_PREVIEWS_MINIMAL;
+            $resource_data = get_resource_data($ref);
+            if ($target && $alternative == -1) {
+                // Do not run for alternative uploads
+                extract_mean_colour($target, $ref);
+                // Flag database. If this was run for e.g. a video or PDF it is not the full set of previews
+                $has_image = (($resource_data["file_extension"] ?? "") === $extension && $generateall) || $previewonly ? RESOURCE_PREVIEWS_ALL : RESOURCE_PREVIEWS_MINIMAL;
 
-            ps_query("UPDATE resource SET has_image=?, preview_extension='jpg', preview_attempts=0, file_modified=NOW() WHERE ref = ?", ["i",$has_image, "i", $ref]);
-        } else {
-            if (!$target) {
-                ps_query("UPDATE resource SET preview_attempts=IFNULL(preview_attempts,0) + 1 WHERE ref = ?", ["i",$ref]);
+                ps_query("UPDATE resource SET has_image=?, preview_extension='jpg', preview_attempts=0, file_modified=NOW() WHERE ref = ?", ["i",$has_image, "i", $ref]);
+            } else {
+                if (!$target) {
+                    ps_query("UPDATE resource SET preview_attempts=IFNULL(preview_attempts,0) + 1 WHERE ref = ?", ["i",$ref]);
+                }
             }
         }
 
@@ -4396,10 +4414,11 @@ function create_previews_using_im(
             create_image_alternatives(
                 $ref,
                 ["extension" => $extension,
-                "file" => $file,
+                "file" => $origfile,
                 "previewonly" => $previewonly,
                 "previewbased" => $previewbased,
                 "ingested" => $ingested],
+                true
             );
         }
         hook('afterpreviewcreation', '', array($ref, $alternative, $generateall));

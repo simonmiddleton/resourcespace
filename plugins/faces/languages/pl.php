@@ -22,3 +22,10 @@ $lang["faces_count_missing"] = 'Obrazy do przetworzenia';
 $lang["faces-tag-field-not-set"] = 'Pole tagowania nie jest skonfigurowane.';
 
 $lang["page-title_faces_setup"] = 'Konfiguracja wtyczki Faces';
+$lang["faces_insight_faces"] = 'InsightFaces';
+$lang["faces_detect_faces"] = 'Wykryj twarze';
+$lang["faces_tag_faces"] = 'Oznacz twarze';
+$lang["faces_detect_faces_configure"] = 'Skonfiguruj zadanie do wykrywania twarzy';
+$lang["faces_tag_faces_configure"] = 'Skonfiguruj zadanie do oznaczania twarzy';
+$lang["faces_detect_faces_intro"] = 'Utwórz zadanie, aby rozpocząć wykrywanie twarzy tutaj - to zadanie nie wymaga żadnych parametrów, więc można je uruchomić, o ile nie ma innych oczekujących zadań tego typu.';
+$lang["faces_tag_faces_collection_refs_help"] = 'Ustawienie tej opcji oznacza, że będą aktualizowane tylko zasoby w wymienionych kolekcjach. Jeśli nie określono kolekcji, oznaczanie twarzy zostanie zaktualizowane dla WSZYSTKICH odpowiednich zasobów. Kolekcje można określić za pomocą listy oddzielonej przecinkami, a także zakresów np 100,105,110-115';

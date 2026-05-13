@@ -40,3 +40,4 @@ $lang["plugin-action_dates-title"] = 'Data akcí';
 $lang["plugin-action_dates-desc"] = 'Umožňuje naplánované smazání nebo omezení zdrojů na základě datových polí';
 
 $lang["page-title_action_dates_setup"] = 'Nastavení pluginu pro akční data';
+$lang["action_dates_additional_settings_email_admin_days"] = 'Upozornit správce tento počet dní před akcí (nechat prázdné pro vypnutí)';

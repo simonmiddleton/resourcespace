@@ -25,3 +25,7 @@ $lang["page-title_google_vision_process_existing"] = 'Google Vision Process Exis
 $lang["page-title_google_vision_setup"] = 'ตั้งค่า Google Vision Plugin';
 $lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
 $lang["page-title_google_vision_test"] = 'Google Vision Test';
+$lang["google_vision"] = 'Google Vision';
+$lang["google_vision_process_existing"] = 'ประมวลผลทรัพยากรที่ยังไม่ได้ประมวลผล';
+$lang["google_vision_process_existing_configure"] = 'กำหนดค่าการทำงานเพื่อประมวลผลทรัพยากรที่ยังไม่ได้ประมวลผล';
+$lang["google_vision_process_existing_collection_refs_help"] = 'การตั้งค่านี้จะหมายความว่าจะประมวลผลเฉพาะทรัพยากรในคอลเลกชันที่ระบุไว้เท่านั้น หากไม่ได้ระบุคอลเลกชันใด ๆ จะประมวลผลทรัพยากรที่เหมาะสมทั้งหมด คอลเลกชันสามารถระบุได้โดยใช้รายการคั่นด้วยเครื่องหมายจุลภาค รวมถึงช่วงเช่น 100,105,110-115';

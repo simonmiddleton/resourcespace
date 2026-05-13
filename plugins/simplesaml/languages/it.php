@@ -107,3 +107,4 @@ $lang["page-title_simplesaml_setup"] = 'Imposta il plugin Simple SAML';
 $lang["simplesaml_error_not_configured"] = 'Il plugin SimpleSAML non è configurato';
 $lang["simplesaml_error_no_idp_metadata"] = 'Il plugin SimpleSAML non è completamente configurato (mancano i metadati IdP)';
 $lang["simplesaml_error_no_authsource"] = 'Il plugin SimpleSAML non è completamente configurato (manca authsource)';
+$lang["simplesaml_userlimit_error"] = 'Impossibile creare l\'utente poiché è stato raggiunto il limite di utenti. Si prega di contattare l\'amministratore.';

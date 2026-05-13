@@ -55,3 +55,4 @@ $lang["plugin-youtube_publish-title"]='YouTube Objavi';
 $lang["plugin-youtube_publish-desc"]='Objavljuje video resurs na konfigurirani YouTube račun.';
 $lang["page-title_youtube_publish_setup"] = 'Postavljanje dodatka';
 $lang["page-title_youtube_publish_youtube_upload"] = 'Objavi resurs na YouTube';
+$lang["youtube_publish_video_title"] = 'Naslov videa (najviše 100 znakova)';
