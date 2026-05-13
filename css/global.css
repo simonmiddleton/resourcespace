@@ -4282,6 +4282,7 @@ a.text-link:visited {
     color: var(--colour-neutral-100);
     height: var(--thumbs-height);
     pointer-events: auto;
+    transition: height 0.25s ease;
 }
 
 .collection-bar-thumbs-section::-webkit-scrollbar {
@@ -4586,12 +4587,4 @@ body:has(.collection-bar-holder.state-thumbs) #UICenter {
         width: 100%;
     }
 
-}
-
-#HeaderLinksContainer {
-display: none !important;
-}
-
-#Header {
-    height: 56px !important;
 }
