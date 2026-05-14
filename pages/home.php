@@ -8,16 +8,23 @@ include_once "../include/dash_functions.php";
 $home_collections = get_home_page_promoted_collections();
 $welcometext = false;
 
-global $home_dash;
+global $home_dash, $static_slideshow_image, $no_welcometext;
 
 include "../include/header.php";
+
+include "../include/home_slideshow.php";
+if ($slideshow_configured || !$no_welcometext) {
+    echo '<div id="hero_banner">';
+    loadWelcomeText();
+    echo '</div>';
+}
 
 function loadWelcomeText()
 {
     global $no_welcometext, $home_dash, $productversion;
     if (!$no_welcometext) {
         ?>
-        <div class="BasicsBox <?php echo $home_dash ? 'dashtext' : ''; ?>" id="HomeSiteText">
+        <div class=" <?php echo $home_dash ? 'dashtext' : ''; ?>" id="HomeSiteText">
             <div id="HomeSiteTextInner">
                 <h1>
                     <?php # Include version number
@@ -26,68 +33,11 @@ function loadWelcomeText()
                 </h1>
                 <p><?php echo strip_tags_and_attributes(text("welcometext"), ['a'], ['href']); ?></p>
             </div>
-            <?php hook('homeafterwelcometext') ?>
         </div>
         <?php
     }
 }
 
-global $slideshow_photo_delay;
-
-$slideshow_files_holder = get_slideshow_files_data();
-$slideshow_files = array();
-$homeimages = 0;
-
-foreach ($slideshow_files_holder as $slideshow_file) {
-    if ((bool) $slideshow_file['homepage_show'] === false) {
-        continue;
-    }
-
-    array_push($slideshow_files, $slideshow_file);
-    $homeimages++;
-}
-
-if ($homeimages > 0) {
-    ?>
-    <script>
-
-        var SlideshowImages = new Array();
-        var SlideshowCurrent = -1;
-        var SlideshowTimer = 0;
-
-        <?php
-        if ($static_slideshow_image) {
-            $randomimage = array_rand($slideshow_files);
-            // We only want to use one of the available images
-            ?>
-            var big_slideshow_timer = 0;
-            RegisterSlideshowImage('<?php echo "{$baseurl_short}pages/download.php?slideshow={$slideshow_files[$randomimage]["ref"]}"; ?>','<?php echo (isset($slideshow_files[$randomimage]["link"])) ? $slideshow_files[$randomimage]["link"] : "" ?>',1);
-            <?php
-        } else {
-            ?>
-            var big_slideshow_timer = <?php echo $slideshow_photo_delay;?>;
-            <?php
-            foreach ($slideshow_files as $slideshow_file_info) {
-                if ((bool) $slideshow_file_info['homepage_show'] === false) {
-                    continue;
-                }
-                ?>
-                RegisterSlideshowImage('<?php echo "{$baseurl_short}pages/download.php?slideshow={$slideshow_file_info["ref"]}"; ?>','<?php echo (isset($slideshow_file_info["link"])) ? $slideshow_file_info["link"] : "" ?>');
-                <?php
-            }
-        }
-        ?>
-
-        jQuery( document ).ready(function() {
-            /* Clear all old timers */
-            ClearTimers();       
-            ActivateSlideshow();
-        });
-    </script>
-    <?php
-}
-
-loadWelcomeText();
 $welcometext = true;
 
 if ($home_dash && !$welcometext) {
@@ -95,7 +45,9 @@ if ($home_dash && !$welcometext) {
     $welcometext = true;
 }
 
+hook('homeafterwelcometext');
 hook("homebeforepanels");
+
 ?>
 
 <div id="HomePanelContainer">

@@ -321,18 +321,7 @@ function CentralSpaceLoad (anchor,scrolltop,modal,keep_fragment = true)
                 jQuery('#modal').focus();
                 }
 
-            // Activate or deactivate the large slideshow, if this function is enabled.
-            if (typeof ActivateSlideshow == 'function' && !modal)
-                {
-                if (basename(anchor.href).substr(0,8)=="home.php")
-                {
-                ActivateSlideshow();
-                }
-                else
-                {
-                DeactivateSlideshow();
-                }
-                }
+
 
             // Only allow reordering when search results are collections
             if(basename(anchor.href).substr(0, 10) == 'search.php')
@@ -517,18 +506,7 @@ function CentralSpacePost (form, scrolltop, modal, update_history, container_id)
         CentralSpace.append(global_trash_html);
         CentralSpace.trigger('prepareDragDrop');
 
-        // Activate or deactivate the large slideshow, if this function is enabled.
-        if (typeof ActivateSlideshow == 'function' && !modal)
-            {
-            if (basename(form.action).substr(0,8)=="home.php")
-            {
-            ActivateSlideshow();
-            }
-            else
-            {
-            DeactivateSlideshow();
-            }
-            }
+
 
         // Update title in browser for accessibility
         updatePageTitle(pagename, pluginname);

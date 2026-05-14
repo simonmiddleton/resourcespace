@@ -836,4 +836,8 @@ if ($simple_search_pills_view) { ?>
         margin-left: 221px;
     } <?php
 }
+?>
 
+:root {
+--slideshow-photo-delay: <?php echo (int) $slideshow_photo_delay . 's'; ?> 
+}

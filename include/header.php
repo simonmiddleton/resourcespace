@@ -87,9 +87,6 @@ $page_title = get_page_title($pagename, pluginname());
         <script type="text/javascript" src="<?php echo $baseurl; ?>/lib/js/jquery.tshift.min.js"></script>
         <script type="text/javascript" src="<?php echo $baseurl; ?>/lib/js/jquery-periodical-updater.js"></script>
 
-        <script type="text/javascript">StaticSlideshowImage=<?php echo $static_slideshow_image ? "true" : "false"; ?>;</script>
-        <script type="text/javascript" src="<?php echo $baseurl; ?>/js/slideshow_big.js?css_reload_key=<?php echo $css_reload_key; ?>"></script>
-
         <?php if ($contact_sheet) { ?>
             <script type="text/javascript" src="<?php echo $baseurl; ?>/js/contactsheet.js"></script>
             <script>contactsheet_previewimage_prefix = '<?php echo escape($storageurl); ?>';</script>
@@ -273,10 +270,6 @@ $page_title = get_page_title($pagename, pluginname());
     </head>
 
     <body lang="<?php echo escape($language); ?>">
-        <div class="slide slide-active"></div>
-        <div class="slide"></div>
-        <a href="#UICenter" class="skip-to-main-content"><?php echo escape($lang["skip-to-main-content"]); ?></a>
-
         <!-- Processing graphic -->
         <div id='ProcessingBox' style='display: none'>
             <i aria-hidden="true" class="icon-settings lucide--spin"></i>
