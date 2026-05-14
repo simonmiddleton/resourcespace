@@ -72,7 +72,6 @@ function typesense_search_do_search(
     string $sort
 ) {
     $result = typesense_search_get_refs($search, $restypes, $archive, $fetchrows, $order_by, $sort);
-echo $order_by;
 
     if ($result === false) {
         return false;
