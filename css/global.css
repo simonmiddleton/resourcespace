@@ -1389,6 +1389,8 @@ input.contactadminbutton  {
     width: 100%;
     float: left;
     background-color: #EAEBEA;
+    margin-left: 15px;
+    margin-right: 20px;
 }
 
 #HomePanelContainer a {-webkit-user-drag: none;}
@@ -2309,7 +2311,7 @@ a.Enabled, a:visited.Enabled {
 }
 
 .BreadcrumbsBox.BreadcrumbsBoxSlim {
-    margin: 1em 1em 0 0;
+    margin: 1em 1em 1em 15px;
 }
 
 .lockedQuestion .fieldset, .lockedQuestion table, .lockedQuestion input, .lockedQuestion select, .lockedQuestion textarea, .lockedQuestion .keywordselected, .lockedQuestion .CategoryBox{
