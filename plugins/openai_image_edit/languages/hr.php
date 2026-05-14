@@ -30,3 +30,4 @@ $lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
 $lang["page-title_openai_image_edit_get_png"] = 'OpenAI Preuzmi PNG';
 $lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI Spremi Alternativu';
 $lang["page-title_openai_image_edit_save_new"] = 'OpenAI Spremi Novo';
+$lang["openai_image_edit__introtext"] = 'Unesite u okvir za unos opis promjena koje želite napraviti na slici. Po želji, koristite kist za brisanje dijelova slike, prisiljavajući regeneraciju tih područja.';

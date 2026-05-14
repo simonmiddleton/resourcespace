@@ -30,3 +30,4 @@ $lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
 $lang["page-title_openai_image_edit_get_png"] = 'OpenAI Get PNG';
 $lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI Захаваць Альтэрнатыва';
 $lang["page-title_openai_image_edit_save_new"] = 'OpenAI Захаваць Новы';
+$lang["openai_image_edit__introtext"] = 'Увядзіце ў поле запыту апісанне змен, якія вы хацелі б унесці ў малюнак. Па жаданні выкарыстоўвайце пэндзаль, каб выдаліць часткі малюнка, прымушаючы перагенерацыю гэтых участкаў.';

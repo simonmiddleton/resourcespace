@@ -30,3 +30,4 @@ $lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
 $lang["page-title_openai_image_edit_get_png"] = 'OpenAI Get PNG';
 $lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI Cadw Amgen';
 $lang["page-title_openai_image_edit_save_new"] = 'OpenAI Cadw Newydd';
+$lang["openai_image_edit__introtext"] = 'Nodwch ddisgrifiad o\'r newidiadau yr hoffech eu gwneud i\'r ddelwedd yn y blwch sgwrs. Dewiswch, os gwelwch yn dda, ddefnyddio\'r brws i ddileu rhannau o\'r ddelwedd, gan orfodi ail-gynhyrchu\'r mannau hynny.';

@@ -30,3 +30,4 @@ $lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
 $lang["page-title_openai_image_edit_get_png"] = 'OpenAI PNG प्राप्त करें';
 $lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI सहेजें विकल्प';
 $lang["page-title_openai_image_edit_save_new"] = 'OpenAI नया सहेजें';
+$lang["openai_image_edit__introtext"] = 'प्रारूप बॉक्स में छवि में किए जाने वाले परिवर्तनों का विवरण दर्ज करें। वैकल्पिक रूप से, ब्रश का उपयोग करके छवि के भागों को मिटाएं, जिससे उन क्षेत्रों का पुनः निर्माण किया जा सके।';

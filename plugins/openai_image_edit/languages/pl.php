@@ -30,3 +30,4 @@ $lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
 $lang["page-title_openai_image_edit_get_png"] = 'OpenAI Get PNG';
 $lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI Zapisz Alternatywę';
 $lang["page-title_openai_image_edit_save_new"] = 'OpenAI Zapisz nowy';
+$lang["openai_image_edit__introtext"] = 'Wprowadź w polu prompt opis zmian, które chcesz wprowadzić do obrazu. Opcjonalnie użyj pędzla, aby wymazać części obrazu, wymuszając ponowne wygenerowanie tych obszarów.';

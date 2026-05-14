@@ -30,3 +30,4 @@ $lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
 $lang["page-title_openai_image_edit_get_png"] = 'OpenAI Get PNG';
 $lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI সংরক্ষণ বিকল্প';
 $lang["page-title_openai_image_edit_save_new"] = 'OpenAI নতুন সংরক্ষণ করুন';
+$lang["openai_image_edit__introtext"] = 'ছবিতে আপনি যে পরিবর্তনগুলি করতে চান তার বিবরণ প্রম্পট বাক্সে লিখুন। ঐচ্ছিকভাবে, ব্রাশ ব্যবহার করে ছবির কিছু অংশ মুছে ফেলুন, সেই এলাকাগুলোর পুনঃউৎপাদন নিশ্চিত করতে।';

@@ -30,3 +30,4 @@ $lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
 $lang["page-title_openai_image_edit_get_png"] = 'OpenAI Получить PNG';
 $lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI Сохранить Альтернативу';
 $lang["page-title_openai_image_edit_save_new"] = 'OpenAI Сохранить новый';
+$lang["openai_image_edit__introtext"] = 'Введите в поле подсказки описание изменений, которые вы хотели бы внести в изображение. При необходимости используйте кисть, чтобы стереть части изображения, заставляя их заново генерировать.';

@@ -30,3 +30,4 @@ $lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
 $lang["page-title_openai_image_edit_get_png"] = 'OpenAI Get PNG';
 $lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI ਸੁਰੱਖਿਅਤ ਵਿਕਲਪ';
 $lang["page-title_openai_image_edit_save_new"] = 'OpenAI ਨਵਾਂ ਸੁਰੱਖਿਅਤ ਕਰੋ';
+$lang["openai_image_edit__introtext"] = 'ਇਮੇਜ ਵਿੱਚ ਕੀਤੀਆਂ ਜਾਣ ਵਾਲੀਆਂ ਤਬਦੀਲੀਆਂ ਦੀ ਵਰਣਨਾ ਪ੍ਰੰਪਟ ਬਾਕਸ ਵਿੱਚ ਦਰਜ ਕਰੋ। ਵਿਕਲਪਿਕ ਤੌਰ \'ਤੇ, ਬਰਸ਼ ਦੀ ਵਰਤੋਂ ਕਰਕੇ ਇਮੇਜ ਦੇ ਹਿੱਸਿਆਂ ਨੂੰ ਮਿਟਾਓ, ਜਿਸ ਨਾਲ ਉਹਨਾਂ ਖੇਤਰਾਂ ਦੀ ਦੁਬਾਰਾ ਪੈਦਾ ਹੋਣੀ ਮਜ਼ਬੂਰੀ ਬਣਦੀ ਹੈ।';

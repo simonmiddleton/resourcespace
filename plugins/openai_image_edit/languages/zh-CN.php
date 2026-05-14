@@ -30,3 +30,4 @@ $lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
 $lang["page-title_openai_image_edit_get_png"] = 'OpenAI 获取 PNG';
 $lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI 保存替代方案';
 $lang["page-title_openai_image_edit_save_new"] = 'OpenAI 保存新建';
+$lang["openai_image_edit__introtext"] = '在提示框中输入您希望对图像进行的更改的描述。可选地，使用画笔擦除图像的部分区域，强制重新生成这些区域。';

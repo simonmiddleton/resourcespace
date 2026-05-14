@@ -30,3 +30,4 @@ $lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
 $lang["page-title_openai_image_edit_get_png"] = 'OpenAI PNG 가져오기';
 $lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI 저장 대안';
 $lang["page-title_openai_image_edit_save_new"] = 'OpenAI 새로 저장';
+$lang["openai_image_edit__introtext"] = '이미지에 원하는 변경 사항에 대한 설명을 프롬프트 상자에 입력하세요. 선택적으로 브러시를 사용하여 이미지의 일부를 지우면 해당 영역이 다시 생성됩니다.';

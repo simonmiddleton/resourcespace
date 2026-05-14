@@ -30,3 +30,4 @@ $lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
 $lang["page-title_openai_image_edit_get_png"] = 'OpenAI PNGを取得';
 $lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI 保存の代替';
 $lang["page-title_openai_image_edit_save_new"] = 'OpenAI 新規保存';
+$lang["openai_image_edit__introtext"] = '画像に加えたい変更の説明をプロンプトボックスに入力してください。必要に応じてブラシを使用して画像の一部を消去し、その部分の再生成を促すこともできます。';

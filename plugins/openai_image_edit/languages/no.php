@@ -30,3 +30,4 @@ $lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
 $lang["page-title_openai_image_edit_get_png"] = 'OpenAI Hent PNG';
 $lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI Lagre alternativ';
 $lang["page-title_openai_image_edit_save_new"] = 'OpenAI Lagre Ny';
+$lang["openai_image_edit__introtext"] = 'Skriv inn en beskrivelse av endringene du ønsker i promptboksen. Bruk eventuelt børsten for å slette deler av bildet, noe som tvinger frem regenerering av disse områdene.';

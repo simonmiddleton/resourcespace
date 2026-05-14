@@ -30,3 +30,4 @@ $lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
 $lang["page-title_openai_image_edit_get_png"] = 'OpenAI Get PNG';
 $lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI Mentés Alternatíva';
 $lang["page-title_openai_image_edit_save_new"] = 'OpenAI Mentés Új';
+$lang["openai_image_edit__introtext"] = 'Írja be a módosítások leírását a prompt mezőbe. Opcionálisan használja a ecsetet a kép egyes részeinek törléséhez, ezzel kényszerítve azok újragenerálását.';

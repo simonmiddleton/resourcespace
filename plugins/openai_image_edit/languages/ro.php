@@ -30,3 +30,4 @@ $lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
 $lang["page-title_openai_image_edit_get_png"] = 'OpenAI Obține PNG';
 $lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI Salvează Alternativ';
 $lang["page-title_openai_image_edit_save_new"] = 'OpenAI Salvează Nou';
+$lang["openai_image_edit__introtext"] = 'Introduceți în caseta de prompt o descriere a modificărilor pe care doriți să le faceți imaginii. Opțional, folosiți pensula pentru a șterge părți ale imaginii, forțând regenerarea acelor zone.';
