@@ -43,8 +43,7 @@ ResourceSpace.Modules.Header = (() => {
         window.addEventListener('resize', handlePrimaryNavigationOverflow);
         handlePrimaryNavigationOverflow();
 
-        jQuery('#field_test_select2\\[\\]').select2({
-        });
+        handleResourceTypesFilter();
     }
 
     function makeStickyHeader(e) {
@@ -141,7 +140,7 @@ ResourceSpace.Modules.Header = (() => {
                 });
             }
 
-            jQuery('#field_test_select2\\[\\]').select2();
+            handleResourceTypesFilter();
         });
 
         return;
@@ -219,6 +218,29 @@ ResourceSpace.Modules.Header = (() => {
                 list.insertBefore(item, listItemMenuOverflow);
             }
         });
+    }
+
+    function handleResourceTypesFilter() {
+        // todo: attach to events so that when all reosurce types option is selected none of the other options remain selected
+        // https://select2.org/programmatic-control/events
+        jQuery('#field_test_select2\\[\\]').select2();
+        bindSelect2Events();
+    }
+
+    function bindSelect2Events() {
+        // jQuery('#field_test_select2\\[\\]').on('select2:select', function (e) {
+        //     console.log('(select2) Select triggered');
+        // });
+
+        jQuery('#field_test_select2\\[\\]').on('select2:clear', function (e) {
+            console.log('(select2) clear triggered %o', e);
+            const all_resource_types_option = jQuery(this).find('option').first().val();
+            jQuery(this).val(all_resource_types_option).trigger('change');
+        });
+
+        // jQuery('#field_test_select2\\[\\]').on('change', function (e) {
+        //     console.log('(select2) Change triggered');
+        // });
     }
 
     return {

@@ -275,6 +275,9 @@ $selected_search_tab = getval("selected_search_tab", "search");
 
                     if (!$basic_simple_search && !$hide_search_resource_types) {
                         $rt = is_array($restypes) ? $restypes : explode(",", $restypes);
+                        $clear_function = "SetCookie('search','');SetCookie('restypes','');SetCookie('ssearchhiddenfields','');SetCookie('saved_offset','');SetCookie('saved_archive','');";
+                        hook('clearsearchcookies');
+
                         $resource_type_filter_options = array_filter(
                             array_column($types, 'name', 'ref'),
                             static fn($V, $ref) => !in_array($ref, $hide_resource_types),
@@ -765,6 +768,16 @@ $selected_search_tab = getval("selected_search_tab", "search");
 
                                 const date_range_fields = document.querySelectorAll('.header-search-field #search-filters-panel .date-range-search select');
                                 date_range_fields.forEach(f => f.selectedIndex = 0);
+
+                                // See https://select2.org/programmatic-control/add-select-clear-items
+                                const multiselect_fields = document.querySelectorAll('.header-search-field #search-filters-panel select.select2-hidden-accessible');
+                                multiselect_fields.forEach(f => jQuery(f)
+                                    .val(null)
+                                    // Needed to trigger the actual existing selection removal
+                                    .trigger('change')
+                                    // Needed to trigger the clear logic (if applicable, e.g. see header.js for resource types filters)
+                                    .trigger('select2:clear')
+                                );
                             }
                         </script>
         
