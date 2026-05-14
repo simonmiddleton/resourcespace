@@ -2,45 +2,38 @@
 include "../../../include/boot.php";
 include "../../../include/authenticate.php";
 
-
-if (!in_array("openai_gpt" ,$plugins) || !in_array("openai_image_edit", $plugins))
-    {
+if (!in_array("openai_gpt" ,$plugins) || !in_array("openai_image_edit", $plugins)) {
     exit("The OpenAI/Ollama metadata processing and OpenAI Image Editing plugins must be enabled and configured.");
-    }
+}
 
 // Find image
-$ref=getval("ref",0,true);
-$access=get_resource_access($ref);
-$edit_access=get_edit_access($ref);
+$ref = getval("ref", 0, true);
+$access = get_resource_access($ref);
+$edit_access = get_edit_access($ref);
 
-if ($access!=0)
-    {
+if ($access != 0) {
     // They shouldn't arrive here as the link wouldn't be available.
     exit("Access denied");
-    }
+}
 
 function curlprogress($resource,$download_size, $downloaded, $upload_size, $uploaded)
-    {
+{
     // Give an estimate of completion based on the % of upload. There is also the DALL-E 2 processing time but the bulk of the time seems to be the upload due to using PNG for images.
     global $lang;
-    if ($uploaded>0)
-        {
-        $percent=floor(($uploaded/$upload_size)*100);
-        $percent*=7;$percent+=10; // It lags behind a lot, after experimentation, this gives a more reasonable estimate of completion time.
-        if ($percent>=100)
-            {
+    if ($uploaded > 0) {
+        $percent = floor(($uploaded / $upload_size) * 100);
+        // It lags behind a lot, after experimentation, this gives a more reasonable estimate of completion time.
+        $percent *= 7;
+        $percent += 10;
+        if ($percent>=100) {
             set_processing_message($lang["openai_image_edit__completing"]);
-            }
-        else
-            {
+        } else {
             set_processing_message($lang["openai_image_edit__sending"] . " (" . $percent . "%)");
-            }
         }
     }
+}
     
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    
-
     set_processing_message($lang["openai_image_edit__preparing_images"]);
 
     $maskData = getval('mask','');    // Base64 encoded mask from the frontend
@@ -54,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Prepare the OpenAI API request using multipart/form-data
     $url = 'https://api.openai.com/v1/images/edits';
     $model = "gpt-image-2";
-    $content_type="multipart/form-data";
+    $content_type = "multipart/form-data";
         
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
@@ -68,9 +61,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         "Authorization: Bearer $openai_gpt_api_key"
     ]);
 
-
     // Improve the mask by replacing non transparent areas with black. This significantly reduces the time to send the mask to OpenAI as the compression is much better.
-    $mask=imagecreatefromstring($maskData);
+    $mask = imagecreatefromstring($maskData);
     // Set blending mode off to preserve transparency
     imagealphablending($mask, false);
     imagesavealpha($mask, true);
@@ -136,21 +128,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (curl_errno($ch)) {
         echo 'Error:' . curl_error($ch);
     } else {
-$json = json_decode($response, true);
+        $json = json_decode($response, true);
 
-if (isset($json["data"][0]["b64_json"])) {
-    daily_stat("OpenAI Image Edit", $userref, 1);
-    header('Content-Type: application/json');
-    echo json_encode(["image_base64" => $json["data"][0]["b64_json"]]);
-} elseif (isset($json["data"][0]["url"])) {
-    daily_stat("OpenAI Image Edit", $userref, 1);
-    header('Content-Type: application/json');
-    echo json_encode(["image_base64" => base64_encode(file_get_contents($json["data"][0]["url"]))]);
-} else {
-    header('Content-Type: application/json');
-    echo $response;
-}
-
+        if (isset($json["data"][0]["b64_json"])) {
+            daily_stat("OpenAI Image Edit", $userref, 1);
+            header('Content-Type: application/json');
+            echo json_encode(["image_base64" => $json["data"][0]["b64_json"]]);
+        } elseif (isset($json["data"][0]["url"])) {
+            daily_stat("OpenAI Image Edit", $userref, 1);
+            header('Content-Type: application/json');
+            echo json_encode(["image_base64" => base64_encode(file_get_contents($json["data"][0]["url"]))]);
+        } else {
+            header('Content-Type: application/json');
+            echo $response;
+        }
         try_unlink($tmp_image);
         try_unlink($maskDataSimplified);
     }
@@ -175,46 +166,51 @@ include "../../../include/header.php";
         ]
     ]);
     ?>
-</div>
-<p class="PageIntroText"><?php echo escape($lang["openai_image_edit__introtext"]); ?></p>
-<img id="image" src="get_png.php?ref=<?php echo (int) $ref ?>" alt="" hidden>
-<div id="canvas-container" class="canvas-container" style="position: relative;visibility:hidden;">
-    <canvas id="canvas"></canvas>
-    <canvas id="overlayCanvas" style="position: absolute; top: 0; left: 0; pointer-events: none;"></canvas>
-</div>
+    <p class="PageIntroText"><?php echo escape($lang["openai_image_edit__introtext"]); ?></p>
+    <img id="image" src="get_png.php?ref=<?php echo (int) $ref ?>" alt="" hidden>
+    <div id="canvas-container" class="canvas-container" style="position: relative;visibility:hidden;">
+        <canvas id="canvas"></canvas>
+        <canvas id="overlayCanvas" style="position: absolute; top: 0; left: 0; pointer-events: none;"></canvas>
+    </div>
 
-<div id="toolbox" class="toolbox openai-image-edit" style="visibility:hidden;">
-<div id="tools">    
-<label for="penSize"><?php echo escape($lang["openai_image_edit__pensize"]); ?></label><br>
-<input type="range" id="penSize" min="10" max="200" value="75">
-<br><br>
-<label for="prompt"><?php echo escape($lang["openai_image_edit__prompt"]); ?></label><br>
-<textarea id="prompt" rows="5" required placeholder="Prompt for regeneration">Complete only the transparent masked area. Preserve every unmasked part of the image exactly, including composition, scale, position, lighting, colours, faces, text, borders and background.</textarea>
-<br>
-<button id="clearBtn" onclick="window.location.reload();"><?php echo escape($lang["openai_image_edit__reset"]); ?></button>
-<button id="submitBtn"><?php echo escape($lang["openai_image_edit__generate"]); ?></button>
-<br><br><br>
-
-
-<div id="downloadOptions" style="visibility: hidden;">
-<label for="downloadType"><?php echo escape($lang["openai_image_edit__exportoptions"]); ?></label><br>
-<select id="downloadType">
-    <option value="image/jpeg">JPEG</option>
-    <option value="image/png">PNG</option>
-    <option value="image/webp">WEBP</option>
-</select>
-<br>
-<select id="downloadAction">
-    <option value="download"><?php echo escape($lang["openai_image_edit__download"]); ?></option>
-<?php if ($edit_access) { ?><option value="alternative"><?php echo escape($lang["openai_image_edit__alternative"]); ?></option><?php } ?>
-<?php if (checkperm("c")) { ?><option value="new"><?php echo escape($lang["openai_image_edit__new"]); ?></option><?php } ?>
-
-</select>
-<br>
-<button id="downloadBtn"><?php echo escape($lang["openai_image_edit__export"]); ?></button>
-</div>
-
-</div>
+    <div id="toolbox" class="toolbox openai-image-edit" style="visibility:hidden;">
+        <div id="tools">    
+            <label for="penSize"><?php echo escape($lang["openai_image_edit__pensize"]); ?></label>
+            <br>
+            <input type="range" id="penSize" min="10" max="200" value="75">
+            <br>
+            <br>
+            <label for="prompt"><?php echo escape($lang["openai_image_edit__prompt"]); ?></label>
+            <br>
+            <textarea id="prompt" rows="5" required placeholder="Prompt for regeneration">Complete only the transparent masked area. Preserve every unmasked part of the image exactly, including composition, scale, position, lighting, colours, faces, text, borders and background.</textarea>
+            <br>
+            <button id="clearBtn" onclick="window.location.reload();"><?php echo escape($lang["openai_image_edit__reset"]); ?></button>
+            <button id="submitBtn"><?php echo escape($lang["openai_image_edit__generate"]); ?></button>
+            <br>
+            <br>
+            <br>
+            <div id="downloadOptions" style="visibility: hidden;">
+                <label for="downloadType"><?php echo escape($lang["openai_image_edit__exportoptions"]); ?></label><br>
+                <select id="downloadType">
+                    <option value="image/jpeg">JPEG</option>
+                    <option value="image/png">PNG</option>
+                    <option value="image/webp">WEBP</option>
+                </select>
+                <br>
+                <select id="downloadAction">
+                    <option value="download"><?php echo escape($lang["openai_image_edit__download"]); ?></option>
+                    <?php if ($edit_access) { ?>
+                        <option value="alternative"><?php echo escape($lang["openai_image_edit__alternative"]); ?></option>
+                    <?php } ?>
+                    <?php if (checkperm("c")) { ?>
+                        <option value="new"><?php echo escape($lang["openai_image_edit__new"]); ?></option>
+                    <?php } ?>
+                </select>
+                <br>
+                <button id="downloadBtn"><?php echo escape($lang["openai_image_edit__export"]); ?></button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
