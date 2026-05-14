@@ -68,9 +68,11 @@ function typesense_search_do_search(
     $fetchrows,
     bool $return_refs_only,
     PreparedStatementQuery $select,
-    string $order_by
+    string $order_by,
+    string $sort
 ) {
-    $result = typesense_search_get_refs($search, $restypes, $archive, $fetchrows);
+    $result = typesense_search_get_refs($search, $restypes, $archive, $fetchrows, $order_by, $sort);
+echo $order_by;
 
     if ($result === false) {
         return false;
@@ -101,9 +103,11 @@ function typesense_search_get_refs(
     string $search,
     $restypes,
     array $archive,
-    $fetchrows
+    $fetchrows,
+    $order_by,
+    $sort
 ) {
-    global $typesense_search_collection, $typesense_search_global_filter;
+    global $typesense_search_collection, $typesense_search_global_filter, $date_field;
 
     setup_search_chunks($fetchrows, $chunk_offset, $search_chunk_size);
 
@@ -121,6 +125,13 @@ function typesense_search_get_refs(
         $search = substr($search, 0, -1);
     }
 
+    // Order by - convert the ResourceSpace SQL order to a Typesense compatible order
+    $sort_by="_text_match";
+    if (substr($order_by,0,5)=="field" . $date_field) {$sort_by="date";}
+    if (substr($order_by,0,5)=="r.ref") {$sort_by="resource";}
+    if (substr($order_by,0,8)=="modified") {$sort_by="modified";}
+    $sort_by.=":" . strtolower($sort);
+
     $params = array(
         'q' => $search,
         'query_by' => 'title,text',
@@ -129,6 +140,7 @@ function typesense_search_get_refs(
         'prefix' => $prefix,
         'page' => $page,
         'per_page' => $per_page,
+        'sort_by' => $sort_by
     );
 
     if ($filter_by !== '') {
@@ -240,21 +252,12 @@ function typesense_search_hydrate_refs(
     $ref_params = array();
     $field_params = array();
 
-    // If "relevance" (order by score first) then use the ref order from Typesense. Otherwise use the provided order by SQL.
-    $set_field_params = false;
-    if (substr($order_by, 0, 5) == "score") {
-        $order_by = 'FIELD(r.ref, ' . $field_placeholders . ')';
-        $set_field_params = true;
-    }
-
     foreach ($refs as $ref) {
         $ref_params[] = 'i';
         $ref_params[] = (int)$ref;
 
-        if ($set_field_params) {
-            $field_params[] = 'i';
-            $field_params[] = (int)$ref;
-        }
+        $field_params[] = 'i';
+        $field_params[] = (int)$ref;
     }
 
     $query = new PreparedStatementQuery();
@@ -283,7 +286,7 @@ function typesense_search_hydrate_refs(
 
     $query->sql .=
         ' GROUP BY r.ref'
-        . ' ORDER BY ' . $order_by;
+        . ' ORDER BY FIELD(r.ref, ' . $field_placeholders . ')';
 
     $query->parameters = array_merge($query->parameters, $field_params);
 
@@ -380,6 +383,7 @@ function typesense_search_request(string $method, string $endpoint, ?array $payl
 
     if ($status < 200 || $status >= 300) {
         debug('typesense_search_request(): Response body: ' . $response);
+        echo $response;
         return false;
     }
 
@@ -412,16 +416,19 @@ function typesense_search_ensure_collection(): bool
     $schema = array(
         'name' => $typesense_search_collection,
         'fields' => array(
-            array('name' => 'resource', 'type' => 'int32'),
+            array('name' => 'resource', 'type' => 'int32', 'sort' => true),
             array('name' => 'title', 'type' => 'string', 'stem' => true),
             array('name' => 'text', 'type' => 'string', 'stem' => true),
-            array('name' => 'resource_type', 'type' => 'int32', 'facet' => true),
+            array('name' => 'resource_type', 'type' => 'int32', 'facet' => true, 'sort' => true),
             array('name' => 'archive', 'type' => 'int32', 'facet' => true),
-        ),
+            array('name' => 'date', 'type' => 'int64', 'sort' => true, 'optional' => true),
+            array('name' => 'modified', 'type' => 'int64', 'sort' => true, 'optional' => true),
+            ),
         'default_sorting_field' => 'resource',
     );
 
     $created = typesense_search_request('POST', '/collections', $schema);
+    if (!$created) debug('typesense_search_ensure_collection(): collection creation FAILED');
 
     return $created !== false;
 }
@@ -436,6 +443,8 @@ function typesense_search_ensure_collection(): bool
  */
 function typesense_search_get_document_data(int $resource)
 {
+    global $date_field;
+
     $resource_data = get_resource_data($resource);
 
     if ($resource_data === false || !is_array($resource_data)) {
@@ -469,6 +478,25 @@ function typesense_search_get_document_data(int $resource)
         }
     }
 
+    // Fetch CLIP vetor if we have one.
+    /*
+    $image_embedding=null;
+    $image_embedding_blob=ps_value("SELECT vector_blob value FROM resource_clip_vector WHERE ref=? LIMIT 1",["i",$resource],"");
+    if (strlen($image_embedding_blob)>0) {
+        $image_embedding=unpack('g*', $image_embedding_blob);
+    }
+    */
+
+    // Created date
+    $date=null;
+    $date_value=$resource_data['field' . $date_field];
+    if (strlen($date_value)>0) {$date=strtotime($date_value);}
+
+    // Modified date
+    $modified=null;
+    $modified_value=$resource_data['modified'];
+    if (strlen($modified_value)>0) {$modified=strtotime($modified_value);}
+
     return array(
         'id' => (string)$resource,
         'resource' => (int)$resource,
@@ -476,6 +504,8 @@ function typesense_search_get_document_data(int $resource)
         'text' => implode(' ', $indexed_values),
         'resource_type' => (int)$resource_data['resource_type'],
         'archive' => (int)$resource_data['archive'],
+        'date' => $date,
+        'modified' => $modified
     );
 }
 
