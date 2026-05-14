@@ -221,21 +221,23 @@ ResourceSpace.Modules.Header = (() => {
     }
 
     function handleResourceTypesFilter() {
-        jQuery('#field_test_select2\\[\\]').select2();
-        bindResourceTypeSelectorEvents();
+        const resource_type_selector = jQuery('#restypes\\[\\]');
+
+        resource_type_selector.select2();
+        bindResourceTypeSelectorEvents(resource_type_selector);
     }
 
     /**
      * @see https://select2.org/programmatic-control/events
      */
-    function bindResourceTypeSelectorEvents() {
+    function bindResourceTypeSelectorEvents(resource_type_selector) {
         // When clearing the search filters on the panel, select only the "All resource types" (default behaviour). 
-        jQuery('#field_test_select2\\[\\]').on('select2:clear', function (e) {
+        resource_type_selector.on('select2:clear', function (e) {
             const all_resource_types_option = jQuery(this).find('option').first().val();
             jQuery(this).val(all_resource_types_option).trigger('change');
         });
 
-        jQuery('#field_test_select2\\[\\]').on('select2:select', function (e) {
+        resource_type_selector.on('select2:select', function (e) {
             const all_resource_types_option = jQuery(this).find('option').first().val();
 
             // If the user selects the "All resource types" option then any manually selected resource types are cleared 

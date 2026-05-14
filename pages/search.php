@@ -405,22 +405,34 @@ if (getval("resetrestypes","")=="")
     {
     $restypes=getval("restypes","");
     }
-else
-    { 
-    $restypes="";
-    reset($_POST);reset($_GET);foreach (array_merge($_GET, $_POST) as $key=>$value)
+else { 
+    $restypes = implode(
+        ',',
+        array_merge(
+            getval('restypes', [], false, static function ($data) use ($hide_resource_types) {
+                $resource_types = array_filter(
+                    array_column(get_resource_types('', true, false, true), 'ref'),
+                    static fn($ref): bool => !in_array($ref, $hide_resource_types)
+                );
+                $valid_resource_types = array_merge(['Global'], $resource_types);
 
-        {
-        $hiddenfields = array();
-        if ($key=="rttickall" && $value=="on"){$restypes="";break;} 
-        if ((substr($key,0,8)=="resource")&&!in_array($key, $hiddenfields)) {if ($restypes!="") {$restypes.=",";} $restypes.=substr($key,8);}
-        }
+                $check = array_intersect($valid_resource_types, $data);
+
+                return array_values($check) === array_values($data);
+            }),
+            getval('includeFeaturedCollections', '') === 'yes' ? ['FeaturedCollections'] : []
+        )
+    );
 
     rs_setcookie('restypes', $restypes,0,"","",false,false);
 
     # This is a new search, log this activity
-    if ($archivesearched) {daily_stat("Archive search",0);} else {daily_stat("Search",0);}
+    if ($archivesearched) {
+        daily_stat("Archive search", 0);
+    } else {
+        daily_stat("Search", 0);
     }
+}
 $modified_restypes=hook("modifyrestypes_aftercookieset");
 if($modified_restypes){$restypes=$modified_restypes;}
 

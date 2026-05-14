@@ -284,7 +284,7 @@ $selected_search_tab = getval("selected_search_tab", "search");
                             ARRAY_FILTER_USE_BOTH
                         );
                         $all_resource_type_filter_options = (
-                            ['allRTs' => $lang['all_resource_types']]
+                            ['Global' => $lang['all_resource_types']]
                             + $resource_type_filter_options
                         );
                         $current_rt_options = array_keys(
@@ -301,7 +301,7 @@ $selected_search_tab = getval("selected_search_tab", "search");
                             $rt_filter_featured_collections_html = sprintf(
                                 '<div class="tick">
                                     <input id="TickBoxFeaturedCollections" class="tickboxcoll" type="checkbox"
-                                        name="resourceFeaturedCollections" value="yes" %s
+                                        name="includeFeaturedCollections" value="yes" %s
                                         onclick="SimpleSearchFieldsHideOrShow(true);">
                                     <label for="TickBoxFeaturedCollections">%s</label>
                                 </div>
@@ -321,10 +321,10 @@ $selected_search_tab = getval("selected_search_tab", "search");
                         <?php
                         render_dropdown_question(
                             label: $lang['resourcetypes'],
-                            inputname: 'field_test_select2[]',
+                            inputname: 'restypes[]',
                             options: $all_resource_type_filter_options,
                             current: $current_rt_options === array_keys($resource_type_filter_options)
-                                ? ['allRTs']
+                                ? ['Global']
                                 : $current_rt_options,
                             // Style needed for the width - @see https://select2.org/appearance#container-width
                             extra: 'multiple="multiple" onchange="SimpleSearchFieldsHideOrShow(true);" style="width: 100%;"',
@@ -333,48 +333,9 @@ $selected_search_tab = getval("selected_search_tab", "search");
                                 'no_div_class_question' => true,
                                 'input_class' => '',
                                 'div_content' => $rt_filter_featured_collections_html ?? '',
+                                'div_extra_attr' => $simpleSearchFieldsAreHidden ? 'style="display: none;"' : '',
                             ]
                         );
-                        // todo: drop the below code once done with the WIP above
-                        ?>
-                        <div class="field-input" <?php echo $simpleSearchFieldsAreHidden ? 'style="display:none;"' : ''; ?>>
-                            <?php
-                            // $rt = is_array($restypes) ? $restypes : explode(",", $restypes);
-                            // $clear_function = "SetCookie('search','');SetCookie('restypes','');SetCookie('ssearchhiddenfields','');SetCookie('saved_offset','');SetCookie('saved_archive','');";
-                            // hook('clearsearchcookies');
-
-                            # Render resource type checkbox inputs
-                            for ($n = 0; $n < count($types); $n++) {
-                                if (in_array($types[$n]['ref'], $hide_resource_types)) {
-                                    continue;
-                                }
-
-                                $tickBoxClass = "tick";
-                                $inputBoxClass = "tickbox";
-                                $resetTickAllCall = "";
-                                $clear_function .= "jQuery('#TickBox" . $types[$n]["ref"] . "').prop('checked',true);";
-                                ?>
-                                <div class="<?php echo $tickBoxClass; ?>">
-                                    <input
-                                        class="<?php echo $inputBoxClass; ?>"
-                                        id="TickBox<?php echo (int) $types[$n]["ref"]; ?>" 
-                                        type="checkbox"
-                                        value="yes"
-                                        name="resource<?php echo (int) $types[$n]["ref"]; ?>"  
-                                        <?php if (((count($rt) == 1) && ($rt[0] == "")) || ($restypes == "Global") || (in_array($types[$n]["ref"], $rt))) { ?>
-                                            checked="checked"
-                                        <?php } ?> 
-                                        onclick="SimpleSearchFieldsHideOrShow(true);<?php echo $resetTickAllCall; ?>"
-                                    >
-                                    <label for="TickBox<?php echo (int) $types[$n]["ref"]; ?>">
-                                        <i class="icon-<?php echo escape($types[$n]["icon"] != "" ? $types[$n]["icon"] : LUCIDE_EXTENSIONS["default"]); ?>"></i>    
-                                        <?php echo "&nbsp;" . escape($types[$n]["name"]); ?>
-                                    </label>
-                                </div>
-
-                                <?php
-                            }
-                            # End of rendering for resource type checkbox inputs
                     } elseif ($restypes == '') {
                         # We still need a way to pass restypes based on simple search settings or things like search crumbs will be incorrect
                         if ($search_includes_resources) {
@@ -389,12 +350,6 @@ $selected_search_tab = getval("selected_search_tab", "search");
                         ?>
 
                         <input type="hidden" name="restypes" id="restypes" value="<?php echo escape($restypes); ?>" />
-                        <?php
-                    }
-
-                    if (!$basic_simple_search && !$hide_search_resource_types) {
-                        ?>
-                        </div>
                         <?php
                     }
 

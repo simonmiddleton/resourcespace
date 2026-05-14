@@ -1672,6 +1672,9 @@ function render_split_text_question($label, $inputs = array(), $additionaltext="
 
 /**
 * render_dropdown_question - Used to display a question with a dropdown selector
+*
+* IMPORTANT: careful when having to handle untrusted data! If you have to pass it to elements, make sure they're encoded
+* accordingly.
 * 
 * @param string $label     Label of question
 * @param string $inputname Name of input field
@@ -1682,10 +1685,10 @@ function render_split_text_question($label, $inputs = array(), $additionaltext="
 *   no_div_class_question?: bool,
 *   div_class?: list<string>,
 *   div_content?: string,
+*   div_extra_attr?: string,
 *   input_class?: string,
 *   onchange?: string,
 * } $ctx Rendering context. Should be used to inject different elements (e.g set the div class, add onchange for select).
-*   IMPORTANT: never allow untrusted data for "div_content"!
 */
 function render_dropdown_question($label, $inputname, $options = array(), string|array $current="", $extra="", array $ctx = array()): void
     {
@@ -1696,6 +1699,7 @@ function render_dropdown_question($label, $inputname, $options = array(), string
         $div_class = array_merge($div_class, $ctx["div_class"]);
         }
     $div_content = $ctx["div_content"] ?? "";
+    $div_extra_attr = $ctx["div_extra_attr"] ?? "";
     $input_class = isset($ctx["input_class"]) ? $ctx["input_class"] : "stdwidth";
 
     $onchange = (isset($ctx["onchange"]) && trim($ctx["onchange"]) != "" ? trim($ctx["onchange"]) : "");
@@ -1707,7 +1711,7 @@ function render_dropdown_question($label, $inputname, $options = array(), string
         ? in_array($option, $current)
         : trim((string) $option) === trim((string) $current);
     ?>
-    <div class="<?php echo escape(implode(" ", $div_class)); ?>">
+    <div class="<?php echo escape(implode(" ", $div_class)); ?>" <?php echo $div_extra_attr; ?>>
         <label for="<?php echo $input_name_escaped; ?>"><?php echo escape($label); ?></label>
         <select  name="<?php echo $input_name_escaped; ?>" class="<?php echo escape($input_class); ?>" id="<?php echo $input_name_escaped; ?>" <?php echo $extra; ?>>
         <?php
