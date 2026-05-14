@@ -109,12 +109,8 @@ $resource_view_title = i18n_get_translated($result[$n]["field" . $view_title_fie
                                 onClick="return <?php echo $resource_view_modal ? "Modal" : "CentralSpace"; ?>Load(this,true);"
                             >
                         <?php } 
-
-                        if (eval_check_signed($df[$x]['value_filter']) != '') {
-                            echo strip_tags_and_attributes(tidy_trim(TidyList(i18n_get_translated($value)), $results_title_trim));
-                        } else {
-                            echo escape(tidy_trim(TidyList(i18n_get_translated($value)), $results_title_trim));
-                        }
+                        
+                        echo escape(tidy_trim(TidyList(i18n_get_translated($value)), $results_title_trim));
                         
                         if ($x == 0) { ?>
                             </a>
