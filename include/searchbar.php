@@ -773,7 +773,6 @@ $selected_search_tab = getval("selected_search_tab", "search");
                                 const multiselect_fields = document.querySelectorAll('.header-search-field #search-filters-panel select.select2-hidden-accessible');
                                 multiselect_fields.forEach(f => jQuery(f)
                                     .val(null)
-                                    // Needed to trigger the actual existing selection removal
                                     .trigger('change')
                                     // Needed to trigger the clear logic (if applicable, e.g. see header.js for resource types filters)
                                     .trigger('select2:clear')

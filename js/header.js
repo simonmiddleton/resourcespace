@@ -224,23 +224,32 @@ ResourceSpace.Modules.Header = (() => {
         // todo: attach to events so that when all reosurce types option is selected none of the other options remain selected
         // https://select2.org/programmatic-control/events
         jQuery('#field_test_select2\\[\\]').select2();
-        bindSelect2Events();
+        bindResourceTypeSelectorEvents();
     }
 
-    function bindSelect2Events() {
-        // jQuery('#field_test_select2\\[\\]').on('select2:select', function (e) {
-        //     console.log('(select2) Select triggered');
-        // });
-
+    function bindResourceTypeSelectorEvents() {
+        // When clearing the search filters on the panel, select only the "All resource types" (default behaviour). 
         jQuery('#field_test_select2\\[\\]').on('select2:clear', function (e) {
-            console.log('(select2) clear triggered %o', e);
             const all_resource_types_option = jQuery(this).find('option').first().val();
             jQuery(this).val(all_resource_types_option).trigger('change');
         });
 
-        // jQuery('#field_test_select2\\[\\]').on('change', function (e) {
-        //     console.log('(select2) Change triggered');
-        // });
+        jQuery('#field_test_select2\\[\\]').on('select2:select', function (e) {
+            const all_resource_types_option = jQuery(this).find('option').first().val();
+
+            // If the user selects the "All resource types" option then any manually selected resource types are cleared 
+            if (e.params.data.id === all_resource_types_option) {
+                // This event clears all selections (default) and our bind (see above) will reselect the all RTs option
+                jQuery(this).trigger('select2:clear');
+                return;
+            }
+
+            // Selecting a resource type will remove the "All resource types" option to only show your manually selected
+            // resource types
+            jQuery(this)
+                .val(jQuery(this).val().filter(v => v !== all_resource_types_option))
+                .trigger('change');
+        });
     }
 
     return {
