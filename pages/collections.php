@@ -11,8 +11,6 @@ if (checkperm("b")) {
     exit($lang["error-permissiondenied"]);
 }
 
-// include_once __DIR__ . "/../include/research_functions.php";
-
 $sort            = getval('sort', 'ASC');
 $search          = getval('search', '');
 $last_collection = getval('last_collection', '');
@@ -175,7 +173,6 @@ if ($allow_reorder) {
                     * The !collectionX part may be urlencoded, or not, depending on how the page was reached.
                     */
                     var results = new RegExp('[\\?&amp;]' + 'search' + '=([^&amp;#]*)').exec(window.location.href);
-                    // var ref = new RegExp('[\\?&amp;]' + 'ref' + '=([^&amp;#]*)').exec(window.location.href);
 
                     if ((results !== null) &&
                         ('<?php echo urlencode("!collection" . $usercollection); ?>' === results[1]
@@ -239,7 +236,7 @@ if ($allow_reorder) {
     <script type="text/javascript">
         jQuery(document).ready(function() {
             jQuery('.ui-sortable').sortable('disable');
-            jQuery('.CollectionPanelShell').enableSelection();          
+            jQuery('.CollectionPanelShell').enableSelection();
         }); 
     </script>
     <?php
@@ -327,7 +324,7 @@ if ($add != "") {
 
     if ($allowadd) {
         foreach ($addarray as $add) {
-            #add to current collection
+            // add to current collection
             if (
                 $usercollection == -$userref
                 || $to_collection == -$userref
@@ -686,17 +683,17 @@ jQuery(function () {
             setBarState('state-actions');
         } else {
             setBarState('state-closed');
-            $toggleThumbsBtn.find('span').text('Show thumbnails');
+            $toggleThumbsBtn.find('span').text('<?php echo escape($lang["showthumbnails"]); ?>');
         }
     });
 
     jQuery('.show-thumbs-button').on('click', function () {
         if ($bar.hasClass('state-thumbs')) {
             setBarState('state-actions');
-            $toggleThumbsBtn.find('span').text('Show thumbnails');
+            $toggleThumbsBtn.find('span').text('<?php echo escape($lang["showthumbnails"]); ?>');
         } else {
             setBarState('state-thumbs');
-            $toggleThumbsBtn.find('span').text('Hide thumbnails');
+            $toggleThumbsBtn.find('span').text('<?php echo escape($lang["hidethumbnails"]); ?>');
         }
     });
     
@@ -816,7 +813,7 @@ jQuery(function () {
             </div>
             <button class="show-thumbs-button">
                 <i class="icon-images"></i>
-                <span><?php echo ($collection_holder_state == "state-thumbs") ? "Hide thumbnails" : "Show thumbnails"; ?></span>
+                <span><?php echo escape(($collection_holder_state == "state-thumbs") ? $lang["hidethumbnails"] : $lang["showthumbnails"]); ?></span>
             </button>
         </div>
     </div>
@@ -907,8 +904,6 @@ jQuery(function () {
                             ?>
 
                             <div class="collection-bar-resource-card-image">
-                                <!-- <a onclick="return <?php echo $resource_view_modal ? 'Modal' : 'CentralSpace'; ?>Load(this,true);"
-                                   href="<?php echo $resource_url ?>"> -->
                                 <?php
                                 $colimg_preview_size = $retina_mode ? 'thm' : 'col';
                                 $colimgpath = get_resource_preview($result[$n], [$colimg_preview_size]);
@@ -995,7 +990,7 @@ jQuery(function () {
                 <?php
                 }
             } else {
-                echo "No resources in collection";
+                echo escape($lang['emptycollection']);
             }
 
             if ($count_result > $max_collection_thumbs) {
@@ -1008,7 +1003,7 @@ jQuery(function () {
                     </a>
                     <div class="collection-bar-resource-card-image">
                         <i class="icon-eye"></i>
-                        <span><?php echo escape($lang['viewall'])?></span>
+                        <span><?php echo escape($lang['viewall']); ?></span>
                         <div class="collection-bar-resource-card-image-overlay"></div>
                     </div>
                     <div class="collection-bar-resource-card-title">

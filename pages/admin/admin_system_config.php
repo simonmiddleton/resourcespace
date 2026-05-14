@@ -122,7 +122,7 @@ $page_def[] = config_add_colouroverride_input(
     true,
     "jQuery('button:not(.search-icon),input[type=submit],input[type=button],.RecordPanel .RecordDownloadSpace .DownloadDBlend a,.UploadButton a').css('background-color',value);"
 );
-$page_def[] = config_add_single_select('thumbs_default', $lang['userpreference_thumbs_default_label'], array('show' => $lang['showthumbnails'], 'hide' => $lang['hidethumbnails']), true, 420, null, true);
+$page_def[] = config_add_single_select('thumbs_default', $lang['userpreference_thumbs_default_label'], array('show' => $lang['thumbnails_collection_bar'], 'actions' => $lang['minimal_collection_bar'], 'hide' => $lang['hide_collection_bar']), true, 420, null, true);
 $page_def[] = config_add_boolean_select('resource_view_modal', $lang['userpreference_resource_view_modal_label'], $enable_disable_options, 420, null, true);
 $page_def[] = config_add_boolean_select('modal_default', $lang['systemconfig_modal_default'], $enable_disable_options, 420, null, true);
 $page_def[] = config_add_boolean_select('basic_simple_search', $lang['userpreference_basic_simple_search_label'], $enable_disable_options, 420, null, true);
