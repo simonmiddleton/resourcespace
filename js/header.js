@@ -221,12 +221,13 @@ ResourceSpace.Modules.Header = (() => {
     }
 
     function handleResourceTypesFilter() {
-        // todo: attach to events so that when all reosurce types option is selected none of the other options remain selected
-        // https://select2.org/programmatic-control/events
         jQuery('#field_test_select2\\[\\]').select2();
         bindResourceTypeSelectorEvents();
     }
 
+    /**
+     * @see https://select2.org/programmatic-control/events
+     */
     function bindResourceTypeSelectorEvents() {
         // When clearing the search filters on the panel, select only the "All resource types" (default behaviour). 
         jQuery('#field_test_select2\\[\\]').on('select2:clear', function (e) {
