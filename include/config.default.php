@@ -2636,6 +2636,9 @@ $replace_resource_preserve_default = false;
 // Option to allow replacement of multiple resources by filename using the "Replace resource batch" functionality
 $replace_batch_existing = false;
 
+// Option to allow replacement of multiple alternative files by filename using the "Replace resource batch" functionality
+$replace_batch_alt_existing = false;
+
 // E-mail address to send a report to if any of the automated tests (tests/test.php) fail.
 // This is used by Montala to automatically test the RS trunk on a nightly basis.
 // $email_test_fails_to="example@example.com";

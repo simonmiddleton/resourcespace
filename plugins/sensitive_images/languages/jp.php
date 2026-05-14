@@ -8,3 +8,4 @@ $lang["sensitive_images_blur_level"]='画像のセンシティブな部分のぼ
 $lang["plugin-sensitive_images-title"]='機密画像のぼかし';
 $lang["plugin-sensitive_images-desc"]='ユーザーがクリックしてぼかしを解除できるように、機密としてマークされた画像をぼかします。';
 $lang["page-title_sensitive_images_setup"] = 'センシティブ画像プラグインの設定';
+$lang["sensitive_images_show"] = '画像をクリックして表示。';

@@ -107,3 +107,4 @@ $lang["page-title_simplesaml_setup"] = '간단한 SAML 플러그인 설정';
 $lang["simplesaml_error_not_configured"] = 'SimpleSAML 플러그인이 구성되지 않았습니다';
 $lang["simplesaml_error_no_idp_metadata"] = 'SimpleSAML 플러그인이 완전히 구성되지 않았습니다 (IdP 메타데이터가 누락됨)';
 $lang["simplesaml_error_no_authsource"] = 'SimpleSAML 플러그인이 완전히 구성되지 않았습니다 (authsource 누락)';
+$lang["simplesaml_userlimit_error"] = '사용자를 생성할 수 없습니다. 사용자 제한에 도달했습니다. 관리자에게 문의하세요.';

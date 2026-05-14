@@ -53,3 +53,4 @@ $lang["plugin-youtube_publish-title"]='YouTube公開';
 $lang["plugin-youtube_publish-desc"]='設定されたYouTubeアカウントにビデオリソースを公開します。';
 $lang["page-title_youtube_publish_setup"] = 'プラグインの設定';
 $lang["page-title_youtube_publish_youtube_upload"] = 'YouTubeにリソースを公開する';
+$lang["youtube_publish_video_title"] = '動画のタイトル（最大100文字）';

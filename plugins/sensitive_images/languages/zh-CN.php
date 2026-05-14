@@ -8,3 +8,4 @@ $lang["sensitive_images_blur_level"]='敏感图像模糊程度<br>（1=最小，
 $lang["plugin-sensitive_images-title"]='敏感图像模糊处理';
 $lang["plugin-sensitive_images-desc"]='将标记为敏感的图像模糊处理，用户可以点击以取消模糊。';
 $lang["page-title_sensitive_images_setup"] = '设置敏感图像插件';
+$lang["sensitive_images_show"] = '点击图片以显示。';

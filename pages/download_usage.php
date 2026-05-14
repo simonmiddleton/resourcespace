@@ -1,6 +1,6 @@
 <?php
 include "../include/boot.php";
-
+debug("BANG");
 # External access support (authenticate only if no key provided, or if invalid access key provided)
 $k           = getval('k', '');
 $ref         = getval('ref', '', true);
@@ -15,17 +15,19 @@ $email       = getval('email', '');
 $usage       = getval("usage", '', true);
 $usagecomment = getval("usagecomment", '');
 
-resource_type_config_override(get_resource_data($ref)['resource_type']);
-
 $error = array();
 
 if (-1 != $col) {
     $need_to_authenticate = !check_access_key_collection($col, $k);
 } else {
     $need_to_authenticate = !check_access_key($ref, $k);
+    if ($ref != '') {
+        resource_type_config_override(get_resource_data($ref)['resource_type']);
+    }
 }
-
+debug("BANG");
 if ('' == $k || $need_to_authenticate) {
+    debug("BANG");
     include '../include/authenticate.php';
 }
 

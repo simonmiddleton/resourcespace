@@ -107,3 +107,4 @@ $lang["page-title_simplesaml_setup"] = 'Configura el complement Simple SAML';
 $lang["simplesaml_error_not_configured"] = 'El complement SimpleSAML no està configurat';
 $lang["simplesaml_error_no_idp_metadata"] = 'El complement SimpleSAML no està completament configurat (falta la metadata de l\'IdP)';
 $lang["simplesaml_error_no_authsource"] = 'El complement SimpleSAML no està completament configurat (falta authsource)';
+$lang["simplesaml_userlimit_error"] = 'No s\'ha pogut crear l\'usuari ja que s\'ha arribat al límit d\'usuaris. Si us plau, contacteu amb l\'administrador.';

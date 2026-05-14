@@ -52,3 +52,4 @@ $lang["origin_simpleldap"]='افزونه SimpleLDAP';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='نام کامل دامنه (FQDN) سرور را با نام مشترک (CN) گواهی مقایسه نکنید';
 $lang["page-title_simpleldap_ajax_test_auth"] = 'تست احراز هویت LDAP';
 $lang["page-title_simpleldap_setup"] = 'نصب افزونه LDAP ساده';
+$lang["simpleldap_userlimit_error"] = 'کاربر نمی‌تواند ایجاد شود زیرا محدودیت کاربر به پایان رسیده است. لطفاً با مدیر سیستم خود تماس بگیرید.';

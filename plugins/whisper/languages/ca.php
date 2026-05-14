@@ -10,3 +10,8 @@ $lang["whisper_transcript"] = 'Genera un fitxer de transcripció i afegeix-lo co
 $lang["whisper_transcript_name"] = 'Transcripció generada automàticament';
 
 $lang["page-title_whisper_setup"] = 'Configura el complement Whisper';
+$lang["whisper_cron_enable"] = 'Habilitar el processament de recursos no processats mitjançant una tasca programada Cron';
+$lang["whisper"] = 'Sussurro';
+$lang["whisper_process_existing"] = 'Processar recursos no processats';
+$lang["whisper_process_existing_intro"] = 'Crea una tasca per iniciar el processament d\'àudio amb Whisper aquí - aquesta tasca no requereix cap paràmetre, de manera que es pot iniciar sempre que no hi hagi altres tasques pendents d\'aquest tipus.';
+$lang["whisper_process_existing_configure"] = 'Configura la tasca per processar fitxers amb Whisper';

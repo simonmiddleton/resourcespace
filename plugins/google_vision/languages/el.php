@@ -27,3 +27,7 @@ $lang["page-title_google_vision_process_existing"] = 'Διαδικασία Googl
 $lang["page-title_google_vision_setup"] = 'Ρύθμιση Πρόσθετου Google Vision';
 $lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
 $lang["page-title_google_vision_test"] = 'Google Vision Test';
+$lang["google_vision"] = 'Google Vision';
+$lang["google_vision_process_existing"] = 'Επεξεργασία μη επεξεργασμένων πόρων';
+$lang["google_vision_process_existing_configure"] = 'Διαμόρφωση εργασίας για επεξεργασία μη επεξεργασμένων πόρων';
+$lang["google_vision_process_existing_collection_refs_help"] = 'Ορισμός αυτής της επιλογής σημαίνει ότι θα επεξεργαστούν μόνο οι πόροι στις καταχωρημένες συλλογές. Αν δεν οριστούν συλλογές, θα επεξεργαστούν ΟΛΟΙ οι κατάλληλοι πόροι. Οι συλλογές μπορούν να οριστούν με μια λίστα διαχωρισμένη με κόμμα ή με εύρη π.χ. 100,105,110-115';

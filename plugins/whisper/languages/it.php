@@ -10,3 +10,8 @@ $lang["whisper_transcript"] = 'Genera un file di trascrizione e aggiungilo come 
 $lang["whisper_transcript_name"] = 'Trascrizione generata automaticamente';
 
 $lang["page-title_whisper_setup"] = 'Imposta il plugin Whisper';
+$lang["whisper_cron_enable"] = 'Abilita l\'elaborazione delle risorse non elaborate tramite il job pianificato Cron';
+$lang["whisper"] = 'Sussurro';
+$lang["whisper_process_existing"] = 'Elabora risorse non elaborate';
+$lang["whisper_process_existing_intro"] = 'Crea un lavoro per avviare l\'elaborazione audio con Whisper qui - questo lavoro non richiede parametri, quindi può essere avviato fintanto che non ci sono altri lavori in sospeso di questo tipo.';
+$lang["whisper_process_existing_configure"] = 'Configura il lavoro per elaborare i file con Whisper';

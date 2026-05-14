@@ -775,7 +775,6 @@ const SENSITIVE_VARIABLE_NAMES = [
     'ldapauth',
     'tms_link_user',
     'tms_link_password',
-    'wordpress_sso_secret',
     'youtube_publish_username',
     'youtube_publish_password',
     'vimeo_publish_client_id',
@@ -896,6 +895,13 @@ const API_ISSUE_VALID_DESTINATIONS = [
     "linkrui" => [
         "name" => "LinkrUI",
         "url" => "https://resourcespace.linkrui.com/saml",
+        "querydata" => ["username"],
+        "stateparam" => "state",
+    ],
+    "tagquest" => [
+        "name" => "TagQuest",
+        "url" => "https://resourcespace.tagquest.io/api/auth/rs-callback",
+        "querydata" => ["username", "email", "fullname"],
         "stateparam" => "state",
     ],
 ];

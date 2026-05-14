@@ -27,3 +27,7 @@ $lang["page-title_google_vision_process_existing"] = 'Google Vision Process Exis
 $lang["page-title_google_vision_setup"] = 'Installera Google Vision-plugin';
 $lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
 $lang["page-title_google_vision_test"] = 'Google Vision Test';
+$lang["google_vision"] = 'Google Vision';
+$lang["google_vision_process_existing"] = 'Bearbeta olästa resurser';
+$lang["google_vision_process_existing_configure"] = 'Konfigurera jobb för att bearbeta olästa resurser';
+$lang["google_vision_process_existing_collection_refs_help"] = 'Genom att ställa in detta alternativ kommer endast resurser i de listade samlingarna att bearbetas. Om inga samlingar anges kommer ALLA lämpliga resurser att bearbetas. Samlingar kan anges med hjälp av kommaseparerade listor samt intervall, t.ex. 100,105,110-115';

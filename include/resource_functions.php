@@ -191,8 +191,8 @@ function get_resource_path(
             } else {
                 $path_suffix = "/original/";
             }
-        } elseif ($size == "") {
-            # Original file (core file or alternative)
+        } elseif (($size == "") || ($extension == 'icc')) {
+            # Original file (core file or alternative) or icc profile
             $path_suffix = "/original/";
         } else {
             # Preview or thumb
@@ -4662,6 +4662,45 @@ function get_alternative_files($resource, $order_by = "", $sort = "", $type = ""
 }
 
 /**
+ * Search the alternative file records for matching filenames
+ * Alternative files can be optionally filtered by the Resource ID or by collection
+ *
+ * @param  string $filename Filename of the alternative file(s) to search for
+ * @param  int $collection Collection ID to filter resources, use 0 to ignore
+ * @param  int $min Minimum Resource ID to consider, use 0 to ignore
+ * @param  int $max Maximum Resource ID to consider, use 0 to ignore
+ * 
+ * @return array All matching alternative file records with corresponding:
+ *               resource ID, filename, file size, extension, name, and description
+ */
+function get_alternative_files_by_filename(string $filename, int $collection, int $min, int $max) : array
+{
+    $sql = new PreparedStatementQuery(
+        "SELECT ref, resource, file_name, file_size, file_extension, name, description FROM resource_alt_files WHERE file_name = ?",
+        ["s", $filename]
+    );
+
+    if ($collection) {
+        $sql->sql .= " AND resource IN (SELECT resource FROM collection_resource WHERE collection = ?)";
+        $sql->parameters[] = "i";
+        $sql->parameters[] = $collection;
+    } elseif ($min || $max) {
+        if ($min) {
+            $sql->sql .= " AND resource >= ?";
+            $sql->parameters[] = "i";
+            $sql->parameters[] = $min;
+        }
+        if ($max) {
+            $sql->sql .= " AND resource <= ?";
+            $sql->parameters[] = "i";
+            $sql->parameters[] = $max;
+        }
+    }
+
+    return ps_query($sql->sql, $sql->parameters);
+}
+
+/**
 * Add alternative file
 *
 * @param integer $resource
@@ -5693,7 +5732,7 @@ function autocomplete_blank_fields($resource, $force_run, $return_changes = fals
     }
 
     $fields = ps_query(
-        "SELECT rtf.ref, rtf.type, rtf.autocomplete_macro
+        "SELECT rtf.ref, rtf.type, rtf.autocomplete_macro, rtf.display_condition
             FROM resource_type_field rtf
             LEFT JOIN resource_type rt ON rt.ref = ?
             WHERE length(rtf.autocomplete_macro) > 0
@@ -5715,6 +5754,13 @@ function autocomplete_blank_fields($resource, $force_run, $return_changes = fals
         $run_autocomplete_macro = $force_run || hook('run_autocomplete_macro');
         # The autocomplete macro will run if the existing value is blank, or if forced to always run
         if (count(get_resource_nodes($resource, $field['ref'], true)) == 0 || $run_autocomplete_macro) {
+            # Check if the field has a unique display condition blocking it from being rendered
+            if ($field['display_condition'] != '') {
+                $field_data = get_resource_field_data($field['ref']);
+                if (!check_display_condition(0, $field, $field_data, false, $resource)) {
+                    continue;
+                }
+            }
             # Autocomplete and update using the returned value
             $value = eval(eval_check_signed($field['autocomplete_macro']));
             if (in_array($field['type'], $FIXED_LIST_FIELD_TYPES)) {
@@ -7725,7 +7771,7 @@ function get_nopreview_html(string $extension, $resource_type = null): string
 function get_resource_type_fields($restypes = "", $field_order_by = "ref", $field_sort = "asc", $find = "", $fieldtypes = array(), $include_inactive = false)
 {
     debug_function_call(__FUNCTION__, func_get_args());
-    if ($field_order_by != "ref") {
+    if (!in_array($field_order_by, ["ref", "title"])) {
         // Default order by is not being used so check order by columns supplied are valid for the table
         $fields = columns_in("resource_type_field", null, null, true);
         $fields[] = "tab_name";
@@ -9150,8 +9196,11 @@ function can_upload_preview_image(int $ref): bool
 
 /**
  * Check if a resource has a file to derive previews from.
+ *  
+ * @param int       $ref        Resource ID
+ * @param string    $extension  Resource file extension
  */
-function resource_has_preview_source($ref, $extension) 
+function resource_has_preview_source(int $ref, string $extension) : bool
 {
     return file_exists( 
             in_array($extension, NON_PREVIEW_EXTENSIONS) ? 

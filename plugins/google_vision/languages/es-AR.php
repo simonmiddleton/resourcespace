@@ -27,3 +27,7 @@ $lang["page-title_google_vision_process_existing"] = 'Proceso de Google Vision E
 $lang["page-title_google_vision_setup"] = 'Configurar el complemento de Google Vision';
 $lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
 $lang["page-title_google_vision_test"] = 'Google Vision Test';
+$lang["google_vision"] = 'Google Vision';
+$lang["google_vision_process_existing"] = 'Procesar recursos no procesados';
+$lang["google_vision_process_existing_configure"] = 'Configurar trabajo para procesar recursos no procesados';
+$lang["google_vision_process_existing_collection_refs_help"] = 'Configurar esta opción significará que solo se procesarán los recursos en las colecciones listadas. Si no se especifican colecciones, se procesarán TODOS los recursos adecuados. Las colecciones pueden especificarse usando una lista separada por comas así como rangos, por ejemplo 100,105,110-115';

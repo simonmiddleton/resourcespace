@@ -170,7 +170,11 @@ if ($upload_review_mode)
         else
             {
             // Redirect to recent user uploads
-            $defaultarchivestate = get_default_archive_state();
+            if ($show_status_and_access_on_upload) {
+                $defaultarchivestate = ps_value("SELECT archive value FROM resource WHERE ref = ?", ["i",$lastedited], null) ?? get_default_archive_state();
+            } else {
+                $defaultarchivestate = get_default_archive_state();
+            }
             $redirectparams = array(
                 "search"=>"!contributions" . $userref,
                 "order_by"=>"resourceid",
@@ -628,6 +632,10 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                 {
                 if ($upload_review_mode)
                     {
+                    if (is_numeric($collection_add))
+                        {
+                        add_resource_to_collection($ref, $collection_add, false, "", $resource_type); 
+                        }
                     # Drop this resource from the collection and either save all subsequent resources, or redirect thus picking the next resource.
                     if($external_upload)
                         {
@@ -688,6 +696,11 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                             $resource = copy_locked_data($resource, $locked_fields, $lastedited, true);
                                  
                             $hookresource = hook('copy_locked_data_extra', '', [$resource, $locked_fields, $lastedited, true]);
+
+                            if (is_numeric($collection_add))
+                                {
+                                add_resource_to_collection($ref, $collection_add, false, "", $resource_type); 
+                                }
 
                             // Update $fields and all_selected_nodes with details of the last resource edited for locked fields
                             // NOTE: $fields and $all_selected_nodes are passed by reference

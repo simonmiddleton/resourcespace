@@ -40,3 +40,4 @@ $lang["plugin-action_dates-title"] = 'Datas de Ação';
 $lang["plugin-action_dates-desc"] = 'Permite a exclusão ou restrição programada de recursos com base em campos de data';
 
 $lang["page-title_action_dates_setup"] = 'Configurar Plugin de Datas de Ação';
+$lang["action_dates_additional_settings_email_admin_days"] = 'Notificar os administradores com quantos dias de antecedência antes da ação (Deixe em branco para desativar)';

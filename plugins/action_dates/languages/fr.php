@@ -40,3 +40,4 @@ $lang["plugin-action_dates-title"] = 'Dates d\'action';
 $lang["plugin-action_dates-desc"] = 'Permet la suppression ou la restriction programmée des ressources en fonction des champs de date';
 
 $lang["page-title_action_dates_setup"] = 'Configurer le plugin des dates d\'action';
+$lang["action_dates_additional_settings_email_admin_days"] = 'Notifier les administrateurs ce nombre de jours avant la date de l\'action (Laissez vide pour désactiver)';

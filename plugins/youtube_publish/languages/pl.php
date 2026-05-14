@@ -53,3 +53,4 @@ $lang["plugin-youtube_publish-title"]='Publikacja na YouTube';
 $lang["plugin-youtube_publish-desc"]='Publikuje zasób wideo na skonfigurowane konto YouTube.';
 $lang["page-title_youtube_publish_setup"] = 'Konfiguracja wtyczki';
 $lang["page-title_youtube_publish_youtube_upload"] = 'Opublikuj zasób na YouTube';
+$lang["youtube_publish_video_title"] = 'Tytuł filmu (maksymalnie 100 znaków)';

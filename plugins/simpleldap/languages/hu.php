@@ -52,3 +52,4 @@ $lang["origin_simpleldap"] = 'SimpleLDAP plugin';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"] = 'Ne ellenőrizze a szerver FQDN-jét a tanúsítvány CN-jével szemben';
 $lang["page-title_simpleldap_ajax_test_auth"] = 'LDAP hitelesítés tesztelése';
 $lang["page-title_simpleldap_setup"] = 'Egyszerű LDAP bővítmény beállítása';
+$lang["simpleldap_userlimit_error"] = 'Felhasználót nem lehet létrehozni, mivel elérte a felhasználói korlátot. Kérjük, lépjen kapcsolatba a rendszergazdával.';

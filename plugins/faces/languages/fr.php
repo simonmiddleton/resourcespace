@@ -22,3 +22,10 @@ $lang["faces_count_missing"] = 'Images à traiter';
 $lang["faces-tag-field-not-set"] = 'Le champ de balisage n\'est pas configuré.';
 
 $lang["page-title_faces_setup"] = 'Configurer le plugin Faces';
+$lang["faces_insight_faces"] = 'Faces Insight';
+$lang["faces_detect_faces"] = 'Détecter les visages';
+$lang["faces_tag_faces"] = 'Étiqueter les visages';
+$lang["faces_detect_faces_configure"] = 'Configurer le travail pour détecter les visages';
+$lang["faces_tag_faces_configure"] = 'Configurer le travail pour étiqueter les visages';
+$lang["faces_detect_faces_intro"] = 'Créez un travail pour démarrer la détection des visages ici - ce travail ne nécessite aucun paramètre et peut être lancé tant qu\'il n\'y a pas d\'autres travaux en cours de ce type.';
+$lang["faces_tag_faces_collection_refs_help"] = 'La configuration de cette option signifie que seules les ressources dans les collections listées seront mises à jour. Si aucune collection n\'est spécifiée, l\'étiquetage des visages sera mis à jour pour TOUTES les ressources appropriées. Les collections peuvent être spécifiées à l\'aide d\'une liste séparée par des virgules ainsi que des plages, par exemple 100,105,110-115.';

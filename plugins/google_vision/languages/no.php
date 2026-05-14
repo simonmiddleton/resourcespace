@@ -27,3 +27,7 @@ $lang["page-title_google_vision_process_existing"] = 'Google Vision Prosess Eksi
 $lang["page-title_google_vision_setup"] = 'Sett opp Google Vision-plugin';
 $lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
 $lang["page-title_google_vision_test"] = 'Google Vision Test';
+$lang["google_vision"] = 'Google Vision';
+$lang["google_vision_process_existing"] = 'Behandle ubehandlede ressurser';
+$lang["google_vision_process_existing_configure"] = 'Konfigurer jobb for å behandle ubehandlede ressurser';
+$lang["google_vision_process_existing_collection_refs_help"] = 'Innstilling av dette alternativet vil bety at bare ressurser i de oppførte samlingene vil bli behandlet. Hvis ingen samlinger er angitt, vil ALLE egnede ressurser bli behandlet. Samlinger kan angis med en kommaseparert liste samt intervaller, f.eks 100,105,110-115';

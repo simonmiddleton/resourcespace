@@ -27,3 +27,7 @@ $lang["page-title_google_vision_process_existing"] = 'Google Vision Procesiraj p
 $lang["page-title_google_vision_setup"] = 'Postavljanje Google Vision dodatka';
 $lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
 $lang["page-title_google_vision_test"] = 'Google Vision Test';
+$lang["google_vision"] = 'Google Vizija';
+$lang["google_vision_process_existing"] = 'Obrada neobrađenih resursa';
+$lang["google_vision_process_existing_configure"] = 'Konfigurirajte zadatak za obradu neobrađenih resursa';
+$lang["google_vision_process_existing_collection_refs_help"] = 'Postavljanje ove opcije značit će da će biti obrađeni samo resursi u navedenim kolekcijama. Ako nisu navedene kolekcije, obrađivat će se SVI prikladni resursi. Kolekcije se mogu navesti pomoću popisa odvojenog zarezom ili raspona npr 100,105,110-115';

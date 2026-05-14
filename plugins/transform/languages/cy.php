@@ -81,3 +81,4 @@ $lang["cropper_preset_sizes"] = 'Maintiau wedi\'u diffinio ymlaen llaw';
 $lang["page-title_transform_collection_transform"] = 'Trawsnewid Adnodd';
 $lang["page-title_transform_crop"] = 'Torri Adnodd';
 $lang["page-title_transform_setup"] = 'Sefydlu Plugin Trawsnewid';
+$lang["use_filename_as_title"] = 'Defnyddio\'r enw ffeil fel teitl';

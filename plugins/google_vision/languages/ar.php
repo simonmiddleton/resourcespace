@@ -27,3 +27,7 @@ $lang["page-title_google_vision_process_existing"] = 'عملية رؤية جوج
 $lang["page-title_google_vision_setup"] = 'إعداد ملحق Google Vision';
 $lang["page-title_google_vision_test_jpg"] = 'اختبار رؤية جوجل';
 $lang["page-title_google_vision_test"] = 'اختبار رؤية جوجل';
+$lang["google_vision"] = 'رؤية جوجل';
+$lang["google_vision_process_existing"] = 'معالجة الموارد غير المعالجة';
+$lang["google_vision_process_existing_configure"] = 'تكوين مهمة لمعالجة الموارد غير المعالجة';
+$lang["google_vision_process_existing_collection_refs_help"] = 'سيؤدي ضبط هذا الخيار إلى معالجة الموارد الموجودة في المجموعات المدرجة فقط. إذا لم يتم تحديد أي مجموعات، فسيتم معالجة جميع الموارد المناسبة. يمكن تحديد المجموعات باستخدام قائمة مفصولة بفواصل بالإضافة إلى النطاقات مثل 100،105،110-115';

@@ -85,3 +85,4 @@ $lang["cropper_preset_sizes"] = 'Предустановленные размер
 $lang["page-title_transform_collection_transform"] = 'Преобразовать ресурс';
 $lang["page-title_transform_crop"] = 'Обрезать ресурс';
 $lang["page-title_transform_setup"] = 'Настройка плагина преобразования';
+$lang["use_filename_as_title"] = 'Использовать имя файла в качестве заголовка';

@@ -17,3 +17,4 @@ $lang["totp_date_binding_m"] = 'De huidige maand';
 $lang["totp_date_binding_y"] = 'Het huidige jaar';
 $lang["page-title_totp_setup"] = 'Instellen TOTP Plugin';
 $lang["page-title_totp_totp"] = 'TOTP';
+$lang["totp_saml"] = 'Schakel TOTP uit voor gebruikers die al via SAML zijn geauthenticeerd (Vereist SAML-plug-in)';

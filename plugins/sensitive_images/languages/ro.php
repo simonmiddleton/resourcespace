@@ -8,3 +8,4 @@ $lang["sensitive_images_blur_level"]='Nivel de estompare a imaginii sensibile<br
 $lang["plugin-sensitive_images-title"]='Estomparea imaginilor sensibile';
 $lang["plugin-sensitive_images-desc"]='Estompează imaginile marcate ca sensibile, utilizatorul putând face clic pentru a le clarifica.';
 $lang["page-title_sensitive_images_setup"] = 'Configurare Plugin pentru Imagini Sensibile';
+$lang["sensitive_images_show"] = 'Faceți clic pe imagine pentru a afișa.';

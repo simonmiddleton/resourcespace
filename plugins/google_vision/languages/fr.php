@@ -27,3 +27,7 @@ $lang["page-title_google_vision_process_existing"] = 'Processus Google Vision ex
 $lang["page-title_google_vision_setup"] = 'Configurer le plugin Google Vision';
 $lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
 $lang["page-title_google_vision_test"] = 'Google Vision Test';
+$lang["google_vision"] = 'Google Vision';
+$lang["google_vision_process_existing"] = 'Traiter les ressources non traitées';
+$lang["google_vision_process_existing_configure"] = 'Configurer le travail pour traiter les ressources non traitées';
+$lang["google_vision_process_existing_collection_refs_help"] = 'Activer cette option signifie que seules les ressources dans les collections listées seront traitées. Si aucune collection n\'est spécifiée, toutes les ressources appropriées seront traitées. Les collections peuvent être spécifiées à l\'aide d\'une liste séparée par des virgules ainsi que des plages, par exemple 100,105,110-115';

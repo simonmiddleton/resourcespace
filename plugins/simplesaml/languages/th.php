@@ -105,3 +105,4 @@ $lang["page-title_simplesaml_setup"] = 'ตั้งค่า Simple SAML Plugin
 $lang["simplesaml_error_not_configured"] = 'ปลั๊กอิน SimpleSAML ยังไม่ได้รับการกำหนดค่า';
 $lang["simplesaml_error_no_idp_metadata"] = 'ปลั๊กอิน SimpleSAML ยังไม่ได้รับการกำหนดค่าอย่างสมบูรณ์ (ขาดข้อมูลเมตาของ IdP)';
 $lang["simplesaml_error_no_authsource"] = 'ปลั๊กอิน SimpleSAML ยังไม่ได้รับการกำหนดค่าอย่างสมบูรณ์ (ขาด authsource)';
+$lang["simplesaml_userlimit_error"] = 'ไม่สามารถสร้างผู้ใช้ได้เนื่องจากจำนวนผู้ใช้ถึงขีดจำกัด กรุณาติดต่อผู้ดูแลระบบของคุณ';

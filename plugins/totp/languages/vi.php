@@ -17,3 +17,4 @@ $lang["totp_date_binding_m"] = 'Tháng hiện tại';
 $lang["totp_date_binding_y"] = 'Năm hiện tại';
 $lang["page-title_totp_setup"] = 'Cài đặt Plugin TOTP';
 $lang["page-title_totp_totp"] = 'TOTP';
+$lang["totp_saml"] = 'Vô hiệu hóa TOTP cho người dùng đã xác thực qua SAML (Yêu cầu plugin SAML)';

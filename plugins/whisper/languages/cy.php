@@ -10,3 +10,8 @@ $lang["whisper_transcript"] = 'Generwch ffeil drwydded a chynnwys fel lawrlwythi
 $lang["whisper_transcript_name"] = 'Trawsgrifiad a gynhelir yn awtomatig';
 
 $lang["page-title_whisper_setup"] = 'Sefydlu Plugin Whisper';
+$lang["whisper_cron_enable"] = 'Gallu prosesu adnoddau heb eu prosesu drwy swydd Cron wedi\'i threfnu';
+$lang["whisper"] = 'Whisper';
+$lang["whisper_process_existing"] = 'Prosesu adnoddau heb eu prosesu';
+$lang["whisper_process_existing_intro"] = 'Creu swydd i ddechrau prosesu audio Whisper yma - nid oes angen paramedrau ar y swydd hon felly gall ddechrau cyn belled â bod dim swyddi eraill o\'r math hwn ar waith.';
+$lang["whisper_process_existing_configure"] = 'Cyflwyno\'r swydd i brosesu ffeiliau gyda Whisper';

@@ -17,3 +17,4 @@ $lang["totp_date_binding_m"] = '현재 월';
 $lang["totp_date_binding_y"] = '현재 연도';
 $lang["page-title_totp_setup"] = 'TOTP 플러그인 설정';
 $lang["page-title_totp_totp"] = 'TOTP';
+$lang["totp_saml"] = 'SAML을 통해 이미 인증된 사용자에 대해 TOTP 비활성화 (SAML 플러그인 필요)';

@@ -22,3 +22,10 @@ $lang["faces_count_missing"] = 'Bilder zur Verarbeitung';
 $lang["faces-tag-field-not-set"] = 'Das Tagging-Feld ist nicht konfiguriert.';
 
 $lang["page-title_faces_setup"] = 'Faces Plugin einrichten';
+$lang["faces_insight_faces"] = 'InsightFaces';
+$lang["faces_detect_faces"] = 'Gesichter erkennen';
+$lang["faces_tag_faces"] = 'Gesichter taggen';
+$lang["faces_detect_faces_configure"] = 'Job zur Gesichtserkennung konfigurieren';
+$lang["faces_tag_faces_configure"] = 'Job zum Gesichtstaggen konfigurieren';
+$lang["faces_detect_faces_intro"] = 'Erstellen Sie hier einen Job, um die Gesichtserkennung zu starten – dieser Job erfordert keine Parameter und kann gestartet werden, solange keine anderen ausstehenden Jobs dieses Typs vorhanden sind.';
+$lang["faces_tag_faces_collection_refs_help"] = 'Wenn diese Option aktiviert ist, werden nur Ressourcen in den aufgelisteten Sammlungen aktualisiert. Wenn keine Sammlungen angegeben sind, wird das Gesichtstagging für ALLE geeigneten Ressourcen aktualisiert. Sammlungen können durch eine kommaseparierte Liste sowie Bereiche angegeben werden, z.B. 100,105,110-115';

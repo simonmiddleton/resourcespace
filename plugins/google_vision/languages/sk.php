@@ -27,3 +27,7 @@ $lang["page-title_google_vision_process_existing"] = 'Google Vision Proces Exist
 $lang["page-title_google_vision_setup"] = 'Nastavenie pluginu Google Vision';
 $lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
 $lang["page-title_google_vision_test"] = 'Google Vision Test';
+$lang["google_vision"] = 'Google Vision';
+$lang["google_vision_process_existing"] = 'Spracovať nespracované zdroje';
+$lang["google_vision_process_existing_configure"] = 'Konfigurovať úlohu na spracovanie nespracovaných zdrojov';
+$lang["google_vision_process_existing_collection_refs_help"] = 'Nastavenie tejto možnosti znamená, že budú spracované iba zdroje v uvedených zbierkach. Ak nie sú uvedené žiadne zbierky, budú spracované VŠETKY vhodné zdroje. Zbierky je možné špecifikovať pomocou zoznamu oddeleného čiarkami alebo rozsahov, napríklad 100,105,110-115';

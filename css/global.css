@@ -1375,6 +1375,12 @@ input.contactadminbutton  {
 }
 .SearchResultsCollectionCompactTools {display:inline-block;}
 
+.SearchResultsDivider {
+    width: 100%;
+    padding: 0;
+    line-height: 1.5rem;
+}
+
 #merge_filename_title_container {
     float: left;
 }
@@ -2931,6 +2937,9 @@ input[type="text"]#iconpicker-input {
 .leaflet-touch .leaflet-control-geocoder-icon {
     min-width: unset; 
 }
+.leaflet-container {
+    z-index: 100;
+}
 
 .codeexample
     {
@@ -3162,7 +3171,7 @@ input[type="text"]#iconpicker-input {
 .PluginDisplay
     {
     width:400px;
-    height:150px;
+    height:165px;
     float: left;
     border-radius: 10px;
     margin: 10px 20px 10px 0;
@@ -3197,6 +3206,8 @@ input[type="text"]#iconpicker-input {
     {
     font-size: 0.9em;
     text-align: right;
+    min-height: 40px;
+    align-content: end;
     }
 
 .PluginDisplay .PluginTools a
@@ -3208,6 +3219,7 @@ input[type="text"]#iconpicker-input {
     {
     vertical-align: middle; /* Align the text with the icon */
     display: inline-block; /* Ensures proper alignment */
+    width: 325px;
     }
 
 .plugin-header  

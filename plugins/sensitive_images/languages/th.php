@@ -6,3 +6,4 @@ $lang["sensitive_images_help"]='ระบุฟิลด์เมตาดาต
 $lang["sensitive_images_field"]='ฟิลด์เมตาดาต้าที่มีเหตุผลว่าทำไมภาพจึงมีความละเอียดอ่อน';
 $lang["sensitive_images_blur_level"]='ระดับการเบลอภาพที่ละเอียดอ่อน<br>(1=น้อยที่สุด, 6=มากที่สุด)';
 $lang["page-title_sensitive_images_setup"] = 'ตั้งค่าปลั๊กอินภาพที่ละเอียดอ่อน';
+$lang["sensitive_images_show"] = 'คลิกภาพเพื่อแสดง';

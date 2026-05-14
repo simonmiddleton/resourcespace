@@ -27,3 +27,7 @@ $lang["page-title_google_vision_process_existing"] = 'Google Vision プロセス
 $lang["page-title_google_vision_setup"] = 'Google Visionプラグインの設定';
 $lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
 $lang["page-title_google_vision_test"] = 'Google Vision Test';
+$lang["google_vision"] = 'Google Vision';
+$lang["google_vision_process_existing"] = '未処理のリソースを処理する';
+$lang["google_vision_process_existing_configure"] = '未処理のリソースを処理するジョブを設定';
+$lang["google_vision_process_existing_collection_refs_help"] = 'このオプションを設定すると、リストされたコレクション内のリソースのみが処理されます。コレクションが指定されていない場合は、すべての適切なリソースが処理されます。コレクションはカンマ区切りのリストや範囲（例：100,105,110-115）で指定できます。';

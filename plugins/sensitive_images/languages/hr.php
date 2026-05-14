@@ -8,3 +8,4 @@ $lang["sensitive_images_blur_level"]='Osjetljiva razina zamagljivanja slike<br>(
 $lang["plugin-sensitive_images-title"]='Zamućenje osjetljive slike';
 $lang["plugin-sensitive_images-desc"]='Zamagljuje slike označene kao osjetljive, a korisnik može kliknuti za uklanjanje zamućenja.';
 $lang["page-title_sensitive_images_setup"] = 'Postavljanje dodatka za osjetljive slike';
+$lang["sensitive_images_show"] = 'Kliknite na sliku za prikaz.';

@@ -8,3 +8,4 @@ $lang["sensitive_images_blur_level"]='Niveau de flou d\'image sensible<br>(1=le 
 $lang["plugin-sensitive_images-title"]='Floutage d\'image sensible';
 $lang["plugin-sensitive_images-desc"]='Floute les images marquées comme sensibles avec la possibilité pour l\'utilisateur de cliquer pour les déflouter.';
 $lang["page-title_sensitive_images_setup"] = 'Configurer le plugin d\'images sensibles';
+$lang["sensitive_images_show"] = 'Cliquez sur l\'image pour l\'afficher.';

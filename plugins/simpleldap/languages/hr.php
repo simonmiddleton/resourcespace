@@ -54,3 +54,4 @@ $lang["plugin-simpleldap-title"]='Jednostavni LDAP';
 $lang["plugin-simpleldap-desc"]='Jednostavnija implementacija LDAP autentifikacije, usmjerena na Active Directory, ali također podržava Oracle directory';
 $lang["page-title_simpleldap_ajax_test_auth"] = 'Testiraj LDAP autentifikaciju';
 $lang["page-title_simpleldap_setup"] = 'Postavite jednostavni LDAP dodatak';
+$lang["simpleldap_userlimit_error"] = 'Korisnik nije mogao biti kreiran jer je dosegnut maksimalni broj korisnika. Molimo kontaktirajte svog administratora.';

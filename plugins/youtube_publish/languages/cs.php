@@ -53,3 +53,4 @@ $lang["plugin-youtube_publish-title"]='Publikovat na YouTube';
 $lang["plugin-youtube_publish-desc"]='Publikuje video zdroj na nakonfigurovaný účet YouTube.';
 $lang["page-title_youtube_publish_setup"] = 'Nastavení pluginu';
 $lang["page-title_youtube_publish_youtube_upload"] = 'Publikovat zdroj na YouTube';
+$lang["youtube_publish_video_title"] = 'Název videa (max. 100 znaků)';
