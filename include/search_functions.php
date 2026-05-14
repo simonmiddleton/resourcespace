@@ -2490,6 +2490,7 @@ function save_related_keywords($keyword, $related)
         }
     }
     clear_query_cache("keywords_related");
+    hook('after_save_related_keywords', '', array($keyword, $related));
     return true;
 }
 
