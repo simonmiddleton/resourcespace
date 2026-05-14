@@ -245,8 +245,8 @@ function typesense_search_hydrate_refs(
 
     setup_search_chunks($fetchrows, $chunk_offset, $search_chunk_size);
 
-    $ref_placeholders = ps_param_insert(count($refs), 'i');
-    $field_placeholders = ps_param_insert(count($refs), 'i');
+    $ref_placeholders = ps_param_insert(count($refs));
+    $field_placeholders = ps_param_insert(count($refs));
 
     $ref_params = array();
     $field_params = array();
