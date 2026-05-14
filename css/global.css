@@ -2970,7 +2970,7 @@ input[type="text"]#iconpicker-input {
 }
 
 #HomeSiteTextInner {
-    padding: var(--space--32, 32px) 14%;
+    padding: var(--space-32, 32px) 14%;
     max-width: 656px;
 }
 
@@ -2992,7 +2992,7 @@ input[type="text"]#iconpicker-input {
 }
 
 #HomeSiteText p {
-    padding-bottom: var(--space--24, 24px);
+    padding-bottom: var(--space-24, 24px);
     font-size: 18px;
 }
 
@@ -3052,7 +3052,7 @@ input[type="text"]#iconpicker-input {
         justify-content: center;
         width: 768px;
         height: 256px;
-        padding: var(--space--32, 32px);
+        padding: var(--space-32, 32px);
         aspect-ratio: 3/1;
     }
 
@@ -3060,7 +3060,7 @@ input[type="text"]#iconpicker-input {
         width: 352px;
         padding-bottom: var(--space-20, 20px);
         font-size: 32px;
-        color: var(--Colour-Global-White, #FFF);
+        color: var(--colour-global-white, #FFF);
     }
 }
 
@@ -3075,7 +3075,7 @@ input[type="text"]#iconpicker-input {
 
     #HomeSiteText {
         height: 360px;
-        background: var(--Colour-Transparency-Black-40, rgba(0,0,0,.4)) !important;
+        background: var(--colour-transparency-black-40, rgba(0,0,0,.4)) !important;
     }
 
     #hero_banner {
@@ -3095,7 +3095,7 @@ input[type="text"]#iconpicker-input {
     #HomeSiteTextInner h1 {
         padding-bottom: var(--space-20, 20px);
         font-size: 32px;
-        color: var(--Colour-Global-White, #FFF);
+        color: var(--colour-global-white, #FFF);
         align-self: stretch;
     }
 }

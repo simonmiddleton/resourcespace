@@ -6,14 +6,14 @@
   align-items: center;
   gap: 10px;
   border-radius: var(--space-4, 4px);
-  border: 1px solid var(--Colour-Feedback-Warning-Default, #CC8200);
-  background: var(--Colour-Feedback-Warning-Lightest, #FFFBF5);
+  border: 1px solid var(--colour-feedback-warning-default, #CC8200);
+  background: var(--colour-feedback-warning-lightest, #FFFBF5);
   box-shadow: 0 4px 8px 8px rgba(0, 0, 0, 0.10);
 }
 
 #remote_assist p,
 #remote_assist a {
-  color: var(--Colour-Feedback-Warning-Dark, #7F530D);
+  color: var(--colour-feedback-warning-dark, #7F530D);
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
@@ -28,7 +28,7 @@
 }
 
 #remote_assist i {
-  color: var(--Colour-Feedback-Warning-Dark, #7F530D);
+  color: var(--colour-feedback-warning-dark, #7F530D);
   display: flex;
   font-size: 24px;
 }
