@@ -375,15 +375,6 @@ $selected_search_tab = getval("selected_search_tab", "search");
                                 <?php
                             }
                             # End of rendering for resource type checkbox inputs
-                            ?>
-                            
-                            <div class="spacer"></div>
-                            <?php
-                            if ($clear_button_unchecks_collections) {
-                                $colcheck = "false";
-                            } else {
-                                $colcheck = "true";
-                            }
                     } elseif ($restypes == '') {
                         # We still need a way to pass restypes based on simple search settings or things like search crumbs will be incorrect
                         if ($search_includes_resources) {
