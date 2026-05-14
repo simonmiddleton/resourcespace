@@ -3713,6 +3713,14 @@ header.LoginHeader {
     width: 100%;
 }
 
+.header-search-field #search-panel-main > .field-input:has(input#TickBoxFeaturedCollections) {
+    text-align: left;
+}
+
+.header-search-field #search-panel-main > .field-input input#TickBoxFeaturedCollections {
+    width: unset;
+}
+
 .header-search-field #search-panel-main > .field-input .MiniCategoryBox {
     width: 100%;
     height: calc(2 * var(--form-field-min-height));

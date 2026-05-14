@@ -296,6 +296,26 @@ $selected_search_tab = getval("selected_search_tab", "search");
                                 ARRAY_FILTER_USE_BOTH
                             )
                         );
+
+                        if ($search_includes_themes) {
+                            $rt_filter_featured_collections_html = sprintf(
+                                '<div class="tick">
+                                    <input id="TickBoxFeaturedCollections" class="tickboxcoll" type="checkbox"
+                                        name="resourceFeaturedCollections" value="yes" %s
+                                        onclick="SimpleSearchFieldsHideOrShow(true);">
+                                    <label for="TickBoxFeaturedCollections">%s</label>
+                                </div>
+                                ',
+                                (count($rt) === 1 && $rt[0] === '') || in_array('FeaturedCollections', $rt)
+                                    ? 'checked="checked"'
+                                    : '',
+                                escape($lang["findcollectionthemes"])
+                            );
+                            $clear_function .= sprintf(
+                                'jQuery("#TickBoxFeaturedCollections").prop("checked", %s);',
+                                encode_js_value($clear_button_unchecks_collections)
+                            );
+                        }
                         ?>
                         <input type="hidden" name="resetrestypes" value="yes">
                         <?php
@@ -312,15 +332,16 @@ $selected_search_tab = getval("selected_search_tab", "search");
                                 'div_class' => ['field-input'],
                                 'no_div_class_question' => true,
                                 'input_class' => '',
+                                'div_content' => $rt_filter_featured_collections_html ?? '',
                             ]
                         );
                         // todo: drop the below code once done with the WIP above
                         ?>
                         <div class="field-input" <?php echo $simpleSearchFieldsAreHidden ? 'style="display:none;"' : ''; ?>>
                             <?php
-                            $rt = is_array($restypes) ? $restypes : explode(",", $restypes);
-                            $clear_function = "SetCookie('search','');SetCookie('restypes','');SetCookie('ssearchhiddenfields','');SetCookie('saved_offset','');SetCookie('saved_archive','');";
-                            hook('clearsearchcookies');
+                            // $rt = is_array($restypes) ? $restypes : explode(",", $restypes);
+                            // $clear_function = "SetCookie('search','');SetCookie('restypes','');SetCookie('ssearchhiddenfields','');SetCookie('saved_offset','');SetCookie('saved_archive','');";
+                            // hook('clearsearchcookies');
 
                             # Render resource type checkbox inputs
                             for ($n = 0; $n < count($types); $n++) {
@@ -362,25 +383,6 @@ $selected_search_tab = getval("selected_search_tab", "search");
                                 $colcheck = "false";
                             } else {
                                 $colcheck = "true";
-                            }
-
-                            if ($search_includes_themes) { ?>
-                                <div class="tick">
-                                    <input
-                                        class="tickboxcoll"
-                                        id="TickBoxFeaturedCollections"
-                                        type="checkbox"
-                                        name="resourceFeaturedCollections"
-                                        value="yes"
-                                        <?php if (((count($rt) == 1) && ($rt[0] == "")) || (in_array("FeaturedCollections", $rt))) { ?>
-                                            checked="checked"
-                                        <?php } ?>
-                                        onClick="SimpleSearchFieldsHideOrShow(true);"
-                                    />
-                                    <label for="TickBoxFeaturedCollections">&nbsp;<?php echo escape($lang["findcollectionthemes"]); ?></label>
-                                </div>
-                                <?php
-                                $clear_function .= "jQuery('#TickBoxFeaturedCollections').prop('checked'," . $colcheck . ");";
                             }
                     } elseif ($restypes == '') {
                         # We still need a way to pass restypes based on simple search settings or things like search crumbs will be incorrect

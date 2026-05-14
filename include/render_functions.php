@@ -1678,7 +1678,14 @@ function render_split_text_question($label, $inputs = array(), $additionaltext="
 * @param array  $options   Array of options (value and text pairs) (eg. array('pixelwidthmin'=>'From','pixelwidthmin'=>'To')
 * @param string|list<int> $current The current selected value. For a multiple selector, a list of currently selected values.
 * @param string $extra     Extra attributes used on the selector element
-* @param array  $ctx       Rendering context. Should be used to inject different elements (e.g set the div class, add onchange for select)
+* @param array{
+*   no_div_class_question?: bool,
+*   div_class?: list<string>,
+*   div_content?: string,
+*   input_class?: string,
+*   onchange?: string,
+* } $ctx Rendering context. Should be used to inject different elements (e.g set the div class, add onchange for select).
+*   IMPORTANT: never allow untrusted data for "div_content"!
 */
 function render_dropdown_question($label, $inputname, $options = array(), string|array $current="", $extra="", array $ctx = array()): void
     {
@@ -1688,6 +1695,7 @@ function render_dropdown_question($label, $inputname, $options = array(), string
         {
         $div_class = array_merge($div_class, $ctx["div_class"]);
         }
+    $div_content = $ctx["div_content"] ?? "";
     $input_class = isset($ctx["input_class"]) ? $ctx["input_class"] : "stdwidth";
 
     $onchange = (isset($ctx["onchange"]) && trim($ctx["onchange"]) != "" ? trim($ctx["onchange"]) : "");
@@ -1711,6 +1719,7 @@ function render_dropdown_question($label, $inputname, $options = array(), string
             }
         ?>
         </select>
+        <?php echo $div_content; ?>
         <div class="clearerleft"></div>
     </div>
     <?php
