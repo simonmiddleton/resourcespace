@@ -844,7 +844,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                   }
                 if (!hook('redirectaftersave'))
                   {
-                  $urlparams["modal"] = "true";
+                  $urlparams["modal"] = $modal ? "true" : "false";
                   redirect(generateURL($baseurl_short . "pages/view.php",$urlparams, array("refreshcollectionframe"=>"true")));
                   }
                 }

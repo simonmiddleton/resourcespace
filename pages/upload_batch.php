@@ -1824,13 +1824,14 @@ function postUploadActions()
         }
 
     <?php
-    
-    if($context==="Modal"){?>
+    if($context==="Modal"){
+        ?>
         loadAsModal=true;
-    <?php
-    } else {?>
+        <?php
+    } else {
+        ?>
         loadAsModal=false;
-    <?php
+        <?php
     }
 
     if ($redirecturl != "")
