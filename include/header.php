@@ -51,7 +51,7 @@ if ($ajax == "") {
 $page_title = get_page_title($pagename, pluginname());
     ?>
     <!DOCTYPE html>
-    <html lang="<?php echo $language; ?>">   
+    <html lang="<?php echo $language; ?>" <?php if (isset($colour_theme) && $colour_theme != "") { echo 'class="mode-' . escape($colour_theme) . '"'; } ?>>   
     <!--
     ResourceSpace version <?php echo $productversion; ?>
     For copyright and license information see /documentation/licenses/resourcespace.txt

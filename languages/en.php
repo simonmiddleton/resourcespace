@@ -1359,12 +1359,6 @@ $lang["setup-login_to"] = "Login to";
 $lang["setup-configuration_file_output"] = "Configuration file output";
 $lang["more-information"] = "More information";
 $lang["setup-structuralplugins"] = "System templates";
-$lang["setup-headercolourstyleoverride"] = "Custom header background colour";
-$lang["setup-headerlinkstyleoverride"] = "Custom header link colour";
-$lang["setup-homecolourstyleoverride"] = "Custom intro text, dash tile, browse bar and simple search colour";
-$lang["setup-collectionbarbackground"] = "Custom collection bar primary colour";
-$lang["setup-collectionbarforeground"] = "Custom collection bar secondary colour";
-$lang["setup-buttoncolouroverride"] = "Custom button colour";
 
 # Collection log - actions
 $lang["collectionlog"] = "Collection log";
@@ -2870,6 +2864,10 @@ $lang['systemconfig_debug'] = 'Debug';
 $lang['systemconfig_debug_log_on_specific_user'] = "On (specific user)";
 $lang['systemconfig_use_native_input_for_date_field'] = "Use native date input for displaying a 'date' metadata field type";
 $lang['systemconfig_native_date_input_no_partials_supported'] = "IMPORTANT: If enabled, partial dates (e.g May 2023) will no longer be supported and existing data will get cleared after the next resource edit.";
+$lang["blue"] = "Blue";
+$lang["green"] = "Green";
+$lang["red"] = "Red";
+$lang["purple"] = "Purple";
 
 /* Error Messages */
 $lang['error_check_html_first'] = 'Please Check HTML! The text used does not contain valid HTML.';
