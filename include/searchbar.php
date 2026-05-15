@@ -274,27 +274,22 @@ $selected_search_tab = getval("selected_search_tab", "search");
                     hook("aftersearchbox");
 
                     if (!$basic_simple_search && !$hide_search_resource_types) {
-                        $rt = is_array($restypes) ? $restypes : explode(",", $restypes);
+                        $rt = array_filter(is_array($restypes) ? $restypes : explode(',', $restypes));
                         $clear_function = "SetCookie('search','');SetCookie('restypes','');SetCookie('ssearchhiddenfields','');SetCookie('saved_offset','');SetCookie('saved_archive','');";
                         hook('clearsearchcookies');
 
+                        $global_option = ['Global' => $lang['all_resource_types']];
                         $resource_type_filter_options = array_filter(
                             array_column($types, 'name', 'ref'),
                             static fn($V, $ref) => !in_array($ref, $hide_resource_types),
                             ARRAY_FILTER_USE_BOTH
                         );
-                        $all_resource_type_filter_options = (
-                            ['Global' => $lang['all_resource_types']]
-                            + $resource_type_filter_options
-                        );
+                        // We care about the array keys so array_merge() can't be used here!
+                        $all_resource_type_filter_options = $global_option + $resource_type_filter_options;
                         $current_rt_options = array_keys(
-                            array_filter(
-                                $resource_type_filter_options,
-                                static fn ($V, $ref) => (count($rt) == 1 && $rt[0] == "")
-                                    || $restypes == "Global"
-                                    || in_array($ref, $rt),
-                                ARRAY_FILTER_USE_BOTH
-                            )
+                            array_intersect(array_keys($global_option), $rt) !== []
+                                ? $global_option
+                                : array_intersect_key($resource_type_filter_options, array_flip($rt))
                         );
 
                         if ($search_includes_themes) {
