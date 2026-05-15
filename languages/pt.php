@@ -3354,3 +3354,7 @@ $lang["resource-card-menu-delete"] = 'Tem certeza de que deseja excluir este rec
 $lang["resource-card-menu-delete-button"] = 'Sim, excluir recurso';
 $lang["resource-card-menu-delete-perm"] = 'Tem certeza? Esta ação não pode ser desfeita.';
 $lang["resource-card-menu-delete-perm-button"] = 'Sim, excluir permanentemente';
+$lang["blue"] = 'Azul';
+$lang["green"] = 'Verde';
+$lang["red"] = 'Vermelho';
+$lang["purple"] = 'Roxo';

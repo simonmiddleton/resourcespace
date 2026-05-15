@@ -3240,3 +3240,7 @@ $lang["resource-card-menu-delete"] = 'Ydych chi\'n siŵr eich bod am ddileu\'r a
 $lang["resource-card-menu-delete-button"] = 'Ie, dileu\'r adnodd';
 $lang["resource-card-menu-delete-perm"] = 'Ydych chi\'n siŵr? Ni ellir ad-dalu\'r weithred hon.';
 $lang["resource-card-menu-delete-perm-button"] = 'Ie, dileu\'n barhaol';
+$lang["blue"] = ' Glas';
+$lang["green"] = 'Gwyrdd';
+$lang["red"] = ' Coch';
+$lang["purple"] = 'Porffor';

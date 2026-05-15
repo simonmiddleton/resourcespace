@@ -3243,3 +3243,7 @@ $lang["resource-card-menu-delete"] = 'Bạn có chắc chắn muốn xóa tài n
 $lang["resource-card-menu-delete-button"] = 'Có, xóa tài nguyên';
 $lang["resource-card-menu-delete-perm"] = 'Bạn có chắc không? Hành động này không thể hoàn tác.';
 $lang["resource-card-menu-delete-perm-button"] = 'Có, xóa vĩnh viễn';
+$lang["blue"] = 'Xanh lam';
+$lang["green"] = 'Xanh lá';
+$lang["red"] = 'Đỏ';
+$lang["purple"] = 'Tím';

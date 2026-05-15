@@ -3461,3 +3461,7 @@ $lang["resource-card-menu-delete"] = 'هل أنت متأكد أنك ترغب ف�
 $lang["resource-card-menu-delete-button"] = 'نعم، احذف المورد';
 $lang["resource-card-menu-delete-perm"] = 'هل أنت متأكد؟ لا يمكن التراجع عن هذا الإجراء.';
 $lang["resource-card-menu-delete-perm-button"] = 'نعم، احذف بشكل دائم';
+$lang["blue"] = 'أزرق';
+$lang["green"] = 'أخضر';
+$lang["red"] = 'أحمر';
+$lang["purple"] = 'بنفسجي';

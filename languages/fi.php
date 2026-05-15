@@ -3478,3 +3478,7 @@ $lang["resource-card-menu-delete"] = 'Oletko varma, että haluat poistaa tämän
 $lang["resource-card-menu-delete-button"] = 'Kyllä, poista resurssi';
 $lang["resource-card-menu-delete-perm"] = 'Oletko varma? Tätä toimintoa ei voi peruuttaa.';
 $lang["resource-card-menu-delete-perm-button"] = 'Kyllä, poista pysyvästi';
+$lang["blue"] = 'Sininen';
+$lang["green"] = 'Vihreä';
+$lang["red"] = 'Punainen';
+$lang["purple"] = 'Violetti';

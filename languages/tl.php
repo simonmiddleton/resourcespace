@@ -3240,3 +3240,7 @@ $lang["resource-card-menu-delete"] = 'Sigurado ka bang nais mong burahin ang res
 $lang["resource-card-menu-delete-button"] = 'Oo, tanggalin ang yaman';
 $lang["resource-card-menu-delete-perm"] = 'Sigurado ka na? Hindi na maibabalik ang aksyong ito.';
 $lang["resource-card-menu-delete-perm-button"] = 'Oo, permanenteng tanggalin';
+$lang["blue"] = 'Asul';
+$lang["green"] = 'Luntian';
+$lang["red"] = 'Pula';
+$lang["purple"] = 'Ube';

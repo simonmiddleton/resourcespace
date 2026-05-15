@@ -3248,3 +3248,7 @@ $lang["resource-card-menu-delete"] = 'Biztos benne, hogy törölni szeretné ezt
 $lang["resource-card-menu-delete-button"] = 'Igen, erőforrás törlése';
 $lang["resource-card-menu-delete-perm"] = 'Biztos benne? Ezt a műveletet nem lehet visszavonni.';
 $lang["resource-card-menu-delete-perm-button"] = 'Igen, véglegesen töröl';
+$lang["blue"] = 'Kék';
+$lang["green"] = 'Zöld';
+$lang["red"] = 'Piros';
+$lang["purple"] = 'Lila';

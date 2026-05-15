@@ -3240,3 +3240,7 @@ $lang["resource-card-menu-delete"] = 'Вы ўпэўнены, што жадаец
 $lang["resource-card-menu-delete-button"] = 'Так, выдаліць рэсурс';
 $lang["resource-card-menu-delete-perm"] = 'Вы ўпэўнены? Гэту дзею нельга адклікаць.';
 $lang["resource-card-menu-delete-perm-button"] = 'Так, назаўжды выдаліць';
+$lang["blue"] = 'Сіні';
+$lang["green"] = 'Зялёны';
+$lang["red"] = 'Чырвоны';
+$lang["purple"] = 'Фіялетавы';

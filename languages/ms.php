@@ -3240,3 +3240,7 @@ $lang["resource-card-menu-delete"] = 'Adakah anda pasti ingin memadam sumber ini
 $lang["resource-card-menu-delete-button"] = 'Ya, padam sumber';
 $lang["resource-card-menu-delete-perm"] = 'Adakah anda pasti? Tindakan ini tidak boleh dibalikkan.';
 $lang["resource-card-menu-delete-perm-button"] = 'Ya, padam secara kekal';
+$lang["blue"] = 'Biru';
+$lang["green"] = 'Hijau';
+$lang["red"] = 'Merah';
+$lang["purple"] = 'Ungu';

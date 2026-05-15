@@ -3642,3 +3642,7 @@ $lang["resource-card-menu-delete"] = 'Ste si istí, že chcete odstrániť tento
 $lang["resource-card-menu-delete-button"] = 'Áno, odstrániť zdroj';
 $lang["resource-card-menu-delete-perm"] = 'Ste si istí? Túto akciu nemožno vrátiť.';
 $lang["resource-card-menu-delete-perm-button"] = 'Áno, odstrániť trvalo';
+$lang["blue"] = 'Modrá';
+$lang["green"] = 'Zelená';
+$lang["red"] = 'Červená';
+$lang["purple"] = 'Fialová';

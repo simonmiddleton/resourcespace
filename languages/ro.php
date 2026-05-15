@@ -3327,3 +3327,7 @@ $lang["resource-card-menu-delete"] = 'Sigur doriți să ștergeți această resu
 $lang["resource-card-menu-delete-button"] = 'Da, șterge resursa';
 $lang["resource-card-menu-delete-perm"] = 'Ești sigur? Această acțiune nu poate fi anulată.';
 $lang["resource-card-menu-delete-perm-button"] = 'Da, șterge definitiv';
+$lang["blue"] = 'Albastru';
+$lang["green"] = 'Verde';
+$lang["red"] = 'Roșu';
+$lang["purple"] = 'Violet';

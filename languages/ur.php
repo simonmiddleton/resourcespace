@@ -3253,3 +3253,7 @@ $lang["resource-card-menu-delete"] = 'کیا آپ واقعی اس وسیلے ک�
 $lang["resource-card-menu-delete-button"] = 'ہاں، وسیلہ حذف کریں';
 $lang["resource-card-menu-delete-perm"] = 'کیا آپ واقعی یقین رکھتے ہیں؟ یہ عمل واپس نہیں لیا جا سکتا۔';
 $lang["resource-card-menu-delete-perm-button"] = 'ہاں، مستقل طور پر حذف کریں';
+$lang["blue"] = 'نیلا';
+$lang["green"] = 'سبز';
+$lang["red"] = 'سرخ';
+$lang["purple"] = ' بنفشی';

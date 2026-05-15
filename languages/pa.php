@@ -3254,3 +3254,7 @@ $lang["resource-card-menu-delete"] = 'क्या आप सुनिश्च�
 $lang["resource-card-menu-delete-button"] = 'ਹਾਂ, ਸਰੋਤ ਨੂੰ ਮਿਟਾਓ';
 $lang["resource-card-menu-delete-perm"] = 'ਕੀ ਤੁਸੀਂ ਯਕੀਨ ਹੋ? ਇਹ ਕਾਰਵਾਈ ਵਾਪਸ ਨਹੀਂ ਲੈ ਸਕਦੀ।';
 $lang["resource-card-menu-delete-perm-button"] = 'ਹਾਂ, ਸਦਾ ਲਈ ਮਿਟਾਓ';
+$lang["blue"] = 'ਨੀਲਾ';
+$lang["green"] = 'ਹਰਾ';
+$lang["red"] = 'ਲਾਲ';
+$lang["purple"] = 'ਜਾਮੁਨੀ';

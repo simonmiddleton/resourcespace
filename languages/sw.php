@@ -3250,3 +3250,7 @@ $lang["resource-card-menu-delete"] = 'Una uhakika unataka kufuta rasilimali hii?
 $lang["resource-card-menu-delete-button"] = 'Ndiyo, futa rasilimali';
 $lang["resource-card-menu-delete-perm"] = 'Una uhakika? Hatua hii haiwezi kurudishwa nyuma.';
 $lang["resource-card-menu-delete-perm-button"] = 'Ndiyo, futa kwa kudumu';
+$lang["blue"] = 'Bluu';
+$lang["green"] = 'Kijani';
+$lang["red"] = 'Nyekundu';
+$lang["purple"] = 'Zambarau';

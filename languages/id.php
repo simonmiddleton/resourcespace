@@ -3391,3 +3391,7 @@ $lang["resource-card-menu-delete"] = 'Apakah Anda yakin ingin menghapus sumber d
 $lang["resource-card-menu-delete-button"] = 'Ya, hapus sumber daya';
 $lang["resource-card-menu-delete-perm"] = 'Apakah Anda yakin? Tindakan ini tidak dapat dibatalkan.';
 $lang["resource-card-menu-delete-perm-button"] = 'Ya, hapus secara permanen';
+$lang["blue"] = 'Biru';
+$lang["green"] = 'Hijau';
+$lang["red"] = 'Merah';
+$lang["purple"] = 'Ungu';

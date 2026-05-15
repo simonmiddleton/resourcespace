@@ -3320,3 +3320,7 @@ $lang["resource-card-menu-delete"] = 'Jeste li sigurni da želite izbrisati ovaj
 $lang["resource-card-menu-delete-button"] = 'Da, obriši resurs';
 $lang["resource-card-menu-delete-perm"] = 'Jeste li sigurni? Ova radnja se ne može poništiti.';
 $lang["resource-card-menu-delete-perm-button"] = 'Da, trajno obriši';
+$lang["blue"] = 'Plava';
+$lang["green"] = 'Zelena';
+$lang["red"] = 'Crvena';
+$lang["purple"] = 'Ljubičasta';

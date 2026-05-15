@@ -3254,3 +3254,7 @@ $lang["resource-card-menu-delete"] = 'آیا مطمئن هستید که می‌�
 $lang["resource-card-menu-delete-button"] = 'بله، منبع را حذف کن';
 $lang["resource-card-menu-delete-perm"] = 'آیا مطمئن هستید؟ این عملیات قابل بازگشت نیست.';
 $lang["resource-card-menu-delete-perm-button"] = 'بله، به طور دائم حذف کن';
+$lang["blue"] = 'آبی';
+$lang["green"] = 'سبز';
+$lang["red"] = 'قرمز';
+$lang["purple"] = 'بنفش';

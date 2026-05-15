@@ -3336,3 +3336,7 @@ $lang["resource-card-menu-delete"] = 'Estàs segur que vols eliminar aquest recu
 $lang["resource-card-menu-delete-button"] = 'Sí, elimina el recurs';
 $lang["resource-card-menu-delete-perm"] = 'Estàs segur? Aquesta acció no es pot desfer.';
 $lang["resource-card-menu-delete-perm-button"] = 'Sí, elimina permanentment';
+$lang["blue"] = 'Blau';
+$lang["green"] = 'Verd';
+$lang["red"] = 'Vermell';
+$lang["purple"] = 'Porpra';

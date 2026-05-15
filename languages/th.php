@@ -3238,3 +3238,7 @@ $lang["resource-card-menu-delete"] = 'คุณแน่ใจหรือว่
 $lang["resource-card-menu-delete-button"] = 'ใช่ ลบทรัพยากร';
 $lang["resource-card-menu-delete-perm"] = 'คุณแน่ใจหรือไม่? การดำเนินการนี้ไม่สามารถย้อนกลับได้';
 $lang["resource-card-menu-delete-perm-button"] = 'ใช่ ลบถาวร';
+$lang["blue"] = 'น้ำเงิน';
+$lang["green"] = 'เขียว';
+$lang["red"] = 'แดง';
+$lang["purple"] = 'ม่วง';

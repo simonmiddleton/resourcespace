@@ -3345,3 +3345,7 @@ $lang["resource-card-menu-delete"] = 'Weet je zeker dat je deze resource wilt ve
 $lang["resource-card-menu-delete-button"] = 'Ja, bron verwijderen';
 $lang["resource-card-menu-delete-perm"] = 'Weet u het zeker? Deze actie kan niet worden teruggedraaid.';
 $lang["resource-card-menu-delete-perm-button"] = 'Ja, permanent verwijderen';
+$lang["blue"] = 'Blauw';
+$lang["green"] = 'Groen';
+$lang["red"] = 'Rood';
+$lang["purple"] = 'Paars';

@@ -3251,3 +3251,7 @@ $lang["resource-card-menu-delete"] = 'Bu kaynağı silmek istediğinizden emin m
 $lang["resource-card-menu-delete-button"] = 'Evet, kaynağı sil';
 $lang["resource-card-menu-delete-perm"] = 'Emin misiniz? Bu işlem geri alınamaz.';
 $lang["resource-card-menu-delete-perm-button"] = 'Evet, kalıcı olarak sil';
+$lang["blue"] = 'Mavi';
+$lang["green"] = 'Yeşil';
+$lang["red"] = 'Kırmızı';
+$lang["purple"] = 'Mor';

@@ -3259,3 +3259,7 @@ $lang["resource-card-menu-delete"] = 'क्या आप सुनिश्च�
 $lang["resource-card-menu-delete-button"] = 'हाँ, संसाधन हटाएँ';
 $lang["resource-card-menu-delete-perm"] = 'क्या आप सुनिश्चित हैं? यह क्रिया वापस नहीं ली जा सकती।';
 $lang["resource-card-menu-delete-perm-button"] = 'हाँ, स्थायी रूप से हटाएँ';
+$lang["blue"] = 'नीला';
+$lang["green"] = 'हरा';
+$lang["red"] = 'लाल';
+$lang["purple"] = 'बैंगनी';

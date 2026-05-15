@@ -3293,3 +3293,7 @@ $lang["resource-card-menu-delete"] = '¿Estás seguro de que deseas eliminar est
 $lang["resource-card-menu-delete-button"] = 'Sí, eliminar recurso';
 $lang["resource-card-menu-delete-perm"] = '¿Estás seguro? Esta acción no se puede revertir.';
 $lang["resource-card-menu-delete-perm-button"] = 'Sí, eliminar permanentemente';
+$lang["blue"] = 'Azul';
+$lang["green"] = 'Verde';
+$lang["red"] = 'Rojo';
+$lang["purple"] = 'Morado';

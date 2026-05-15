@@ -3302,3 +3302,7 @@ $lang["resource-card-menu-delete"] = 'Er du sikker på, at du vil slette denne r
 $lang["resource-card-menu-delete-button"] = 'Ja, slet ressource';
 $lang["resource-card-menu-delete-perm"] = 'Er du sikker? Denne handling kan ikke fortrydes.';
 $lang["resource-card-menu-delete-perm-button"] = 'Ja, slet permanent';
+$lang["blue"] = 'Blå';
+$lang["green"] = 'Grøn';
+$lang["red"] = 'Rød';
+$lang["purple"] = 'Lilla';

@@ -3447,3 +3447,7 @@ $lang["resource-card-menu-delete"] = '您确定要删除此资源吗？';
 $lang["resource-card-menu-delete-button"] = '是的，删除资源';
 $lang["resource-card-menu-delete-perm"] = '你确定吗？此操作无法撤销。';
 $lang["resource-card-menu-delete-perm-button"] = '是的，永久删除';
+$lang["blue"] = '蓝色';
+$lang["green"] = '绿色';
+$lang["red"] = '红色';
+$lang["purple"] = '紫色';

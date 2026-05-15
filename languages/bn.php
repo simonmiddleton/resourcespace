@@ -3245,3 +3245,7 @@ $lang["resource-card-menu-delete"] = 'আপনি কি নিশ্চিত 
 $lang["resource-card-menu-delete-button"] = 'হ্যাঁ, সম্পদ মুছে ফেলুন';
 $lang["resource-card-menu-delete-perm"] = 'আপনি কি নিশ্চিত? এই কার্যকলাপটি পূর্বাবস্থায় ফিরিয়ে নেওয়া যাবে না।';
 $lang["resource-card-menu-delete-perm-button"] = 'হ্যাঁ, স্থায়ীভাবে মুছে ফেলুন';
+$lang["blue"] = 'নীল';
+$lang["green"] = 'সবুজ';
+$lang["red"] = 'লাল';
+$lang["purple"] = 'বেগুনি';

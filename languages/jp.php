@@ -3379,3 +3379,7 @@ $lang["resource-card-menu-delete"] = 'このリソースを削除してもよろ
 $lang["resource-card-menu-delete-button"] = 'はい、リソースを削除';
 $lang["resource-card-menu-delete-perm"] = '本当によろしいですか？この操作は取り消せません。';
 $lang["resource-card-menu-delete-perm-button"] = 'はい、完全に削除';
+$lang["blue"] = '青';
+$lang["green"] = '緑';
+$lang["red"] = '赤';
+$lang["purple"] = '紫';

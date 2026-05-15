@@ -3361,3 +3361,7 @@ $lang["resource-card-menu-delete"] = 'Czy na pewno chcesz usunąć ten zasób?';
 $lang["resource-card-menu-delete-button"] = 'Tak, usuń zasób';
 $lang["resource-card-menu-delete-perm"] = 'Czy na pewno? Ta akcja nie może zostać cofnięta.';
 $lang["resource-card-menu-delete-perm-button"] = 'Tak, usuń na stałe';
+$lang["blue"] = 'Niebieski';
+$lang["green"] = 'Zielony';
+$lang["red"] = 'Czerwony';
+$lang["purple"] = 'Fioletowy';

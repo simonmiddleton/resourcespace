@@ -3320,3 +3320,7 @@ $lang["resource-card-menu-delete"] = 'Είστε σίγουροι ότι θέλ�
 $lang["resource-card-menu-delete-button"] = 'Ναι, διαγραφή πόρου';
 $lang["resource-card-menu-delete-perm"] = 'Είστε σίγουροι; Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.';
 $lang["resource-card-menu-delete-perm-button"] = 'Ναι, διαγραφή οριστικά';
+$lang["blue"] = 'Μπλε';
+$lang["green"] = 'Πράσινο';
+$lang["red"] = 'Κόκκινο';
+$lang["purple"] = 'Μωβ';

@@ -3254,3 +3254,7 @@ $lang["resource-card-menu-delete"] = '이 리소스를 삭제하시겠습니까?
 $lang["resource-card-menu-delete-button"] = '예, 자산 삭제';
 $lang["resource-card-menu-delete-perm"] = '정말로 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.';
 $lang["resource-card-menu-delete-perm-button"] = '예, 영구 삭제';
+$lang["blue"] = '파란색';
+$lang["green"] = '초록색';
+$lang["red"] = '빨간색';
+$lang["purple"] = '보라색';
