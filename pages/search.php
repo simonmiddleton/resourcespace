@@ -409,7 +409,7 @@ else {
     $restypes = implode(
         ',',
         array_merge(
-            getval('restypes', [], false, static function ($data) use ($hide_resource_types) {
+            getval('restypes', [], false, static function ($data) use ($hide_resource_types): bool {
                 $resource_types = array_filter(
                     array_column(get_resource_types('', true, false, true), 'ref'),
                     static fn($ref): bool => !in_array($ref, $hide_resource_types)

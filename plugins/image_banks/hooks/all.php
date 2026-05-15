@@ -49,7 +49,7 @@ function HookImage_banksAllSearchfiltertop()
 
     $image_bank_provider_id = (int) getval("image_bank_provider_id", 0, true);
     ?>
-    <div id="SearchImageBanksItem" class="SearchItem" title="">
+    <div id="SearchImageBanksItem" class="field-input">
         <label for="SearchImageBanks"><?php echo escape($lang['image_banks_search_image_banks_label']); ?></label>
         <select id="SearchImageBanks" class="SearchWidth" name="image_bank_provider_id" onchange="toggleUnwantedElementsFromSimpleSearch(jQuery(this));SimpleSearchFieldsHideOrShow(true);">
             <option value=""></option>
