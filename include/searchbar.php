@@ -279,10 +279,9 @@ $selected_search_tab = getval("selected_search_tab", "search");
                         hook('clearsearchcookies');
 
                         $global_option = ['Global' => $lang['all_resource_types']];
-                        $resource_type_filter_options = array_filter(
+                        $resource_type_filter_options = array_diff_key(
                             array_column($types, 'name', 'ref'),
-                            static fn($V, $ref) => !in_array($ref, $hide_resource_types),
-                            ARRAY_FILTER_USE_BOTH
+                            array_flip($hide_resource_types)
                         );
                         // We care about the array keys so array_merge() can't be used here!
                         $all_resource_type_filter_options = $global_option + $resource_type_filter_options;
@@ -322,7 +321,7 @@ $selected_search_tab = getval("selected_search_tab", "search");
                                 ? ['Global']
                                 : $current_rt_options,
                             // Style needed for the width - @see https://select2.org/appearance#container-width
-                            extra: 'multiple="multiple" onchange="SimpleSearchFieldsHideOrShow(true);" style="width: 100%;"',
+                            extra: 'multiple="multiple" style="width: 100%;"',
                             ctx: [
                                 'div_class' => ['field-input'],
                                 'no_div_class_question' => true,
@@ -431,6 +430,14 @@ $selected_search_tab = getval("selected_search_tab", "search");
                                 ssearchhiddenfields.length = 0;
                                 document.getElementById('ssearchhiddenfields').value='';
 
+                                const selected_resource_types = jQuery('#restypes\\[\\]')
+                                    .find(':selected')
+                                    .map((_, el) => el.value)
+                                    .get()
+                                    // note: we leave the "Global" pseudo resource type alone
+                                    .map(value => /^\d+$/.test(value) ? parseInt(value, 10) : value);
+                                let valid_field_resource_types = [];
+
                                 <?php
                                 # Show or hide each searchfield depending on whether the resource type for this field is selected
                                 # Exclude global fields
@@ -448,31 +455,36 @@ $selected_search_tab = getval("selected_search_tab", "search");
                                         )
                                         && $fields[$n]["global"] != 1
                                     ) {
-                                        // Process resource type checkboxes, whether checked or unchecked
-                                        $hideconditions =  [];
-                                        $showconditions =  [];
-                                        $notypeconditions = [];
-                                        // Check if resource types are valid for field
-                                        $validrestypes = explode(",", (string)$fields[$n]["resource_types"]);
-                                        $invalidrestypes = array_diff(array_column($types, "ref"), array_merge($hide_resource_types, $validrestypes));
+                                        /* 
+                                        Uses cases:
+                                            - Global (allRTs; default) => show all the fields.
+                                            Note: the fields' global property refers to the field being applicable to
+                                            all resource types wheras here, global means you want to search all resource
+                                            types (i.e. show fields that are not global too).
 
-                                        // Don't hide if any of the valid resource types are checked AND none of the invalid types are checked
-                                        foreach ($validrestypes as $validrestype) {
-                                            $showconditions[] = "jQuery('#TickBox" . (int) $validrestype . "').prop('checked') == false";
-                                        }
+                                            - Select specific RTs => show applicable fields and hide inapplicable ones
+                                        */
+                                        $field_rts = array_map(intval(...), array_filter(explode(',', (string) $fields[$n]['resource_types'])));
+                                        $valid_resource_types = array_values(
+                                            array_diff(
+                                                array_map(intval(...), array_column($types, 'ref')),
+                                                $hide_resource_types
+                                            )
+                                        );
+                                        $valid_field_rts = array_merge(
+                                            ['Global'], # pseudo resource type <=> search by all resource types
+                                            array_values(array_intersect($valid_resource_types, $field_rts))
+                                        );
+                                    ?>
+                                    valid_field_resource_types = <?php echo encode_js_value($valid_field_rts); ?>;
+                                    console.group('[SimpleSearchFieldsHideOrShow] Checking field #%s', <?php echo encode_js_value($fields[$n]["ref"]); ?>);
+                                    console.debug('[SimpleSearchFieldsHideOrShow] selected_resource_types = %o', selected_resource_types);
+                                    console.debug('[SimpleSearchFieldsHideOrShow] $types = %o', <?php echo encode_js_value(array_map(intval(...), array_column($types, 'ref'))); ?>);
+                                    console.debug('[SimpleSearchFieldsHideOrShow] $field_rts = %o', <?php echo encode_js_value($field_rts); ?>);
+                                    console.debug('[SimpleSearchFieldsHideOrShow] $valid_resource_types = %o', <?php echo encode_js_value($valid_resource_types); ?>);
+                                    console.debug('[SimpleSearchFieldsHideOrShow] $valid_field_rts = %o', valid_field_resource_types);
 
-                                        foreach ($invalidrestypes as $invalidrestype) {
-                                            $hideconditions[] = "jQuery('#TickBox" . (int) $invalidrestype . "').prop('checked')";
-                                        }
-
-                                        foreach (array_diff(array_column($types, "ref"), $hide_resource_types) as $displayedrestype) {
-                                            // Check to field if no resource types are selected
-                                            $notypeconditions[] = "jQuery('#TickBox" . (int) $displayedrestype . "').prop('checked') == false";
-                                        }
-
-                                        $hidecondition = " if ((" .  implode(" && ", $showconditions) . ") " . (count($hideconditions) > 0 ? "|| " : "") . implode(" || ", $hideconditions) . " || (" . implode(" && ", $notypeconditions) . ")) {";
-                                        echo "// Start of hide field code\n" . $hidecondition;
-                                        ?>
+                                    if (!selected_resource_types.some(rt => valid_field_resource_types.includes(rt))) {
 
                                         // Process unchecked element
                                         ssearchfieldname = 'simplesearch_<?php echo $fields[$n]["ref"]; ?>';
@@ -536,6 +548,7 @@ $selected_search_tab = getval("selected_search_tab", "search");
                                             ssearchhiddenfield.splice(ssindex, 1);
                                         }
                                     }
+                                    console.groupEnd();
                                     <?php
                                 }
                             }

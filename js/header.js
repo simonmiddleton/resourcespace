@@ -244,8 +244,6 @@ ResourceSpace.Modules.Header = (() => {
             if (e.params.data.id === all_resource_types_option) {
                 // This event clears all selections (default) and our bind (see above) will reselect the all RTs option
                 jQuery(this).trigger('select2:clear');
-
-                SimpleSearchFieldsHideOrShow(true);
                 return;
             }
 
@@ -254,7 +252,11 @@ ResourceSpace.Modules.Header = (() => {
             jQuery(this)
                 .val(jQuery(this).val().filter(v => v !== all_resource_types_option))
                 .trigger('change');
+        });
 
+        // Triggered whenever an option is selected or removed. Note that clearing can end up running this twice
+        // depending on the selectors' state (once for the selected event and once for the removal one).
+        resource_type_selector.on('change', function (e) {
             SimpleSearchFieldsHideOrShow(true);
         });
     }
