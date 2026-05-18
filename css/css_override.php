@@ -329,7 +329,7 @@ if (isset($user_pref_appearance) && !(isset($high_contrast_mode) && $high_contra
         }
         [data-uppy-theme=dark] .uppy-StatusBar.is-waiting .uppy-StatusBar-actionBtn--upload:hover,
         [data-uppy-theme=dark] .uppy-StatusBar.is-waiting .uppy-StatusBar-actionBtn--upload {
-            background-color: #1988d7;
+            background-color: var(--colour-brand-primary-default);
         }
         .lockedQuestion {
             background-color: #404040;

@@ -55,7 +55,7 @@ if ((int) $group['parent'] > 0 && in_array("preferences", $group['inherit'])) {
         $lang['userpreference_colourtheme'],
         ['blue' => $lang['blue'], 'green' => $lang['green'], 'red' => $lang['red'], 'purple' => $lang["purple"]],
         true,
-        420,
+        300,
         null,
         true,
         null,

@@ -349,6 +349,10 @@ input[type="file"] {
     border-radius: 0;
 }
 
+input[type="checkbox"], input[type="radio"], input[type="range"] {
+    accent-color: var(--colour-brand-primary-default);
+}
+
 .TopInpageNavLeft select, .TopInpageNavLeft select:focus {
     border: none;
 }
