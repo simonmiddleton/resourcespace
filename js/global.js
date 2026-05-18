@@ -948,7 +948,7 @@ function ModalCentre()
     topmargin = 30;
     if (modalalign == 'right' || modalalign == 'rightnarrow') {
         left = Math.max(jQuery(window).width() - jQuery('#modal').outerWidth(), 0) - 20;
-        topmargin = 50;
+        topmargin = 70;
     } else {
         left = Math.max(jQuery(window).width() - jQuery('#modal').outerWidth(), 0) / 2;
     }
