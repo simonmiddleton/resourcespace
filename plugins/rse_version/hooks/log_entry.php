@@ -16,7 +16,7 @@ function HookRse_versionLog_entryLog_entry_processing($column, $value, $logentry
                 where resource=? and type='u' and ref>? 
                 order by ref limit 1", $parameters);
 
-        if (count($latest)==0)
+        if (count($latest) == 0 || !isset($latest[0]["previous_file_alt_ref"]))
             {
             # There are no subsequent uploads. The current file is the latest one.
             $image_path=get_resource_path($resource,true,"thm");
@@ -33,7 +33,7 @@ function HookRse_versionLog_entryLog_entry_processing($column, $value, $logentry
             # We've found a more recent upload; the upload therefore is represented in the alternative file for this.
             $alt_file=$latest[0]["previous_file_alt_ref"];
 
-            if (isset($alt_file))
+            if ($alt_file)
                 {
                 $alter_data = get_alternative_file($resource,$alt_file);
                 }            
