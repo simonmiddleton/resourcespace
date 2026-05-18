@@ -626,15 +626,27 @@ $selected_search_tab = getval("selected_search_tab", "search");
                                             case FIELD_TYPE_DATE_AND_OPTIONAL_TIME:
                                             case FIELD_TYPE_EXPIRY_DATE:
                                             case FIELD_TYPE_DATE:
-                                                ?>
-                                                document.getElementById('field_<?php echo escape($fields[$n]["ref"]) ?>-y').value='';
-                                                document.getElementById('field_<?php echo escape($fields[$n]["ref"]) ?>-m').value='';
-                                                <?php
-                                                if ($searchbyday) {
-                                                    ?>
-                                                    document.getElementById('field_<?php echo escape($fields[$n]["ref"]) ?>-d').value='';
-                                                    <?php
+                                            case FIELD_TYPE_DATE_RANGE:
+                                                $date_range_pos = $daterange_search ? ['_start', '_end'] : [''];
+                                                $date_parts = ($searchbyday || $daterange_search)
+                                                    ? ['y', 'm', 'd']
+                                                    : ['y', 'm'];
+
+                                                $field_identifier = $daterange_search ? 'name' : 'ref';
+                                                $field_x = prefix_value("field_{$fields[$n][$field_identifier]}");
+
+                                                $date_field_prefixes = array_map($field_x, $date_range_pos);
+                                                $date_field_part_ids = [];
+
+                                                foreach ($date_parts as $date_part) {
+                                                    foreach ($date_field_prefixes as $prefix) {
+                                                        $date_field_part_ids[] = "{$prefix}-{$date_part}";
+                                                    }
                                                 }
+                                                ?>
+                                                const date_field_parts = <?php echo encode_js_value($date_field_part_ids); ?>;
+                                                date_field_parts.forEach(id => jQuery(`#${id}`).val(''));
+                                                <?php
                                                 break;
                                             case FIELD_TYPE_CHECK_BOX_LIST:
                                             case FIELD_TYPE_DROP_DOWN_LIST:
