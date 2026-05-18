@@ -406,20 +406,31 @@ if (getval("resetrestypes","")=="")
     $restypes=getval("restypes","");
     }
 else { 
+    /** Check input type and support the pseudo "Global" and resource type IDs */
+    $check_restype_list_item_type = static fn ($V): bool => (is_int_loose($V) || is_string_loose($V));
+    $rt_val = getval(
+        'restypes',
+        [],
+        false,
+        static fn ($V): bool => is_input_list_loose($V)
+            // If using the (saved) cookie value, the input will be a CSV
+            || (is_string($V) && array_filter(parse_csv_to_list_of_type($V, $check_restype_list_item_type)) !== [])
+    );
     $restypes = implode(
         ',',
         array_merge(
-            getval('restypes', [], false, static function ($data) use ($hide_resource_types): bool {
-                $resource_types = array_filter(
-                    array_column(get_resource_types('', true, false, true), 'ref'),
-                    static fn($ref): bool => !in_array($ref, $hide_resource_types)
-                );
-                $valid_resource_types = array_merge(['Global'], $resource_types);
-
-                $check = array_intersect($valid_resource_types, $data);
-
-                return array_values($check) === array_values($data);
-            }),
+            array_values(array_intersect(
+                array_merge(
+                    ['Global'], # pseudo resource type <=> "All resource types" option
+                    array_values(
+                        array_diff(
+                            array_map(intval(...), array_column(get_resource_types('', true, false, true), 'ref')),
+                            $hide_resource_types
+                        )
+                    )
+                ),
+                is_array($rt_val) ? $rt_val : parse_csv_to_list_of_type($rt_val, $check_restype_list_item_type)
+            )),
             getval('includeFeaturedCollections', '') === 'yes' ? ['FeaturedCollections'] : []
         )
     );
