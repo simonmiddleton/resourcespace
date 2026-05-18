@@ -464,7 +464,10 @@ $selected_search_tab = getval("selected_search_tab", "search");
 
                                             - Select specific RTs => show applicable fields and hide inapplicable ones
                                         */
-                                        $field_rts = array_map(intval(...), array_filter(explode(',', (string) $fields[$n]['resource_types'])));
+                                        $field_rts = array_map(
+                                            intval(...),
+                                            array_filter(explode(',', (string) $fields[$n]['resource_types']))
+                                        );
                                         $valid_resource_types = array_values(
                                             array_diff(
                                                 array_map(intval(...), array_column($types, 'ref')),
@@ -477,12 +480,6 @@ $selected_search_tab = getval("selected_search_tab", "search");
                                         );
                                     ?>
                                     valid_field_resource_types = <?php echo encode_js_value($valid_field_rts); ?>;
-                                    console.group('[SimpleSearchFieldsHideOrShow] Checking field #%s', <?php echo encode_js_value($fields[$n]["ref"]); ?>);
-                                    console.debug('[SimpleSearchFieldsHideOrShow] selected_resource_types = %o', selected_resource_types);
-                                    console.debug('[SimpleSearchFieldsHideOrShow] $types = %o', <?php echo encode_js_value(array_map(intval(...), array_column($types, 'ref'))); ?>);
-                                    console.debug('[SimpleSearchFieldsHideOrShow] $field_rts = %o', <?php echo encode_js_value($field_rts); ?>);
-                                    console.debug('[SimpleSearchFieldsHideOrShow] $valid_resource_types = %o', <?php echo encode_js_value($valid_resource_types); ?>);
-                                    console.debug('[SimpleSearchFieldsHideOrShow] $valid_field_rts = %o', valid_field_resource_types);
 
                                     if (!selected_resource_types.some(rt => valid_field_resource_types.includes(rt))) {
 
@@ -548,7 +545,6 @@ $selected_search_tab = getval("selected_search_tab", "search");
                                             ssearchhiddenfield.splice(ssindex, 1);
                                         }
                                     }
-                                    console.groupEnd();
                                     <?php
                                 }
                             }
