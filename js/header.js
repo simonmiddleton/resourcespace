@@ -38,6 +38,15 @@ ResourceSpace.Modules.Header = (() => {
             }
         });
 
+        // Modals should close the search filter panel, if open.
+        jQuery('#modal')?.on('CentralSpaceLoaded', () => {
+            const searchFilterOpen = header.querySelector('.header-search-field .input-wrapper > button[aria-expanded="true"]');
+
+            if (searchFilterOpen) {
+                toggleSearchPanel(searchFilterOpen);
+            }
+        });
+
         // Overflow primary navigation links on smaller desktop sizes (e.g. 1366 - 1500px) since there won't be enough
         // space for maximum six links (see render_header_links()).
         window.addEventListener('resize', handlePrimaryNavigationOverflow);
@@ -82,10 +91,15 @@ ResourceSpace.Modules.Header = (() => {
     }
 
     function toggleSearchPanel(e) {
-        e.stopPropagation();
+        const isEvent = e?.target;
+
+        if (isEvent) {
+            e.stopPropagation();
+        }
 
         const is_small_screen = ResourceSpace.media.max('desktop').matches;
-        const form = e.target.closest('form');
+        const target = isEvent ? e.target : e;
+        const form = target.closest('form');
         const panel = document.getElementById('search-filters-panel');
         const isOpen = form.classList.toggle('filters-open');
         form.querySelector('.input-wrapper > button')
