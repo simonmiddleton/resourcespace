@@ -3592,6 +3592,12 @@ header.LoginHeader {
     outline: none;
 }
 
+.header-search-field .input-wrapper > input[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    appearance: none;
+    display: none;
+}
+
 .header-search-field .input-wrapper > button {
     display: flex;
     padding: 11.5px;
