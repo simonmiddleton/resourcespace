@@ -4198,7 +4198,7 @@ a.text-link:visited {
     color: #fafafa; /* hardcoded due to dark mode flip */
     background: var(--colour-neutral-900);
     flex: 1;
-    padding: var(--space-12);
+    padding: var(--space-12) var(--space-4) var(--space-12) var(--space-12);
     border: none;
     outline: none;
 }
@@ -4631,6 +4631,10 @@ body:has(.collection-bar-holder.state-thumbs) #UICenter {
 
     .collection-bar-actions-form select {
         width: 100%;
+    }
+
+    .collection-bar-name-input {
+        width: calc(100% - 6px);
     }
 
 }
