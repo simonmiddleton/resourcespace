@@ -3651,7 +3651,7 @@ $lang["resource-card-menu-delete-button"] = "Yes, delete resource";
 $lang["resource-card-menu-delete-perm"] = "Are you sure? This action cannot be reversed.";
 $lang["resource-card-menu-delete-perm-button"] = "Yes, delete permanently";
 
-$lang['emptycollection'] = "No resources in collection";
+$lang['noresources_collection'] = "No resources in collection";
 $lang['hide_collection_bar'] = "Hidden";
 $lang['minimal_collection_bar'] = "Minimal bar";
 $lang['thumbnails_collection_bar'] = "Thumbnails";

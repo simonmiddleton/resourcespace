@@ -990,7 +990,7 @@ jQuery(function () {
                 <?php
                 }
             } else {
-                echo escape($lang['emptycollection']);
+                echo escape($lang['noresources_collection']);
             }
 
             if ($count_result > $max_collection_thumbs) {
