@@ -283,6 +283,12 @@ $selected_search_tab = getval("selected_search_tab", "search");
                             array_column($types, 'name', 'ref'),
                             array_flip($hide_resource_types)
                         );
+
+                        // Sometimes, e.g. after logging in, restypes = '' so ensure "All resource types" is preselected
+                        if ($rt === []) {
+                            $rt = array_keys($global_option);
+                        }
+
                         // We care about the array keys so array_merge() can't be used here!
                         $all_resource_type_filter_options = $global_option + $resource_type_filter_options;
                         $current_rt_options = array_keys(
