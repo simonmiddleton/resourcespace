@@ -1828,13 +1828,14 @@ function postUploadActions()
         }
 
     <?php
-    
-    if($context==="Modal"){?>
+    if($context==="Modal"){
+        ?>
         loadAsModal=true;
-    <?php
-    } else {?>
+        <?php
+    } else {
+        ?>
         loadAsModal=false;
-    <?php
+        <?php
     }
 
     if ($redirecturl != "")
@@ -1849,11 +1850,19 @@ function postUploadActions()
     elseif ($replace_resource>0)
         {
         $searchparams = get_search_params();
-        $redirecturl = generateURL("{$baseurl}/pages/view.php", array_merge(['ref' => $replace_resource],$searchparams));
+        $params = array_merge(
+            ['ref' => $replace_resource, 'context' => ($context === "Modal" ? "Modal" : "")],
+            $searchparams
+            );
+        $redirecturl = generateURL("{$baseurl}/pages/view.php", $params);
         ?>
         if(!upRedirBlock)
             {
-            CentralSpaceLoad('<?php echo $redirecturl ?>',true,loadAsModal);
+            if (loadAsModal) {
+                ModalLoad('<?php echo $redirecturl ?>',true);
+            } else {
+                CentralSpaceLoad('<?php echo $redirecturl ?>',true);
+            }
             }
         <?php
         }

@@ -4609,6 +4609,16 @@ function is_string_loose($var): bool
 }
 
 /**
+ * Helper function to check if a value is able to be cast to a float
+ * 
+ * @param mixed $var value to be tested
+ */
+function is_float_loose($var): bool
+{
+    return !is_array($var) && $var == (float)$var;
+}
+
+/**
  * Does the provided $ip match the string $ip_restrict? Used for restricting user access by IP address.
  *
  * @param  string $ip

@@ -507,18 +507,69 @@ function csv_upload_process($filename, &$meta, $resource_types, &$messages, $csv
                 }
             }
 
-            // Now process the actual data, looping through each column field
-            foreach ($headers as $column_id => $field_name) {
-                // Skip columns already processed as special columns e.g. resource type, id etc.
-                // or if not included in mappings
-                // or if field not applicable to resource type
-                if (
-                    in_array($column_id, $processed_columns)
-                    ||
-                    !isset($csv_set_options["fieldmapping"][$column_id])
-                    ||
-                    $csv_set_options["fieldmapping"][$column_id] == -1
-                    ||
+        // Update location if provided
+        if ($csv_set_options["location_column"] !== "" && in_array($csv_set_options["location_column"], array_keys($line))) {
+            if ($csv_set_options["longitude_column"] == "") {
+                // Single location field
+                $pattern = '/
+                    ^
+                    (-?\d{1,3}(?:\.\d+)?) # Latitude capture
+                    ,\s*                  # Comma + whitespace
+                    (-?\d{1,3}(?:\.\d+)?) # Longitude capture
+                    $
+                    /x';
+                if (preg_match($pattern, $line[$csv_set_options["location_column"]], $matches)) {
+                    $lat = $matches[1];
+                    $lng = $matches[2];
+                }
+            } elseif (in_array($csv_set_options["longitude_column"], array_keys($line))) {
+                // Separate latitude and longitude fields
+                $lat = $line[$csv_set_options["location_column"]];
+                $lng = $line[$csv_set_options["longitude_column"]];
+            }
+
+            // Validate coordinate ranges
+            if (
+                isset($lat, $lng) && is_float_loose($lat) && is_float_loose($lng)
+                && $lat >= -90 && $lat <= 90 && $lng >= -180 && $lng <= 180
+            ) {
+                ps_query(
+                    "UPDATE resource SET geo_lat=?, geo_long=? WHERE ref IN (" . ps_param_insert(count($resourcerefs)) . ")",
+                    array_merge(['d', (float) $lat, 'd', (float) $lng], ps_param_fill($resourcerefs, 'i'))
+                );
+                foreach ($resourcerefs as $resource_id) {
+                    update_geolocation_fields($resource_id, [$lat, $lng]);
+                }
+
+                if ($csv_set_options["update_existing"]) {
+                    $logtext = " - " . ($processcsv ? "Updating " : "Update ") . "location to $lat, $lng";
+                } else {
+                    $logtext = " - Add location $lat, $lng ";
+                }
+            } else {
+                $logtext = " - Error: no valid location found on line " . $line_count;
+                array_push($messages, $logtext);
+                $error_count++;
+                continue;
+            }
+            csv_upload_log($logfile, $logtext);
+            array_push($messages, $logtext);
+            $processed_columns[] = $csv_set_options["location_column"];
+            $processed_columns[] = $csv_set_options["longitude_column"];
+        }
+
+        // Now process the actual data, looping through each column field
+        foreach ($headers as $column_id => $field_name) {
+            // Skip columns already processed as special columns e.g. resource type, id etc.
+            // or if not included in mappings
+            // or if field not applicable to resource type
+            if (
+                in_array($column_id, $processed_columns)
+                ||
+                !isset($csv_set_options["fieldmapping"][$column_id])
+                ||
+                $csv_set_options["fieldmapping"][$column_id] == -1
+                ||
                     (
                     $resource_type_set != 0
                     &&
@@ -839,6 +890,13 @@ function csv_upload_process($filename, &$meta, $resource_types, &$messages, $csv
         } // end of loop through lines
     }
 
+        // Run autocomplete macros if possible
+        if ($processcsv && isset($resource_id)) {
+            autocomplete_blank_fields($resource_id, false);
+        }
+    }  // end of loop through lines
+
+    set_processing_message('');
     set_processing_message('');
     fclose($file);
 

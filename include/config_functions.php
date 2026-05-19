@@ -1927,6 +1927,26 @@ function save_resource_type_field(int $ref, array $columns, $postdata): bool
             if ($column === 'tab' && $val == 0) {
                 $val = ''; # set to blank so the code will convert to SQL NULL later
             }
+
+        // Geo mapping only available for single line text fields
+            if ($column == "geomapping") {
+                if (
+                    $postdata["type"] != FIELD_TYPE_TEXT_BOX_SINGLE_LINE
+                    || ($postdata["type"] != FIELD_TYPE_TEXT_BOX_SINGLE_LINE && $val == "")
+                ) {
+                    $val = 0;
+                } else {
+                    $geomapping_fields = ps_array("SELECT geomapping value FROM resource_type_field WHERE ref != ?", ["i", $ref]);
+                    if (
+                        in_array($val, $geomapping_fields) // This option is used elsewhere
+                        || in_array(FIELD_GEO_LOCATION::both->value, $geomapping_fields) // A different field is set to both
+                        || (in_array(FIELD_GEO_LOCATION::latitude->value, $geomapping_fields)
+                            && in_array(FIELD_GEO_LOCATION::longitude->value, $geomapping_fields)) // Both lat and long are set elsewhere
+                        ) {
+                        $val = 0;
+                    }
+                }
+            }
         }
 
         if (isset($sql)) {
@@ -2086,6 +2106,7 @@ function get_resource_type_field_columns()
         'value_filter'             => [$lang['property-value_filter'],'',2,1],
         'onchange_macro'           => [$lang['property-onchange_macro'],$lang['information-onchange_macro'],2,1],
         'sort_method'              => [$lang['property-sort_method'], $lang['information-sort_method'], 0, 1],
+        'geomapping'               => [$lang['property-geomapping'], $lang['information-geomapping'], 0, 1],
     ]);
 
     $modify_resource_type_field_definitions = hook("modifyresourcetypefieldcolumns", "", array($resource_type_field_column_definitions));

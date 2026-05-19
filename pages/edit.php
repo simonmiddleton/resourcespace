@@ -844,7 +844,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                   }
                 if (!hook('redirectaftersave'))
                   {
-                  $urlparams["modal"] = "true";
+                  $urlparams["modal"] = $modal ? "true" : "false";
                   redirect(generateURL($baseurl_short . "pages/view.php",$urlparams, array("refreshcollectionframe"=>"true")));
                   }
                 }
@@ -1273,6 +1273,21 @@ jQuery(document).ready(function()
                             if (i.substring(0,6) == 'status')
                                 {
                                 original_value = i.substring(6);
+                                }
+                            else if (i.substring(0,8) == 'location')
+                                {
+                                original_value = i.substring(8);
+                                jQuery('.location').val(original_value);
+                                }
+                            else if (i.substring(0,8) == 'latitude')
+                                {
+                                original_value = i.substring(8);
+                                jQuery('.latitude').val(original_value);
+                                }
+                            else if (i.substring(0,9) == 'longitude')
+                                {
+                                original_value = i.substring(9);
+                                jQuery('.longitude').val(original_value);
                                 }
                             }
                         }
@@ -1997,7 +2012,7 @@ $tabcount = 0;
 $last_tab_drawn = 0;
 foreach($fields as $n => $field)
     {
-    if(!(is_field_displayed($field)))
+    if(!(is_field_displayed($field)) || ($field['geomapping'] > 0 && $multiple))
         {
         continue;
         }
