@@ -664,7 +664,7 @@ jQuery(function () {
     // Collection bar state toggle
     const $bar = jQuery('.collection-bar-holder');
     const $toggleThumbsBtn = jQuery('.show-thumbs-button');
-    let thumbsShown = false;
+    let thumbsShown = <?php echo $thumbs_default == "show" ? "true" : "false"; ?>;
 
     function setBarState(state) {
         $bar.removeClass('state-closed state-actions state-thumbs').addClass(state);
