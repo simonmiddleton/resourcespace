@@ -529,17 +529,17 @@ jQuery(function () {
     }
 
     function getScrollerPaddingLeft() {
-        var scrollerEl = $scroller[0];
+        const scrollerEl = $scroller[0];
         return parseFloat(window.getComputedStyle(scrollerEl).paddingLeft) || 0;
     }
 
     function getCardPositions() {
-        var scrollerEl = $scroller[0];
-        var paddingLeft = getScrollerPaddingLeft();
-        var positions = [];
+        const scrollerEl = $scroller[0];
+        const paddingLeft = getScrollerPaddingLeft();
+        let positions = [];
 
         getCards().each(function (index) {
-            var extraOffset = index === 0 ? 0 : 6;
+            let extraOffset = index === 0 ? 0 : 6;
             positions.push(this.offsetLeft - paddingLeft + extraOffset);
         });
 
@@ -550,15 +550,15 @@ jQuery(function () {
     }
 
     function getFullyVisibleIndexes() {
-        var scrollerEl = $scroller[0];
-        var scrollerLeft = scrollerEl.scrollLeft;
-        var scrollerRight = scrollerLeft + scrollerEl.clientWidth;
-        var paddingLeft = getScrollerPaddingLeft();
-        var visibleIndexes = [];
+        const scrollerEl = $scroller[0];
+        const scrollerLeft = scrollerEl.scrollLeft;
+        const scrollerRight = scrollerLeft + scrollerEl.clientWidth;
+        const paddingLeft = getScrollerPaddingLeft();
+        let visibleIndexes = [];
 
         getCards().each(function (index) {
-            var cardLeft = this.offsetLeft - paddingLeft + (index === 0 ? 0 : 6);
-            var cardRight = cardLeft + this.offsetWidth;
+            let cardLeft = this.offsetLeft - paddingLeft + (index === 0 ? 0 : 6);
+            let cardRight = cardLeft + this.offsetWidth;
 
             if (cardLeft >= scrollerLeft && cardRight <= scrollerRight) {
                 visibleIndexes.push(index);
@@ -569,8 +569,8 @@ jQuery(function () {
     }
 
     function getFirstVisibleIndex(positions) {
-        var currentScroll = $scroller.scrollLeft();
-        var tolerance = 2;
+        const currentScroll = $scroller.scrollLeft();
+        const tolerance = 2;
 
         for (var i = 0; i < positions.length; i++) {
             if (positions[i] >= currentScroll - tolerance) {
@@ -582,11 +582,11 @@ jQuery(function () {
     }
 
     function updateScrollButtons() {
-        var el = $scroller[0];
+        const el = $scroller[0];
         if (!el) return;
 
-        var maxScrollLeft = el.scrollWidth - el.clientWidth;
-        var tolerance = 2;
+        let maxScrollLeft = el.scrollWidth - el.clientWidth;
+        let tolerance = 2;
 
         if (el.scrollLeft <= tolerance) {
             $leftBtn.hide();
@@ -602,21 +602,21 @@ jQuery(function () {
     }
 
     function scrollPage(direction) {
-        var metrics = getCardPositions();
+        let metrics = getCardPositions();
         if (!metrics.positions.length) return;
 
-        var fullyVisibleIndexes = getFullyVisibleIndexes();
-        var visibleCount = Math.max(1, fullyVisibleIndexes.length);
-        var moveBy = Math.max(1, visibleCount - 1);
+        let fullyVisibleIndexes = getFullyVisibleIndexes();
+        let visibleCount = Math.max(1, fullyVisibleIndexes.length);
+        let moveBy = Math.max(1, visibleCount - 1);
 
-        var currentIndex = getFirstVisibleIndex(metrics.positions);
-        var nextIndex = direction === "right"
+        let currentIndex = getFirstVisibleIndex(metrics.positions);
+        let nextIndex = direction === "right"
             ? currentIndex + moveBy
             : currentIndex - moveBy;
 
         nextIndex = Math.max(0, Math.min(nextIndex, metrics.positions.length - 1));
 
-        var target = metrics.positions[nextIndex];
+        let target = metrics.positions[nextIndex];
         target = Math.max(0, Math.min(target, metrics.maxScroll));
 
         $scroller.stop().animate({ scrollLeft: target }, 300, updateScrollButtons);
@@ -634,22 +634,22 @@ jQuery(function () {
     jQuery(window).on("resize", updateScrollButtons);
 
     // New collection name entry
-    const input = jQuery("#collection_name_input");
-    const cancel_button = jQuery("#cancel_creating_collection_button");
-    const accept_button = jQuery("#accept_creating_collection_button");
+    const $input = jQuery("#collection_name_input");
+    const $cancel_button = jQuery("#cancel_creating_collection_button");
+    const $accept_button = jQuery("#accept_creating_collection_button");
 
     function updateButtons() {
-        if (input.val().trim().length > 0) {
-            accept_button.removeClass("inactive");
+        if ($input.val().trim().length > 0) {
+            $accept_button.removeClass("inactive");
         } else {
-            accept_button.addClass("inactive");
+            $accept_button.addClass("inactive");
         }
     }
 
-    input.on("input", updateButtons);
+    $input.on("input", updateButtons);
 
-    cancel_button.on("click", function () {
-        input.val("");
+    $cancel_button.on("click", function () {
+        $input.val("");
         updateButtons();
         document.getElementById("collection").value = jQuery("#currentusercollection").text().trim();
         document.getElementById('collection').style.display = 'block';
@@ -657,43 +657,50 @@ jQuery(function () {
         document.getElementById('collection').focus();
     });
 
-    accept_button.on("click", function () {
+    $accept_button.on("click", function () {
         jQuery("#colselect").submit();
     });
 
     // Collection bar state toggle
     const $bar = jQuery('.collection-bar-holder');
     const $toggleThumbsBtn = jQuery('.show-thumbs-button');
+    let thumbsShown = false;
 
     function setBarState(state) {
-        $bar.removeClass('state-closed state-actions state-thumbs')
-            .addClass(state);
+        $bar.removeClass('state-closed state-actions state-thumbs').addClass(state);
+
         if (state == 'state-thumbs') {
             SetCookie('thumbs',"show",1000);
+            $toggleThumbsBtn.find('span').text('<?php echo escape($lang["hidethumbnails"]); ?>');
         } else if (state == 'state-actions') {
             SetCookie('thumbs',"actions",1000);
+            $toggleThumbsBtn.find('span').text('<?php echo escape($lang["showthumbnails"]); ?>');
         } else {
             SetCookie('thumbs',"hide",1000);
-            cancel_button.trigger("click");
+            $cancel_button.trigger("click");
+            $toggleThumbsBtn.find('span').text('<?php echo escape($lang["showthumbnails"]); ?>');
         }
     }
 
     jQuery('.collection-bar-toggle-button').on('click', function () {
         if ($bar.hasClass('state-closed')) {
-            setBarState('state-actions');
+            if (thumbsShown) {
+                setBarState('state-thumbs');
+            } else {
+                setBarState('state-actions');
+            }
         } else {
             setBarState('state-closed');
-            $toggleThumbsBtn.find('span').text('<?php echo escape($lang["showthumbnails"]); ?>');
         }
     });
 
     jQuery('.show-thumbs-button').on('click', function () {
         if ($bar.hasClass('state-thumbs')) {
             setBarState('state-actions');
-            $toggleThumbsBtn.find('span').text('<?php echo escape($lang["showthumbnails"]); ?>');
+            thumbsShown = false;
         } else {
             setBarState('state-thumbs');
-            $toggleThumbsBtn.find('span').text('<?php echo escape($lang["hidethumbnails"]); ?>');
+            thumbsShown = true;
         }
     });
     
