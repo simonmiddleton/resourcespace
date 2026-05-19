@@ -110,8 +110,12 @@ $resource_view_title = i18n_get_translated($result[$n]["field" . $view_title_fie
                             >
                         <?php } 
 
-                        if (eval_check_signed($df[$x]['value_filter']) != '') {
-                            echo strip_tags_and_attributes(tidy_trim(TidyList(i18n_get_translated($value)), $results_title_trim));
+                        if (eval_check_signed((string) $df[$x]['value_filter']) != '') {
+                            $displayed_value = strip_tags($value);
+                            if (strlen($displayed_value) > $results_title_trim) {
+                                $value = str_replace(($displayed_value), tidy_trim(($displayed_value), $results_title_trim), $value);
+                            }
+                            echo strip_tags_and_attributes(TidyList(i18n_get_translated($value)));
                         } else {
                             echo escape(tidy_trim(TidyList(i18n_get_translated($value)), $results_title_trim));
                         }
