@@ -59,6 +59,11 @@ if (!isset($thumbs)) {
     }
 }
 
+$thumbs_shown = getval("thumbs_shown", "unset");
+if ($thumbs_shown == "unset") {
+    rs_setcookie("thumbs_shown", ($thumbs === "show") ? "true" : "false", 1000, "", "", false, false);
+}
+
 switch ($thumbs) {
     case "show":
         $collection_holder_state = "state-thumbs";
@@ -664,7 +669,19 @@ jQuery(function () {
     // Collection bar state toggle
     const $bar = jQuery('.collection-bar-holder');
     const $toggleThumbsBtn = jQuery('.show-thumbs-button');
-    let thumbsShown = <?php echo $thumbs_default == "show" ? "true" : "false"; ?>;
+
+    function getThumbsShown() {
+
+        const value = getCookie("thumbs_shown");
+
+        if (value === undefined) {
+            const returnVal = <?php echo $thumbs_default == "show" ? "true" : "false"; ?>;;
+            SetCookie('thumbs_shown', returnVal, 1000);
+            return returnVal;
+        }
+
+        return value === "true";
+    }
 
     function setBarState(state) {
         $bar.removeClass('state-closed state-actions state-thumbs').addClass(state);
@@ -681,10 +698,10 @@ jQuery(function () {
             $toggleThumbsBtn.find('span').text('<?php echo escape($lang["showthumbnails"]); ?>');
         }
     }
-
+    
     jQuery('.collection-bar-toggle-button').on('click', function () {
         if ($bar.hasClass('state-closed')) {
-            if (thumbsShown) {
+            if (getThumbsShown()) {
                 setBarState('state-thumbs');
             } else {
                 setBarState('state-actions');
@@ -697,10 +714,10 @@ jQuery(function () {
     jQuery('.show-thumbs-button').on('click', function () {
         if ($bar.hasClass('state-thumbs')) {
             setBarState('state-actions');
-            thumbsShown = false;
+            SetCookie('thumbs_shown',"false",1000);
         } else {
             setBarState('state-thumbs');
-            thumbsShown = true;
+            SetCookie('thumbs_shown',"true",1000);
         }
     });
     
