@@ -372,7 +372,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                     && (<?php if ($forsearchbar) { ?>
                         !(ssearchhiddenfieldsarray.includes("<?php echo escape("simplesearch_{$scriptcondition['field']}") ?>"))
                     <?php } else { ?>
-                        (selectedtypes.includes(<?php echo json_encode($scriptcondition['resource_types']); ?>))
+                        (selectedtypes.includes(<?php echo encode_js_value($scriptcondition['resource_types']); ?>))
                     <?php } ?>
                         || <?php echo escape(empty($scriptcondition['resource_types'])) ? 'true' : 'false'; ?>)
                     ) {
