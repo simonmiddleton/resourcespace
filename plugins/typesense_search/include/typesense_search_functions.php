@@ -363,13 +363,10 @@ function typesense_search_request(string $method, string $endpoint, ?array $payl
 
     if ($response === false) {
         debug('typesense_search_request(): cURL error: ' . curl_error($curl));
-        curl_close($curl);
         return false;
     }
 
     $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-
-    curl_close($curl);
 
     debug(
         'typesense_search_request(): '
