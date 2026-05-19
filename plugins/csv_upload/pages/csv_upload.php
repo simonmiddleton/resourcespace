@@ -55,7 +55,6 @@ $csv_default_settings = array(
     "alternative_file_filename_column" => -1,
     "alternative_file_name_column" => -1,
     "alternative_file_description_column" => -1,
-    "csv_filename" => "",
     "location_column" => "",
     "longitude_column" => "",
     );

@@ -887,8 +887,7 @@ function csv_upload_process($filename, &$meta, $resource_types, &$messages, $csv
                     add_alternative_file($resource_id, $name ?? $filename, $description ?? "", $filename, $extension);
                 }
             }
-        } // end of loop through lines
-    }
+        }
 
         // Run autocomplete macros if possible
         if ($processcsv && isset($resource_id)) {
@@ -896,7 +895,6 @@ function csv_upload_process($filename, &$meta, $resource_types, &$messages, $csv
         }
     }  // end of loop through lines
 
-    set_processing_message('');
     set_processing_message('');
     fclose($file);
 
