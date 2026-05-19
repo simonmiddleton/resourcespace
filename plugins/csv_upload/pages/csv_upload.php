@@ -146,7 +146,7 @@ if ($csvuploaded) {
 include __DIR__ . "/../../../include/header.php";
 
 if (!checkperm("c")) {
-    echo "<div class=\"BasicsBox\">" . $lang['csv_upload_error_no_permission'] . "</div>";
+    echo "<div class=\"BasicsBox\">" . escape($lang['csv_upload_error_no_permission']) . "</div>";
     include __DIR__ . "/../../../include/footer.php";
     return;
 }
@@ -302,7 +302,7 @@ if (!checkperm("c")) {
                             <label for="clear"><?php echo escape($lang["csv_upload_using_config"]); ?></label>
                             <div class="fixed" >
                                 <a href="<?php echo generateURL($_SERVER["SCRIPT_NAME"], array("resetconfig" => "1")); ?>" onclick="return CentralSpaceLoad(this,false);">
-                                    <?php echo LINK_CARET . $lang["csv_upload_upload_config_clear"]; ?>
+                                    <?php echo LINK_CARET . escape($lang["csv_upload_upload_config_clear"]); ?>
                                 </a>
                             </div>
                             <div class="clearerleft"></div>
@@ -347,8 +347,8 @@ if (!checkperm("c")) {
                 if ($offline_limit) {
                     echo "<div class='PageInformal'>" . $offline_text . "</div>";
                 }
-                echo "<h2>" . $lang["csv_upload_create_new_title"] . "</h2>";
-                echo "<p>" . $lang["csv_upload_create_new_notes"] . "</p>";
+                echo "<h2>" . escape($lang["csv_upload_create_new_title"]) . "</h2>";
+                echo "<p>" . escape($lang["csv_upload_create_new_notes"]) . "</p>";
                 ?>
                 <form action="<?php echo $_SERVER["SCRIPT_NAME"]; ?>" id="upload_csv_form" method="post" enctype="multipart/form-data" onSubmit="return CentralSpacePost(this,true);">
                     <?php generateFormToken("upload_csv_form"); ?>
@@ -516,8 +516,8 @@ if (!checkperm("c")) {
                 if ($offline_limit) {
                     echo "<div class='PageInformal'>" . $offline_text . "</div>";
                 }
-                echo "<h2>" . $lang["csv_upload_update_existing_title"] . "</h2>";
-                echo "<p>" . $lang["csv_upload_update_existing_notes"] . "</p>";
+                echo "<h2>" . escape($lang["csv_upload_update_existing_title"]) . "</h2>";
+                echo "<p>" . escape($lang["csv_upload_update_existing_notes"]) . "</p>";
                 ?>
                 <form action="<?php echo $_SERVER["SCRIPT_NAME"]; ?>" id="upload_csv_form" method="post" enctype="multipart/form-data" onSubmit="return CentralSpacePost(this,true);" >
                     <?php generateFormToken("upload_csv_form"); ?>
@@ -891,8 +891,8 @@ if (!checkperm("c")) {
                 echo "<div class='PageInformal'>" . escape($offline_text) . "</div>";
             }
             if (is_array($csv_info)) {
-                echo "<p>" . $lang["csv_upload_map_fields_notes"] . "</p>";
-                echo "<p>" . $lang["csv_upload_map_fields_auto_notes"] . "</p>";
+                echo "<p>" . escape($lang["csv_upload_map_fields_notes"]) . "</p>";
+                echo "<p>" . escape($lang["csv_upload_map_fields_auto_notes"]) . "</p>";
                 // Render each header with an option to map to a field
                 ?>
                 <div class="BasicsBox">
@@ -919,7 +919,7 @@ if (!checkperm("c")) {
                                     echo "<tr>";
                                     echo "<td><div class='fixed medwidth' >" . escape($csv_field_data["header"]) . "</div></td>\n";
                                     echo "<td><select name='fieldmapping[" . $csv_column  . "]' class='stdwidth columnselect'>";
-                                    echo "<option value='-1' " . ((isset($csv_set_options["fieldmapping"][$csv_column]) && $csv_set_options["fieldmapping"][$csv_column] == -1) ? "selected" : "") . ">" . $lang["csv_upload_mapping_ignore"] . "</option>";
+                                    echo "<option value='-1' " . ((isset($csv_set_options["fieldmapping"][$csv_column]) && $csv_set_options["fieldmapping"][$csv_column] == -1) ? "selected" : "") . ">" . escape($lang["csv_upload_mapping_ignore"]) . "</option>";
 
                                     foreach ($allfields as $field) {
                                         echo "<option value=\"" . $field["ref"] . "\" ";
@@ -1008,11 +1008,11 @@ if (!checkperm("c")) {
                 echo "<div class='PageInformal'>" . $offline_text . "</div>";
             }
 
-            echo "<p>" . $lang["csv_upload_validation_notes"] . "</p>";
+            echo "<p>" . escape($lang["csv_upload_validation_notes"]) . "</p>";
 
             if (count($messages) > 1000) {
                 $messages = array_slice($messages, 0, 1000);
-                echo "<p>" . str_replace("[log_url]", $prelog_url, $lang["csv_upload_full_messages_link"]) . "</p>";
+                echo "<p>" . strip_tags_and_attributes(str_replace("[log_url]", $prelog_url, $lang["csv_upload_full_messages_link"])) . "</p>";
             }
             ?>
 
@@ -1036,7 +1036,7 @@ if (!checkperm("c")) {
                             <?php if ($offline_job_queue) { ?>
                                 <input type="checkbox" id="process_offline" name="process_offline" value="1">
                             <?php } else {
-                                echo "<div class='Fixed'>" . $lang["offline_processing_disabled"] . "</div>";
+                                echo "<div class='Fixed'>" . escape($lang["offline_processing_disabled"]) . "</div>";
                             } ?>
                             <div class="clearerleft"></div>
                         </div>
@@ -1052,7 +1052,7 @@ if (!checkperm("c")) {
                             id="submit"
                             value="<?php echo escape($lang["csv_upload_process"]); ?>"
                             <?php if (!$valid_csv) {
-                                echo "onclick=\"return confirm('" . $lang["csv_upload_ignore_errors"] . "');\"";
+                                echo "onclick=\"return confirm('" . escape($lang["csv_upload_ignore_errors"]) . "');\"";
                             } ?>
                         >
                         <div class="clearerleft"></div>
@@ -1094,10 +1094,10 @@ if (!checkperm("c")) {
                     $csv_set_options["csvchecksum"]
                 );
 
-                if ($csvjob) {
-                    echo str_replace("[jobref]", $csvjob, $lang["csv_upload_oj_created"]);
+                if (is_int($csvjob)) {
+                    echo strip_tags_and_attributes(str_replace("[jobref]", $csvjob, $lang["csv_upload_oj_created"]));
                 } elseif (is_string($csvjob)) {
-                    echo "<div class='PageInfoMessage'>" . $lang["error"] . $csvjob . "</div>";
+                    echo "<div class='PageInfoMessage'>" . escape($lang["error"]) . $csvjob . "</div>";
                 }
             } else {
                 $messages = array();
@@ -1114,7 +1114,7 @@ if (!checkperm("c")) {
                 // If this is a very large CSV we need to limit the output displayed or it may crash the browser
                 if (count($messages) > 1000) {
                     $messages = array_slice($messages, 0, 1000);
-                    echo "<p>" . str_replace("[log_url]", $log_url, $lang["csv_upload_full_messages_link"]) . "</p>";
+                    echo "<p>" . strip_tags_and_attributes(str_replace("[log_url]", $log_url, $lang["csv_upload_full_messages_link"])) . "</p>";
                 }
                 ?>
                 <div class="BasicsBox">
@@ -1130,10 +1130,10 @@ if (!checkperm("c")) {
                 <div class="VerticalNav">
                     <ul>
                         <li>
-                            <a href="<?php echo generateURL($_SERVER["SCRIPT_NAME"], array("getconfig" => "1")); ?>"><?php echo LINK_CARET . $lang["csv_upload_download_config"]; ?></a>
+                            <a href="<?php echo generateURL($_SERVER["SCRIPT_NAME"], array("getconfig" => "1")); ?>"><?php echo LINK_CARET . escape($lang["csv_upload_download_config"]); ?></a>
                         </li>
                         <li>
-                            <a href="<?php echo generateURL($_SERVER["SCRIPT_NAME"], array("step" => "1")); ?>"><?php echo LINK_CARET . $lang["csv_upload_upload_another"]; ?></a>
+                            <a href="<?php echo generateURL($_SERVER["SCRIPT_NAME"], array("step" => "1")); ?>"><?php echo LINK_CARET . escape($lang["csv_upload_upload_another"]); ?></a>
                         </li>
                     </ul>
                 </div>
