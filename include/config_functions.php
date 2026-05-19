@@ -885,85 +885,6 @@ function config_file_input($name, $label, $current, $form_action, $width = 420, 
 }
 
 /**
- * Generate colour picker input
- *
- * @param string $name          HTML input name attribute
- * @param string $label
- * @param string $current       Current value
- * @param string $default       Default value
- * @param string $title         Title
- * @param boolean $autosave     Automatically save the value on change
- * @param string on_change_js   JavaScript run onchange of value (useful for "live" previewing of changes)
- */
-function config_colouroverride_input($name, $label, $current, $default, $title = null, $autosave = false, $on_change_js = null, $hidden = false)
-{
-    global $lang;
-    $checked = $current && $current != $default;
-    if (is_null($title)) {
-        // This is how it was used on plugins setup page. Makes sense for developers when trying to debug and not much for non-technical users
-        $title = str_replace('%cvn', $name, $lang['plugins-configvar']);
-    }
-    ?>
-    
-    <div class="Question" style="min-height: 1.5em;" id="question_<?php echo escape($name); ?>" <?php echo $hidden ? "style=\"display:none;\"" : ''; ?>>
-        <label for="<?php echo escape($name); ?>" title="<?php echo escape($title); ?>"><?php echo escape($label); ?></label>
-        <div class="AutoSaveStatus">
-            <span id="AutoSaveStatus-<?php echo escape($name); ?>" style="display:none;"></span>
-        </div>
-        <input
-            type="checkbox"
-            <?php if ($checked) { ?>
-                checked="true"
-            <?php } ?>
-            onchange="
-                jQuery('#container_<?php echo escape($name); ?>').toggle();
-                if (!this.checked) {
-                    // Unchecked, set the default. Must first change the type as a color picker can't hold the empty string.
-                    jQuery('#<?php echo escape($name); ?>').attr('type','text');
-                    jQuery('#<?php echo escape($name); ?>').val('<?php echo escape($default); ?>');
-                    <?php
-                    if (!empty($on_change_js)) {
-                        echo $on_change_js;
-                    }
-                    if ($autosave) {
-                        ?>AutoSaveConfigOption('<?php echo escape($name); ?>');
-                        jQuery('#<?php echo escape($name); ?>').trigger('change');
-                        <?php
-                    }
-                    if (!empty($on_change_js)) {
-                        echo $on_change_js;
-                    }
-                    ?>
-                } else {
-                    jQuery('#<?php echo escape($name); ?>').attr('type','color');
-                }"
-            style="float: left;"
-        />
-        <div id="container_<?php echo escape($name); ?>"<?php echo !$checked ? 'style="display: none;"' : ''; ?>>
-            &nbsp;
-            <input
-                id="<?php echo escape($name); ?>"
-                name="<?php echo escape($name); ?>"
-                type="<?php echo $checked ? "color" : "text"; ?>"
-                value="<?php echo escape($current); ?>"
-                onchange="<?php
-                if ($autosave) {
-                    ?>AutoSaveConfigOption('<?php echo escape($name); ?>');<?php
-                }
-                if (!empty($on_change_js)) {
-                    echo $on_change_js;
-                }
-                ?>"
-                default="<?php echo escape($default); ?>"
-            />
-        </div>
-        <div class="clearerleft"></div>
-    </div>
-        
-    <?php
-}
-
-/**
 * Return a data structure that will be used to generate the HTML for
 * uploading a file
 *
@@ -1504,9 +1425,6 @@ function config_generate_html(array $page_def)
                 break;
             case 'checkbox_select':
                 config_checkbox_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8], $def[9]);
-                break;
-            case 'colouroverride_input':
-                config_colouroverride_input($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7]);
                 break;
             case 'multi_rtype_select':
                 config_multi_rtype_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3]);

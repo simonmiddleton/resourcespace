@@ -50,12 +50,18 @@ if ((int) $group['parent'] > 0 && in_array("preferences", $group['inherit'])) {
 
     // User interface section
     $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['userpreference_user_interface'] . '</h3><div id="UsergroupConfigUserInterfaceSection" class="CollapsibleSection">');
-    $page_def[] = config_add_colouroverride_input('header_colour_style_override', $lang["setup-headercolourstyleoverride"], '', null, true);
-    $page_def[] = config_add_colouroverride_input('header_link_style_override', $lang["setup-headerlinkstyleoverride"], '', null, true);
-    $page_def[] = config_add_colouroverride_input('home_colour_style_override', $lang["setup-homecolourstyleoverride"], '', null, true);
-    $page_def[] = config_add_colouroverride_input('collection_bar_background_override', $lang["setup-collectionbarbackground"], '', null, true);
-    $page_def[] = config_add_colouroverride_input('collection_bar_foreground_override', $lang["setup-collectionbarforeground"], '', null, true);
-    $page_def[] = config_add_colouroverride_input('button_colour_override', $lang["setup-buttoncolouroverride"], '', null, true);
+    $page_def[] = config_add_single_select(
+        'colour_theme',
+        $lang['userpreference_colourtheme'],
+        ['blue' => $lang['blue'], 'green' => $lang['green'], 'red' => $lang['red'], 'purple' => $lang["purple"]],
+        true,
+        300,
+        null,
+        true,
+        null,
+        false,
+        true
+    );
     $page_def[] = config_add_single_select('thumbs_default', $lang['userpreference_thumbs_default_label'], array('show' => $lang['showthumbnails'], 'hide' => $lang['hidethumbnails']), true, 300, '', true);
     $page_def[] = config_add_boolean_select('basic_simple_search', $lang['userpreference_basic_simple_search_label'], $enable_disable_options, 300, '', true);
     $page_def[] = config_add_boolean_select('hide_search_resource_types', $lang['userpreference_hide_search_resource_types'], $enable_disable_options, 300, '', true);

@@ -15,7 +15,7 @@ body, html {
 h1, h2 {color: #000000;}
 a:link {color:#666666;}
 a:visited {color:#666666;}
-a:hover {color:#2E99E6;}
+a:hover {color:var(--colour-brand-primary-hover);}
 a:active {opacity:0.6;}
 
 input[readonly] {
@@ -50,7 +50,7 @@ input[readonly] {
 .ListTitle a:link, 
 .ListTitle a:visited, 
 .ListTitle a:active {color:#666666;}
-.HorizontalWhiteNav a:hover, .BasicsBox .VerticalNav a:hover, .ListTitle a:hover {color:#2e99e6;}
+.HorizontalWhiteNav a:hover, .BasicsBox .VerticalNav a:hover, .ListTitle a:hover {color: var(--colour-brand-primary-hover);}
 
 /* Search Bar */
 #SearchBoxPanel a:link, #SearchBoxPanel a:visited, #SearchBoxPanel a:hover,
@@ -174,7 +174,7 @@ div.autocomplete ul li {color: #000;}
 .RecordDownloadSpace .HorizontalWhiteNav a:active, .RecordPanel .RecordDownloadSpace .HorizontalWhiteNav a:hover {color:#FFFFFF;} 
 .NoFind {border: none;background: #FFFFFF;}
 .NoFind .highlight {color:#000000;font-weight: bold;}
-.NoFind a:link, .NoFind a:visited, .NoFind a:hover, .NoFind a:active {color:#2e99e6;text-decoration:underline;}
+.NoFind a:link, .NoFind a:visited, .NoFind a:hover, .NoFind a:active {color: var(--colour-brand-primary-default);text-decoration:underline;}
 .ViewPanelTitles .Title { border-bottom: 0; }
 .RecordDownloadSpace {  background: #fff;}
 .RecordPanel .RecordDownload .DownloadDBlend td {border-top: 1px solid #ddd;color: #333;}
@@ -360,7 +360,7 @@ div.MessageBox a {
 
 /* Highlight selected keywords */
 input:checked + .customFieldLabel, .keywordselected {
-    background-color: #2e99e6;
+    background-color: var(--colour-brand-primary-default);
     color: #fff;
 }
   
@@ -464,7 +464,7 @@ input:checked + .customFieldLabel, .keywordselected {
 #HomeSiteText h1,#HomeSiteText p {color:#fff;}
 
 button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpace .DownloadDBlend a, .UploadButton a {
-    background-color: #1679c0;
+    background-color: var(--colour-brand-primary-default);
     box-shadow: 0 1px 3px rgba(0,0,0,0.25);
 }
 
@@ -514,7 +514,7 @@ input:focus, textarea:focus, select:focus, .RecordPanel .RecordDownloadSpace .Do
 .uppy-StatusBar.is-waiting .uppy-StatusBar-actionBtn--upload:hover,
 .uppy-DashboardContent-back, .uppy-DashboardContent-back:focus,
 .uppy-DashboardContent-addMore, .uppy-DashboardContent-addMore:focus {
-    background-color: #1988d7;
+    background-color: var(--colour-brand-primary-default);
     color: #fff;
 }
 .uppy-Dashboard-browse {

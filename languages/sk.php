@@ -1185,11 +1185,6 @@ $lang["setup-login_to"] = "Prihlásiť sa";
 $lang["setup-configuration_file_output"] = "Výpis z konfiguračného súboru";
 $lang["more-information"] = "Viac informácií";
 $lang["setup-structuralplugins"] = "Šablóny systému";
-$lang["setup-headercolourstyleoverride"] = "Vlastná farba pozadia hlavičky";
-$lang["setup-headerlinkstyleoverride"] = "Vlastná farba odkazu v hlavičke";
-$lang["setup-homecolourstyleoverride"] = "Vlastná farba úvodného textu, dlaždíc na palubovke, panelu prehľadávania a jednoduchého vyhľadávania";
-$lang["setup-collectionbarbackground"] = "Základná farba lišty vlastnej kolekcie";
-$lang["setup-collectionbarforeground"] = "Sekundárna farba lišty vlastnej kolekcie";
 
 # Collection log - actions
 $lang["collectionlog"] = "Denník kolekcie";
@@ -2791,7 +2786,6 @@ $lang["requiredfield_resource_type"] = 'Typ zdroja: Toto pole je povinné';
 $lang["altfiledeletefail"] = 'Nemožno vymazať alternatívny súbor.';
 $lang["altfilesdeletefail"] = 'Nemožno vymazať jeden alebo viac alternatívnych súborov.';
 $lang["setup-err_phar_injection"] = 'Zaznan je potencialni vstavek objekta Phar PHP.';
-$lang["setup-buttoncolouroverride"] = 'Vlastná farba tlačidla';
 $lang["collectionlog-SEU"] = 'Zdieľaný odkaz na nahrávanie externe';
 $lang["collectionlog-EEU"] = 'Urejen zunanji prenos';
 $lang["collectionlog-XK"] = 'Odstránený externý prístupový kľúč';
@@ -3648,3 +3642,7 @@ $lang["resource-card-menu-delete"] = 'Ste si istí, že chcete odstrániť tento
 $lang["resource-card-menu-delete-button"] = 'Áno, odstrániť zdroj';
 $lang["resource-card-menu-delete-perm"] = 'Ste si istí? Túto akciu nemožno vrátiť.';
 $lang["resource-card-menu-delete-perm-button"] = 'Áno, odstrániť trvalo';
+$lang["blue"] = 'Modrá';
+$lang["green"] = 'Zelená';
+$lang["red"] = 'Červená';
+$lang["purple"] = 'Fialová';

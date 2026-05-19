@@ -195,19 +195,8 @@ $linkedheaderimgsrc_dark = "";
 // Change the Header Logo link to another address by uncommenting and setting the variable below
 // $header_link_url=http://my-alternative-header-link
 
-// Used for specifying custom colours for header
-$header_colour_style_override = '';
-$header_link_style_override = '';
-
-// Used for specifying custom colours for home page elements (site text, dash tiles, simple search)
-$home_colour_style_override = '';
-
-// Used for specifying custom colours for collection bar elements
-$collection_bar_background_override = '';
-$collection_bar_foreground_override = '';
-
-// Used for changing colour of default blue buttons
-$button_colour_override = '';
+// UI colour theme
+$colour_theme = "blue";
 
 // Used by system settings page when setting a custom system font
 $custom_font = '';

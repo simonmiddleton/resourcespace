@@ -937,7 +937,7 @@ function allowed_type_mime($allowedtype)
 function send_mail($email, $subject, $message, $from = "", $reply_to = "", $html_template = "", $templatevars = array(), $from_name = "", $cc = "", $bcc = "", $files = array())
 {
     global $applicationname, $use_phpmailer, $email_from, $email_notify, $always_email_copy_admin, $baseurl, $userfullname;
-    global $email_footer, $header_colour_style_override, $userref, $email_rate_limit, $lang, $useremail_rate_limit_active;
+    global $email_footer, $userref, $email_rate_limit, $lang, $useremail_rate_limit_active;
 
     if (defined("RS_TEST_MODE")) {
         return false;
@@ -1192,7 +1192,7 @@ function send_mail($email, $subject, $message, $from = "", $reply_to = "", $html
 function send_mail_phpmailer($email, $subject, $message = "", $from = "", $reply_to = "", $html_template = "", $templatevars = array(), $from_name = "", $cc = "", $bcc = "", $files = array())
 {
     # Include footer
-    global $header_colour_style_override, $email_from;
+    global $email_from;
 
     if (check_email_invalid($email)) {
         return false;
@@ -1300,7 +1300,7 @@ function send_mail_phpmailer($email, $subject, $message = "", $from = "", $reply
                     // Add header image to email if not using template
                     $img_url = get_header_image(true);
                     $img_div_style = "max-height:50px;padding: 5px;";
-                    $img_div_style .= "background: " . ((isset($header_colour_style_override) && $header_colour_style_override != '') ? $header_colour_style_override : "rgba(0, 0, 0, 0.6)") . ";";
+                    $img_div_style .= "background: rgba(0, 0, 0, 0.6);";
                     $setvalues[$placeholder] = '<div style="' . $img_div_style . '"><img src="' . $img_url . '" style="max-height:50px;"  /></div><br /><br />';
                 } elseif ($placeholder == "embed_thumbnail") {
                     # [embed_thumbnail] (requires url in templatevars['thumbnail'])
