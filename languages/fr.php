@@ -2187,7 +2187,6 @@ $lang["systemconfig_help_link_label"] = 'Afficher le lien "Aide et conseils"';
 $lang["systemconfig_recent_link_label"] = 'Afficher le lien "Récemment ajouté"';
 $lang["systemconfig_mycollections_link_label"] = 'Afficher le lien "Mes collections"';
 $lang["systemconfig_myrequests_link_label"] = 'Afficher le lien "Mes demandes"';
-$lang["systemconfig_research_link_label"] = 'Afficher le lien "Demandes de recherche"';
 $lang["systemconfig_themes_navlink_label"] = 'Afficher le lien "Collections en vedette"';
 $lang["systemconfig_use_theme_as_home_label"] = 'Utiliser la page "Collections en vedette" comme page d\'accueil ?';
 $lang["systemconfig_use_recent_as_home_label"] = 'Utiliser la page "Récemment ajoutés" comme page d\'accueil ?';

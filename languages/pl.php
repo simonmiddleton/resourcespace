@@ -1867,7 +1867,6 @@ $lang["systemconfig_help_link_label"] = 'Pokaż link "Pomoc i porady"';
 $lang["systemconfig_recent_link_label"] = 'Pokaż link "Ostatnio dodane"';
 $lang["systemconfig_mycollections_link_label"] = 'Pokaż link "Moje kolekcje"';
 $lang["systemconfig_myrequests_link_label"] = 'Pokaż link "Moje wnioski"';
-$lang["systemconfig_research_link_label"] = 'Pokaż link "Żądania badawcze"';
 $lang["systemconfig_themes_navlink_label"] = 'Pokaż link "Wyróżnione kolekcje"';
 $lang["systemconfig_use_theme_as_home_label"] = 'Czy użyć strony "Wyróżnione kolekcje" jako strony głównej?';
 $lang["systemconfig_use_recent_as_home_label"] = 'Czy ustawić stronę "Ostatnio dodane" jako stronę główną?';

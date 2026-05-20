@@ -2089,7 +2089,6 @@ $lang["systemconfig_help_link_label"] = 'Εμφάνιση συνδέσμου "Β
 $lang["systemconfig_recent_link_label"] = 'Εμφάνιση συνδέσμου "Πρόσφατα προστέθηκαν"';
 $lang["systemconfig_mycollections_link_label"] = 'Εμφάνιση συνδέσμου "Οι συλλογές μου"';
 $lang["systemconfig_myrequests_link_label"] = 'Εμφάνιση συνδέσμου "Οι αιτήσεις μου"';
-$lang["systemconfig_research_link_label"] = 'Εμφάνιση συνδέσμου "Αιτήματα έρευνας"';
 $lang["systemconfig_themes_navlink_label"] = 'Εμφάνιση συνδέσμου "Προβεβλημένες συλλογές"';
 $lang["systemconfig_use_theme_as_home_label"] = 'Χρησιμοποιήστε τη σελίδα "Προβεβλημένες συλλογές" ως αρχική σελίδα;';
 $lang["systemconfig_use_recent_as_home_label"] = 'Χρησιμοποιήστε τη σελίδα "Πρόσφατα προστέθηκαν" ως αρχική σελίδα;';

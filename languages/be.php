@@ -2285,7 +2285,6 @@ $lang["systemconfig_help_link_label"] = 'Паказаць спасылку "Да
 $lang["systemconfig_recent_link_label"] = 'Паказаць спасылку "Нядаўна дададзена"';
 $lang["systemconfig_mycollections_link_label"] = 'Паказаць спасылку "Мае калекцыі"';
 $lang["systemconfig_myrequests_link_label"] = 'Паказаць спасылку "Мае запыты"';
-$lang["systemconfig_research_link_label"] = 'Паказаць спасылку "Запыты на даследаванні"';
 $lang["systemconfig_themes_navlink_label"] = 'Паказаць спасылку "Выбраныя калекцыі"';
 $lang["systemconfig_use_theme_as_home_label"] = 'Выкарыстоўваць старонку "Выбраныя калекцыі" як галоўную старонку?';
 $lang["systemconfig_use_recent_as_home_label"] = 'Выкарыстоўваць старонку "Нядаўна дададзена" як старонку хатняй старонкі?';

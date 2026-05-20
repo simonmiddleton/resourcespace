@@ -2248,7 +2248,6 @@ $lang["systemconfig_help_link_label"] = 'Zobrazit odkaz "Nápověda a rady"';
 $lang["systemconfig_recent_link_label"] = 'Zobrazit odkaz "Nedávno přidané"';
 $lang["systemconfig_mycollections_link_label"] = 'Zobrazit odkaz "Moje kolekce"';
 $lang["systemconfig_myrequests_link_label"] = 'Zobrazit odkaz "Moje žádosti"';
-$lang["systemconfig_research_link_label"] = 'Zobrazit odkaz "Žádosti o výzkum"';
 $lang["systemconfig_themes_navlink_label"] = 'Zobrazit odkaz "Doporučené kolekce"';
 $lang["systemconfig_use_theme_as_home_label"] = 'Použít stránku "Doporučené kolekce" jako domovskou stránku?';
 $lang["systemconfig_use_recent_as_home_label"] = 'Použít stránku "Nedávno přidané" jako domovskou stránku?';

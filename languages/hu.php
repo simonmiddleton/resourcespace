@@ -2214,7 +2214,6 @@ $lang["systemconfig_help_link_label"] = 'Mutassa a "Segítség és tanács" link
 $lang["systemconfig_recent_link_label"] = 'Mutasd a "Legutóbb hozzáadott" linket';
 $lang["systemconfig_mycollections_link_label"] = 'Mutasd a "Saját gyűjteményeim" hivatkozást';
 $lang["systemconfig_myrequests_link_label"] = 'Mutasd a "Kéréseim" hivatkozást';
-$lang["systemconfig_research_link_label"] = '"Mutassa a \'Kutatási kérések\' hivatkozást"';
 $lang["systemconfig_themes_navlink_label"] = 'Mutassa a "Kiemelt gyűjtemények" hivatkozást';
 $lang["systemconfig_use_theme_as_home_label"] = 'Használja a "Kiemelt gyűjtemények" oldalt kezdőlapként?';
 $lang["systemconfig_use_recent_as_home_label"] = 'Használja a "Legutóbb hozzáadott" oldalt kezdőlapként?';

@@ -2380,7 +2380,6 @@ $lang["systemconfig_help_link_label"] = 'Visa länken "Hjälp och råd"';
 $lang["systemconfig_recent_link_label"] = 'Visa länk till "Nyligen tillagda"';
 $lang["systemconfig_mycollections_link_label"] = 'Visa länken "Mina samlingar"';
 $lang["systemconfig_myrequests_link_label"] = 'Visa länken "Mina förfrågningar"';
-$lang["systemconfig_research_link_label"] = 'Visa länken "Forskningsförfrågningar"';
 $lang["systemconfig_themes_navlink_label"] = 'Visa länk till "Utvalda samlingar"';
 $lang["systemconfig_use_theme_as_home_label"] = 'Använd sidan "Utvalda samlingar" som startsida?';
 $lang["systemconfig_use_recent_as_home_label"] = 'Använd "Nyligen tillagda" sidan som startsida?';

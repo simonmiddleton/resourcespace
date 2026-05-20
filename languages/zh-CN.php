@@ -2232,7 +2232,6 @@ $lang["systemconfig_help_link_label"] = '显示“帮助与建议”链接。';
 $lang["systemconfig_recent_link_label"] = '显示“最近添加”的链接。';
 $lang["systemconfig_mycollections_link_label"] = '显示“我的收藏”链接。';
 $lang["systemconfig_myrequests_link_label"] = '显示“我的请求”链接。';
-$lang["systemconfig_research_link_label"] = '显示“研究请求”链接。';
 $lang["systemconfig_themes_navlink_label"] = '显示“特色收藏”链接。';
 $lang["systemconfig_use_theme_as_home_label"] = '将“特色收藏”页面用作主页？';
 $lang["systemconfig_use_recent_as_home_label"] = '将“最近添加”页面用作主页？';

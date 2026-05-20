@@ -7709,7 +7709,7 @@ function render_header_links(array $ctx): void
     global $pagename, $terms_login, $baseurl, $nav2contact_link, $advanced_search_nav, $search_results_link,
     $enable_themes, $theme_direct_jump, $themes_navlink, $public_collections_top_nav, $mycollections_link, $recent_link,
     $recent_search_by_days, $recent_search_by_days_default, $recent_search_quantity, $myrequests_link,
-    $mycontributions_link, $research_request, $research_link, $custom_top_nav, $lang;
+    $mycontributions_link, $research_request, $custom_top_nav, $lang;
 
     if (
         $pagename == 'terms'
@@ -7808,7 +7808,7 @@ function render_header_links(array $ctx): void
         ];
     }
 
-    if ($research_request && $research_link && checkperm("s") && checkperm("q")) {
+    if ($research_request && checkperm("s") && checkperm("q")) {
         $nav_links[] = [
             'title' => '(lang)researchrequest',
             'link' => "{$baseurl}/pages/research_request.php",

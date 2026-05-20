@@ -2200,7 +2200,6 @@ $lang["systemconfig_help_link_label"] = 'Toon de link "Hulp en advies"';
 $lang["systemconfig_recent_link_label"] = 'Toon de link "Onlangs toegevoegd"';
 $lang["systemconfig_mycollections_link_label"] = 'Toon de link "Mijn collecties"';
 $lang["systemconfig_myrequests_link_label"] = 'Toon de link "Mijn verzoeken"';
-$lang["systemconfig_research_link_label"] = 'Toon de link "Onderzoeksverzoeken"';
 $lang["systemconfig_themes_navlink_label"] = 'Toon link "Uitgelichte collecties"';
 $lang["systemconfig_use_theme_as_home_label"] = 'Gebruik de pagina "Uitgelichte collecties" als startpagina?';
 $lang["systemconfig_use_recent_as_home_label"] = 'Gebruik de pagina "Onlangs toegevoegd" als startpagina?';

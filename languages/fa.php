@@ -2258,7 +2258,6 @@ $lang["systemconfig_help_link_label"] = 'نمایش لینک "راهنما و م
 $lang["systemconfig_recent_link_label"] = 'نمایش پیوند "تازه اضافه شده"';
 $lang["systemconfig_mycollections_link_label"] = 'نمایش لینک "مجموعه‌های من"';
 $lang["systemconfig_myrequests_link_label"] = 'نمایش لینک "درخواست‌های من"';
-$lang["systemconfig_research_link_label"] = 'نمایش پیوند "درخواست‌های تحقیق"';
 $lang["systemconfig_themes_navlink_label"] = 'نمایش پیوند "مجموعه‌های ویژه"';
 $lang["systemconfig_use_theme_as_home_label"] = 'آیا از صفحه "مجموعه‌های ویژه" به عنوان صفحه اصلی استفاده شود؟';
 $lang["systemconfig_use_recent_as_home_label"] = 'آیا از صفحه "تازه اضافه شده‌ها" به عنوان صفحه اصلی استفاده شود؟';

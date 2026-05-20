@@ -2169,7 +2169,6 @@ $lang["systemconfig_help_link_label"] = 'Показать ссылку "Помо
 $lang["systemconfig_recent_link_label"] = 'Показать ссылку "Недавно добавленные"';
 $lang["systemconfig_mycollections_link_label"] = 'Показать ссылку "Мои коллекции"';
 $lang["systemconfig_myrequests_link_label"] = 'Показать ссылку "Мои запросы"';
-$lang["systemconfig_research_link_label"] = 'Показать ссылку "Запросы на исследование"';
 $lang["systemconfig_themes_navlink_label"] = 'Показать ссылку "Рекомендуемые коллекции"';
 $lang["systemconfig_use_theme_as_home_label"] = 'Использовать страницу "Избранные коллекции" в качестве домашней страницы?';
 $lang["systemconfig_use_recent_as_home_label"] = 'Использовать страницу "Недавно добавленные" в качестве домашней страницы?';

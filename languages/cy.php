@@ -2197,7 +2197,6 @@ $lang["systemconfig_help_link_label"] = 'Dangos dolen "Cymorth a chyngor"';
 $lang["systemconfig_recent_link_label"] = 'Dangos dolen "Ychwanegwyd yn ddiweddar"';
 $lang["systemconfig_mycollections_link_label"] = 'Dangos dolen "Fy chasgliadau"';
 $lang["systemconfig_myrequests_link_label"] = 'Dangos dolen "Fy ceisiadau"';
-$lang["systemconfig_research_link_label"] = 'Dangos dolen "Cynigion ymchwil"';
 $lang["systemconfig_themes_navlink_label"] = 'Dangos dolen "Casgliadau nodweddiadol"';
 $lang["systemconfig_use_theme_as_home_label"] = 'Defnyddio\'r dudalen "Casgliadau nodweddiadol" fel y dudalen gartref?';
 $lang["systemconfig_use_recent_as_home_label"] = 'Defnyddio\'r dudalen "Ychwanegwyd yn ddiweddar" fel y dudalen gartref?';

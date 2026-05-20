@@ -2258,7 +2258,6 @@ $lang["systemconfig_help_link_label"] = '"مدد اور مشورہ" لنک دک�
 $lang["systemconfig_recent_link_label"] = '"حال ہی میں شامل کردہ" لنک دکھائیں';
 $lang["systemconfig_mycollections_link_label"] = '"میری کلیکشنز" لنک دکھائیں';
 $lang["systemconfig_myrequests_link_label"] = '"میری درخواستیں" لنک دکھائیں';
-$lang["systemconfig_research_link_label"] = '"تحقیقی درخواستیں" لنک دکھائیں';
 $lang["systemconfig_themes_navlink_label"] = '"نمایاں مجموعے" لنک دکھائیں';
 $lang["systemconfig_use_theme_as_home_label"] = 'کیا "نمایاں مجموعے" صفحہ کو ہوم پیج کے طور پر استعمال کریں؟';
 $lang["systemconfig_use_recent_as_home_label"] = 'کیا "حال ہی میں شامل کردہ" صفحہ کو ہوم پیج کے طور پر استعمال کریں؟';

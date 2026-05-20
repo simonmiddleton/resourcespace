@@ -2141,7 +2141,6 @@ $lang["systemconfig_help_link_label"] = 'Afișează link-ul "Ajutor și sfaturi"
 $lang["systemconfig_recent_link_label"] = 'Afișează link-ul "Adăugate recent"';
 $lang["systemconfig_mycollections_link_label"] = 'Afișează link-ul "Colecțiile mele"';
 $lang["systemconfig_myrequests_link_label"] = 'Afișează link-ul "Cererile mele"';
-$lang["systemconfig_research_link_label"] = 'Afișează link-ul "Cereri de cercetare"';
 $lang["systemconfig_themes_navlink_label"] = 'Afișează link-ul "Colecții recomandate"';
 $lang["systemconfig_use_theme_as_home_label"] = 'Folosește pagina "Colecții recomandate" ca pagină de start?';
 $lang["systemconfig_use_recent_as_home_label"] = 'Folosește pagina "Recent adăugate" ca pagină de start?';

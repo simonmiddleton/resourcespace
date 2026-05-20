@@ -2264,7 +2264,6 @@ $lang["systemconfig_help_link_label"] = 'عرض رابط "المساعدة وا�
 $lang["systemconfig_recent_link_label"] = 'عرض رابط "المضاف حديثًا"';
 $lang["systemconfig_mycollections_link_label"] = 'عرض رابط "مجموعاتي"';
 $lang["systemconfig_myrequests_link_label"] = 'عرض رابط "طلباتي"';
-$lang["systemconfig_research_link_label"] = 'عرض رابط "طلبات البحث"';
 $lang["systemconfig_themes_navlink_label"] = 'عرض رابط "المجموعات المميزة"';
 $lang["systemconfig_use_theme_as_home_label"] = 'هل ترغب في استخدام صفحة "مجموعات مميزة" كصفحة رئيسية؟';
 $lang["systemconfig_use_recent_as_home_label"] = 'هل ترغب في استخدام صفحة "المضافة حديثًا" كصفحة رئيسية؟';

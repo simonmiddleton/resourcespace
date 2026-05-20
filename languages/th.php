@@ -2206,7 +2206,6 @@ $lang["systemconfig_help_link_label"] = 'แสดงลิงก์ "ช่ว�
 $lang["systemconfig_recent_link_label"] = 'แสดงลิงก์ "เพิ่มเมื่อเร็วๆ นี้"';
 $lang["systemconfig_mycollections_link_label"] = 'แสดงลิงก์ "คอลเลกชันของฉัน"';
 $lang["systemconfig_myrequests_link_label"] = 'แสดงลิงก์ "คำขอของฉัน"';
-$lang["systemconfig_research_link_label"] = 'แสดงลิงก์ "คำขอวิจัย"';
 $lang["systemconfig_themes_navlink_label"] = 'แสดงลิงก์ "คอลเลกชันที่โดดเด่น"';
 $lang["systemconfig_use_theme_as_home_label"] = 'ใช้หน้า "คอลเลกชันที่แนะนำ" เป็นหน้าแรกหรือไม่?';
 $lang["systemconfig_use_recent_as_home_label"] = 'ใช้หน้า "เพิ่มเข้ามาเมื่อเร็วๆ นี้" เป็นหน้าแรกหรือไม่?';

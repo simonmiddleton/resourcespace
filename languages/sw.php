@@ -2251,7 +2251,6 @@ $lang["systemconfig_help_link_label"] = 'Onyesha kiungo cha "Msaada & ushauri"';
 $lang["systemconfig_recent_link_label"] = 'Onyesha kiungo cha "Zilizoongezwa Hivi Karibuni"';
 $lang["systemconfig_mycollections_link_label"] = 'Onyesha kiungo cha "Mikusanyiko Yangu"';
 $lang["systemconfig_myrequests_link_label"] = 'Onyesha kiungo cha "Maombi Yangu"';
-$lang["systemconfig_research_link_label"] = 'Onyesha kiungo cha "Maombi ya Utafiti"';
 $lang["systemconfig_themes_navlink_label"] = 'Onyesha kiungo cha "Mikusanyiko Maarufu"';
 $lang["systemconfig_use_theme_as_home_label"] = 'Tumia ukurasa wa "Mikusanyo Maarufu" kama ukurasa wa nyumbani?';
 $lang["systemconfig_use_recent_as_home_label"] = 'Tumia ukurasa wa "Iliyoongezwa hivi karibuni" kama ukurasa wa nyumbani?';

@@ -2787,7 +2787,6 @@ $lang['systemconfig_help_link_label'] = 'Show "Help & advice" link';
 $lang['systemconfig_recent_link_label'] = 'Show "Recently added" link';
 $lang['systemconfig_mycollections_link_label'] = 'Show "My collections" link';
 $lang['systemconfig_myrequests_link_label'] = 'Show "My requests" link';
-$lang['systemconfig_research_link_label'] = 'Show "Research requests" link';
 $lang['systemconfig_themes_navlink_label'] = 'Show "Featured collections" link';
 $lang['systemconfig_use_theme_as_home_label'] = 'Use the "Featured collections" page as the home page?';
 $lang['systemconfig_use_recent_as_home_label'] = 'Use the "Recently added" page as the home page?';

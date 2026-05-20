@@ -2251,7 +2251,6 @@ $lang["systemconfig_help_link_label"] = '"ਮਦਦ ਅਤੇ ਸਲਾਹ" ਲ�
 $lang["systemconfig_recent_link_label"] = '"ਹਾਲ ਹੀ ਵਿੱਚ ਸ਼ਾਮਲ ਕੀਤਾ" ਲਿੰਕ ਦਿਖਾਓ';
 $lang["systemconfig_mycollections_link_label"] = '"ਮੇਰੀਆਂ ਕਲੈਕਸ਼ਨਾਂ" ਲਿੰਕ ਦਿਖਾਓ';
 $lang["systemconfig_myrequests_link_label"] = '"ਮੇਰੀਆਂ ਬੇਨਤੀਆਂ" ਲਿੰਕ ਦਿਖਾਓ';
-$lang["systemconfig_research_link_label"] = '"ਖੋਜ ਬੇਨਤੀਆਂ" ਲਿੰਕ ਦਿਖਾਓ';
 $lang["systemconfig_themes_navlink_label"] = '"ਫੀਚਰਡ ਕਲੈਕਸ਼ਨ" ਲਿੰਕ ਦਿਖਾਓ';
 $lang["systemconfig_use_theme_as_home_label"] = 'ਕੀ "ਫੀਚਰਡ ਕਲੇਕਸ਼ਨ" ਪੰਨਾ ਮੁੱਖ ਪੰਨੇ ਵਜੋਂ ਵਰਤਣਾ ਹੈ?';
 $lang["systemconfig_use_recent_as_home_label"] = 'ਕੀ "ਹਾਲ ਹੀ ਵਿੱਚ ਸ਼ਾਮਲ ਕੀਤੇ" ਪੰਨੇ ਨੂੰ ਮੁੱਖ ਪੰਨੇ ਵਜੋਂ ਵਰਤਣਾ ਹੈ?';

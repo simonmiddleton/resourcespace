@@ -2218,7 +2218,6 @@ $lang["systemconfig_help_link_label"] = '「ヘルプ＆アドバイス」リン
 $lang["systemconfig_recent_link_label"] = '「最近追加されたもの」のリンクを表示する。';
 $lang["systemconfig_mycollections_link_label"] = '"My collections" リンクを表示する';
 $lang["systemconfig_myrequests_link_label"] = '"My requests"リンクを表示する。';
-$lang["systemconfig_research_link_label"] = '「リサーチリクエスト」リンクを表示する。';
 $lang["systemconfig_themes_navlink_label"] = '「注目コレクション」リンクを表示する。';
 $lang["systemconfig_use_theme_as_home_label"] = 'ホームページとして「注目コレクション」ページを使用しますか？';
 $lang["systemconfig_use_recent_as_home_label"] = 'ホームページとして「最近追加された」ページを使用しますか？';

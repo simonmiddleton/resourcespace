@@ -2260,7 +2260,6 @@ $lang["systemconfig_help_link_label"] = 'Hiển thị liên kết "Trợ giúp &
 $lang["systemconfig_recent_link_label"] = 'Hiển thị liên kết "Mới thêm"';
 $lang["systemconfig_mycollections_link_label"] = 'Hiển thị liên kết "Bộ sưu tập của tôi"';
 $lang["systemconfig_myrequests_link_label"] = 'Hiển thị liên kết "Yêu cầu của tôi"';
-$lang["systemconfig_research_link_label"] = 'Hiển thị liên kết "Yêu cầu nghiên cứu"';
 $lang["systemconfig_themes_navlink_label"] = 'Hiển thị liên kết "Bộ sưu tập nổi bật"';
 $lang["systemconfig_use_theme_as_home_label"] = 'Sử dụng trang "Bộ sưu tập nổi bật" làm trang chính?';
 $lang["systemconfig_use_recent_as_home_label"] = 'Sử dụng trang "Mới thêm" làm trang chính?';

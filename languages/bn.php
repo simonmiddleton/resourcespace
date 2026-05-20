@@ -2255,7 +2255,6 @@ $lang["systemconfig_help_link_label"] = '"সহায়তা ও পরাম
 $lang["systemconfig_recent_link_label"] = '"সম্প্রতি যোগ করা" লিঙ্ক দেখান';
 $lang["systemconfig_mycollections_link_label"] = '"আমার সংগ্রহসমূহ" লিঙ্ক দেখান';
 $lang["systemconfig_myrequests_link_label"] = '"আমার অনুরোধ" লিঙ্ক দেখান';
-$lang["systemconfig_research_link_label"] = '"গবেষণা অনুরোধ" লিঙ্ক দেখান';
 $lang["systemconfig_themes_navlink_label"] = '"বৈশিষ্ট্যযুক্ত সংগ্রহসমূহ" লিঙ্ক দেখান';
 $lang["systemconfig_use_theme_as_home_label"] = '"বৈশিষ্ট্যযুক্ত সংগ্রহসমূহ" পৃষ্ঠাটি কি হোম পেজ হিসেবে ব্যবহার করবেন?';
 $lang["systemconfig_use_recent_as_home_label"] = '"সম্প্রতি যোগ করা হয়েছে" পৃষ্ঠাটি কি হোম পৃষ্ঠা হিসেবে ব্যবহার করবেন?';

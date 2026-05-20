@@ -2156,7 +2156,6 @@ $lang["systemconfig_help_link_label"] = 'Mostra l\'enllaç "Ajuda i consell"';
 $lang["systemconfig_recent_link_label"] = 'Mostra l\'enllaç "Afegits recentment"';
 $lang["systemconfig_mycollections_link_label"] = 'Mostra l\'enllaç "Les meves col·leccions"';
 $lang["systemconfig_myrequests_link_label"] = 'Mostra l\'enllaç "Les meves sol·licituds"';
-$lang["systemconfig_research_link_label"] = 'Mostra l\'enllaç "Sol·licituds de recerca"';
 $lang["systemconfig_themes_navlink_label"] = 'Mostra l\'enllaç de "Col·leccions destacades"';
 $lang["systemconfig_use_theme_as_home_label"] = 'Voleu utilitzar la pàgina "Col·leccions destacades" com a pàgina d\'inici?';
 $lang["systemconfig_use_recent_as_home_label"] = 'Voleu utilitzar la pàgina "Recentment afegit" com a pàgina d\'inici?';

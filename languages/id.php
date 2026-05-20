@@ -2224,7 +2224,6 @@ $lang["systemconfig_help_link_label"] = 'Tampilkan tautan "Bantuan & saran"';
 $lang["systemconfig_recent_link_label"] = 'Tampilkan tautan "Baru Ditambahkan"';
 $lang["systemconfig_mycollections_link_label"] = 'Tampilkan tautan "Koleksi Saya"';
 $lang["systemconfig_myrequests_link_label"] = 'Tampilkan tautan "Permintaan Saya"';
-$lang["systemconfig_research_link_label"] = 'Tampilkan tautan "Permintaan Penelitian"';
 $lang["systemconfig_themes_navlink_label"] = 'Tampilkan tautan "Koleksi Unggulan"';
 $lang["systemconfig_use_theme_as_home_label"] = 'Gunakan halaman "Koleksi Unggulan" sebagai halaman utama?';
 $lang["systemconfig_use_recent_as_home_label"] = 'Gunakan halaman "Baru Ditambahkan" sebagai halaman utama?';

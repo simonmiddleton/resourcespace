@@ -2256,7 +2256,6 @@ $lang["systemconfig_help_link_label"] = 'Показати посилання "Д
 $lang["systemconfig_recent_link_label"] = 'Показати посилання "Нещодавно додані"';
 $lang["systemconfig_mycollections_link_label"] = 'Показати посилання "Мої колекції"';
 $lang["systemconfig_myrequests_link_label"] = 'Показати посилання "Мої запити"';
-$lang["systemconfig_research_link_label"] = 'Показати посилання "Запити на дослідження"';
 $lang["systemconfig_themes_navlink_label"] = 'Показати посилання "Рекомендовані колекції"';
 $lang["systemconfig_use_theme_as_home_label"] = 'Використовувати сторінку "Рекомендовані колекції" як домашню сторінку?';
 $lang["systemconfig_use_recent_as_home_label"] = 'Використовувати сторінку "Нещодавно додані" як домашню сторінку?';

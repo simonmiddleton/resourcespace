@@ -2244,7 +2244,6 @@ $lang["systemconfig_help_link_label"] = '"Yardım ve tavsiye" bağlantısını g
 $lang["systemconfig_recent_link_label"] = '"Yeni eklenenler" bağlantısını göster';
 $lang["systemconfig_mycollections_link_label"] = '"Benim koleksiyonlarım" bağlantısını göster';
 $lang["systemconfig_myrequests_link_label"] = '"İsteklerim" bağlantısını göster';
-$lang["systemconfig_research_link_label"] = '"Arama talepleri" bağlantısını göster';
 $lang["systemconfig_themes_navlink_label"] = '"Öne Çıkan Koleksiyonlar" bağlantısını göster';
 $lang["systemconfig_use_theme_as_home_label"] = '"Öne çıkan koleksiyonlar" sayfasını ana sayfa olarak kullan?';
 $lang["systemconfig_use_recent_as_home_label"] = '"Son Eklenenler" sayfasını ana sayfa olarak kullan?';

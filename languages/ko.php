@@ -2262,7 +2262,6 @@ $lang["systemconfig_help_link_label"] = '"도움말 및 조언" 링크 표시';
 $lang["systemconfig_recent_link_label"] = '"최근 추가됨" 링크 표시';
 $lang["systemconfig_mycollections_link_label"] = '"내 컬렉션" 링크 표시';
 $lang["systemconfig_myrequests_link_label"] = '"내 요청" 링크 표시';
-$lang["systemconfig_research_link_label"] = '"연구 요청" 링크 표시';
 $lang["systemconfig_themes_navlink_label"] = '"추천 컬렉션" 링크 표시';
 $lang["systemconfig_use_theme_as_home_label"] = '"추천 컬렉션" 페이지를 홈 페이지로 사용하시겠습니까?';
 $lang["systemconfig_use_recent_as_home_label"] = '"최근 추가된" 페이지를 홈 페이지로 사용하시겠습니까?';

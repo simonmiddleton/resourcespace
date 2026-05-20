@@ -2425,7 +2425,6 @@ $lang["systemconfig_help_link_label"] = 'Zeige den Link "Hilfe & Beratung" an';
 $lang["systemconfig_recent_link_label"] = 'Zeige den Link "Zuletzt hinzugefügt" an';
 $lang["systemconfig_mycollections_link_label"] = 'Zeige den Link "Meine Sammlungen" an';
 $lang["systemconfig_myrequests_link_label"] = 'Zeige den Link "Meine Anfragen" an';
-$lang["systemconfig_research_link_label"] = 'Zeige den Link "Forschungsanfragen" an';
 $lang["systemconfig_themes_navlink_label"] = 'Zeige den Link "Ausgewählte Sammlungen" an';
 $lang["systemconfig_use_theme_as_home_label"] = 'Soll die Seite "Ausgewählte Sammlungen" als Startseite verwendet werden?';
 $lang["systemconfig_use_recent_as_home_label"] = 'Möchten Sie die Seite "Zuletzt hinzugefügt" als Startseite verwenden?';

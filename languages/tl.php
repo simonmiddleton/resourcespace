@@ -2280,7 +2280,6 @@ $lang["systemconfig_help_link_label"] = 'Ipakita ang link na "Tulong at payo"';
 $lang["systemconfig_recent_link_label"] = 'Ipakita ang link na "Kamakailan Idinagdag"';
 $lang["systemconfig_mycollections_link_label"] = 'Ipakita ang link na "Aking mga koleksyon"';
 $lang["systemconfig_myrequests_link_label"] = 'Ipakita ang link na "Aking mga kahilingan"';
-$lang["systemconfig_research_link_label"] = 'Ipakita ang link na "Mga Kahilingan sa Pananaliksik"';
 $lang["systemconfig_themes_navlink_label"] = 'Ipakita ang link na "Mga Itinatampok na koleksyon"';
 $lang["systemconfig_use_theme_as_home_label"] = 'Gamitin ang pahina ng "Mga Itinatampok na koleksyon" bilang pangunahing pahina?';
 $lang["systemconfig_use_recent_as_home_label"] = 'Gamitin ang pahina ng "Kamakailang idinagdag" bilang pangunahing pahina?';

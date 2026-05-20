@@ -2241,7 +2241,6 @@ $lang["systemconfig_help_link_label"] = 'Mostrar link "Ajuda e conselhos"';
 $lang["systemconfig_recent_link_label"] = 'Mostrar link "Adicionados recentemente"';
 $lang["systemconfig_mycollections_link_label"] = 'Mostrar link "Minhas coleções"';
 $lang["systemconfig_myrequests_link_label"] = 'Mostrar o link "Minhas solicitações"';
-$lang["systemconfig_research_link_label"] = 'Mostrar link "Solicitações de pesquisa"';
 $lang["systemconfig_themes_navlink_label"] = 'Mostrar link "Coleções em destaque"';
 $lang["systemconfig_use_theme_as_home_label"] = 'Usar a página "Coleções em destaque" como página inicial?';
 $lang["systemconfig_use_recent_as_home_label"] = 'Usar a página "Recentemente adicionados" como página inicial?';

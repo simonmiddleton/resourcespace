@@ -2132,7 +2132,6 @@ $lang["systemconfig_help_link_label"] = 'Prikaži poveznicu "Pomoć i savjeti"';
 $lang["systemconfig_recent_link_label"] = 'Prikaži poveznicu "Nedavno dodano"';
 $lang["systemconfig_mycollections_link_label"] = 'Prikaži poveznicu "Moje zbirke"';
 $lang["systemconfig_myrequests_link_label"] = 'Prikaži poveznicu "Moji zahtjevi"';
-$lang["systemconfig_research_link_label"] = 'Prikaži poveznicu "Zahtjevi za istraživanje"';
 $lang["systemconfig_themes_navlink_label"] = 'Prikaži poveznicu "Istaknute zbirke"';
 $lang["systemconfig_use_theme_as_home_label"] = 'Koristiti stranicu "Istaknute kolekcije" kao početnu stranicu?';
 $lang["systemconfig_use_recent_as_home_label"] = 'Koristiti stranicu "Nedavno dodano" kao početnu stranicu?';

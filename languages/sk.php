@@ -2243,7 +2243,6 @@ $lang['systemconfig_help_link_label'] = 'Zobraziť odkaz „Pomoc a poradenstvo�
 $lang['systemconfig_recent_link_label'] = 'Zobraziť odkaz Naposledy pridané';
 $lang['systemconfig_mycollections_link_label'] = 'Zobraziť odkaz Moje zbierky';
 $lang['systemconfig_myrequests_link_label'] = 'Zobraziť odkaz Moje požiadavky';
-$lang['systemconfig_research_link_label'] = 'Zobraziť odkaz „Požiadavky na asistenciu“';
 $lang['systemconfig_themes_navlink_label'] = 'Zobraziť odkaz Odporúčané zbierky';
 $lang['systemconfig_use_theme_as_home_label'] = 'Použiť stránku „Odporúčané zbierky“ ako domovskú stránku?';
 $lang['systemconfig_use_recent_as_home_label'] = 'Použiť stránku „Naposledy pridané“ ako domovskú stránku?';

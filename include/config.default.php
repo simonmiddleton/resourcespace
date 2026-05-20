@@ -651,9 +651,6 @@ $mycollections_link = false;
 // Display a 'My Requests' link in the top navigation
 $myrequests_link = false;
 
-// Display a 'Research Request' link in the top navigation
-$research_link = true;
-
 // Display a Themes link in Top Navigation if Themes is enabled
 $themes_navlink = true;
 

@@ -2280,7 +2280,6 @@ $lang["systemconfig_help_link_label"] = 'Tunjukkan pautan "Bantuan & nasihat"';
 $lang["systemconfig_recent_link_label"] = 'Tunjukkan pautan "Baru ditambah"';
 $lang["systemconfig_mycollections_link_label"] = 'Tunjukkan pautan "Koleksi Saya"';
 $lang["systemconfig_myrequests_link_label"] = 'Tunjukkan pautan "Permintaan Saya"';
-$lang["systemconfig_research_link_label"] = 'Tunjukkan pautan "Permintaan penyelidikan"';
 $lang["systemconfig_themes_navlink_label"] = 'Tunjukkan pautan "Koleksi Pilihan"';
 $lang["systemconfig_use_theme_as_home_label"] = 'Gunakan halaman "Koleksi Terpilih" sebagai halaman utama?';
 $lang["systemconfig_use_recent_as_home_label"] = 'Gunakan halaman "Baru ditambah" sebagai halaman utama?';

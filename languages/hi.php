@@ -2266,7 +2266,6 @@ $lang["systemconfig_help_link_label"] = '"सहायता और सलाह
 $lang["systemconfig_recent_link_label"] = '"हाल ही में जोड़े गए" लिंक दिखाएं';
 $lang["systemconfig_mycollections_link_label"] = '"मेरे संग्रह" लिंक दिखाएं';
 $lang["systemconfig_myrequests_link_label"] = '"मेरे अनुरोध" लिंक दिखाएं';
-$lang["systemconfig_research_link_label"] = '"अनुसंधान अनुरोध" लिंक दिखाएं';
 $lang["systemconfig_themes_navlink_label"] = '"विशेष संग्रह" लिंक दिखाएं';
 $lang["systemconfig_use_theme_as_home_label"] = '"विशेष संग्रह" पृष्ठ को होम पेज के रूप में उपयोग करें?';
 $lang["systemconfig_use_recent_as_home_label"] = '"हाल ही में जोड़े गए" पृष्ठ को होम पेज के रूप में उपयोग करें?';

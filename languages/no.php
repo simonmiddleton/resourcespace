@@ -2315,7 +2315,6 @@ $lang["systemconfig_help_link_label"] = 'Vis "Hjelp og råd"-lenke';
 $lang["systemconfig_recent_link_label"] = 'Vis "Nylig lagt til" lenke';
 $lang["systemconfig_mycollections_link_label"] = 'Vis "Mine samlinger" lenke';
 $lang["systemconfig_myrequests_link_label"] = 'Vis "Mine forespørsler" lenke';
-$lang["systemconfig_research_link_label"] = 'Vis "Forespørsler om forskning" lenke';
 $lang["systemconfig_themes_navlink_label"] = 'Vis "Utvalgte samlinger" lenke';
 $lang["systemconfig_use_theme_as_home_label"] = 'Vil du bruke siden "Utvalgte samlinger" som hjemmeside?';
 $lang["systemconfig_use_recent_as_home_label"] = 'Vil du bruke "Nylig lagt til" siden som hjemmeside?';

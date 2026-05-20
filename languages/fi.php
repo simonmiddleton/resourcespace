@@ -2354,7 +2354,6 @@ $lang["systemconfig_help_link_label"] = 'Näytä "Ohje ja neuvonta" -linkki';
 $lang["systemconfig_recent_link_label"] = 'Näytä "Äskettäin lisätyt" linkki';
 $lang["systemconfig_mycollections_link_label"] = 'Näytä "Omat kokoelmat" -linkki';
 $lang["systemconfig_myrequests_link_label"] = 'Näytä "Omat pyynnöt" -linkki';
-$lang["systemconfig_research_link_label"] = 'Näytä "Tutkimuspyynnöt" linkki';
 $lang["systemconfig_themes_navlink_label"] = 'Näytä "Esittelyssä olevat kokoelmat" linkki';
 $lang["systemconfig_use_theme_as_home_label"] = 'Käytä "Esittelykokoelmat" -sivua aloitussivuna?';
 $lang["systemconfig_use_recent_as_home_label"] = 'Käytetäänkö "Äskettäin lisätyt" -sivua aloitussivuna?';
