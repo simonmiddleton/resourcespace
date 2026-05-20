@@ -3257,7 +3257,7 @@ label {
     position: fixed;
     bottom: 0px;
     pointer-events: none;
-    z-index: 4;
+    z-index: 101;
 }
 
 #toggleThumbsLink i {
