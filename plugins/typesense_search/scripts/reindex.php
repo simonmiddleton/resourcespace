@@ -8,6 +8,7 @@ include_once dirname(__DIR__, 3) . '/include/boot.php';
 include_once dirname(__DIR__) . '/include/typesense_search_functions.php';
 
 command_line_only();
+set_time_limit(0);
 
 $batch_size = isset($argv[1]) && is_numeric($argv[1]) ? (int)$argv[1] : 100;
 $after = isset($argv[2]) && is_numeric($argv[2]) ? (int)$argv[2] : 0;
