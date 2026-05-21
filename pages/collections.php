@@ -75,8 +75,6 @@ switch ($thumbs) {
         $collection_holder_state = "state-closed";
 }
 
-$pulse_enable = $collection_holder_state == "state-closed" && $pulse == true;
-
 # ------------ Change the collection, if a collection ID has been provided ----------------
 if ($collection != "" && $collection != "undefined") {
     hook("prechangecollection");
@@ -730,7 +728,7 @@ jQuery(function () {
 <div class="collection-bar-holder <?php echo $collection_holder_state; ?>">
     <div style="display:none;" id="currentusercollection"><?php echo (int) $usercollection; ?></div>
     <script>usercollection='<?php echo escape($usercollection) ?>';</script>
-    <div class="collection-bar-toggle-button <?php echo $pulse_enable ? "pulse-animation" : ""; ?>"><i class="icon-layout-dashboard"></i></div>
+    <div class="collection-bar-toggle-button <?php echo ($collection_holder_state == "state-closed" && $pulse == true) ? "pulse-animation" : ""; ?>"><i class="icon-layout-dashboard"></i></div>
     <div class="collection-bar-actions-section">
         <div class="collection-bar-actions-form">
             <div class="field current-collections-field">
