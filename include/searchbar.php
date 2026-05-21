@@ -756,7 +756,7 @@ $selected_search_tab = getval("selected_search_tab", "search");
                 </div>
                 <div id="simplesearchbuttons">
                     <div class="search-actions-primary">
-                        <input name="Submit" id="searchbutton" class="searchbutton" type="submit" value="<?php echo escape($lang['searchbutton']); ?>" onclick="SimpleSearchFieldsHideOrShow();">
+                        <input name="Submit" id="searchbutton" class="searchbutton" type="submit" value="<?php echo escape($lang['search_resources']); ?>" onclick="SimpleSearchFieldsHideOrShow();">
                         <a href="#" onclick="<?php
                             if ($basic_simple_search) {
                                 echo "document.getElementById('ssearchbox').value='';";
@@ -776,7 +776,7 @@ $selected_search_tab = getval("selected_search_tab", "search");
                             }
                         ?>">
                             <?php render_icon_wrapper_component(Icon::CircleX); ?>
-                            <span><?php echo escape($lang["clearbutton"]); ?></span>
+                            <span><?php echo escape($lang['clear_filters']); ?></span>
                         </a>
                     </div>
                     <div class="search-actions-secondary">

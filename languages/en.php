@@ -235,8 +235,8 @@ $lang["changethemeto"] = "Change theme to";
 # Search bar
 $lang["simplesearch"] = "Simple search";
 $lang["search_filter_panel_toggle"] = "Toggle search filters";
-$lang["searchbutton"] = "Search resources";
-$lang["clearbutton"] = "Clear filters";
+$lang["searchbutton"] = "Search";
+$lang["clearbutton"] = "Clear";
 $lang["bycountry"] = "By country";
 $lang["bydate"] = "By date";
 $lang["anyyear"] = "Any year";
@@ -256,6 +256,8 @@ $lang["perpage"] = "per page";
 $lang["perpage_option"] = "? per page";
 $lang["powered_by"] = "Powered by";
 $lang["powered_by_resourcespace"] = "Powered by ResourceSpace";
+$lang['search_resources'] = 'Search resources';
+$lang['clear_filters'] = 'Clear filters';
 
 $lang["on"] = "On";
 $lang["off"] = "Off";
