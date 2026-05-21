@@ -110,7 +110,7 @@ $resource_view_title = i18n_get_translated($result[$n]["field" . $view_title_fie
                             >
                         <?php } 
 
-                        if (eval_check_signed((string) $df[$x]['value_filter']) != '') {
+                        if (isset($value) && eval_check_signed((string) $df[$x]['value_filter']) != '') {
                             $displayed_value = strip_tags($value);
                             if (strlen($displayed_value) > $results_title_trim) {
                                 $value = str_replace(($displayed_value), tidy_trim(($displayed_value), $results_title_trim), $value);
