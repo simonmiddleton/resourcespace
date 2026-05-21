@@ -3508,7 +3508,7 @@ function get_resource_field_data_batch($resources, $use_permissions = true, $ext
                 continue;
             }
 
-            // Track the current field when rendering metadata and refresh config overrides when it updates.
+            // Track the current resource type when rendering metadata and refresh config overrides when it updates.
             if (empty($exportoptions) && ((!isset($current_restype)) || ($restype[$fields[$n]["resource"]] != $current_restype))) {
                 $current_restype = $restype[$fields[$n]["resource"]];
                 resource_type_config_override($restype[$fields[$n]["resource"]]);
