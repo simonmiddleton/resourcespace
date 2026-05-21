@@ -14,7 +14,7 @@ $order_by = getval("orderby", "name");
 $order_by_list = ["ref","ref desc","name","name desc","support_non_correlated_sql","support_non_correlated_sql desc"];
 
 if (!in_array(strtolower($order_by), $order_by_list)) {
-    $order_by[0] = "name";
+    $order_by = "name";
 }
 
 $url_params = array("find" => $find, "orderby" => $order_by);
