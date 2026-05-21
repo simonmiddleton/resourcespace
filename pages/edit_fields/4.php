@@ -11,6 +11,7 @@ $m = getval("$name-m", "");
 $d = getval("$name-d", "");
 $h = getval("$name-h", "");
 $i = getval("$name-i", "");
+$resetform =  getval("resetform","");
 
 if (
     (
@@ -18,7 +19,8 @@ if (
         || $ref > 0
         || '' != getval('submitted', '')
     )
-    && !empty(array_filter([$value ?? '', $y, $m, $d, $h, $i], 'strlen'))
+    && (!empty(array_filter([$value ?? '', $y, $m, $d, $h, $i], 'strlen')))
+    && $resetform == ''
 ) {
     if ($value != "") {
         #fetch the date parts from the value
@@ -65,6 +67,15 @@ if (
         $dh = $h;
         $di = $i;
     }
+} elseif (
+    $resetform != ""
+    && $reset_date_upload_template
+    && "field_$reset_date_field" == $name) {
+    $dy = date('Y');
+    $dm = date('m');
+    $dd = date('d');
+    $dh = date('H');
+    $di = date('i');
 }
 
 if ($date_d_m_y) {
