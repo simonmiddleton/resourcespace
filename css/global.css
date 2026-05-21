@@ -3629,11 +3629,11 @@ header.LoginHeader {
     display: grid;
     padding: var(--space-16);
     padding-right: var(--space-4);
-    max-height: 65vh;
     overflow-y: scroll;
     scrollbar-gutter: stable;
-    position: absolute;
-    top: 100%;
+    position: fixed;
+    top: var(--js-header-container-bottom); /* header.js module is setting the value */
+    bottom: env(safe-area-inset-bottom);
     left: 0;
     width: 100%;
     opacity: 0;
@@ -4197,6 +4197,13 @@ header.LoginHeader {
     #header-container .header-search-field {
         grid-area: search;
         width: 100%;
+    }
+
+    .header-search-field #search-filters-panel {
+        max-height: 65vh;
+        position: absolute;
+        top: 100%;
+        bottom: unset;
     }
 
     .header-search-field #search-filters-panel #SearchBoxPanel {

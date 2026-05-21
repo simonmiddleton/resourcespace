@@ -3,6 +3,7 @@ ResourceSpace.Modules.Header = (() => {
     const uiCenter = document.getElementById('UICenter');
     const primaryNavOverflowThreshold = 6;
     let stickyHeaderLastScrollTop = 0;
+    const updateCssHeaderVarsObserver = new ResizeObserver(updateCssHeaderVars);
 
     function init() {
         if (!header) return;
@@ -15,6 +16,8 @@ ResourceSpace.Modules.Header = (() => {
         const mq_mobile = ResourceSpace.media.max('tablet');
         mq_mobile.addEventListener('change', makeStickyHeader);
         makeStickyHeader(mq_mobile);
+
+        updateCssHeaderVars();
 
         header.addEventListener('click', (e) => {
             // The search container is being replaced in the DOM as part of the reloadSearchBar()
@@ -52,9 +55,11 @@ ResourceSpace.Modules.Header = (() => {
     function makeStickyHeader(e) {
         if (e.matches) {
             uiCenter.addEventListener('scroll', handleStickyHeaderScroll);
+            updateCssHeaderVarsObserver.observe(header);
         } else {
             uiCenter.removeEventListener('scroll', handleStickyHeaderScroll);
             resetStickyHeader();
+            updateCssHeaderVarsObserver.disconnect();
         }
     }
 
@@ -82,6 +87,12 @@ ResourceSpace.Modules.Header = (() => {
         logo.classList.remove('is-collapsed');
         actions.classList.remove('is-collapsed');
         header.classList.remove('is-compact');
+    }
+
+    function updateCssHeaderVars() {
+        const headerBB = header.getBoundingClientRect();
+
+        document.documentElement.style.setProperty('--js-header-container-bottom', `${headerBB.bottom}px`);
     }
 
     function toggleSearchPanel(e) {
