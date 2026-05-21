@@ -7758,7 +7758,7 @@ function render_header_links(array $ctx): void
 
     if (checkperm("s") && $enable_themes && !$theme_direct_jump && $themes_navlink) {
         $nav_links[] = [
-            'title' => '(lang)collections',
+            'title' => '(lang)themes',
             'link' => "{$baseurl}/pages/collections_featured.php",
         ];
     }
