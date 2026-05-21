@@ -195,7 +195,7 @@ $linkedheaderimgsrc_dark = "";
 // Change the Header Logo link to another address by uncommenting and setting the variable below
 // $header_link_url=http://my-alternative-header-link
 
-// UI colour theme
+// UI colour theme - available options are "blue", "green", "red" and "purple". 
 $colour_theme = "blue";
 
 // Used by system settings page when setting a custom system font
