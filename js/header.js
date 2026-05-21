@@ -38,14 +38,8 @@ ResourceSpace.Modules.Header = (() => {
             }
         });
 
-        // Modals should close the search filter panel, if open.
-        jQuery('#modal')?.on('CentralSpaceLoaded', () => {
-            const searchFilterOpen = header.querySelector('.header-search-field .input-wrapper > button[aria-expanded="true"]');
-
-            if (searchFilterOpen) {
-                toggleSearchPanel(searchFilterOpen);
-            }
-        });
+        jQuery('#CentralSpace')?.on('CentralSpaceLoaded', closeSearchPanel);
+        jQuery('#modal')?.on('CentralSpaceLoaded', closeSearchPanel);
 
         // Overflow primary navigation links on smaller desktop sizes (e.g. 1366 - 1500px) since there won't be enough
         // space for maximum six links (see render_header_links()).
@@ -109,7 +103,7 @@ ResourceSpace.Modules.Header = (() => {
             panel.hidden = false;
 
             if (is_small_screen) {
-                e.target.classList.replace('icon-sliders-horizontal', 'icon-circle-x');
+                target.classList.replace('icon-sliders-horizontal', 'icon-circle-x');
             }
         } else {
             panel.addEventListener(
@@ -121,12 +115,20 @@ ResourceSpace.Modules.Header = (() => {
                         panel.hidden = true;
 
                         if (is_small_screen) {
-                            e.target.classList.replace('icon-circle-x', 'icon-sliders-horizontal');
+                            target.classList.replace('icon-circle-x', 'icon-sliders-horizontal');
                         }
                     }
                 },
                 { once: true }
             );
+        }
+    }
+
+    function closeSearchPanel() {
+        const openPanel = header.querySelector('.header-search-field .input-wrapper > button[aria-expanded="true"]');
+
+        if (openPanel) {
+            toggleSearchPanel(openPanel);
         }
     }
 
