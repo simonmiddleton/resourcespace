@@ -3581,7 +3581,7 @@ header.LoginHeader {
 .header-search-field .input-wrapper > input {
     margin: 0px;
     padding: 0px;
-    width: auto;
+    min-width: 100px;
     height: 24px;
     border: unset;
     box-shadow: none;
