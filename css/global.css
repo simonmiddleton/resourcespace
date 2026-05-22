@@ -3598,7 +3598,20 @@ header.LoginHeader {
     display: none;
 }
 
-.header-search-field .input-wrapper > button {
+.header-search-field .input-wrapper > button:first-of-type  {
+    display: flex;
+    width: 36px;
+    height: 36px;
+    box-shadow: none;
+    border-radius: 3.6px;
+    background: var(--colour-surface-200);
+    color: var(--colour-surface-900);
+    justify-content: center;
+    align-items: center;
+    font-weight: unset;
+}
+
+.header-search-field .input-wrapper > button:last-of-type  {
     display: flex;
     padding: 11.5px;
     width: 46px;
@@ -3620,7 +3633,7 @@ header.LoginHeader {
 }
 
 .header-search-field .input-wrapper > button:active,
-.header-search-field .input-wrapper > button[aria-expanded="true"] {
+.header-search-field .input-wrapper > button:last-of-type[aria-expanded="true"] {
     background: var(--colour-surface-900);
     color: var(--colour-surface-50);
 }

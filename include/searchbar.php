@@ -222,7 +222,6 @@ $selected_search_tab = getval("selected_search_tab", "search");
     >
         <?php generateFormToken("simple_search_form"); ?>
         <div class="input-wrapper">
-            <?php render_icon_wrapper_component(Icon::Search); ?>
             <input 
                 type="search"
                 name="search"
@@ -230,8 +229,13 @@ $selected_search_tab = getval("selected_search_tab", "search");
                 value="<?php echo escape(stripslashes($quicksearch)); ?>"
             >
             <button
+                type="submit"
+                class="<?php echo escape(Icon::Search->value); ?>"
+                aria-label="<?php echo escape(text('search_resources')); ?>"
+            ></button>
+            <button
                 type="button"
-                class="icon-sliders-horizontal"
+                class="<?php echo escape(Icon::SlidersHorizontal->value); ?>"
                 aria-label="<?php echo escape(text('search_filter_panel_toggle')); ?>"
                 aria-expanded="false"
                 aria-controls="search-filters-panel"

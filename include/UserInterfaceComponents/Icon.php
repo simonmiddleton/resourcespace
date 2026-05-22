@@ -20,4 +20,5 @@ enum Icon: string
     case Clock = 'icon-clock';
     case Rss = 'icon-rss';
     case Brain = 'icon-brain';
+    case SlidersHorizontal = 'icon-sliders-horizontal';
 }

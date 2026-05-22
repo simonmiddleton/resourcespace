@@ -26,7 +26,7 @@ ResourceSpace.Modules.Header = (() => {
 
             if (
                 // The open/close buttons for the search (filter) panel
-                e.target.matches('.input-wrapper > button')
+                e.target.matches('.input-wrapper > button:last-of-type')
                 || e.target.matches('section > button')
                 
                 // Clicking on the search (filter) panel links (except the clear filters ones), or on the search button
@@ -107,7 +107,7 @@ ResourceSpace.Modules.Header = (() => {
         const form = target.closest('form');
         const panel = document.getElementById('search-filters-panel');
         const isOpen = form.classList.toggle('filters-open');
-        form.querySelector('.input-wrapper > button')
+        form.querySelector('.input-wrapper > button:last-of-type')
             .setAttribute('aria-expanded', String(isOpen));
 
         if (isOpen) {
