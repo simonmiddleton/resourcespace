@@ -3641,7 +3641,6 @@ header.LoginHeader {
 .header-search-field #search-filters-panel {
     display: grid;
     padding: var(--space-16);
-    padding-right: var(--space-4);
     overflow-y: scroll;
     scrollbar-gutter: stable;
     position: fixed;
