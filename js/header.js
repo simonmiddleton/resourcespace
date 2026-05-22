@@ -29,15 +29,19 @@ ResourceSpace.Modules.Header = (() => {
                 e.target.matches('.input-wrapper > button:last-of-type')
                 || e.target.matches('section > button')
                 
-                // Clicking on the search (filter) panel links (except the clear filters ones), or on the search button
+                // Clicking on the search (filter) panel links (except the "Clear filters" one), or on the search button
                 // will close the panel
-                || e.target.matches('#simplesearchbuttons > a:not(:first-of-type) i')
-                || e.target.matches('#simplesearchbuttons > a:not(:first-of-type) span')
-                // Using e.detail to avoid trigger being called when the form is submitted on Enter (which seems to call
-                // click on the submit input virtually)
-                || (e.target.matches('#simplesearchbuttons > input') && e.detail > 0)
+                || e.target.closest('#simplesearchbuttons .search-actions-secondary')
+                || (
+                    e.target.matches('#simplesearchbuttons .search-actions-primary > input')
+                    // Using e.detail to avoid trigger being called when the form is submitted on Enter (which seems to
+                    // call click on the submit input virtually)
+                    && e.detail > 0
+                )
             ) {
                 toggleSearchPanel(e);
+            } else if (e.target.matches('.input-wrapper > button[type="submit"]')) {
+                closeSearchPanel();
             }
         });
 
