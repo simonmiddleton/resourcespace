@@ -118,7 +118,8 @@ $introtext = text("introtext");
                                 } else {
                                         ?>ModalLoad(this,true);<?php
                                 } ?>">
-                            <?php echo HELP_ICON . escape($lang["helpandadvice"]); ?>
+                            <i aria-hidden="true" class="icon-life-buoy"></i>
+                            <br /><?php echo escape(text('helpandadvice')); ?>
                         </a>
                     </li><?php
                 }

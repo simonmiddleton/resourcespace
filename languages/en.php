@@ -224,7 +224,7 @@ $lang["myrequests"] = "My requests";
 $lang["collections"] = "Collections";
 $lang["mycontributions"] = "Contributions";
 $lang["researchrequest"] = "Research request";
-$lang["helpandadvice"] = "Help and Advice";
+$lang["helpandadvice"] = "Help & advice";
 $lang['knowledgebase'] = "Knowledge Base";
 $lang["teamcentre"] = "Admin";
 
@@ -2553,7 +2553,7 @@ $lang["download_progress__introtext"] = "Your download will start shortly. When 
 $lang["downloadfile_nofile"] = "The file requested was not found.";
 $lang["edit__batch"] = "";
 $lang["edit__multiple"] = "Please select which fields you wish to overwrite. Fields you do not select will be left untouched.";
-$lang["help__introtext"] = '<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
+$lang["help__introtext"] = '<p>Get the most out of ResourceSpace. The Knowledge Base will help you use the system and the resources more effectively.</p><p><a href="https://www.resourcespace.com/knowledge-base/" target="_blank" rel="noopener noreferrer">ResourceSpace Knowledge Base</a></p>';
 $lang["home__restrictedtext"] = "Please click on the link that you were e-mailed to access the resources selected for you.";
 $lang["home__restrictedtitle"] = "Welcome to ResourceSpace [ver]";
 $lang["home__welcometext"] = "The simple, fast, &amp; free way to organise your digital assets.";
