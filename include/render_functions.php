@@ -7789,7 +7789,7 @@ function render_header_links(array $ctx): void
         $recenturl = generateURL("$baseurl/pages/search.php", $recent_url_params);
 
         $nav_links[] = [
-            'title' => '(lang)browse',
+            'title' => '(lang)recent',
             'link' => $recenturl,
         ];
     }
