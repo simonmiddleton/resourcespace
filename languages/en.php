@@ -224,7 +224,8 @@ $lang["myrequests"] = "My requests";
 $lang["collections"] = "Collections";
 $lang["mycontributions"] = "Contributions";
 $lang["researchrequest"] = "Research request";
-$lang["helpandadvice"] = "Knowledge Base";
+$lang["helpandadvice"] = "Help and Advice";
+$lang['knowledgebase'] = "Knowledge Base";
 $lang["teamcentre"] = "Admin";
 
 # footer link
@@ -3507,6 +3508,7 @@ $lang["manage_dash_tiles-tooltip"] = "Manage default user dash tiles";
 $lang["manage_external_shares-tooltip"] = "View and manage external share links";
 $lang["rse_analytics-tooltip"] = "Create charts of resource usage and system statistics";
 $lang["viewreports-tooltip"] = "View tables of data from the system";
+$lang["knowledgebase-tooltip"] = "View ResourceSpace (Knowledge Base) documentation";
 $lang["systemsetup-tooltip"] = "System setup area";
 $lang["page-title_user_group_management-tooltip"] = "Manage user groups and permissions";
 $lang["resource_types_manage-tooltip"] = "Create and configure resource types";

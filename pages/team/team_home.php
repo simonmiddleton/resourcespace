@@ -167,9 +167,16 @@ include "../../include/header.php";
                 </a>
             </li>
 
-            <?php
-            hook("customteamfunction");
+            <?php hook("customteamfunction"); ?>
 
+            <li title="<?php echo escape(text('knowledgebase-tooltip')); ?>">
+                <a href="https://www.resourcespace.com/knowledge-base/" target="_blank" rel="noopener noreferrer">
+                    <i aria-hidden="true" class="icon-book-marked"></i>
+                    <br /><?php echo escape(text('knowledgebase')); ?>
+                </a>
+            </li>
+
+            <?php
             # Get failed job count
             $pending = count(job_queue_get_jobs("", STATUS_ERROR, 0));
             # Include a link to the System Setup area for those with the appropriate permissions.
