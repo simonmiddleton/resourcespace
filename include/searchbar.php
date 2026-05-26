@@ -273,6 +273,10 @@ $selected_search_tab = getval("selected_search_tab", "search");
 
                     <?php
                     $types = get_resource_types("", true, false, true);
+                    $resource_type_filter_options = array_diff_key(
+                        array_column($types, 'name', 'ref'),
+                        array_flip($hide_resource_types)
+                    );
 
                     $simpleSearchFieldsAreHidden = hook("simplesearchfieldsarehidden");
                     hook("aftersearchbox");
@@ -283,10 +287,6 @@ $selected_search_tab = getval("selected_search_tab", "search");
                         hook('clearsearchcookies');
 
                         $global_option = ['Global' => $lang['all_resource_types']];
-                        $resource_type_filter_options = array_diff_key(
-                            array_column($types, 'name', 'ref'),
-                            array_flip($hide_resource_types)
-                        );
 
                         // Sometimes, e.g. after logging in, restypes = '' so ensure "All resource types" is preselected
                         if ($rt === []) {
@@ -446,9 +446,27 @@ $selected_search_tab = getval("selected_search_tab", "search");
                                     .get()
                                     // note: we leave the "Global" pseudo resource type alone
                                     .map(value => /^\d+$/.test(value) ? parseInt(value, 10) : value);
-                                let valid_field_resource_types = [];
-
                                 <?php
+                                /* 
+                                ---------------------------------------------------------------------------
+                                                                       | Metadata field types
+                                                                       |--------|--------------------------
+                                Use cases                              | Global | Specific (as applicable)
+                                ---------------------------------------|--------|--------------------------
+                                All resource types option (default)    | Show   | No show
+                                ---------------------------------------|--------|--------------------------
+                                Select a specific resource type option | Show   | Show
+                                ---------------------------------------|--------|--------------------------
+                                Select multiple resource types options | Show   | Show
+                                ---------------------------------------------------------------------------
+                                Note: the fields' global property refers to the field being applicable to all resource
+                                types wheras here, global also means you want to search for all resource types.
+                                */
+                                $valid_resource_types = array_keys($resource_type_filter_options);
+
+                                /** @var array Data structure used by JS */
+                                $js_fields_ds = [];
+
                                 # Show or hide each searchfield depending on whether the resource type for this field is selected
                                 # Exclude global fields
                                 for ($n = 0; $n < count($fields); $n++) {
@@ -465,100 +483,90 @@ $selected_search_tab = getval("selected_search_tab", "search");
                                         )
                                         && $fields[$n]["global"] != 1
                                     ) {
-                                        /* 
-                                        Uses cases:
-                                            - Global (allRTs; default) => show all the fields.
-                                            Note: the fields' global property refers to the field being applicable to
-                                            all resource types wheras here, global means you want to search all resource
-                                            types (i.e. show fields that are not global too).
-
-                                            - Select specific RTs => show applicable fields and hide inapplicable ones
-                                        */
                                         $field_rts = array_map(
                                             intval(...),
                                             array_filter(explode(',', (string) $fields[$n]['resource_types']))
                                         );
-                                        $valid_resource_types = array_values(
-                                            array_diff(
-                                                array_map(intval(...), array_column($types, 'ref')),
-                                                $hide_resource_types
-                                            )
-                                        );
-                                        $valid_field_rts = array_merge(
-                                            ['Global'], # pseudo resource type <=> search by all resource types
-                                            array_values(array_intersect($valid_resource_types, $field_rts))
-                                        );
-                                    ?>
-                                    valid_field_resource_types = <?php echo encode_js_value($valid_field_rts); ?>;
 
-                                    if (!selected_resource_types.some(rt => valid_field_resource_types.includes(rt))) {
-
-                                        // Process unchecked element
-                                        ssearchfieldname = 'simplesearch_<?php echo $fields[$n]["ref"]; ?>';
-                                        document.getElementById(ssearchfieldname).style.display = 'none';
-
-                                        // Search field is hidden, so add it to the list of hidden search field names for use when searchbar is redisplayed
-                                        ssearchhiddenfields.push(ssearchfieldname)
-
-                                        // Also deselect it.
-                                        <?php
-                                        switch ($fields[$n]['type']) {
-                                            case FIELD_TYPE_DATE_AND_OPTIONAL_TIME:
-                                            case FIELD_TYPE_EXPIRY_DATE:
-                                            case FIELD_TYPE_DATE:
-                                                ?>
-                                                document.getElementById('field_<?php echo escape($fields[$n]["ref"]) ?>-y').value = '';
-                                                document.getElementById('field_<?php echo escape($fields[$n]["ref"]) ?>-m').value = '';
-                                                <?php
-                                                if ($searchbyday) {
-                                                    ?>
-                                                    document.getElementById('field_<?php echo escape($fields[$n]["ref"]) ?>-d').value = '';
-                                                    <?php
-                                                }
-                                                break;
-                                            case FIELD_TYPE_CATEGORY_TREE:
-                                                ?>
-                                                document.getElementById('field_<?php echo escape($fields[$n]["name"]) ?>').value = '';
-                                                <?php
-                                                break;
-                                            case FIELD_TYPE_CHECK_BOX_LIST:
-                                            case FIELD_TYPE_DROP_DOWN_LIST:
-                                            case FIELD_TYPE_RADIO_BUTTONS:
-                                                ?>
-                                                jQuery('select[name="nodes_searched[<?php echo $fields[$n]["ref"]; ?>]"]').val('');
-                                                <?php
-                                                break;
-                                            default:
-                                                if ($fields[$n]['field_constraint'] == 1) { ?>
-                                                    document.getElementById('field_<?php echo escape($fields[$n]["name"]) ?>').value = '';  
-                                                <?php } else { ?>
-                                                    document.getElementById('field_<?php echo escape($fields[$n]["ref"]) ?>').value = '';
-                                                <?php }
-                                        }
-                                        ?>
-                                    } else {
-                                        // Process checked element
-                                        <?php
-                                        if (in_array($fields[$n]['type'], array(2,3)) || ($fields[$n]["type"] == 9 && $simple_search_show_dynamic_as_dropdown)) {
-                                            ?>
-                                            document.getElementById('field_<?php echo $fields[$n]["ref"]; ?>').disabled=false;
-                                            <?php
-                                        }
-                                        ?>
-
-                                        ssearchfieldname = 'simplesearch_<?php echo $fields[$n]["ref"]; ?>';
-                                        document.getElementById(ssearchfieldname).style.display = '';
-
-                                        // Search field is no longer hidden, so remove it from the list of hidden search field names for use when searchbar is redisplayed
-                                        ssindex = ssearchhiddenfields.indexOf(ssearchfieldname);
-                                        if (ssindex > -1)  {
-                                            ssearchhiddenfield.splice(ssindex, 1);
-                                        }
-                                    }
-                                    <?php
+                                        $js_fields_ds[] = [
+                                            'ref' => $fields[$n]['ref'],
+                                            'name' => $fields[$n]['name'],
+                                            'type' => $fields[$n]['type'],
+                                            'applicable_resource_types' => array_values(
+                                                array_intersect($valid_resource_types, $field_rts)
+                                            ),
+                                            'onShowEnable' => (
+                                                in_array(
+                                                    $fields[$n]['type'],
+                                                    [FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_DROP_DOWN_LIST]
+                                                )
+                                                || (
+                                                    $fields[$n]['type'] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST
+                                                    && $simple_search_show_dynamic_as_dropdown
+                                                )
+                                            ),
+                                        ];
                                 }
                             }
                             ?>
+                            const fields = <?php echo encode_js_value($js_fields_ds); ?>;
+                            const actions = {
+                                enable: field => {
+                                    const el = document.getElementById(`field_${field.ref}`);
+                                    if (field.onShowEnable && el) el.disabled = false;
+                                },
+
+                                reset: field => {
+                                    // Covers all field types (handles non-existent elements gracefully)
+                                    // Generic
+                                    jQuery(`field_${field.ref}`).val('');
+                                    jQuery(`field_${field.name}`).val('');
+                                    jQuery(`select[name="nodes_searched[${field.ref}]"]`).val('');
+
+                                    // Date specific
+                                    jQuery(`field_${field.ref}-y`).val('');
+                                    jQuery(`field_${field.ref}-m`).val('');
+                                    jQuery(`field_${field.ref}-d`).val('');
+                                },
+                            };
+
+                            fields.forEach(field => {
+                                console.group('Checking field #%s', field.ref);
+                                const searchFieldName = `simplesearch_${field.ref}`;
+                                const searchField = document.getElementById(searchFieldName);
+
+                                if (!searchField) {
+                                    return;
+                                    console.groupEnd();
+                                }
+
+                                const showField = (
+                                    selected_resource_types.length === field.applicable_resource_types.length
+                                    && selected_resource_types.every(rt =>
+                                        field.applicable_resource_types.includes(rt)
+                                    )
+                                );
+                                console.debug('selected_resource_types = %o', selected_resource_types);
+                                console.debug('field.applicable_resource_types = %o', field.applicable_resource_types);
+                                console.debug('showField = %o', showField);
+
+                                if (showField) {
+                                    actions.enable(field);
+                                    searchField.style.display = '';
+
+                                    // Search field is no longer hidden, so remove it from the list of hidden search
+                                    // field names for use when searchbar is redisplayed
+                                    ssindex = ssearchhiddenfields.indexOf(searchFieldName);
+                                    if (ssindex > -1)  {
+                                        ssearchhiddenfields.splice(ssindex, 1);
+                                    }
+                                } else {
+                                    searchField.style.display = 'none';
+                                    ssearchhiddenfields.push(searchFieldName)
+                                    actions.reset(field);
+                                }
+                                console.groupEnd();
+                            });
 
                             // Save the hidden field names for use when searchbar is redisplayed
                             ssearchhiddenfieldsstring = ssearchhiddenfields.join(',');
