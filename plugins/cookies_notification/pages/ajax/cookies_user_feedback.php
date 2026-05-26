@@ -10,7 +10,7 @@ if (
     !is_null($accepted_cookies_use)
     && (int) $accepted_cookies_use === 0
 ) {
-    rs_setcookie('accepted_cookies_use', '', -1, '', '', substr($baseurl, 0, 5) == 'https', false);
+    rs_setcookie('accepted_cookies_use', '', -1, '', '', substr($baseurl, 0, 5) == 'https', false, "Lax");
 
     $return['error'] = array(
         'status' => 307,
