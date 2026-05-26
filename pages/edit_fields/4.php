@@ -19,7 +19,7 @@ if (
         || $ref > 0
         || '' != getval('submitted', '')
     )
-    && (!empty(array_filter([$value ?? '', $y, $m, $d, $h, $i], 'strlen')))
+    && !empty(array_filter([$value ?? '', $y, $m, $d, $h, $i], 'strlen'))
     && $resetform == ''
 ) {
     if ($value != "") {
