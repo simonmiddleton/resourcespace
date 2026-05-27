@@ -448,17 +448,17 @@ $selected_search_tab = getval("selected_search_tab", "search");
                                     .map(value => /^\d+$/.test(value) ? parseInt(value, 10) : value);
                                 <?php
                                 /* 
-                                ---------------------------------------------------------------------------
-                                                                       | Metadata field types
-                                                                       |--------|--------------------------
-                                Use cases                              | Global | Specific (as applicable)
-                                ---------------------------------------|--------|--------------------------
-                                All resource types option (default)    | Show   | No show
-                                ---------------------------------------|--------|--------------------------
-                                Select a specific resource type option | Show   | Show
-                                ---------------------------------------|--------|--------------------------
-                                Select multiple resource types options | Show   | Show
-                                ---------------------------------------------------------------------------
+                                ---------------------------------------------------------------------------------------------------
+                                                                       | Metadata fields
+                                                                       |-----------------------------------------------------------
+                                Use cases                              | Global | Specific (X) | Specific (X, Z) | Specific (Y, Z)
+                                ---------------------------------------|--------|--------------|-----------------|-----------------
+                                All resource types option (default)    | Show   | No show      | No show         | No show
+                                ---------------------------------------|--------|--------------|-----------------|-----------------
+                                Select a single resource type: X       | Show   | Show         | Show            | No show
+                                ---------------------------------------|--------|--------------|-----------------|-----------------
+                                Select multiple resource types: X, Z   | Show   | No show      | Show            | No show
+                                ---------------------------------------------------------------------------------|-----------------
                                 Note: the fields' global property refers to the field being applicable to all resource
                                 types wheras here, global also means you want to search for all resource types.
                                 */
@@ -489,9 +489,8 @@ $selected_search_tab = getval("selected_search_tab", "search");
                                         );
 
                                         $js_fields_ds[] = [
-                                            'ref' => $fields[$n]['ref'],
+                                            'ref' => (int) $fields[$n]['ref'],
                                             'name' => $fields[$n]['name'],
-                                            'type' => $fields[$n]['type'],
                                             'applicable_resource_types' => array_values(
                                                 array_intersect($valid_resource_types, $field_rts)
                                             ),
@@ -520,7 +519,13 @@ $selected_search_tab = getval("selected_search_tab", "search");
                                     // Covers all field types (handles non-existent elements gracefully)
                                     // Generic
                                     jQuery(`field_${field.ref}`).val('');
-                                    jQuery(`field_${field.name}`).val('');
+
+                                    if (/^[A-Za-z0-9_-]+$/.test(field.name)) {
+                                        jQuery(`field_${field.name}`).val('');
+                                    } else {
+                                        console.warn('Invalid field name - %s', field.name);
+                                    }
+
                                     jQuery(`select[name="nodes_searched[${field.ref}]"]`).val('');
 
                                     // Date specific
@@ -532,20 +537,30 @@ $selected_search_tab = getval("selected_search_tab", "search");
 
                             fields.forEach(field => {
                                 console.group('Checking field #%s', field.ref);
+
+                                if (!Number.isInteger(field.ref)) {
+                                    console.groupEnd();
+                                    return;
+                                }
+
                                 const searchFieldName = `simplesearch_${field.ref}`;
                                 const searchField = document.getElementById(searchFieldName);
 
                                 if (!searchField) {
-                                    return;
                                     console.groupEnd();
+                                    return;
                                 }
 
-                                const showField = (
-                                    selected_resource_types.length === field.applicable_resource_types.length
-                                    && selected_resource_types.every(rt =>
-                                        field.applicable_resource_types.includes(rt)
-                                    )
+                                const checkApplicableResourceTypes = rt => field.applicable_resource_types.includes(rt);
+                                const checkSingleResourceType = (
+                                    selected_resource_types.length === 1
+                                    && selected_resource_types.some(checkApplicableResourceTypes)
                                 );
+                                const checkMultipleResourceTypes = (
+                                    selected_resource_types.length === field.applicable_resource_types.length
+                                    && selected_resource_types.every(checkApplicableResourceTypes)
+                                );
+                                const showField = checkSingleResourceType || checkMultipleResourceTypes;
                                 console.debug('selected_resource_types = %o', selected_resource_types);
                                 console.debug('field.applicable_resource_types = %o', field.applicable_resource_types);
                                 console.debug('showField = %o', showField);
