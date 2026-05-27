@@ -25,3 +25,7 @@ $lang["page-title_google_vision_process_existing"] = 'গুগল ভিশন 
 $lang["page-title_google_vision_setup"] = 'গুগল ভিশন প্লাগইন সেটআপ করুন';
 $lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
 $lang["page-title_google_vision_test"] = 'Google Vision Test';
+$lang["google_vision"] = 'গুগল ভিশন';
+$lang["google_vision_process_existing"] = 'অপ্রক্রিয়াজাত সম্পদ প্রক্রিয়া করুন';
+$lang["google_vision_process_existing_configure"] = 'অপ্রক্রিয়াজাত সম্পদ প্রক্রিয়াকরণের জন্য কাজ কনফিগার করুন';
+$lang["google_vision_process_existing_collection_refs_help"] = 'এই বিকল্পটি সেট করলে শুধুমাত্র তালিকাভুক্ত সংগ্রহের সম্পদগুলি প্রক্রিয়া করা হবে। যদি কোনও সংগ্রহ নির্দিষ্ট না করা হয় তবে সমস্ত উপযুক্ত সম্পদ প্রক্রিয়া করা হবে। সংগ্রহগুলি কমা দিয়ে আলাদা তালিকা বা রেঞ্জ ব্যবহার করে নির্দিষ্ট করা যেতে পারে যেমন 100,105,110-115';

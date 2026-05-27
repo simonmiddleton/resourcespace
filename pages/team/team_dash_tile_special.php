@@ -47,7 +47,7 @@ include "../../include/header.php";
             </a>
         </li>
         <li>
-            <a href="<?php echo $baseurl . "/pages/dash_tile.php?create=true&tltype=ftxt&freetext=true&title=Upload&nostyleoptions=true&tile_audience=true&link=pages/edit.php%3Fref=-[userref]%26uploader=batch";?>">
+            <a href="<?php echo $baseurl . "/pages/dash_tile.php?create=true&tltype=conf&tlstyle=upld&title=Upload&freetext=dashtile_upload&nostyleoptions=true&tile_audience=true&link=pages/edit.php%3Fref=-[userref]%26uploader=batch";?>">
                 <?php echo escape($lang["createdashtileuserupload"]);?>
             </a>
         </li>

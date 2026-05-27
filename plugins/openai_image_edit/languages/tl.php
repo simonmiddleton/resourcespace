@@ -30,3 +30,4 @@ $lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
 $lang["page-title_openai_image_edit_get_png"] = 'OpenAI Kumuha ng PNG';
 $lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI I-save ang Alternatibo';
 $lang["page-title_openai_image_edit_save_new"] = 'OpenAI I-save ang Bago';
+$lang["openai_image_edit__introtext"] = 'Ilagay sa kahon ng prompt ang paglalarawan ng mga pagbabago na nais mong gawin sa larawan. Opsyonal, gamitin ang brush upang burahin ang mga bahagi ng larawan, na pipilitin ang muling paggawa ng mga lugar na iyon.';

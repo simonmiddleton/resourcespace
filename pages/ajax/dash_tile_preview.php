@@ -15,6 +15,7 @@ global $userref,$baseurl_short;
 $tile_type = getval("tltype", "");
 $tile_style = getval("tlstyle", "");
 $promoted_image = getval('promimg', '');
+$data = getval('data', '');
 
 $tile                   = array();
 $tile['ref']            = getval('edit', '');
@@ -28,10 +29,11 @@ $tile['tlsize']         = ('double' === getval('tlsize', '') ? 'double' : '');
 $tile['url'] = generateURL(
     'pages/ajax/dash_tile_preview.php',
     [
-        'tltype' => $tile_type,
-        'tlsize' => $tile['tlsize'],
+        'tltype'  => $tile_type,
+        'tlsize'  => $tile['tlsize'],
         'tlstyle' => $tile_style,
         'promimg' => $promoted_image,
+        'data'    => $data
     ]
 );
 $tile_id = "previewdashtile";

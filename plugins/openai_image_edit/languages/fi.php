@@ -30,3 +30,4 @@ $lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
 $lang["page-title_openai_image_edit_get_png"] = 'OpenAI Hae PNG';
 $lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI Tallenna vaihtoehto';
 $lang["page-title_openai_image_edit_save_new"] = 'OpenAI Tallenna Uusi';
+$lang["openai_image_edit__introtext"] = 'Kirjoita kehotekenttään kuvaus muutoksista, joita haluaisit kuvalle tehtävän. Voit halutessasi käyttää sivellintä poistaaksesi osia kuvasta, mikä pakottaa näiden alueiden uudelleenluomisen.';

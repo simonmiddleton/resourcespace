@@ -85,6 +85,7 @@ $lang["fieldtype-dynamic_keywords_list"] = "Dynamic keywords list";
 $lang["fieldtype-radio_buttons"] = "Radio buttons";
 $lang["fieldtype-warning_message"] = "Warning message";
 $lang["fieldtype-date_range"] = "Date Range";
+$lang["fieldtype-geo_location"] = "Geolocation";
 
 # Property labels (for the default properties)
 $lang["property-reference"] = "Reference";
@@ -180,6 +181,13 @@ $lang["information-derestrict_filter"] = "Derestrict filter. Intended for use in
 $lang["information-push_metadata"] = "If set, the metadata for this resource will be displayed on the resource view page for any related resources. For example, you may relate several photos to a person resource. If this property is set on the person resource, then the person metadata will appear on all related photo resource records, avoiding duplication of data in the system.";
 $lang["property-sort_method"] = "Sort Method";
 $lang["information-sort_method"] = "Ordering to use when displaying search results ordered by this field.";
+$lang["property-geomapping"] = "Geolocation type";
+$lang["information-geomapping"] = "Store the geolocation in this field as either latitude, longitude, or both.<br />Only a single field can be set to both or one field to each latitude and longitude.<br />Only available for singe line text fields.";
+$lang["disabled-geomapping-title"] = "Geolocation is set to a different field or fields, to change it to this field it must be removed from other fields";
+$lang["geo_location-none"] = "None";
+$lang["geo_location-latitude"] = "Latitude";
+$lang["geo_location-longitude"] = "Longitude";
+$lang["geo_location-both"] = "Both";
 $lang["property-query"] = "Query";
 
 $lang["information-id"] = "Note: 'Id' below MUST be set to a three character unique code.";
@@ -1362,12 +1370,6 @@ $lang["setup-login_to"] = "Login to";
 $lang["setup-configuration_file_output"] = "Configuration file output";
 $lang["more-information"] = "More information";
 $lang["setup-structuralplugins"] = "System templates";
-$lang["setup-headercolourstyleoverride"] = "Custom header background colour";
-$lang["setup-headerlinkstyleoverride"] = "Custom header link colour";
-$lang["setup-homecolourstyleoverride"] = "Custom intro text, dash tile and simple search colour";
-$lang["setup-collectionbarbackground"] = "Custom collection bar primary colour";
-$lang["setup-collectionbarforeground"] = "Custom collection bar secondary colour";
-$lang["setup-buttoncolouroverride"] = "Custom button colour";
 
 # Collection log - actions
 $lang["collectionlog"] = "Collection log";
@@ -2083,6 +2085,9 @@ $lang["sort-method_default"] = "Default - Alphanumeric";
 $lang["sort-method_dot-notation"] = "Accession number - dot notation";
 $lang["save-error"] = "Error auto saving - please save manually";
 $lang["save-error-invalid"] = "Error auto saving - please review the content and try again";
+$lang["save-error-invalid-latlong"] = "Error auto saving - geolocation invalid, Use: latitude, longitude (e.g. 40.7128, -74.0060). Resource location has not been updated.";
+$lang["save-error-invalid-lat"] = "Error auto saving - geo latitude invalid, must be between -90 and 90. Resource location has not been updated.";
+$lang["save-error-invalid-long"] = "Error auto saving - geo longitude invalid, must be between -180 and 180. Resource location has not been updated.";
 $lang["save-conflict-error"] = "Edit conflict. Please reload the page";
 $lang["save-conflict-multiple"] = "Edit conflict. Please reload the page";
 $lang["save-conflict-title"] = "Edit conflict";
@@ -2215,6 +2220,9 @@ $lang["related_resource_confirm_delete"] = "This will remove the relationship bu
 $lang["batch_replace_filename_intro"] = "To replace a batch of resources you can upload files with names matching the unique resource IDs. Alternatively you can select a metadata field containing the file names and the system will look for a match with the uploaded file names to identify the file that needs to be replaced";
 $lang["batch_replace_use_resourceid"] = "Match filenames with resource IDs";
 $lang["batch_replace_filename_field_select"] = "Please select the field containing the file name.";
+$lang["batch_replace_alternatives"] = "Replace original files or alternative files";
+$lang["batch_replace_upload_resources"] = "Original files";
+$lang["batch_replace_upload_alternatives"] = "Alternative files";
 $lang["plupload_log_intro"] = "Upload summary - server time : ";
 $lang["no_access_to_collection"] = "Sorry, you don't have access to this collection.";
 $lang["internal_share_grant_access"] = "Grant open access to selected internal users?";
@@ -2669,6 +2677,9 @@ $lang['upgrade_026_notification'] = "The upgrade has deprecated some configurati
 $lang['upgrade_026_error_unable_to_set_config_system_wide'] = "Unable to set system wide config option 'download_filename_format' to '%format%'. Please retry manually.";
 $lang['upgrade_026_error_unable_to_process_deprecated_config_options'] = "Unable to process deprecated config options for %entity%. Please retry manually. Reason:-\r\n\r\n%error%";
 $lang['upgrade_028_notify_config_not_set'] = "Unable to set the (system wide) config option %name% to %value%";
+$lang['or'] = 'or';
+$lang['view_all_fcs'] = 'View all featured collections';
+$lang['dashtile_upload'] = 'Add resources to your system';
 
 /* User group dash tiles */
 $lang['manage_user_group_dash_tiles']  = 'Manage user group dash tiles';
@@ -2864,6 +2875,10 @@ $lang['systemconfig_debug'] = 'Debug';
 $lang['systemconfig_debug_log_on_specific_user'] = "On (specific user)";
 $lang['systemconfig_use_native_input_for_date_field'] = "Use native date input for displaying a 'date' metadata field type";
 $lang['systemconfig_native_date_input_no_partials_supported'] = "IMPORTANT: If enabled, partial dates (e.g May 2023) will no longer be supported and existing data will get cleared after the next resource edit.";
+$lang["blue"] = "Blue";
+$lang["green"] = "Green";
+$lang["red"] = "Red";
+$lang["purple"] = "Purple";
 
 /* Error Messages */
 $lang['error_check_html_first'] = 'Please Check HTML! The text used does not contain valid HTML.';
@@ -2964,6 +2979,7 @@ $lang["job_queue_type"] = "Job type";
 $lang["job_queue_duplicate_message"] = "Job creation failed. There is already a matching job in the queue.";
 $lang["alternative_file_created"] = "Alternative file successfully created.";
 $lang["alternative_file_creation_failed"] = "Alternative file creation failed";
+$lang["alternative_file_replaced"] = "Alternative file successfully replaced";
 $lang["download_file_created"] = "Your file is ready for download.";
 $lang["download_file_creation_failed"] = "Your file download request failed.";
 $lang["replace_resource_preserve_original"] = "Keep the existing file as an alternative?";
@@ -2971,6 +2987,8 @@ $lang["replace_resource_original_description"] = "Original %EXTENSION file"; // 
 $lang['replace_resource_original_alt_filename'] = 'Alternative filename';
 $lang['jq_create_previews_success_text'] = 'Previews created for resource #%RESOURCE successfully';
 $lang['jq_create_previews_failure_text'] = 'Failed to create previews for resource #%RESOURCE';
+$lang['jq_create_alt_previews_success_text'] = 'Previews created for alternative file #%ALTFILE successfully';
+$lang['jq_create_alt_previews_failure_text'] = 'Falied to create previews for alternative file #%ALTFILE';
 $lang['jq_notify_user_preparing_archive'] = 'Preparing archive for collection download. You can safely navigate away from this page and will receive a notification once the archive is ready for download.';
 
 /* Manage external shares */
@@ -3107,6 +3125,8 @@ $lang["error_upload_replace_multiple_matching_files"] = "Multiple valid resource
 $lang["error_upload_invalid_file"] = "Invalid file type: [filetype]";
 $lang["error_upload_duplicate_file"]  = "Duplicate file upload, file matches resources: [resources]";
 $lang["error_upload_file_move_failed"] = "Failed to move uploaded file. Please check the size of the file you are trying to upload.";
+$lang["error_upload_replace_alternative_file_not_found"] = "Failed to update alternative file. No matching alternative file record found with filename [filename]";
+$lang["error_upload_replace_alternative_multiple_found"] = "Failed to update alternative file. Multiple matching alternative file records found with filename [filename], limit by resource ID or collection";
 $lang["error_fail_save"] = "Unable to save";
 $lang['error_file_upload_cond-InvalidUploadPath'] = 'Invalid upload path detected';
 $lang['error_file_upload_cond-SpecialFile'] = '"Special" file detected which is not allowed';
@@ -3156,6 +3176,7 @@ $lang["share-password-not-set"] = "External shares must be protected by a passwo
 $lang["oj-collection-download-success-text"] = "Collection ready for download";
 $lang["oj-collection-download-failure-text"] = "Unable to prepare collection archive for download";
 $lang["oj-batch-replace-local-success-text"] = "Batch replace has successfully replaced %TOTALRESOURCES resources";
+$lang["oj-batch-replace-local-alternatives-success-text"] = "Batch replace has successfully replaced %TOTALFILES alternative files";
 $lang["oj-batch-replace-local-failure-text"] = "Batch replace failed. Please check logs for errors";
 $lang["oj-creation-failure-text"]            = "An error occurred. Failed to create offline job";
 $lang["oj-creation-success"]                 = "Offline job [jobnumber] created. You will be notified when it has completed";
@@ -3216,6 +3237,9 @@ $lang["replacebatch_resource_min"]      = "Lowest resource ID to replace (ignore
 $lang["replacebatch_resource_max"]      = "Highest resource ID to replace";
 $lang["replacebatch_collection"]        = "Enter a collection ID if you only want to replace resources within this collection";
 $lang["replacebatch_job_created"]       = "Batch replacement job created. You will receive a notification message when the job has completed.";
+$lang["replacebatch_collection_alternatives"]   = "Enter a collection ID if you only want to add or replace alternative files to resources within this collection";
+$lang["replacebatch_resource_min_alternatives"] = "Lowest resource ID to replace alternative files for (ignored if a collection is specified)";
+$lang["replacebatch_resource_max_alternatives"] = "Highest resource ID to replace alternative files for";
 
 $lang["error_saveorigalternative"]      = "Error saving original as alternative file";
 $lang["start"]                          = "Start";

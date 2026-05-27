@@ -266,7 +266,7 @@ function message_get(array &$messages, int $user, bool $expired = false, bool $s
  */
 function message_add($users, $text, $url = "", $owner = null, $notification_type = MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN, $ttl_seconds = MESSAGE_DEFAULT_TTL_SECONDS, $related_activity = 0, $related_ref = 0)
 {
-    global $userref,$applicationname,$lang, $baseurl, $baseurl_short,$header_colour_style_override;
+    global $userref,$applicationname,$lang, $baseurl, $baseurl_short;
 
     if (!is_int_loose($notification_type)) {
         $notification_type = intval($notification_type); // make sure this in an integer
@@ -314,7 +314,7 @@ function message_add($users, $text, $url = "", $owner = null, $notification_type
                 $headerimghtml = "";
                 $img_url = get_header_image(true);
                 $img_div_style = "max-height:50px;padding: 5px;";
-                $img_div_style .= "background: " . ((isset($header_colour_style_override) && $header_colour_style_override != '') ? $header_colour_style_override : "rgba(0, 0, 0, 0.6)") . ";";
+                $img_div_style .= "background: rgba(0, 0, 0, 0.6);";
                 $headerimghtml = '<div style="' . $img_div_style . '"><img src="' . $img_url . '" style="max-height:50px;"  /></div><br /><br />';
 
                 if ($url !== '' && strpos($message_text, $url) === false) {
@@ -917,7 +917,7 @@ function send_user_message($users, $text)
  */
 function send_user_notification(array $users, $notifymessage, $forcemail = false)
 {
-    global $userref, $lang, $plugins, $header_colour_style_override;
+    global $userref, $lang, $plugins;
 
     // Need to global $applicationname as it is used inside the lang files
     global $applicationname;
@@ -980,7 +980,7 @@ function send_user_notification(array $users, $notifymessage, $forcemail = false
         // Add header image to email if not using template
         $img_url = get_header_image(true);
         $img_div_style = 'float: left;width: 100%;max-height:50px;padding: 5px;';
-        $img_div_style .= "background: " . ((isset($header_colour_style_override) && $header_colour_style_override != '') ? $header_colour_style_override : "#fff") . ";";
+        $img_div_style .= "background: #fff;";
 
         $headerimghtml .= '<div style="' . $img_div_style . '">';
         $headerimghtml .= '<div style="float: left;">';

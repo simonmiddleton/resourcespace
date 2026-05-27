@@ -52,3 +52,4 @@ $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='Peidiwch â gwirio FQDN y gwein
 $lang["ldapserver"]='LDAP Server/URL e.e.ldaps://hostname:port';
 $lang["page-title_simpleldap_ajax_test_auth"] = 'Prawf Dilysu LDAP';
 $lang["page-title_simpleldap_setup"] = 'Gosod Plugin LDAP Symlig';
+$lang["simpleldap_userlimit_error"] = 'Ni ellir creu\'r defnyddiwr oherwydd bod y terfyn defnyddwyr wedi\'i gyrraedd. Cysylltwch â\'ch gweinyddwr.';

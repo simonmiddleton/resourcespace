@@ -6,3 +6,4 @@ $lang["sensitive_images_help"]='ਮੈਟਾਡੇਟਾ ਫੀਲਡ ਨੂੰ 
 $lang["sensitive_images_field"]='ਮੈਟਾਡੇਟਾ ਫੀਲਡ ਜਿਸ ਵਿੱਚ ਚਿੱਤਰ ਸੰਵੇਦਨਸ਼ੀਲ ਹੋਣ ਦਾ ਕਾਰਨ ਹੈ।';
 $lang["sensitive_images_blur_level"]='ਸੰਵੇਦਨਸ਼ੀਲ ਚਿੱਤਰ ਧੁੰਦਲਾਪਨ ਪੱਧਰ<br>(1=ਘੱਟ, 6=ਸਭ ਤੋਂ ਵੱਧ)';
 $lang["page-title_sensitive_images_setup"] = 'ਸੰਵੇਦਨਸ਼ੀਲ ਚਿੱਤਰ ਪਲੱਗਇਨ ਸੈਟਅਪ ਕਰੋ';
+$lang["sensitive_images_show"] = 'ਦਿਖਾਉਣ ਲਈ ਚਿੱਤਰ \'ਤੇ ਕਲਿੱਕ ਕਰੋ।';

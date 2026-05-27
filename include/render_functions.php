@@ -380,11 +380,15 @@ function render_search_field(
 
                 if (
                     !field<?php echo escape($field['ref']); ?>valuefound
-                    && ((selectedtypes.includes(<?php echo json_encode($scriptcondition['resource_types']); ?>))
-                    || <?php echo escape(empty($scriptcondition['resource_types'])) ? 'true' : 'false'; ?>)
-                ) {
-                    field<?php echo escape($field['ref']); ?>visibility = false;
-                }
+                    && (<?php if ($forsearchbar) { ?>
+                        !(ssearchhiddenfieldsarray.includes("<?php echo escape("simplesearch_{$scriptcondition['field']}") ?>"))
+                    <?php } else { ?>
+                        (selectedtypes.includes(<?php echo encode_js_value($scriptcondition['resource_types']); ?>))
+                    <?php } ?>
+                        || <?php echo escape(empty($scriptcondition['resource_types'])) ? 'true' : 'false'; ?>)
+                    ) {
+                        field<?php echo escape($field['ref']); ?>visibility = false;
+                    }
 
             <?php
                 echo "// End of checking values on field ".$scriptcondition['field']."\n\n            ";
@@ -4340,7 +4344,7 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
         # Do not convert HTML formatted fields (that are already HTML) to HTML. Added check for extracted fields set to 
         # TinyMCE that have not yet been edited.
         if(
-            ($field["type"] != FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE && !(in_array($field['type'], $FIXED_LIST_FIELD_TYPES) && is_authenticated()) && (eval_check_signed($field['value_filter'])==''))
+            ($field["type"] != FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE && !(in_array($field['type'], $FIXED_LIST_FIELD_TYPES) && is_authenticated()) && (eval_check_signed((string) $field['value_filter'])==''))
             || ($field["type"] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE && $value == strip_tags($value))
             )
             {
@@ -6808,6 +6812,65 @@ function admin_resource_type_field_option(string $propertyname,string $propertyt
             <?php }
             ?>
             </select>
+            <?php
+        } elseif ($propertyname == 'geomapping') {
+            $geo_location_fields = ps_array("SELECT geomapping value FROM resource_type_field WHERE geomapping !=0 ORDER BY geomapping", []);
+            $disabled_options = [];
+            if (!empty($geo_location_fields) && [$currentvalue] != $geo_location_fields) {
+                // At least one other field is using geo mapping
+                if (in_array(FIELD_GEO_LOCATION::both->value, $geo_location_fields)) {
+                    // A field is set to both, no options here except none
+                    $disabled_options = [
+                        FIELD_GEO_LOCATION::both,
+                        FIELD_GEO_LOCATION::latitude,
+                        FIELD_GEO_LOCATION::longitude
+                    ];
+                } else {
+                    // At least one field is lat or long, only allow one of these if not set elsewhere
+                    $disabled_options[] = FIELD_GEO_LOCATION::both;
+                    if (in_array(FIELD_GEO_LOCATION::latitude->value, $geo_location_fields)
+                        && $currentvalue != FIELD_GEO_LOCATION::latitude->value) {
+                        $disabled_options[] = FIELD_GEO_LOCATION::latitude;
+                    }
+                    if (in_array(FIELD_GEO_LOCATION::longitude->value, $geo_location_fields)
+                        && $currentvalue !=FIELD_GEO_LOCATION::longitude->value) {
+                        $disabled_options[] = FIELD_GEO_LOCATION::longitude;
+                    }
+                }
+            }
+            ?>
+            <select 
+                class="stdwidth"
+                id="field_edit_geomapping"
+                name="geomapping"
+                <?php if (count($disabled_options) == 3) {?>
+                    disabled
+                    title="<?php echo escape($lang["disabled-geomapping-title"]);?>"
+                <?php } ?>
+                >
+            <?php 
+            foreach(FIELD_GEO_LOCATION::cases() as $case) {
+                $selected = $case->value === $currentvalue ? 'selected' : '';
+                $disabled = in_array($case, $disabled_options) ? 'disabled' : '';
+                $value = "\"$case->value\" $selected $disabled";
+                ?>
+                <option
+                    value=<?php echo $value; ?>
+                    ><?php echo escape($case->i18n($lang)); ?>
+                </option>
+            <?php }
+            ?>
+            </select>
+            <script>
+                jQuery(document).ready(function()  {
+                    var selectedValue = jQuery('#field_edit_type').val();
+                    var geoSelect = jQuery('#field_edit_<?php echo escape((string) $propertyname); ?>');
+
+                    if (selectedValue !== '<?php echo FIELD_TYPE_TEXT_BOX_SINGLE_LINE; ?>') {
+                        geoSelect.prop('disabled', true).val(0);
+                    }
+                });
+            </script>
             <?php
         }
         elseif($type==1)

@@ -10,3 +10,8 @@ $lang["whisper_transcript"] = 'Buat file transkrip dan tambahkan sebagai unduhan
 $lang["whisper_transcript_name"] = 'Transkrip yang dihasilkan secara otomatis';
 
 $lang["page-title_whisper_setup"] = 'Pengaturan Plugin Whisper';
+$lang["whisper_cron_enable"] = 'Aktifkan pemrosesan sumber daya yang belum diproses melalui pekerjaan Cron terjadwal';
+$lang["whisper"] = 'Bisikan';
+$lang["whisper_process_existing"] = 'Proses sumber daya yang belum diproses';
+$lang["whisper_process_existing_intro"] = 'Buat pekerjaan untuk memulai pemrosesan audio Whisper di sini - pekerjaan ini tidak memerlukan parameter apa pun sehingga dapat dimulai selama tidak ada pekerjaan lain yang tertunda dari tipe ini.';
+$lang["whisper_process_existing_configure"] = 'Konfigurasikan pekerjaan untuk memproses file dengan Whisper';

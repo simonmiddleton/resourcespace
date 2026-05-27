@@ -53,3 +53,4 @@ $lang["plugin-youtube_publish-title"]='YouTube Udgiv';
 $lang["plugin-youtube_publish-desc"]='Udgiver videoressource til konfigureret YouTube-konto.';
 $lang["page-title_youtube_publish_setup"] = 'Opsætning af plugin';
 $lang["page-title_youtube_publish_youtube_upload"] = 'Udgiv ressource til Youtube';
+$lang["youtube_publish_video_title"] = 'Videotitel (maks. 100 tegn)';

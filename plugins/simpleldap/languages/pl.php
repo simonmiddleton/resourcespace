@@ -54,3 +54,4 @@ $lang["plugin-simpleldap-title"]='Prosty LDAP';
 $lang["plugin-simpleldap-desc"]='Prostsza implementacja uwierzytelniania ldap, skierowana na Active Directory, ale wspiera również katalog Oracle';
 $lang["page-title_simpleldap_ajax_test_auth"] = 'Testowanie uwierzytelniania LDAP';
 $lang["page-title_simpleldap_setup"] = 'Konfiguracja prostego wtyczki LDAP';
+$lang["simpleldap_userlimit_error"] = 'Nie można utworzyć użytkownika, ponieważ osiągnięto limit użytkowników. Skontaktuj się z administratorem.';

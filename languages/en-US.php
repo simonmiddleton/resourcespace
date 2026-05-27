@@ -25,8 +25,5 @@ $lang["home__welcometext"] = "The simple, fast, &amp; free way to organize your 
 
 $lang["userpreferencecolourtheme"] = "Interface color theme";
 $lang['userpreference_colourtheme'] = 'Color theme';
-$lang["setup-headercolourstyleoverride"] = "Custom header color";
 $lang["maximise"] = "Maximize";
 
-$lang["setup-collectionbarbackground"] = "Custom collection bar primary color";
-$lang["setup-collectionbarforeground"] = "Custom collection bar secondary color";

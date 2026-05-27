@@ -10,3 +10,8 @@ $lang["whisper_transcript"] = '生成转录文件并添加为备用文件下载'
 $lang["whisper_transcript_name"] = '自动生成的转录文本';
 
 $lang["page-title_whisper_setup"] = '设置 Whisper 插件';
+$lang["whisper_cron_enable"] = '启用通过定时Cron作业处理未处理的资源';
+$lang["whisper"] = 'Whisper';
+$lang["whisper_process_existing"] = '处理未处理的资源';
+$lang["whisper_process_existing_intro"] = '在此处创建一个作业以启动Whisper音频处理——此作业不需要任何参数，只要没有其他未完成的此类作业即可启动。';
+$lang["whisper_process_existing_configure"] = '配置作业以使用Whisper处理文件';

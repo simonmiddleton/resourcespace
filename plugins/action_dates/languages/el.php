@@ -40,3 +40,4 @@ $lang["plugin-action_dates-title"] = 'Ημερομηνίες Δράσεων';
 $lang["plugin-action_dates-desc"] = 'Ενεργοποιεί τον προγραμματισμένο διαγραφή ή περιορισμό των πόρων βάσει πεδίων ημερομηνίας';
 
 $lang["page-title_action_dates_setup"] = 'Ρύθμιση Plugin Ημερομηνιών Δράσης';
+$lang["action_dates_additional_settings_email_admin_days"] = 'Ειδοποίηση διαχειριστών αυτήν την ημέρα πριν από την εκτέλεση της ενέργειας (Αφήστε κενό για απενεργοποίηση)';

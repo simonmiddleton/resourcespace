@@ -83,3 +83,4 @@ $lang["cropper_preset_sizes"] = 'Predefinirane veličine';
 $lang["page-title_transform_collection_transform"] = 'Transformiraj resurs';
 $lang["page-title_transform_crop"] = 'Izreži resurs';
 $lang["page-title_transform_setup"] = 'Postavljanje Transform Plugin-a';
+$lang["use_filename_as_title"] = 'Koristi naziv datoteke kao naslov';

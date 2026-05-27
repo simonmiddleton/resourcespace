@@ -87,3 +87,4 @@ $lang["cropper_preset_sizes"] = 'Dimensioni predefinite';
 $lang["page-title_transform_collection_transform"] = 'Trasforma Risorsa';
 $lang["page-title_transform_crop"] = 'Ritaglia Risorsa';
 $lang["page-title_transform_setup"] = 'Imposta il plugin di trasformazione';
+$lang["use_filename_as_title"] = 'Usa il nome del file come titolo';

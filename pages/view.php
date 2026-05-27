@@ -1566,7 +1566,6 @@ if ($view_resource_collections && !checkperm('b')){ ?>
     ?>); 
     </script>
     <?php }
-
 if ($metadata_report && isset($exiftool_path) && ($k=="" || $internal_share_access))
     {
     ?>
@@ -1785,4 +1784,5 @@ function updateDownloadLink(ns, selected_size, picker)
         window.location='#Header';
     }); 
 </script>
+
 <?php include "../include/footer.php";

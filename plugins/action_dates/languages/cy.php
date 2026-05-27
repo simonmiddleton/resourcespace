@@ -38,3 +38,4 @@ $lang["weekday-5"] = 'Dydd Gwener';
 $lang["weekday-6"] = 'Dydd Sadwrn';
 
 $lang["page-title_action_dates_setup"] = 'Gosod Plugin Dyddiadau Gweithredu';
+$lang["action_dates_additional_settings_email_admin_days"] = 'Hysbysu\'r rheolwyr hyn yn ychydig ddyddiau cyn i\'r weithred ddigwydd (Gosod yn wag i analluogi)';

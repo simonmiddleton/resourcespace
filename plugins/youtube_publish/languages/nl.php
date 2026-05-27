@@ -53,3 +53,4 @@ $lang["plugin-youtube_publish-title"]='YouTube Publiceren';
 $lang["plugin-youtube_publish-desc"]='Publiceert videobron naar geconfigureerd YouTube-account.';
 $lang["page-title_youtube_publish_setup"] = 'Instellen Plugin';
 $lang["page-title_youtube_publish_youtube_upload"] = 'Publiceer Resource op Youtube';
+$lang["youtube_publish_video_title"] = 'Videotitel (maximaal 100 tekens)';

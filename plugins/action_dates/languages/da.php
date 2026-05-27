@@ -40,3 +40,4 @@ $lang["plugin-action_dates-title"] = 'Handlingsdatoer';
 $lang["plugin-action_dates-desc"] = 'Muliggør planlagt sletning eller begrænsning af ressourcer baseret på datofelter';
 
 $lang["page-title_action_dates_setup"] = 'Opsætning af handlingsdatoer-plugin';
+$lang["action_dates_additional_settings_email_admin_days"] = 'Underret administratorer dette antal dage før handlingen finder sted (Lad være blank for at deaktivere)';

@@ -30,3 +30,4 @@ $lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
 $lang["page-title_openai_image_edit_get_png"] = 'OpenAI Získať PNG';
 $lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI Uložiť alternatívu';
 $lang["page-title_openai_image_edit_save_new"] = 'OpenAI Uložiť Nové';
+$lang["openai_image_edit__introtext"] = 'Zadajte do východiskového poľa popis zmien, ktoré by ste chceli vykonať na obrázku. Voliteľne použite štetec na vymazanie častí obrázka, čo spôsobí ich regeneráciu.';

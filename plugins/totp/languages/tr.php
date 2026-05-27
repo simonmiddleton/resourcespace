@@ -17,3 +17,4 @@ $lang["totp_date_binding_m"] = 'Mevcut ay';
 $lang["totp_date_binding_y"] = 'Mevcut yıl';
 $lang["page-title_totp_setup"] = 'TOTP Eklentisini Kurun';
 $lang["page-title_totp_totp"] = 'TOTP';
+$lang["totp_saml"] = 'SAML ile zaten kimliği doğrulanmış kullanıcılar için TOTP\'yi devre dışı bırak (SAML eklentisi gerekir)';

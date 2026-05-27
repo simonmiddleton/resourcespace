@@ -81,3 +81,4 @@ $lang["cropper_preset_sizes"] = 'Kích thước đã định sẵn';
 $lang["page-title_transform_collection_transform"] = 'Chuyển đổi Tài nguyên';
 $lang["page-title_transform_crop"] = 'Cắt tài nguyên';
 $lang["page-title_transform_setup"] = 'Cài đặt Plugin Chuyển đổi';
+$lang["use_filename_as_title"] = 'Sử dụng tên tệp làm tiêu đề';

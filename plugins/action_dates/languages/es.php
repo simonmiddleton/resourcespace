@@ -40,3 +40,4 @@ $lang["plugin-action_dates-title"] = 'Fechas de Acción';
 $lang["plugin-action_dates-desc"] = 'Permite la eliminación o restricción programada de recursos basada en campos de fecha';
 
 $lang["page-title_action_dates_setup"] = 'Configurar el complemento de fechas de acción';
+$lang["action_dates_additional_settings_email_admin_days"] = 'Notificar a los administradores con tantos días de antelación antes de que ocurra la acción (Dejar en blanco para desactivar)';

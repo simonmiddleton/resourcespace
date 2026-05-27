@@ -22,3 +22,10 @@ $lang["faces_count_missing"] = 'صور للمعالجة';
 $lang["faces-tag-field-not-set"] = 'حقل الوسم غير مُهيأ';
 
 $lang["page-title_faces_setup"] = 'إعداد مكون Faces';
+$lang["faces_insight_faces"] = 'وجهات النظر في الوجوه';
+$lang["faces_detect_faces"] = 'كشف الوجوه';
+$lang["faces_tag_faces"] = 'وسم الوجوه';
+$lang["faces_detect_faces_configure"] = 'تكوين مهمة لاكتشاف الوجوه';
+$lang["faces_tag_faces_configure"] = 'تكوين مهمة لوسم الوجوه';
+$lang["faces_detect_faces_intro"] = 'إنشاء مهمة لبدء اكتشاف الوجوه هنا - هذه المهمة لا تتطلب أي معلمات لذلك يمكن بدءها طالما لا توجد مهام أخرى من هذا النوع قيد الانتظار.';
+$lang["faces_tag_faces_collection_refs_help"] = 'سيؤدي تعيين هذا الخيار إلى تحديث الموارد الموجودة فقط في المجموعات المدرجة. إذا لم يتم تحديد مجموعات، فسيتم تحديث وسم الوجوه لجميع الموارد المناسبة. يمكن تحديد المجموعات باستخدام قائمة مفصولة بفواصل بالإضافة إلى النطاقات مثل 100،105،110-115';

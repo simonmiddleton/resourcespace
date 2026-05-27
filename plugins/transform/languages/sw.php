@@ -81,3 +81,4 @@ $lang["cropper_preset_sizes"] = 'Mikubwa iliyowekwa kabla';
 $lang["page-title_transform_collection_transform"] = 'Badilisha Rasilimali';
 $lang["page-title_transform_crop"] = 'Rasilimali ya Kukata';
 $lang["page-title_transform_setup"] = 'Panga Plugin ya Kubadilisha';
+$lang["use_filename_as_title"] = 'Tumia jina la faili kama kichwa';

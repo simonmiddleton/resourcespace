@@ -107,3 +107,4 @@ $lang["page-title_simplesaml_setup"] = 'Aseta Yksinkertainen SAML-laajennus';
 $lang["simplesaml_error_not_configured"] = 'SimpleSAML-laajennusta ei ole konfiguroitu';
 $lang["simplesaml_error_no_idp_metadata"] = 'SimpleSAML-laajennusta ei ole täysin konfiguroitu (puuttuu IdP-metadata)';
 $lang["simplesaml_error_no_authsource"] = 'SimpleSAML-laajennusta ei ole täysin konfiguroitu (puuttuu authsource)';
+$lang["simplesaml_userlimit_error"] = 'Käyttäjää ei voitu luoda, koska käyttäjäraja on saavutettu. Ota yhteyttä järjestelmänvalvojaan.';

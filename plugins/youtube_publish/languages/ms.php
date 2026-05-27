@@ -51,3 +51,4 @@ $lang["youtube_chunk_size"] = 'Saiz chunk yang digunakan semasa memuat naik ke Y
 $lang["youtube_publish_add_anchor"] = 'Tambah tag anchor ke URL semasa menyimpan ke medan metadata URL YouTube?';
 $lang["page-title_youtube_publish_setup"] = 'Tetapkan Plugin';
 $lang["page-title_youtube_publish_youtube_upload"] = 'Terbitkan Sumber ke Youtube';
+$lang["youtube_publish_video_title"] = 'Tajuk video (max 100 aksara)';

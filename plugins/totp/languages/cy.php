@@ -17,3 +17,4 @@ $lang["totp_date_binding_m"] = 'Y mis presennol';
 $lang["totp_date_binding_y"] = 'Y flwyddyn bresennol';
 $lang["page-title_totp_setup"] = 'Gosodwch y Plugin TOTP';
 $lang["page-title_totp_totp"] = 'TOTP';
+$lang["totp_saml"] = 'Analluogi TOTP ar gyfer defnyddwyr sydd eisoes wedi\'u dilysu trwy SAML (Mae angen y plugin SAML)';

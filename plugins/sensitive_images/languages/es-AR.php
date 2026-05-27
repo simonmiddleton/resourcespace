@@ -8,3 +8,4 @@ $lang["sensitive_images_blur_level"]='Nivel de desenfoque de imagen sensible<br>
 $lang["plugin-sensitive_images-title"]='Desenfoque de imagen sensible';
 $lang["plugin-sensitive_images-desc"]='Desenfoca imágenes marcadas como sensibles, permitiendo al usuario hacer clic para desenfocar.';
 $lang["page-title_sensitive_images_setup"] = 'Configurar el Plugin de Imágenes Sensibles';
+$lang["sensitive_images_show"] = 'Haz clic en la imagen para mostrar.';

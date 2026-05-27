@@ -70,7 +70,7 @@ if (
 if ($tile != "") {
     $n = $tile;
 }
-
+ob_start();
 $condition = "where
 activity_type=? and
 (
@@ -143,6 +143,7 @@ if (
     $graph_dark_mode = true;
 }
 
+
 if (!$from_dash) {
     $title = get_translated_activity_type($activity_type);
     if (isset($lang["report-graph-by-" . $type])) {
@@ -171,7 +172,7 @@ if (!$from_dash) {
                 'to_m'          => $to_m,
                 'to_d'          => $to_d,
             ];
-            $graph_url       = generateURL('pages/team/ajax/graph.php', ['tltype' => 'conf', 'tlstyle' => 'analytics'], $graph_params);
+            $graph_url       = generateURL('pages/team/ajax/graph.php', $graph_params);
             $add_to_dash_url = generateURL(
                     $baseurl_short . 'pages/dash_tile.php',
                     [
@@ -179,7 +180,9 @@ if (!$from_dash) {
                         'title'          => $title,
                         'nostyleoptions' => true,
                         'link'           => $report !== '' ? generateURL('pages/team/team_analytics_edit.php', ['ref' => $report]) : '',
-                        'url'            => $graph_url
+                        'tltype'         => 'conf', 
+                        'tlstyle'        => 'analytics',
+                        'url'            => generateURL('pages/ajax/dash_tile.php', ['tltype' => 'conf', 'tlstyle' => 'analytics', 'data' => $graph_url])
                     ]
                 ); 
             ?>
@@ -196,24 +199,13 @@ if (!$from_dash) {
         ?>
     </h2>
     <?php
-} else {
-    # Dash
-    # Load title
-    $title = getval("tltitle", ps_value("select title value from dash_tile where ref=?", array("i",$tile), ""));
-    ?>
-    <div style="padding:10px 15px">
-        <h2 style="font-size:120%;margin:0;padding:<?php echo $from_dash ? "0" : "0 0 8px 0"; ?>;background:none;white-space: nowrap;overflow: hidden;
-    text-overflow: ellipsis;"><?php echo escape($title) ?></h2>
-    <?php
 }
 
-if ($type != "summary") {
+if ($type != "summary" && !$from_dash) {
     $id = "placeholder" . $type . $n;
     ?><!-- Start chart canvas -->
     <div
-        <?php if ($from_dash) { ?>
-            style="width:220px;height:105px;"
-        <?php } elseif ($print) { ?>
+        <?php if ($print) { ?>
             style="width:50%;height:40%;"
         <?php } else { ?>
             style="width:100%;height:80%;"
@@ -238,11 +230,7 @@ if ($type != "summary") {
                             },
                             unit: 'seconds',
                             ticks: {
-                                <?php if ($from_dash) { ?>
-                                    display: false,
-                                <?php } else { ?>
-                                    color: '<?php echo $graph_dark_mode ? "white": "default"; ?>',
-                                <?php } ?>
+                                color: '<?php echo $graph_dark_mode ? "white": "default"; ?>',
                             },
                             grid: {
                                 color: '<?php echo $from_dash ? "#00000033" : ($graph_dark_mode ? "dimgray": "lightgray"); ?>'
@@ -307,14 +295,18 @@ if ($type == "pie") {
 
     # Work out total so we can add an "other" block.
     $total = ps_value("select sum(count) value from daily_stat d $join $condition", $params, 0);
-    if (count($data) == 0) {
+    if (count($data) == 0 && !$from_dash) {
         ?>
         <p><?php echo escape($lang["report_no_data"]) ?></p>
         <script>jQuery("#placeholder<?php echo escape($type . $n) ?>").hide();</script>
         <?php
         exit();
+    } 
+    if ($from_dash) {
+        ob_clean();
+        echo json_encode(array_slice($data, 0, 10, true));
+        exit();
     }
-
     render_pie_graph($id, $data, $total);
 }
 
@@ -335,11 +327,16 @@ if ($type == "piegroup") {
 
     $data = ps_query("select $usergroup_resolve as usergroup,$name_resolve as `name`,sum(count) c from daily_stat d left outer join usergroup ug on d.usergroup=ug.ref $join $condition group by $usergroup_resolve, $name_resolve order by c desc", $params);
 
-    if (count($data) == 0) {
+    if (count($data) == 0 && !$from_dash) {
         ?>
         <p><?php echo escape($lang["report_no_data"]) ?></p>
         <script>jQuery("#placeholder<?php echo escape($type . $n) ?>").hide();</script>
         <?php
+        exit();
+    }
+    if ($from_dash) {
+        ob_clean();
+        echo json_encode(array_slice($data, 0, 10, true));
         exit();
     }
     render_pie_graph($id, $data);
@@ -365,20 +362,24 @@ if ($type == "pieresourcetype") {
         c desc", $params);
 
     // No data found
-    if (count($data) == 0) {
+    if (count($data) == 0 && !$from_dash) {
         ?>
         <p class='analytics-nodata'><?php echo escape($lang["report_no_data"]) ?></p>
         <script>jQuery("#placeholder<?php echo escape($type . $n) ?>").hide();</script>
         <?php
         exit();
     }
-
+    if ($from_dash) {
+        ob_clean();
+        echo json_encode(array_slice($data, 0, 10, true));
+        exit();
+    }
     render_pie_graph($id, $data);
 }
 
 if ($type == "line") {
     $data = ps_query("select unix_timestamp(concat(year,'-',month,'-',day))*1000 t,sum(count) c from daily_stat d $join $condition group by year,month,day order by t", $params);
-    if (count($data) == 0) {
+    if (count($data) == 0 && !$from_dash) {
         ?>
         <p><?php echo escape($lang["report_no_data"]) ?></p>
         <script>jQuery("#placeholder<?php echo escape($type . $n) ?>").hide();</script>
@@ -403,20 +404,44 @@ if ($type == "line") {
             $last_t = $row["t"];
         }
     }
+    if ($from_dash) {
+        ob_clean();
+        $values = [];
+        foreach ($newdata as $t => $c) {
+            $values[] = ['x' => (int) $t, 'y' => (int) $c];
+        }
+        echo json_encode($values);
+        die();
+    }
     render_bar_graph($id, $newdata);
 }
 
 if ($type == "summary") {
-    # Define styles locally for dash display
-    if ($from_dash) { ?>
-        <style>
-            .ReportSummary {background: none; color: inherit;}
-            .ReportSummary td {padding: 0; display: block; border: none; color: inherit;}
-            .ReportMetric {font-size: 200%; padding-left: 5px; color: inherit; background: none;}
-        </style>
-        <?php
-    } ?>
 
+    $total = ps_value(
+        "SELECT IFNULL(format(sum(count),0),0) `value` FROM daily_stat d $join $condition",
+        $params,
+        0
+    );
+    $average = ps_value(
+        "SELECT IFNULL(format(avg(c),1),0) `value` FROM (
+            SELECT year,month,day,sum(count) c FROM daily_stat d $join $condition GROUP BY year,month,day
+        ) intable",
+        $params,
+        0
+    );
+
+    if ($from_dash) {
+        ob_clean();
+        echo json_encode(
+            [
+                'average'   => $average,
+                'total'     => $total
+            ]
+        );
+        die();
+    }
+    ?>
     <table style="width:100%;" class="ReportSummary">
         <tr>
             <td>
@@ -426,14 +451,7 @@ if ($type == "summary") {
                     echo escape($lang["report_total"]);
                 } ?>
                 <span class="ReportMetric">
-                    <?php echo escape(ps_value(
-                        "SELECT
-                            IFNULL(format(sum(count),0),0) `value`
-                        FROM
-                            daily_stat d $join $condition",
-                        $params,
-                        0
-                    )); ?>
+                    <?php echo escape($total); ?>
                 </span>
             </td>
             <td>
@@ -443,20 +461,7 @@ if ($type == "summary") {
                     echo escape($lang["report_average"]);
                 } ?>
                 <span class="ReportMetric">
-                    <?php echo escape(ps_value(
-                        "SELECT
-                            IFNULL(format(avg(c),1),0) `value`
-                        FROM
-                            (SELECT
-                                year,month,day,sum(count) c
-                            FROM
-                                daily_stat d
-                            $join
-                            $condition
-                            GROUP BY year,month,day) intable",
-                        $params,
-                        0
-                    )); ?>
+                    <?php echo escape($average); ?>
                 </span>
             </td>
         </tr>
@@ -465,17 +470,7 @@ if ($type == "summary") {
 }
 
 if ($from_dash) {
-    if ($tile > 0) {
-        # Update $tile and $usertile for generate_dash_tile_toolbar purposes
-        $usertile = get_user_tile($user_tile, $userref);
-        $tile = get_tile($tile);
-        $tile["no_edit"] = true;
-        $tile_id = (is_array($usertile)) ? "contents_user_tile" . $usertile["ref"] : "contents_tile" . $tile["ref"];
-        generate_dash_tile_toolbar($tile, $tile_id);
-    }
-    ?>
-    </div>
-    <?php
+    ob_clean();
 }
 ?>
 </div>

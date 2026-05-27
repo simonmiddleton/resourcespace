@@ -30,3 +30,4 @@ $lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
 $lang["page-title_openai_image_edit_get_png"] = 'OpenAI Get PNG';
 $lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI ذخیره جایگزین';
 $lang["page-title_openai_image_edit_save_new"] = 'OpenAI ذخیره جدید';
+$lang["openai_image_edit__introtext"] = 'در جعبه متن وارد کنید که چه تغییراتی می‌خواهید در تصویر انجام شود. در صورت تمایل، از قلم‌مو برای پاک کردن قسمت‌هایی از تصویر استفاده کنید تا آن نواحی مجدداً تولید شوند.';

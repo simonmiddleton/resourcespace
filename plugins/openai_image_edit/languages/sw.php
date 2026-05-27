@@ -30,3 +30,4 @@ $lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
 $lang["page-title_openai_image_edit_get_png"] = 'OpenAI Pata PNG';
 $lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI Hifadhi Mbadala';
 $lang["page-title_openai_image_edit_save_new"] = 'OpenAI Hifadhi Mpya';
+$lang["openai_image_edit__introtext"] = 'Ingiza maelezo ya mabadiliko unayotaka yafanyike kwenye picha kwenye kisanduku cha maoni. Kwa hiari, tumia brashi kufuta sehemu za picha, kulazimisha upya wa maeneo hayo.';

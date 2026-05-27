@@ -40,3 +40,4 @@ $lang["plugin-action_dates-title"] = 'Daty działań';
 $lang["plugin-action_dates-desc"] = 'Umożliwia zaplanowane usuwanie lub ograniczanie zasobów na podstawie pól daty';
 
 $lang["page-title_action_dates_setup"] = 'Ustawienia dat akcji wtyczki';
+$lang["action_dates_additional_settings_email_admin_days"] = 'Powiadom administratorów na tyle dni przed wydarzeniem (Pozostaw puste, aby wyłączyć)';

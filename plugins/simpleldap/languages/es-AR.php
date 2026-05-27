@@ -54,3 +54,4 @@ $lang["plugin-simpleldap-title"]='LDAP Simple';
 $lang["plugin-simpleldap-desc"]='Implementación más simple de la autenticación ldap, dirigida a Active Directory pero también compatible con el directorio de Oracle';
 $lang["page-title_simpleldap_ajax_test_auth"] = 'Probar la autenticación LDAP';
 $lang["page-title_simpleldap_setup"] = 'Configurar el complemento LDAP simple';
+$lang["simpleldap_userlimit_error"] = 'No se pudo crear el usuario ya que se ha alcanzado el límite de usuarios. Por favor, contacte a su administrador.';

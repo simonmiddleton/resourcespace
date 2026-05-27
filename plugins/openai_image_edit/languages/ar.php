@@ -30,3 +30,4 @@ $lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
 $lang["page-title_openai_image_edit_get_png"] = 'OpenAI احصل على PNG';
 $lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI حفظ بديل';
 $lang["page-title_openai_image_edit_save_new"] = 'OpenAI حفظ جديد';
+$lang["openai_image_edit__introtext"] = 'أدخل في مربع النص الوصف للتغييرات التي ترغب في إجرائها على الصورة. اختياريًا، استخدم الفرشاة لمسح أجزاء من الصورة، مما يجبر على إعادة توليد تلك المناطق.';

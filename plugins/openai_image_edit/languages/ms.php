@@ -30,3 +30,4 @@ $lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
 $lang["page-title_openai_image_edit_get_png"] = 'OpenAI Dapatkan PNG';
 $lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI Simpan Alternatif';
 $lang["page-title_openai_image_edit_save_new"] = 'OpenAI Simpan Baru';
+$lang["openai_image_edit__introtext"] = 'Masukkan dalam kotak arahan penerangan tentang perubahan yang anda inginkan pada imej. Secara pilihan, gunakan berus untuk menghapus bahagian imej, memaksa penjanaan semula bahagian tersebut.';

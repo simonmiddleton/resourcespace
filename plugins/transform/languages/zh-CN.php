@@ -83,3 +83,4 @@ $lang["cropper_preset_sizes"] = '预定义大小';
 $lang["page-title_transform_collection_transform"] = '转换资源';
 $lang["page-title_transform_crop"] = '裁剪资源';
 $lang["page-title_transform_setup"] = '设置转换插件';
+$lang["use_filename_as_title"] = '使用文件名作为标题';

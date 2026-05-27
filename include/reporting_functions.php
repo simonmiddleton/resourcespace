@@ -781,8 +781,6 @@ function report_process_query_placeholders(string $query, array $placeholders): 
  */
 function render_pie_graph($id, $data, $total = null)
 {
-    global $home_colour_style_override,$header_link_style_override;
-
     $rt = 0;
     $labels = [];
     $values = [];

@@ -40,3 +40,4 @@ $lang["plugin-action_dates-title"] = 'アクション日付';
 $lang["plugin-action_dates-desc"] = '日付フィールドに基づいてリソースのスケジュール削除または制限を有効にします';
 
 $lang["page-title_action_dates_setup"] = 'アクション日付プラグインの設定';
+$lang["action_dates_additional_settings_email_admin_days"] = 'アクションの前に管理者に通知する日数（空白にすると無効）';

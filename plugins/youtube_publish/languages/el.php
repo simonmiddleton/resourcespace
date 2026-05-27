@@ -53,3 +53,4 @@ $lang["plugin-youtube_publish-title"]='Δημοσίευση στο YouTube';
 $lang["plugin-youtube_publish-desc"]='Δημοσιεύει το βίντεο πόρο στον διαμορφωμένο λογαριασμό YouTube.';
 $lang["page-title_youtube_publish_setup"] = 'Ρύθμιση Πρόσθετου';
 $lang["page-title_youtube_publish_youtube_upload"] = 'Δημοσίευση Πόρου στο Youtube';
+$lang["youtube_publish_video_title"] = 'Τίτλος βίντεο (μέγιστο 100 χαρακτήρες)';

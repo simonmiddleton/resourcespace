@@ -189,19 +189,8 @@ $linkedheaderimgsrc_dark = "";
 // Change the Header Logo link to another address by uncommenting and setting the variable below
 // $header_link_url=http://my-alternative-header-link
 
-// Used for specifying custom colours for header
-$header_colour_style_override = '';
-$header_link_style_override = '';
-
-// Used for specifying custom colours for home page elements (site text, dash tiles, simple search)
-$home_colour_style_override = '';
-
-// Used for specifying custom colours for collection bar elements
-$collection_bar_background_override = '';
-$collection_bar_foreground_override = '';
-
-// Used for changing colour of default blue buttons
-$button_colour_override = '';
+// UI colour theme - available options are "blue", "green", "red" and "purple". 
+$colour_theme = "blue";
 
 // Used by system settings page when setting a custom system font
 $custom_font = '';
@@ -244,7 +233,7 @@ $home_dash = true;
 // Define the available styles per type.
 $tile_styles['srch']  = array('thmbs', 'multi', 'blank');
 $tile_styles['ftxt']  = array('ftxt');
-$tile_styles['conf']  = array('blank', 'analytics','thmsl','custm','pend');
+$tile_styles['conf']  = array('blank', 'analytics','thmsl','custm','pend', 'upld');
 $tile_styles['fcthm'] = array('thmbs', 'multi', 'blank');
 
 // All user permissions for the dash are revoked and the dash admin can manage a single dash for all users.
@@ -2616,6 +2605,9 @@ $replace_resource_preserve_default = false;
 
 // Option to allow replacement of multiple resources by filename using the "Replace resource batch" functionality
 $replace_batch_existing = false;
+
+// Option to allow replacement of multiple alternative files by filename using the "Replace resource batch" functionality
+$replace_batch_alt_existing = false;
 
 // E-mail address to send a report to if any of the automated tests (tests/test.php) fail.
 // This is used by Montala to automatically test the RS trunk on a nightly basis.

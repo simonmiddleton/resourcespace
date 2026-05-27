@@ -8,6 +8,9 @@ global $baseurl, $baseurl_short,$view_title_field, $youtube_publish_url_field, $
 // Limit on title length with YT
 $title_character_limit = 100;
 
+// Remove the lax user cookie if it has been used to auth after OAuth flow redirect
+rs_setcookie("user", "", -1, $baseurl_short . "plugins/youtube_publish/pages/youtube_upload.php", "", substr($baseurl, 0, 5) == "https", true, "Lax");
+
 $deletetokens = getval("deletetokens", false);
 if ($deletetokens) {
     ps_query("UPDATE user SET youtube_access_token = '', youtube_refresh_token = '', youtube_username = '' WHERE ref = ?", array("i", $userref));
@@ -37,6 +40,9 @@ if (strpos($search, "!") !== false) {
 $archive = getval("archive", 0, true);
 $video_status = getval("video_status", 'unlisted');
 $video_category = getval("video_category", ""); // This is the uploading video category. There are only certain categories that are accepted.
+
+$youtube_url = "";
+
 if ($youtube_publish_url_field > 0) {
     $youtube_url = get_data_by_field($ref, $youtube_publish_url_field);
 }
@@ -130,12 +136,12 @@ if ($youtube_object && isset($_POST['video_title']) && isset($_POST['video_descr
                 } else {
                                             $save_url = $youtube_new_url;
                 }
-                                        update_field($ref, $youtube_publish_url_field, $save_url);
-                                        $youtube_old_url = $youtube_url;
-                                        $youtube_url = $youtube_new_url;
+                update_field($ref, $youtube_publish_url_field, $save_url);
+                $youtube_old_url = $youtube_url;
+                $youtube_url = $youtube_new_url;
             }
         }
-            resource_log($ref, 'e', $youtube_publish_url_field ? $youtube_publish_url_field : 0, $lang["youtube_publish_log_share"], $fromvalue = $youtube_old_url, $tovalue = $save_url);
+        resource_log($ref, 'e', $youtube_publish_url_field ? $youtube_publish_url_field : 0, $lang["youtube_publish_log_share"], $fromvalue = $youtube_old_url ?? "", $tovalue = $save_url ?? "");
     }
 }
 

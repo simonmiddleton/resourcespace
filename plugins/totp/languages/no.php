@@ -17,3 +17,4 @@ $lang["totp_date_binding_m"] = 'Den nåværende måneden';
 $lang["totp_date_binding_y"] = 'Det nåværende året';
 $lang["page-title_totp_setup"] = 'Konfigurer TOTP-plugin';
 $lang["page-title_totp_totp"] = 'TOTP';
+$lang["totp_saml"] = 'Deaktiver TOTP for brukere som allerede er autentisert via SAML (krever SAML-plugin)';

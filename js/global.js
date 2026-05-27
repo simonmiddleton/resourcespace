@@ -302,18 +302,7 @@ function CentralSpaceLoad (anchor,scrolltop,modal,keep_fragment = true)
                 jQuery('#modal').focus();
                 }
 
-            // Activate or deactivate the large slideshow, if this function is enabled.
-            if (typeof ActivateSlideshow == 'function' && !modal)
-                {
-                if (basename(anchor.href).substr(0,8)=="home.php")
-                {
-                ActivateSlideshow();
-                }
-                else
-                {
-                DeactivateSlideshow();
-                }
-                }
+
 
             // Only allow reordering when search results are collections
             if(basename(anchor.href).substr(0, 10) == 'search.php')
@@ -489,18 +478,7 @@ function CentralSpacePost (form, scrolltop, modal, update_history, container_id)
         CentralSpace.append(global_trash_html);
         CentralSpace.trigger('prepareDragDrop');
 
-        // Activate or deactivate the large slideshow, if this function is enabled.
-        if (typeof ActivateSlideshow == 'function' && !modal)
-            {
-            if (basename(form.action).substr(0,8)=="home.php")
-            {
-            ActivateSlideshow();
-            }
-            else
-            {
-            DeactivateSlideshow();
-            }
-            }
+
 
         // Update title in browser for accessibility
         updatePageTitle(pagename, pluginname);
@@ -2115,3 +2093,43 @@ function getPluginName(url) {
     
     return '';
 }
+
+const tile_graph_legend = {
+    id: 'tile_graph_legend',
+
+    afterUpdate(chart, args, options) {
+        const legendContainer = jQuery('#' + options.containerID);
+        if (!legendContainer) return;
+        legendContainer.children().remove();
+        const ul = jQuery('<ul>');
+
+        const items = chart.options.plugins.legend.labels.generateLabels(chart);
+        items.forEach(item => {
+            const bullet = jQuery('<span>').addClass('tile-graph-legend-bullet');
+            bullet.css({background: item.fillStyle});
+            const text = jQuery('<span>').addClass('tile-graph-legend-label');
+            text.text(item.text);
+
+            ul.append(
+                jQuery('<li>')
+                    .append(bullet)
+                    .append(text)
+            );
+        });
+
+        legendContainer.append(ul);
+    }
+};
+
+const dash_chart_palette = [
+    '#6186CC',
+    '#8979FF',
+    '#FF928A',
+    '#2BB7DC',
+    '#FFAE4C',
+    '#537FF1',
+    '#6FD195',
+    '#8C63DA',
+    '#3CC3DF',
+    '#55C4AE',
+];

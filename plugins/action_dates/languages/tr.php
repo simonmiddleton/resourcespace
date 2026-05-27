@@ -40,3 +40,4 @@ $lang["plugin-action_dates-title"] = 'Eylem Tarihleri';
 $lang["plugin-action_dates-desc"] = 'Tarih alanlarına göre kaynakların planlı silinmesini veya kısıtlanmasını sağlar';
 
 $lang["page-title_action_dates_setup"] = 'Eylem Tarihleri Eklentisini Ayarla';
+$lang["action_dates_additional_settings_email_admin_days"] = 'İşlem gerçekleşmeden önce bu kadar gün önce yöneticilere bildirin (Devre dışı bırakmak için boş bırakın)';

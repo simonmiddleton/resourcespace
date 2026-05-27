@@ -22,3 +22,10 @@ $lang["faces_count_missing"] = 'Immagini da elaborare';
 $lang["faces-tag-field-not-set"] = 'Il campo di tagging non è configurato.';
 
 $lang["page-title_faces_setup"] = 'Imposta il plugin Faces';
+$lang["faces_insight_faces"] = 'InsightFaces';
+$lang["faces_detect_faces"] = 'Rileva volti';
+$lang["faces_tag_faces"] = 'Tagga volti';
+$lang["faces_detect_faces_configure"] = 'Configura il lavoro per rilevare i volti';
+$lang["faces_tag_faces_configure"] = 'Configura il lavoro per taggare i volti';
+$lang["faces_detect_faces_intro"] = 'Crea un lavoro per avviare il rilevamento dei volti qui - questo lavoro non richiede parametri e può essere avviato finché non ci sono altri lavori in sospeso di questo tipo.';
+$lang["faces_tag_faces_collection_refs_help"] = 'Impostando questa opzione, verranno aggiornate solo le risorse nelle collezioni elencate. Se nessuna collezione è specificata, il tagging dei volti verrà aggiornato per TUTTE le risorse idonee. Le collezioni possono essere specificate usando un elenco separato da virgole o intervalli, ad esempio 100,105,110-115';
