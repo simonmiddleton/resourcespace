@@ -2676,6 +2676,9 @@ $lang['upgrade_026_notification'] = "The upgrade has deprecated some configurati
 $lang['upgrade_026_error_unable_to_set_config_system_wide'] = "Unable to set system wide config option 'download_filename_format' to '%format%'. Please retry manually.";
 $lang['upgrade_026_error_unable_to_process_deprecated_config_options'] = "Unable to process deprecated config options for %entity%. Please retry manually. Reason:-\r\n\r\n%error%";
 $lang['upgrade_028_notify_config_not_set'] = "Unable to set the (system wide) config option %name% to %value%";
+$lang['or'] = 'or';
+$lang['view_all_fcs'] = 'View all featured collections';
+$lang['dashtile_upload'] = 'Add resources to your system';
 
 /* User group dash tiles */
 $lang['manage_user_group_dash_tiles']  = 'Manage user group dash tiles';

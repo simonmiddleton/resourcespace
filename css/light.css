@@ -61,7 +61,7 @@ input[readonly] {
 }
 
 .RecordPanel, .ResourcePanelSmall, .ResourcePanelLarge, div#Metadata div.Title { background: #eee; }
-#ResearchBoxPanel, .HomePanelIN, .RecordPanel .RecordDownload, .RecordPanel, .ResourcePanelLarge {
+#ResearchBoxPanel, .RecordPanel .RecordDownload, .RecordPanel, .ResourcePanelLarge {
     border-radius:8px;
     overflow: hidden;
 }
@@ -100,14 +100,17 @@ tr[id^="ResourceShell"].Selected { background-color: #d5eafa; /* Used a tint of 
 
 /* Home */
 .HomePanel a:link, 
-.HomePanel a:visited, 
 .HomePanel a:active, 
 .HomePanel a:hover,
-.HomePanel h2 {color:#FFF;}
 #HomeSiteText.dashtext h1 {color:#FFF;}
 
+#HomePanelContainer .HomePanel a:link,
+#HomePanelContainer .HomePanel a:active,
+#HomePanelContainer .HomePanel a:hover {
+    color: var(--colour-neutral-700)
+}
 /* Default colours for search, dash tiles, browse bar etc */
-#SearchBox, #HomeSiteText.dashtext, .HomePanelIN, .PopupCategoryTree {
+#SearchBox, #HomeSiteText.dashtext, .PopupCategoryTree {
     background: rgba(0, 0, 0, 0.51);
     color:#FFF;
 }
@@ -258,8 +261,7 @@ div.autocomplete ul li {color: #000;}
 .dash_tile_bin_text {color: #fff;}
 
 .HomePanel h2.title {background: transparent;color:#fff;}
-.HomePanel .HomePanelDynamicDash h2{background: rgba(0,0,0,0.4); text-shadow: 0px 1px 5px #000000;}
-.HomePanelDynamicDash p.tile_corner_box {background: rgba(0,0,0,0.4);border-top-left-radius: 5px;color:#fff;}
+.HomePanelDynamicDash p.tile_corner_box {background: rgba(0,0,0,0.4);color:#fff;}
 
 /* Delete Dialog */
 .delete-dialog .ui-dialog-titlebar, .ui-dialog-titlebar{
@@ -564,11 +566,6 @@ input:focus, textarea:focus, select:focus, .RecordPanel .RecordDownloadSpace .Do
 .search-icon:active {
     color: #0299d8;
     background-color: #e8edf1;
-}
-
-.DashTileActions {
-    color: #fff;
-    background: #000;
 }
 
 #modal .BasicsBox .HelpHeader a { color: #999; }

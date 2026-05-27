@@ -150,8 +150,10 @@ if ($submitdashtile && enforcePostRequest(false)) {
             }
         }
 
-        if (isset($buildstring['tlsize'])) {
+        if (isset($buildstring['tlsize']) && strpos($buildurl, 'tlsize=') !== false) {
             $buildurl = str_replace("tlsize={$buildstring['tlsize']}", "tlsize={$tlsize}", $buildurl);
+        } elseif (strpos($buildurl, 'tlsize=') === false) {
+            $buildurl .= "&tlsize={$tlsize}";
         }
 
         if (($tile["all_users"] || $all_users ) && checkPermission_dashadmin()) {
@@ -418,6 +420,9 @@ if ($create) {
     }
 }
 
+parse_str(parse_url($url, PHP_URL_QUERY), $url_parts);
+$data = $url_parts['data'] ?? '';
+
 /* Start Display*/
 include "../include/header.php";
 
@@ -444,7 +449,7 @@ if (!$validpage) {
         <div class="Question">
             <label><?php echo escape($lang["preview"]); ?></label>
             <br />
-            <div class="HomePanel DashTile">
+            <div class="HomePanel DashTile" style="overflow: initial;">
                 <div id="previewdashtile" class="dashtilepreview HomePanelIN HomePanelDynamicDash"></div>
             </div>
             <div class="clearerleft"></div>
@@ -483,6 +488,8 @@ if (!$validpage) {
         if ($freetext) {
             if ($freetext == "true") {
                 $freetext = "";
+            } elseif (array_key_exists($freetext, $lang)) {
+                $freetext = $lang[$freetext];
             }
             ?>
             <div class="Question">
@@ -493,7 +500,7 @@ if (!$validpage) {
             <?php
         }
 
-        if ('' != $tile_type && $tile_type !== "conf") {
+        if ('' != $tile_type) {
             ?>
             <!-- Dash tile size selector -->
             <div class="Question">
@@ -731,6 +738,7 @@ if (!$validpage) {
             var prelink= encodeURIComponent(jQuery("#previewlink").val());
             var tile = "&tllink="+prelink+"&tltitle="+pretitle+"&tltxt="+pretxt;
             var tlsize = encodeURIComponent(jQuery('#DashTileSize :selected').val());
+            var data = "<?php echo urlencode($data); ?>"
 
             // Some tile types don't have style
             if (typeof prevstyle === 'undefined') {
@@ -775,7 +783,7 @@ if (!$validpage) {
                 width = 515;
             }
                 
-            jQuery("#previewdashtile").load("<?php echo escape($previewurl); ?>?tltype=<?php echo urlencode($tile_type)?>&tlsize=" + tlsize + "&tlstyle="+prevstyle+"&tlwidth="+width+"&tlheight="+height+tile);
+            jQuery("#previewdashtile").load("<?php echo escape($previewurl); ?>?tltype=<?php echo urlencode($tile_type)?>&tlsize=" + tlsize + "&tlstyle="+prevstyle+"&tlwidth="+width+"&tlheight="+height+tile+'&data='+data);
         }
 
         jQuery("#previewtitle").change(updateDashTilePreview);
@@ -786,6 +794,15 @@ if (!$validpage) {
             updateDashTilePreview();
         });
         jQuery("#promotedresource").change(updateDashTilePreview);
+        <?php 
+            if ($tile_type == 'conf' || $tile_type == 'ftxt' || $tile_type == 'fcthm') {
+                ?>
+                    jQuery(document).ready(function() {
+                        updateDashTilePreview();
+                    });
+                <?php
+            } 
+        ?>
     </script>
 </div><!-- End of BasicsBox -->
 

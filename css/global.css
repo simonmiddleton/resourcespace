@@ -128,6 +128,7 @@
     --form-tooltip-stroke: var(--colour-brand-primary-default);
 
     /* Spacing  */
+    --space-2: 2px;
     --space-4: 4px;
     --space-6: 6px;
     --space-8: 8px;
@@ -369,6 +370,291 @@ button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpac
     font-weight: 600;
 }
 
+.HomePanel {
+    display: flex;
+
+    background-color: var(--colour-surface-card-content-background);
+    color: var(--colour-typography-900);
+    /* Desktop/Body/Default */
+    font-family: "Atkinson Hyperlegible Next";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%; /* 22.4px */
+    border-radius: var(--space-4) var(--space-4);
+    overflow: hidden;
+    flex: 0 2.1 320px;
+}
+.thmbs-tile-img {
+    display: flex;
+    width: 100%;
+    height: 180px;
+    object-fit: cover;  
+}
+.tile-content {
+    height: 50%;
+    overflow: hidden;
+}
+.tile-desc {
+    display: flex;
+    padding: var(--space-24) var(--space-16) var(--space-16) var(--space-16);
+    flex-direction: column;
+    align-items: flex-start;
+    flex: 1 0 0;
+    align-self: stretch;
+}
+.tile-desc:not(:has(*)){
+    padding: 0;
+}
+.tile-desc p {
+    color: var(--colour-typography-900);
+    font-family: "Atkinson Hyperlegible Next";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%;
+}
+.tile-desc h2 {
+    color: var(--colour-typography-900);
+    /*font-family: Space Grotesk;*/
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 125%;
+    letter-spacing: -0.25px;
+}
+.tile-text-only h2 {
+    display: flex;
+    padding-bottom: var(--space-8);
+    align-items: flex-start;
+    align-self: stretch;
+}
+.tile-placeholder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 180px; 
+    background: var(--colour-surface-card-icon-background);
+}
+.tile-placeholder:hover{
+    background: var(--colour-surface-card-icon-background-hover);
+}
+.tile-placeholder > .thumbs-tile-image {
+    height: 48px;
+    width: 48px;
+
+    background-color: var(--colour-brand-primary-default);
+    opacity: 0.2;
+
+    mask-image: url('../gfx/interface/dash_placeholder.svg');
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+
+    -webkit-mask-image: url('../gfx/interface/dash_placeholder.svg');
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    -webkit-mask-size: contain;
+}
+.tile-special-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 180px;
+    border-radius: var(--space-4) var(--space-4) 0 0;
+    background: var(--colour-surface-card-icon-background);
+}
+.tile-special-icon {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: var(--space-6);
+    background: var(--colour-surface-card-icon-container);
+    box-shadow: 0 4px 8px 8px rgba(0, 0, 0, 0.10);
+    width: 72px;
+    height: 72px;
+}
+.tile-special-icon i {
+    padding: var(--space-12);
+    font-size: 48px;
+    color: var(--colour-surface-card-icon)
+}
+.tile-pill {
+    position: absolute;
+    top: -12px;
+    right: -12px;
+    display: flex;
+    min-width: 19px;
+    height: 22px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+    border-radius: 72px;
+    background: var(--colour-feedback-error-default);
+
+    color: var(--colour-global-white);
+    text-align: center;
+    font-family: "Atkinson Hyperlegible Next";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 100%; /* 18px */
+
+    padding: 2px 5px;
+}
+.tile-graph {
+    display: flex;
+    padding: var(--space-16);
+    gap: var(--space-16);
+    flex-direction: column;
+    align-items: center;
+    align-self: stretch;
+    flex-wrap: wrap;
+}
+.tile-graph > h2 {
+    flex: 1 0 0;
+    color: var(--colour-typography-900);
+    padding-bottom: var(--space-16);
+    align-items: flex-start;
+    align-self: stretch;
+
+    /* Desktop/Header/H4 */
+    /*font-family: Space Grotesk;*/
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 125%; /* 22.5px */
+    letter-spacing: -0.25px;
+}
+.tile-graph-container {
+    height: 256px;
+    width: 100%;
+}
+.tile-graph-container.tile-pie-graph canvas{
+    margin: auto;
+}
+.tile-graph-legend {
+    display: flex;
+    padding: var(--space-16) var(--space-16) 0 var(--space-16);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-8);
+    align-self: stretch;
+}
+.tile-graph-legend ul {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    margin: 0
+}
+.tile-graph-legend li {
+    gap: var(--space-8);
+    display: flex;
+    width: 100%;
+    align-items: flex-start;
+}
+.tile-graph-legend-bullet {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: flex;
+    margin-top: 4px;
+    flex-direction: column;
+    align-items: flex-start;
+    flex-shrink: 0;
+}
+.tile-graph-legend-label {
+    color: var(--colour-typography-900);
+    font-family: "Atkinson Hyperlegible Next";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%; /* 19.6px */
+}
+.tile-summary {
+    display: flex;
+    height: 120px;
+    padding: var(--space-16);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-self: stretch;
+
+    border-radius: var(--space-4);
+    background: var(--colour-surface-card-icon-background);
+}
+.tile-summary > p {
+    color: var(--colour-link-primary-default);
+    text-align: center;
+    /*font-family: Space Grotesk;*/
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 125%; /* 40px */
+}
+.tile-summary > h2 {
+    color: var(--colour-link-primary-default);
+    text-align: center;
+    font-family: "Atkinson Hyperlegible Next";
+    font-size: 14.941px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%; /* 20.918px */
+}
+div.tile-select {
+    padding-bottom: var(--space-8);
+    width: 100%;
+}
+.tile-multi {
+    display: flex;
+    width: 100%;
+    height: 180px;
+    gap: var(--space-2);
+}
+.tile-multi > .tile-placeholder { 
+    width: calc(50% - 1px);
+}
+.tile-multi > img {
+    width: 50%;
+    object-fit: cover;
+    display: block;
+    background: var(--colour-surface-card-icon-background);
+}
+.tile-sub-multi {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    gap: var(--space-2)
+}
+.tile-sub-multi img, .tile-sub-multi div {
+    flex: 1;
+    width: 100%;
+    height: calc(50% - 1px);
+    object-fit: cover;
+    display: block;
+    background: var(--colour-surface-card-icon-background);
+}
+.tile-multi:hover .tile-sub-multi > div, .tile-multi:hover > .tile-placeholder {
+    background: var(--colour-surface-card-icon-background-hover);
+} 
+.HomePanel.DashTile {
+    display: flex;
+}
+#create_dash .HomePanel.DashTile {
+    background-color: unset;
+}
+#previewdashtile {
+    display: flex;
+    flex-grow: 0;
+    background: var(--colour-surface-card-content-background);
+    border-radius: var(--space-4) var(--space-4);
+    outline: var(--space-2) solid var(--colour-neutral-700);
+}
+#previewdashtile .DoubleWidthDashTile{
+    border-radius: var(--space-4) var(--space-4);
+}
 
 .RecordPanel .RecordDownloadSpace .DownloadDBlend .MissingFile a {
     border-radius: 5px;
@@ -948,9 +1234,9 @@ input[type="number"].NumberSearchWidth {width:80px; margin: 0 10px;}
 .ThemeBox li {padding:0 0.35em 0 0;margin:0 0.5em 0.25em 0.25em;}
 
 /*Home styling */
-.HomePanel {margin:15px 15px 0 0;width: 250px;float: left;} 
-.HomePanelIN {padding: 15px;min-height: 150px;}
-.HomePanel h2 {display:block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+.FeaturedSimpleLinks > .HomePanel {margin:15px 15px 0 0;width: 250px;float: left; transition: max-height 0.4s ease;} 
+.HomePanelIN {padding: 15px;min-height: 150px; display:flex;}
+.HomePanel h2 {display:block; text-overflow: ellipsis;}
 .HomePanel p {margin: 0; padding: 5px 0 4px 0;}
 
 .HomePanelPromotedImageWrap {text-align:center;min-height:155px;vertical-align:middle;}
@@ -1266,12 +1552,6 @@ h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
     margin-top:10px;    
     }
 
-#themeselect
-    {
-    width: 200px;
-    font-size: 1em;
-    margin-bottom:10px;
-    }
 #themeviewall
     {
     display:block;
@@ -1435,11 +1715,20 @@ input.contactadminbutton  {
 
 /* Dash Styling */
 #HomePanelContainer {
-    width: 100%;
+    container-name: dash-container;
+    container-type: inline-size;
+    
+    padding-top: var(--space-24);
     float: left;
-    background-color: #EAEBEA;
-    margin-left: 15px;
-    margin-right: 20px;
+    display: flex;
+    width: 100%;
+    max-width: 1376px;
+    flex-direction: row ;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: var(--space-32);
+    background-color: var(--colour-surface-view-background);
+    justify-content: center;
 }
 
 #HomePanelContainer a {-webkit-user-drag: none;}
@@ -1453,22 +1742,40 @@ a.HomePanel:hover {
 
 .HomePanelDynamicDash p.tile_corner_box {
     position: absolute;
-    bottom: 0;
-    right: 0;
+    top: 130px;
+    left: 10px;
     padding: 2px 10px;
     font-size: 1.5em;
+
+    display: inline-flex;
+    height: 26px;
+    padding: 3px var(--space-8, 8px);
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-6, 6px);
+
+    color: var(--colour-global-white);
+    font-family: "Atkinson Hyperlegible Next";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%; /* 21px */
+
+    border-radius: var(--space-4);
+    background: var(--colour-transparency-black-50);
 }
-.DashTileDraggable, .DraggableItem, .SortableItem {
+.DraggableItem, .SortableItem {
     cursor:pointer;
 }
 .HomePanelDynamicDash, .HomePanelThemes {
     padding: 0;
     overflow: hidden;
     position: relative;
-    height: 160px;
-    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex: inherit;
 }
-.HomePanelDynamicDash h2, .HomePanelThemes h2, .FeaturedSimpleTileContents h2 {
+.HomePanelThemes h2, .FeaturedSimpleTileContents h2 {
     float: none;
     position: relative;
     padding: 5px 15px 5px 15px;
@@ -1478,35 +1785,195 @@ a.HomePanel:hover {
 .HomePanelDynamicDash h2 span, .HomePanelThemes h2 span, .FeaturedSimpleTileContents h2 span {
     padding-right: 5px;
 }
-.HomePanelDynamicDash p, .HomePanelThemes p {
+.HomePanelThemes p {
     float: none;
     position: relative;
     padding-left: 15px;
     padding-right: 15px;
     clear: left;
     font-size:1em;
-    text-shadow: 0px 1px 5px #000000, 0px 1px 10px #000000;
 }
 .DoubleWidthDashTile {
     /*Note: check .HomePanel width to be sure it is ok*/
-    width: 515px;
+    flex: 0 1 672px;
 }
-
-.DashTileActions {
-    position: absolute;
-    left: 0;
-    bottom: 0;
+.DoubleWidthDashTile .thmbs-tile-img,
+.DoubleWidthDashTile .tile-multi,
+.DoubleWidthDashTile .tile-placeholder,
+.DoubleWidthDashTile .tile-special-content
+{
+    height: 377px;
+}
+.DoubleWidthDashTile .thumbs-tile-image,
+.DoubleWidthDashTile .tile-special-icon
+{
+    height: 96px;
+    width: 96px;
+}
+.DoubleWidthDashTile .tile-special-icon{
+    border-radius: var(--space-8);
+}
+.DoubleWidthDashTile p.tile_corner_box {
+    top: 330px
+}
+.DoubleWidthDashTile .tile-special-icon i {
+    font-size: 64px;
+}
+.DoubleWidthDashTile .tile-pill {
+    height: 32px;
+    min-width: 27px;
+    border-radius: 96px;
+    font-size: 18px;
+}
+.DoubleWidthDashTile .tile-graph {
+    flex-direction: row;
+}
+.DoubleWidthDashTile .tile-graph > h2 {
+    flex: 0 0 100%;
+}
+.DoubleWidthDashTile .tile-graph-container {
+    padding: var(--space-16) 28px;
+}
+.DoubleWidthDashTile .tile-graph-container.tile-line-graph {
     width: 100%;
-    height: 20px;
-    text-align: right;
-    z-index:3;
+    height: auto;
+    padding: 0;
+}
+.DoubleWidthDashTile .tile-summary {
+    height: 176px;
+    flex: 1 0 0;
+}
+.DoubleWidthDashTile .tile-summary > p{
+    font-size: 64px;
+    font-weight: 500;
+    line-height: 125%; /* 80px */
+}
+.DoubleWidthDashTile .tile-summary > h{
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 140%; /* 25.2px */
+}
+.DoubleWidthDashTile .tile-graph {
+    flex: 1 1 0;
+    padding: var(--space-16);
+    align-items: center;
+    gap: var(--space-12);
+}
+.DoubleWidthDashTile .tile-graph-legend{
+    flex: 1 1 0;
+}
+.DoubleWidthDashTile .tile-graph-container.tile-pie-graph {
+    width: 256px;
+}
+.DashTileActions {
+    display: flex;
+    padding-top: var(--space-12);
+    align-items: flex-end;
+    gap: var(--space-8);
+    flex: 1 0 0;
+    border-radius: var(--space-4);
+    /*background: var(--colour-surface-200);*/
 }
 
 .DashTileActions .tool {
-    margin-left: 8px;
-    vertical-align: middle;
-    display: inline-block;
-    padding-right: 5px;    
+    display: flex;
+    width: var(--space-32);
+    height: var(--space-32);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: var(--space-4);
+    background: var(--colour-surface-200);
+}
+
+@container dash-container (max-width:1377px) { /* Currently adjusted to accommodate the search bar, should be 1366px */
+    .HomePanel {
+        flex: 0 2.1 302px;
+    }
+    .DoubleWidthDashTile {
+        flex: 0 1 636px;
+    }
+    .thmbs-tile-img, .tile-multi, .tile-placeholder, .tile-special-content {
+        height: 170px;
+    }
+    .HomePanelDynamicDash p.tile_corner_box {
+        top: 123px;
+    }
+    .DoubleWidthDashTile .thmbs-tile-img,
+    .DoubleWidthDashTile .tile-multi,
+    .DoubleWidthDashTile .tile-placeholder,
+    .DoubleWidthDashTile .tile-special-content {
+        height: 347px;
+    }
+    .DoubleWidthDashTile .HomePanelDynamicDash p.tile_corner_box {
+        top: 300px;
+    }
+    .DoubleWidthDashTile .tile-graph-container {
+        padding: var(--space-16) 15px;
+    }
+    .DoubleWidthDashTile .tile-summary {
+        height: 160px;
+    }
+}
+@container dash-container  (max-width:768px) { /* Currently adjusted to accommodate the search bar, should be 768px */
+    .HomePanel {
+        flex: 0 2.1 360px;
+    }
+    .DoubleWidthDashTile {
+        flex: 0 1 752px;
+    }
+    .thmbs-tile-img, .tile-multi, .tile-placeholder, .tile-special-content {
+        height: 129px;
+    }
+    .HomePanelDynamicDash p.tile_corner_box {
+        top: 89px;
+    }
+    .DoubleWidthDashTile .thmbs-tile-img,
+    .DoubleWidthDashTile .tile-multi,
+    .DoubleWidthDashTile .tile-placeholder,
+    .DoubleWidthDashTile .tile-special-content {
+        height: 202px;;
+    }
+    .DoubleWidthDashTile .HomePanelDynamicDash p.tile_corner_box {
+        top: 162px;
+    }
+    .DoubleWidthDashTile .tile-graph-container.tile-pie-graph {
+        width: 100%;
+        height: auto;
+        padding: 0;
+    }
+    .DoubleWidthDashTile .tile-summary {
+        width: 100%;
+        height: 88px;
+        flex: initial;
+    }
+    .DoubleWidthDashTile .tile-summary > p {
+        font-size: 32px;
+    }
+    .DoubleWidthDashTile .tile-summary > h2 {
+        font-size: 14.941px;
+    }
+}
+@container dash-container  (max-width:360px) {
+    .HomePanel, .DoubleWidthDashTile {
+        flex: 1 0 202px;
+    }
+    .thmbs-tile-img, .tile-multi, .tile-placeholder, .tile-special-content {
+        height: 184px;
+    }
+    .HomePanelDynamicDash p.tile_corner_box {
+        top: 144px;
+    }
+    .DoubleWidthDashTile .thmbs-tile-img,
+    .DoubleWidthDashTile .tile-multi,
+    .DoubleWidthDashTile .tile-placeholder,
+    .DoubleWidthDashTile .tile-special-content {
+        height: 202px;;
+    }
+    .DoubleWidthDashTile .HomePanelDynamicDash p.tile_corner_box {
+        top: 165px;
+    }
 }
 
 .tools a{white-space: nowrap;}
@@ -1892,6 +2359,9 @@ div.MessageBox a {
     border-radius:8px;
     overflow: hidden;
 }
+.FeaturedSimpleTile.DashTile {
+    display: block;
+}
 
 .FeaturedSimpleTileImage .HomePanelIN {
     background: none;  
@@ -1964,7 +2434,6 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
     padding-right: 5px;    
 }
 
-.HomePanel.DashTile .HomePanelIN img:not(img:only-of-type),
 .FeaturedSimpleTileImage img.TileGroupImageBase { position: absolute; top: 10px; height: 100%; }
 
 .FeaturedSimpleTile.FullWidth { height: 40px; }

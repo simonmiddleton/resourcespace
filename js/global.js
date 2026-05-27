@@ -2303,3 +2303,43 @@ function getPluginName(url) {
     
     return '';
 }
+
+const tile_graph_legend = {
+    id: 'tile_graph_legend',
+
+    afterUpdate(chart, args, options) {
+        const legendContainer = jQuery('#' + options.containerID);
+        if (!legendContainer) return;
+        legendContainer.children().remove();
+        const ul = jQuery('<ul>');
+
+        const items = chart.options.plugins.legend.labels.generateLabels(chart);
+        items.forEach(item => {
+            const bullet = jQuery('<span>').addClass('tile-graph-legend-bullet');
+            bullet.css({background: item.fillStyle});
+            const text = jQuery('<span>').addClass('tile-graph-legend-label');
+            text.text(item.text);
+
+            ul.append(
+                jQuery('<li>')
+                    .append(bullet)
+                    .append(text)
+            );
+        });
+
+        legendContainer.append(ul);
+    }
+};
+
+const dash_chart_palette = [
+    '#6186CC',
+    '#8979FF',
+    '#FF928A',
+    '#2BB7DC',
+    '#FFAE4C',
+    '#537FF1',
+    '#6FD195',
+    '#8C63DA',
+    '#3CC3DF',
+    '#55C4AE',
+];
