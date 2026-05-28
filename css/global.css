@@ -150,9 +150,9 @@
     --effect-style-elevation-level-1-shadow: 0px 2px 4px 4px rgba(0,0,0,0.100);
 
     /* Collection bar */
-    --toggle-height: var(--space-72);
+    --toggle-height: var(--space-60);
     --actions-height: 110px;
-    --thumbs-height: 196px;
+    --thumbs-height: 184px;
     
 }
 
@@ -4045,9 +4045,12 @@ a.text-link:visited {
     transition: transform 0.25s ease;
 }
 
-.collection-bar-holder .collection-bar-toggle-button {
-    height: var(--space-72);
-    width: var(--space-72);
+.collection-bar-holder .collection-bar-toggle-button {    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--space-60);
+    width: var(--space-60);
     margin-left: var(--space-16);
     border-radius: var(--space-4) var(--space-4) 0 0;
     color: var(--colour-neutral-50);
@@ -4063,6 +4066,7 @@ a.text-link:visited {
 
 .collection-bar-holder .collection-bar-toggle-button:hover {
     background-color: var(--colour-brand-primary-hover);
+    cursor: pointer;
 }
 
 .collection-bar-holder:not(.state-closed) .collection-bar-toggle-button {
@@ -4083,7 +4087,16 @@ a.text-link:visited {
     100% { background-color: var(--colour-brand-primary-default); }
 }
 
+.collection-bar-holder .collection-bar-toggle-button i {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
 .collection-bar-toggle-button i::before {
+    font-size: 36px;
+    line-height: 1;
     content: "\e1c1";
 }
 
@@ -4271,7 +4284,7 @@ a.text-link:visited {
 .show-thumbs-button {
     display: inline-flex;
     height: var(--space-48);
-    padding: var(--space-12) 18px;
+    padding: var(--space-12) 18px var(--space-12) var(--space-16);
     align-items: center;
     justify-content: center;
     gap: var(--space-6);
@@ -4281,7 +4294,7 @@ a.text-link:visited {
     border-radius: var(--space-4);
     color: var(--colour-global-white);
     text-align: center;
-    font-size: 20px;
+    font-size: 18px;
     font-style: normal;
     font-weight: 500;
     line-height: 100%;
@@ -4314,7 +4327,7 @@ a.text-link:visited {
 .collection-bar-thumbnails {
     position: relative;
     width: 100%;
-    padding: var(--space-16) 0 var(--space-8) 0;
+    padding: 0 0 var(--space-8) 0;
 }
 
 .collection-bar-thumbnail-row {
@@ -4553,7 +4566,10 @@ body:has(.collection-bar-holder.state-thumbs) #UICenter {
     .collection-bar-holder .collection-bar-toggle-button {
         height: var(--space-48);
         width: var(--space-48);
-        font-size: 30px;
+    }
+    
+    .collection-bar-toggle-button i::before {
+        font-size: 28px;
     }
 
     .thumbnail-row-arrow {
