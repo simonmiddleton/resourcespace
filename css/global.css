@@ -802,8 +802,6 @@ img[src$=".svg"]
 #login_box #Footer {margin: 0 0 10px 0;}
 
 #UICenter {
-    /* display: flex;
-    flex-direction: column; */
     height: calc(100% - 66px);
     transition: height 0.25s ease;
     overflow-y: scroll;
@@ -813,7 +811,6 @@ img[src$=".svg"]
     margin: 0 15px 60px;
     padding: 0 0 0 0;
     text-align:left;
-    /* flex: 1; */
 }
 #CentralSpaceContainerRestrict {margin:0 15px 20px 25px;padding:0;text-align:left;}
 #CentralSpaceLogin {
