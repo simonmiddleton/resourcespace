@@ -4212,17 +4212,14 @@ header.LoginHeader {
 
 #header-container .logo {
     display: flex;
-    max-width: 200px;
-    max-height: 48px;
-    align-items: center;
     line-height: initial;
     grid-area: logo;
     justify-self: center;
 }
 
 #header-container .logo img {
-    width: 100%;
-    height: 100%;
+    max-width: 200px;
+    max-height: 48px;
     object-fit: contain;
 }
 
