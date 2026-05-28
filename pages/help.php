@@ -7,7 +7,6 @@ $page = getval("page", "");
 
 include "../include/header.php";
 ?>
-
 <div class="BasicsBox"> 
     <?php
     $onClick = 'return CentralSpaceLoad(this, true);';
@@ -24,7 +23,7 @@ include "../include/header.php";
                     <a href="#" onclick="ModalClose();" class="closeLink icon-x" title="<?php echo escape($lang["close"]); ?>"></a>
                 </div>
             <?php } ?>
-            <h1><?php echo escape($lang['helpandadvice']); ?></h1>
+            <h1><?php echo escape(text($page != '' ? 'knowledgebase' : 'helpandadvice')); ?></h1>
         </div>
 
         <p>
@@ -33,7 +32,7 @@ include "../include/header.php";
                 // Build link for the specified KnowlegeBase page
                 echo '<iframe src="https://www.resourcespace.com/knowledge-base/' . escape($page) . '?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
             } else {
-                echo strip_tags_and_attributes(text("introtext"), ['iframe', 'a'], ['src', 'href']);
+                echo strip_tags_and_attributes(text("introtext"), ['a'], ['href', 'target', 'rel']);
             }
             ?>
         </p>

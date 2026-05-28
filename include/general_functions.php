@@ -4609,6 +4609,18 @@ function is_string_loose($var): bool
 }
 
 /**
+ * Input (type) validation helper function for a list of integers (mostly used for IDs). This covers cases when the
+ * submitted data is either sent as an actual list (i.e. myInput[]) or when retrieved from the cookie/query string as a
+ * CSV.
+ *
+ * @param mixed $val User input value to be validated
+ */
+function is_input_list_loose($val): bool
+{
+    return (is_array($val) && array_is_list($val)) || validate_digit_csv($val);
+}
+
+/**
  * Helper function to check if a value is able to be cast to a float
  * 
  * @param mixed $var value to be tested

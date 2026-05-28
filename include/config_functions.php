@@ -2080,7 +2080,6 @@ function get_resource_type_field_columns()
         'full_width'               => [$lang['property-field_full_width'],'',1,1],
         'advanced_search'          => [$lang['property-enable_advanced_search'],'',1,1],
         'simple_search'            => [$lang['property-enable_simple_search'],'',1,1],
-        'browse_bar'               => [$lang['field_show_in_browse_bar'],'',1,1],
         'read_only'                => [$lang['property-read_only_field'], '', 1, 1],
         'exiftool_field'           => [$lang['property-exiftool_field'],'',0,1],
         'fits_field'               => [$lang['property-fits_field'], $lang['information-fits_field'], 0, 1],

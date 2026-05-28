@@ -180,12 +180,6 @@ $originals_separate_storage = false;
 $applicationname = "ResourceSpace"; // The name of your implementation / installation (e.g. 'MyCompany Resource System')
 $header_favicon = "gfx/interface/favicon.png";
 
-// Is the logo a link to the home page?
-$header_link = true;
-
-// Header includes username to right of user menu icon
-$header_include_username = false;
-
 // Custom source location for the header image (includes baseurl, requires leading "/"). Will default to the resourcespace logo if left blank. Recommended image size: 350px(X) x 80px(Y)
 $linkedheaderimgsrc = "";
 
@@ -646,9 +640,6 @@ $mycollections_link = false;
 // Display a 'My Requests' link in the top navigation
 $myrequests_link = false;
 
-// Display a 'Research Request' link in the top navigation
-$research_link = true;
-
 // Display a Themes link in Top Navigation if Themes is enabled
 $themes_navlink = true;
 
@@ -911,15 +902,8 @@ $watermark_open_search = false;
 // Set to 'true' to make the simple search bar more basic, with just the single search box.
 $basic_simple_search = false;
 
-// include an "all" toggle checkbox for Resource Types in Search bar
-$searchbar_selectall = false;
-
 // Hide the resource type selector on the simple search and advanced search pages
 $hide_search_resource_types = false;
-
-/*Display keywords as pills on Simple Search. Use tab to create new tags/ pills
-Note: full text strings are also accepted as a pill*/
-$simple_search_pills_view = false;
 
 // Custom top navigation links.
 // You can add as many panels as you like. They must be numbered sequentially starting from zero (0,1,2,3 etc.)
@@ -2316,9 +2300,6 @@ $comments_policy_enable = false;                  // show a Comments Policy link
 $comments_policy_external_url = "";               // if specified, will popup a new window fulfilled by URL (when clicking on "comment policy" link)
 $comments_view_panel_show_marker = true;          // show an asterisk by the comment view panel title if comments exist
 
-// Show the login panel for anonymous users
-$show_anonymous_login_panel = true;
-
 $do_not_add_to_new_collection_default = false; // will set "do not add to a collection" as the default option for upload option
 $no_metadata_read_default = false; // If set to true and $metadata_read is false then metadata will be imported by default
 $removenever = false; // Remove 'never' option for resource request access expiration and sets default expiry date to 7 days
@@ -2961,12 +2942,6 @@ $ghostscript_extensions = array('ps', 'pdf');
 // Generate only the internal preview sizes and show only the original file for download for any of the
 // extensions found in a merge of $non_image_types, $ffmpeg_supported_extensions, $unoconv_extensions and $ghostscript_extensions list
 $non_image_types_generate_preview_only = true;
-
-// Browse bar
-// Enable/Disable browse bar - in system config
-$browse_bar = true;
-// Show workflow (archive) states in browse bar?
-$browse_bar_workflow = true;
 
 // Batch replace from local folder
 $batch_replace_local_folder = ""; // e.g. "/upload";

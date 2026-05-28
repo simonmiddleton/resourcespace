@@ -405,22 +405,45 @@ if (getval("resetrestypes","")=="")
     {
     $restypes=getval("restypes","");
     }
-else
-    { 
-    $restypes="";
-    reset($_POST);reset($_GET);foreach (array_merge($_GET, $_POST) as $key=>$value)
-
-        {
-        $hiddenfields = array();
-        if ($key=="rttickall" && $value=="on"){$restypes="";break;} 
-        if ((substr($key,0,8)=="resource")&&!in_array($key, $hiddenfields)) {if ($restypes!="") {$restypes.=",";} $restypes.=substr($key,8);}
-        }
+else { 
+    /** Check input type and support the pseudo "Global" and resource type IDs */
+    $check_restype_list_item_type = static fn ($V): bool => (is_int_loose($V) || is_string_loose($V));
+    $rt_val = getval(
+        'restypes',
+        [],
+        false,
+        static fn ($V): bool => is_input_list_loose($V)
+            // If using the (saved) cookie value, the input will be a CSV
+            || (is_string($V) && array_filter(parse_csv_to_list_of_type($V, $check_restype_list_item_type)) !== [])
+    );
+    $restypes = implode(
+        ',',
+        array_merge(
+            array_values(array_intersect(
+                array_merge(
+                    ['Global'], # pseudo resource type <=> "All resource types" option
+                    array_values(
+                        array_diff(
+                            array_map(intval(...), array_column(get_resource_types('', true, false, true), 'ref')),
+                            $hide_resource_types
+                        )
+                    )
+                ),
+                is_array($rt_val) ? $rt_val : parse_csv_to_list_of_type($rt_val, $check_restype_list_item_type)
+            )),
+            getval('includeFeaturedCollections', '') === 'yes' ? ['FeaturedCollections'] : []
+        )
+    );
 
     rs_setcookie('restypes', $restypes,0,"","",false,false);
 
     # This is a new search, log this activity
-    if ($archivesearched) {daily_stat("Archive search",0);} else {daily_stat("Search",0);}
+    if ($archivesearched) {
+        daily_stat("Archive search", 0);
+    } else {
+        daily_stat("Search", 0);
     }
+}
 $modified_restypes=hook("modifyrestypes_aftercookieset");
 if($modified_restypes){$restypes=$modified_restypes;}
 
@@ -655,11 +678,13 @@ include "../include/header.php";
 if($k=="" || $internal_share_access)
     {
      ?>
-    <script type="text/javascript">
-    var dontReloadSearchBar=<?php echo getval('noreload', null)!=null ? 'true' : 'false' ?>;
-    if (dontReloadSearchBar !== true)
-        ReloadSearchBar();
-    ReloadLinks();
+    <script>
+        jQuery(() => {
+            const dontReloadSearchBar=<?php echo getval('noreload', null)!=null ? 'true' : 'false' ?>;
+            if (dontReloadSearchBar !== true) {
+                ResourceSpace.Modules.Header.reloadSearchBar();
+            }
+        });
     </script>
     <?php
     }

@@ -4,6 +4,11 @@ include_once "../include/authenticate.php";
 include_once "../include/research_functions.php";
 include_once "../include/request_functions.php";
 
+if (!($research_request && checkperm('s') && checkperm('q'))) {
+    http_response_code(403);
+    die();
+}
+
 $name        = getval('name', '');
 $email       = getval('email', '');
 $description = getval('description', '');

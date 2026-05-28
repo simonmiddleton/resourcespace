@@ -182,6 +182,7 @@ if ($display_as_radiobuttons) {
     // On advanced search, display it as a dropdown, if set like this:
     ?>
     <select
+        id="<?php echo escape($id); ?>"
         class="<?php echo $class; ?>"
         name="<?php echo escape($name); ?>"
         <?php echo ($autoupdate) ? 'onChange="UpdateResultCount();"' : ''; ?>>

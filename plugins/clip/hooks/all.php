@@ -1,4 +1,7 @@
 <?php
+
+use Montala\ResourceSpace\UserInterfaceComponents\Icon;
+
 include_once dirname(__FILE__, 2) . '/include/clip_functions.php';
 
 function HookClipAllAddspecialsearch($search, $select, $sql_join, $sql_filter)
@@ -147,7 +150,10 @@ function HookClipAllSearchbarafterbuttons()
         return false;
     }
     ?>
-    <p><i aria-hidden="true" class="icon-brain"></i>&nbsp;<a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl ?>/plugins/clip/pages/search.php"><?php echo escape($lang["clip-ai-smart-search"]) ?></a></p>
+    <a href="<?php echo $baseurl; ?>/plugins/clip/pages/search.php" onclick="return CentralSpaceLoad(this, true);">
+        <?php render_icon_wrapper_component(Icon::Brain); ?>
+        <span><?php echo escape($lang['clip-ai-smart-search']); ?></span>
+    </a>
     <?php
 }
 

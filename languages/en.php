@@ -232,7 +232,8 @@ $lang["myrequests"] = "My requests";
 $lang["collections"] = "Collections";
 $lang["mycontributions"] = "Contributions";
 $lang["researchrequest"] = "Research request";
-$lang["helpandadvice"] = "Knowledge Base";
+$lang["helpandadvice"] = "Help & advice";
+$lang['knowledgebase'] = "Knowledge Base";
 $lang["teamcentre"] = "Admin";
 
 # footer link
@@ -242,6 +243,7 @@ $lang["changethemeto"] = "Change theme to";
 
 # Search bar
 $lang["simplesearch"] = "Simple search";
+$lang["search_filter_panel_toggle"] = "Toggle search filters";
 $lang["searchbutton"] = "Search";
 $lang["clearbutton"] = "Clear";
 $lang["bycountry"] = "By country";
@@ -263,6 +265,8 @@ $lang["perpage"] = "per page";
 $lang["perpage_option"] = "? per page";
 $lang["powered_by"] = "Powered by";
 $lang["powered_by_resourcespace"] = "Powered by ResourceSpace";
+$lang['search_resources'] = 'Search resources';
+$lang['clear_filters'] = 'Clear filters';
 
 $lang["on"] = "On";
 $lang["off"] = "Off";
@@ -275,7 +279,6 @@ $lang["loadmorebutton"] = "Load more";
 
 $lang["gotoadvancedsearch"] = "Advanced search";
 $lang["viewnewmaterial"] = "View new material";
-$lang["researchrequestservice"] = "Research request service";
 
 # Admin
 $lang["manageresources"] = "Resources";
@@ -1687,8 +1690,6 @@ $lang["smartcollection"] = "Smart collection";
 $lang["dosavedsearch"] = "Do saved search";
 
 $lang["all"] = "All";
-$lang["allresourcessearchbar"] = "All resources";
-$lang["allcollectionssearchbar"] = "All collections";
 $lang["backtoresults"] = "Back to results";
 $lang["continuetoresults"] = "Continue to results";
 
@@ -2560,7 +2561,7 @@ $lang["download_progress__introtext"] = "Your download will start shortly. When 
 $lang["downloadfile_nofile"] = "The file requested was not found.";
 $lang["edit__batch"] = "";
 $lang["edit__multiple"] = "Please select which fields you wish to overwrite. Fields you do not select will be left untouched.";
-$lang["help__introtext"] = '<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
+$lang["help__introtext"] = '<p>Get the most out of ResourceSpace. The Knowledge Base will help you use the system and the resources more effectively.</p><p><a href="https://www.resourcespace.com/knowledge-base/" target="_blank" rel="noopener noreferrer">ResourceSpace Knowledge Base</a></p>';
 $lang["home__restrictedtext"] = "Please click on the link that you were e-mailed to access the resources selected for you.";
 $lang["home__restrictedtitle"] = "Welcome to ResourceSpace [ver]";
 $lang["home__welcometext"] = "The simple, fast, &amp; free way to organise your digital assets.";
@@ -2799,7 +2800,6 @@ $lang['systemconfig_help_link_label'] = 'Show "Help & advice" link';
 $lang['systemconfig_recent_link_label'] = 'Show "Recently added" link';
 $lang['systemconfig_mycollections_link_label'] = 'Show "My collections" link';
 $lang['systemconfig_myrequests_link_label'] = 'Show "My requests" link';
-$lang['systemconfig_research_link_label'] = 'Show "Research requests" link';
 $lang['systemconfig_themes_navlink_label'] = 'Show "Featured collections" link';
 $lang['systemconfig_use_theme_as_home_label'] = 'Use the "Featured collections" page as the home page?';
 $lang['systemconfig_use_recent_as_home_label'] = 'Use the "Recently added" page as the home page?';
@@ -2868,9 +2868,6 @@ $lang['systemconfig_theme_category_levels'] = 'How many levels of theme category
 $lang['systemconfig_enable_themes'] = 'Enable Featured Collections';
 $lang["systemconfig_modal_default"] = "Enable modals for standard pages where configured? User preferences may override this.";
 $lang["systemconfig_slideshow_photo_delay"] = "Number of seconds for slideshow to wait before changing image";
-$lang['systemconfig_browse_bar_section'] = 'Browse Bar';
-$lang['systemconfig_browse_bar_enable'] = 'Enable Browse Bar';
-$lang['systemconfig_browse_bar_workflow'] = 'Display workflow states in Browse Bar';
 $lang['systemconfig_user_local_timezone'] = 'User local time zone';
 $lang['systemconfig_show_collection_name'] = "Show collection name and description when viewing collection resources";
 $lang['systemconfig_only_show_modified'] = 'Only show modified values';
@@ -3227,15 +3224,7 @@ $lang["filter_is_in"]               = "IS ";
 $lang["filter_is_not_in"]           = "IS NOT ";
 $lang["filter_or"]                  = "OR";
 $lang["filter_and"]                 = "AND";
-
-/* Browse bar */
-$lang['browse_bar_text']                = "Browse";
-$lang['field_show_in_browse_bar']       = "Show in Browse Bar";
-$lang['error-sessionexpired']           = "Your session has expired or is otherwise invalid";
-$lang['error-invalid_resource_type']    = "Invalid resource type";
-$lang['error-invalid_browse_action']    = "Invalid action. Please check existing resource data";
-$lang['browse_by_tag']                  = "Browse by tag";
-$lang['browse_by_workflow_state']       = "Workflow";
+$lang['error-sessionexpired'] = "Your session has expired or is otherwise invalid";
 
 # Updates to workflow
 $lang["userresources_status_change"]    = "Resources that you have contributed have been moved to the state: ";
@@ -3543,6 +3532,7 @@ $lang["manage_dash_tiles-tooltip"] = "Manage default user dash tiles";
 $lang["manage_external_shares-tooltip"] = "View and manage external share links";
 $lang["rse_analytics-tooltip"] = "Create charts of resource usage and system statistics";
 $lang["viewreports-tooltip"] = "View tables of data from the system";
+$lang["knowledgebase-tooltip"] = "View ResourceSpace (Knowledge Base) documentation";
 $lang["systemsetup-tooltip"] = "System setup area";
 $lang["page-title_user_group_management-tooltip"] = "Manage user groups and permissions";
 $lang["resource_types_manage-tooltip"] = "Create and configure resource types";

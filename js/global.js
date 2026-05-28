@@ -120,25 +120,6 @@ function ClearLoadingTimers()
         }
     }
 
-/* AJAX loading of searchbar contents for search executed outside of searchbar */
-function ReloadSearchBar()
-{
-    var SearchBar = jQuery('#SearchBarContainer');
-
-    SearchBar.load(baseurl_short + "pages/ajax/reload_searchbar.php?ajax=true&pagename=" + pagename, function (response, status, xhr) {
-        if (status=="error") {
-            SearchBar.html(errorpageload  + xhr.status + " " + xhr.statusText + "<br/>" + response);
-        } else if (typeof chosen_config !== 'undefined' && chosen_config['#SearchBox select']!=='undefined') {
-            // Load completed, add Chosen dropdowns if configured
-            jQuery('#SearchBox select').each(function() {
-                ChosenDropdownInit(this, '#SearchBox select');
-            });
-        }
-    });
-
-    return false;
-}
-
 /* Scroll to top if parameter set - used when changing pages */
 function pageScrolltop(element)
     {
@@ -384,17 +365,9 @@ function CentralSpaceLoad (anchor,scrolltop,modal,keep_fragment = true)
                     ChosenDropdownInit(this, '#CentralSpace select');
                     });
                 }
-
-            if (typeof AdditionalJs == 'function') {
-              AdditionalJs();
-            }
-
-            ReloadLinks();
-
         });
 
     jQuery('#UICenter').show(0);
-    jQuery("#SearchBarContainer").removeClass("FullSearch");
 
     ajaxinprogress=false;
     return false;
@@ -500,7 +473,6 @@ function CentralSpacePost (form, scrolltop, modal, update_history, container_id)
         CentralSpace.html(data);
 
         jQuery('#UICenter').show(0);
-        jQuery("#SearchBarContainer").removeClass("FullSearch");
 
         // Add global trash bin:
         CentralSpace.append(global_trash_html);
@@ -563,12 +535,6 @@ function CentralSpacePost (form, scrolltop, modal, update_history, container_id)
             }
         });
     ajaxinprogress=false;
-
-    // Reload Browse bar item if required
-    if (typeof browsereload !== "undefined")
-        {
-        toggleBrowseElements(browsereload, true);
-        }
 
     return false;
     }
@@ -668,45 +634,6 @@ function directDownload(url, element = undefined)
         {
         window.open(url, '_blank').focus();
         }
-    }
-
-
-
-/* AJAX loading of navigation link */
-function ReloadLinks()
-    {
-    if(!linkreload)
-        {
-        return false;
-        }
-
-    var nav2=jQuery('#HeaderNav2');
-    if(!nav2.has("#HeaderLinksContainer").length)
-        {
-        return false;
-        }
-
-    nav2.load(baseurl_short+"pages/ajax/reload_links.php?ajax=true", function (response, status, xhr)
-        {
-        // 403 is returned when user is logged out and ajax request! @see revision #12655
-        if(xhr.status == 403)
-            {
-            window.location = baseurl_short + "login.php";
-            }
-        else if(status=="error")
-            {
-            var SearchBar=jQuery('#SearchBarContainer');
-            SearchBar.html(errorpageload  + xhr.status + " " + xhr.statusText + "<br/>" + response);
-            }
-        else
-            {
-            // Load completed
-            ActivateHeaderLink(document.location.href);
-            }
-        });
-
-    headerLinksDropdown();
-    return false;
     }
 
 function relateresources(ref,related,action, ctx)
@@ -999,7 +926,7 @@ function ModalCentre()
     topmargin = 30;
     if (modalalign == 'right' || modalalign == 'rightnarrow') {
         left = Math.max(jQuery(window).width() - jQuery('#modal').outerWidth(), 0) - 20;
-        topmargin = 50;
+        topmargin = 70;
     } else {
         left = Math.max(jQuery(window).width() - jQuery('#modal').outerWidth(), 0) / 2;
     }
@@ -1061,35 +988,6 @@ function SetContext(url)
 
     return url;
     }
-
-// Update header links to add a class that indicates current location
-function ActivateHeaderLink(activeurl)
-        {
-        var matchedstring=0;
-        activelink='';
-
-        // Was the 'recent' link clicked?
-        var recentlink=(decodeURIComponent(activeurl).indexOf('%21last')>-1 ||
-        decodeURIComponent(activeurl).indexOf('!last')>-1);
-
-        jQuery('#HeaderNav2 li a').each(function() {
-            // Remove current class from all header links
-            jQuery(this).removeClass('current');
-
-            if(decodeURIComponent(activeurl).indexOf(this.href)>-1
-
-            // Set "recent" rather than "search results" when the search is for recent items.
-            || (recentlink && this.href.indexOf('%21last')>-1))
-                {
-                    if (this.href.length>matchedstring) {
-                    // Find longest matched URL
-                    matchedstring=this.href.length;
-                    activelink=jQuery(this);
-                    }
-                }
-            });
-        jQuery(activelink).addClass('current').attr('aria-current', 'page');
-        }
 
 function ReplaceUrlParameter(url, parameter, value){
     var parameterstring = new RegExp('\\b(' + parameter + '=).*?(&|$)')
@@ -1209,18 +1107,6 @@ function ChosenDropdownInit(elem, selector)
         chosen_config[selector]['width']=css_width_total;
         jQuery(elem).chosen(chosen_config[selector]);
         }
-    }
-
-function removeSearchTagInputPills(search_input)
-    {
-    var tags = search_input.tagEditor('getTags')[0].tags;
-
-    for(i = 0; i < tags.length; i++)
-        {
-        search_input.tagEditor('removeTag', tags[i]);
-        }
-
-    return true;
     }
 
 function array_diff(array_1, array_2)
@@ -1413,75 +1299,6 @@ function toggleFieldLock(field)
 
 /*
 *
-* Places overflowing header links into a dropdown
-*
-*/
-function headerLinksDropdown() {
-
-    if (jQuery(window).width() < 1200) {
-        return;
-    }
-
-    var menuBox = jQuery("#HeaderNav2");
-    var mb_offset = menuBox.offset();
-    var mb_width = menuBox.outerWidth(true);
-    var mb_rightedge = mb_offset.left + mb_width;
-    
-    var uploadBox = jQuery("#HeaderNav1");
-    var ub_offset = uploadBox.offset();
-    var ub_leftedge = ub_offset.left;
-
-    var containerTarget = jQuery("#HeaderLinksContainer");
-    var containerWidth = containerTarget.innerWidth();
-
-    var containerOverlap = mb_rightedge - ub_leftedge;
-    
-    var links =  jQuery("#HeaderLinksContainer").find(".HeaderLink"); // get elements that are links in the header bar
-    var linksWidth = 0;
-    var caretCreated = false;
-
-    jQuery("#OverFlowLinks").remove(); // remove the drop-down menu div
-
-    if (jQuery('#OverflowListElement').is(':visible'))
-        {
-        caretCreated = true;
-        }
-
-    for (var i = 0; i < links.length; i++)
-        {
-        linksWidth += jQuery(links[i]).outerWidth();
-
-        if (linksWidth > containerWidth-containerOverlap)
-            {
-            if (!caretCreated)
-                {
-                jQuery(links[i- 1]).after('<li id="OverflowListElement"><a href="#" id="DropdownCaret" onclick="showHideLinks();"><span class="icon-chevron-down"></span></a></li>');
-                // append a div to the document.body element that will contain the drop-down menu items
-                jQuery(document.body).append('<div id="OverFlowLinks"><ul id="HiddenLinks"></ul></div>');
-                caretCreated = true;
-                }
-            // remove the li element from header links and append it to drop-down link list
-            jQuery(links[i]).remove();
-            jQuery(links[i]).appendTo('#HiddenLinks');
-            }
-        }
-}
-
-/*
-*
-* Show or hide the header overflow drop down links
-*
-*/
-function showHideLinks()
-    {
-    jQuery('div#OverFlowLinks').toggle();
-    jQuery('div#OverFlowLinks').css('right', 290);
-    jQuery('div#OverFlowLinks').css('z-index', 1000);
-    jQuery('div#OverFlowLinks').css('top', 60);
-    }
-
-/*
-*
 * Toggles the edit_multi_checkbox question on edit page when in batch edit mode (ie. multiple == true)
 *
 */
@@ -1666,33 +1483,6 @@ function selectDownloadTab(tabName, modal)
         }
     }
 
-/**
- * Handle clicks on the tab bar in the search area
- *
- * @param {string} tabName - name of the tab clicked
- */
-function selectSearchBarTab(tabName)
-    {
-    jQuery('#SearchBarTabsContainer .SearchBarTab').removeClass('SearchBarTabSelected');
-
-    switch(tabName)
-        {
-        case 'search':
-            jQuery('#SearchBarTabsContainer .SearchTab').addClass('SearchBarTabSelected');
-            jQuery('#SearchBoxPanel').show();
-            jQuery('#BrowseBarContainer').hide();
-            SetCookie('selected_search_tab', 'search');
-            break;
-        case 'browse':
-            jQuery('#SearchBarTabsContainer .BrowseTab').addClass('SearchBarTabSelected');
-            jQuery('#SearchBoxPanel').hide();
-            jQuery('#BrowseBarContainer').show();
-            SetCookie('selected_search_tab', 'browse');
-            break;
-        }
-    }
-
-// unset cookie
 function unsetCookie(cookieName, cpath)
     {
     document.cookie = cookieName + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;path=' + cpath;

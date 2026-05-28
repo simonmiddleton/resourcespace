@@ -35,7 +35,6 @@ automatic_nodes_ordering,tinyint(1),If 1, nodes get ordered by translated names,
 fits_field,varchar(255),FITS values for extracting from embedded metadata.
 personal_data,tinyint(1),If 1, field may contain personal data.
 include_in_csv_export,tinyint(1),If 1, field can be included in CSV exports.
-browse_bar,tinyint(1),Set to 1 to show field in the browse bar
 read_only,tinyint(1),Set to 1 to make field read-only and not write back to the file on download.
 active,tinyint(1),Set to 1 to have field active, 0 to be disabled.
 full_width,tinyint(1),Set to 1 to have the field be displayed full width on the view page.

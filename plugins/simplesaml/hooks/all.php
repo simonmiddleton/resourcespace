@@ -80,11 +80,6 @@ function HookSimplesamlAllPreheaderoutput()
         return true;
     }
 
-    if (!$simplesaml_allow_standard_login) {
-        global $show_anonymous_login_panel;
-        $show_anonymous_login_panel = false;
-    }
-
     // If not blocking site completely and allowing standard logins but not on login page, do nothing and return
     if (!$simplesaml_site_block && $simplesaml_allow_standard_login) {
         debug("simplesaml: standard user login - no action required");
@@ -195,9 +190,6 @@ function HookSimplesamlAllProvideusercredentials()
 
         if (!simplesaml_is_authenticated()) {
             return true;
-        } elseif (!$simplesaml_login) {
-            global $show_anonymous_login_panel;
-            $show_anonymous_login_panel = false;
         }
     }
 
@@ -656,20 +648,9 @@ function HookSimplesamlAllReplaceheadernav1anon()
     }
 
     ?>
-    <ul>
-        <li>
-            <a href="<?php echo $baseurl; ?>/?usesso=true"><?php echo escape($lang['login']); ?></a>
-        </li>
-    <?php
-    if ($contact_link) {
-        ?>
-        <li>
-            <a href="<?php echo $baseurl?>/pages/contact.php" onClick="return CentralSpaceLoad(this, true);"><?php echo escape($lang['contactus']); ?></a>
-        </li>
-        <?php
-    }
-    ?>
-    </ul>
+    <a class="LoginButton" href="<?php echo "{$baseurl}/?usesso=true"; ?>">
+        <span><?php echo escape(text('login')); ?></span>
+    </a>
     <?php
 
     return true;

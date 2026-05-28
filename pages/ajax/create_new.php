@@ -35,7 +35,7 @@ switch ($newtype) {
         $newtext = $lang["createnewcollection"];
         $extraparams["collection"] = "new";
         $csrf_code = "newcollection";
-        $customformaction = "var newcolname=encodeURIComponent(jQuery('#newcolname').val());CollectionDivLoad('" . $baseurl_short . "pages/collections.php?collection=new&entername='+newcolname);ModalClose();ReloadBrowseBar();";
+        $customformaction = "var newcolname=encodeURIComponent(jQuery('#newcolname').val());CollectionDivLoad('" . $baseurl_short . "pages/collections.php?collection=new&entername='+newcolname);ModalClose();";
         break;
 
     case "node":

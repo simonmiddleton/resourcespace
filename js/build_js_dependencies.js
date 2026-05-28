@@ -134,11 +134,6 @@ function globToRegExp(glob) {
 const files = [
     { src: 'node_modules/jquery/dist/jquery.min.js', dest: 'lib/js/jquery-3.6.0.min.js' },
     { src: 'node_modules/jquery/LICENSE.txt', dest: 'documentation/licenses/jquery.txt' },
-    {
-        src: 'node_modules/jquery-tageditor',
-        dest: 'lib/jquery_tag_editor',
-        filter: { patterns: ['**/*.min.js', '**/*.css'] }
-    },
     { src: 'node_modules/jquery-ui/dist/jquery-ui.min.js', dest: 'lib/js/jquery-ui-1.13.2.min.js' },
     { src: 'node_modules/jquery-ui/LICENSE.txt', dest: 'documentation/licenses/jquery-ui.txt' },
     { src: 'node_modules/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js', dest: 'lib/js/jquery.ui.touch-punch.min.js' },
@@ -281,6 +276,9 @@ const files = [
         dest: 'plugins/transform/lib/jcrop',
         filter: { patterns: ['css/*.gif', 'css/*.min.css', 'js/jquery.Jcrop.min.js', 'MIT-LICENSE.txt'] }
     },
+    { src: 'node_modules/select2/dist/js/select2.min.js', dest: 'lib/select2/select2.min.js' }, 
+    { src: 'node_modules/select2/dist/css/select2.min.css', dest: 'lib/select2/select2.min.css' }, 
+    { src: 'node_modules/select2/LICENSE.md', dest: 'lib/select2/LICENSE.md' }, 
 ];
 
 console.log('Copying distribution files to ResourceSpace');

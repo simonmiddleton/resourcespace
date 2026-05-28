@@ -19,7 +19,7 @@ parse_str($_SERVER["QUERY_STRING"], $params);
 foreach ($strip_params as $strip_param) {
     unset($params[$strip_param]);
 }
-$query = urldecode(http_build_query($params));
+$query = http_build_query($params);
 
 # Authenticate based on the provided signature.
 if (!check_api_key($user, $query, $sign)) {

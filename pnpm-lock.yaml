@@ -38,9 +38,6 @@ importers:
       jquery:
         specifier: ^3.6.0
         version: 3.7.1
-      jquery-tageditor:
-        specifier: ^1.0.1
-        version: 1.0.1
       jquery-ui:
         specifier: 1.13.2
         version: 1.13.2
@@ -74,6 +71,9 @@ importers:
       openseadragon:
         specifier: ^2.4.2
         version: 2.4.2
+      select2:
+        specifier: 4.1.0-rc.0
+        version: 4.1.0-rc.0
       tinymce:
         specifier: ^7.3.0
         version: 7.9.2
@@ -411,9 +411,6 @@ packages:
     resolution: {tarball: https://codeload.github.com/tapmodo/Jcrop/tar.gz/43c396817f992cbbfd010f35c07e2f1f58d6a7ac}
     version: 0.9.15
 
-  jquery-tageditor@1.0.1:
-    resolution: {integrity: sha512-PrTZ8PlHQvn5s4xRuUrEDMV5Z2whwXcsknNTdc9sNC3UEtqkJt+s1p4/xsu67iZwHwcS7pwDyY0RAlzBzPv6oA==}
-
   jquery-ui-touch-punch@0.2.3:
     resolution: {integrity: sha512-Q/7aAd+SjbV0SspHO7Kuk96NJIbLwJAS0lD81U1PKcU2T5ZKayXMORH+Y5qvYLuy41xqVQbWimsRKDn1v3oI2Q==}
 
@@ -574,6 +571,9 @@ packages:
 
   safe-json-parse@4.0.0:
     resolution: {integrity: sha512-RjZPPHugjK0TOzFrLZ8inw44s9bKox99/0AZW9o/BEQVrJfhI+fIHMErnPyRa89/yRXUUr93q+tiN6zhoVV4wQ==}
+
+  select2@4.1.0-rc.0:
+    resolution: {integrity: sha512-Hr9TdhyHCZUtwznEH2CBf7967mEM0idtJ5nMtjvk3Up5tPukOLXbHUNmh10oRfeNIhj+3GD3niu+g6sVK+gK0A==}
 
   signal-exit@3.0.7:
     resolution: {integrity: sha512-wnD2ZE+l+SPC/uoS0vXeE9L1+0wuaMqKlfz9AMUo38JsyLSBWSFcHR1Rri62LZc12vLr1gb3jl7iwQhgwpAbGQ==}
@@ -1019,8 +1019,6 @@ snapshots:
 
   jcrop@https://codeload.github.com/tapmodo/Jcrop/tar.gz/43c396817f992cbbfd010f35c07e2f1f58d6a7ac: {}
 
-  jquery-tageditor@1.0.1: {}
-
   jquery-ui-touch-punch@0.2.3: {}
 
   jquery-ui@1.13.2:
@@ -1173,6 +1171,8 @@ snapshots:
   safe-json-parse@4.0.0:
     dependencies:
       rust-result: 1.0.0
+
+  select2@4.1.0-rc.0: {}
 
   signal-exit@3.0.7: {}
 

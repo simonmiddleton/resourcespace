@@ -248,7 +248,7 @@ render_content_menu();
         hideOptionsMenu();
         const is_responsive = window.matchMedia("(max-width: 600px)").matches;
         const uicenter_el = document.getElementById('UICenter');
-        const header_bb = document.getElementById('Header').getBoundingClientRect();
+        const header_bb = document.querySelector('header').getBoundingClientRect();
         const container_bb = document.querySelector('.guidelines-container').getBoundingClientRect();
         const btn_bb = e.getBoundingClientRect();
         const btn_el = jQuery(e);
@@ -277,8 +277,7 @@ render_content_menu();
             off_left_rev -= menu_bb.width + btn_bb.width + (2 * parseInt(getComputedStyle(e).margin));
             if (is_responsive) {
                 off_top += document.body.scrollTop
-                    - header_bb.height
-                    - document.getElementById('SearchBarContainer').getBoundingClientRect().height;
+                    - header_bb.height;
             } else {
                 off_top += uicenter_el.scrollTop - header_bb.height;
                 off_left += uicenter_el.scrollLeft;
@@ -289,7 +288,6 @@ render_content_menu();
             if (is_responsive) {
                 off_top += document.body.scrollTop
                     - header_bb.height
-                    - document.getElementById('SearchBarContainer').getBoundingClientRect().height
                     + parseInt(btn_margin.marginTop) + parseInt(btn_margin.marginBottom);
                 off_left -= container_bb.left + parseInt(getComputedStyle(menu_el_tmp[0]).marginRight);
             } else {
