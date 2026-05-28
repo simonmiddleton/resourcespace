@@ -101,11 +101,6 @@ parameters:
 			path: include/resource_functions.php
 
 		-
-			message: "#^Variable \\$initial_tags in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: include/searchbar.php
-
-		-
 			message: "#^Variable \\$simple_search_display_condition in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 2
 			path: include/searchbar.php
