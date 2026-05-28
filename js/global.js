@@ -541,7 +541,7 @@ function CentralSpacePost (form, scrolltop, modal, update_history, container_id)
 
 
 /* AJAX loading of CollectionDiv contents given a link */
-function CollectionDivLoad (anchor,scrolltop)
+function CollectionDivLoad (anchor, scrolltop = false, pulse = false)
     {
     // Handle straight urls:
     if (typeof(anchor)!=='object'){
@@ -571,6 +571,10 @@ function CollectionDivLoad (anchor,scrolltop)
         {
         url += '?ajax=true';
         }
+
+    if (pulse) {
+        url += '&pulse=true';
+    }
 
     // Load the collection bar and execute a callback after the load has completed
     jQuery('#CollectionDiv').load(url, function ()

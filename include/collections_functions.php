@@ -3984,8 +3984,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
 
     if (!collection_is_research_request($collection_data['ref']) || !checkperm('r')) {
         if (
-            !$top_actions && checkperm('s')
-            && $pagename === 'collections'
+            checkperm('s')
             && isset($collection_data['request_feedback'])
             && $collection_data['request_feedback']
         ) {

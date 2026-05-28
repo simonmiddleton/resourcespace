@@ -3,7 +3,7 @@
 define('RESOURCESPACE_BASE_PATH', dirname(__DIR__));
 
 // current upgrade level of ResourceSpace (used for migration scripts, will set sysvar using this if not already defined)
-define('SYSTEM_UPGRADE_LEVEL', 30);
+define('SYSTEM_UPGRADE_LEVEL', 31);
 
 // PHP VERSION AND MINIMUM SUPPORTED
 if (!defined('PHP_VERSION_ID')) {
@@ -908,7 +908,7 @@ const COLLECTION_FRAME_HEIGHT = 153;
 // Default lifetime in days of a temporary download file created by the job queue. After this time it will be deleted by another job
 const DOWNLOAD_FILE_LIFETIME = 14;
 
-$max_collection_thumbs = 150;
+$max_collection_thumbs = 100;
 
 // Define languages available
 $languages["en"] = "International English";

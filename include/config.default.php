@@ -655,11 +655,14 @@ $terms_upload = false;
 // Require terms on first login?
 $terms_login = false;
 
-//  Thumbnails options
-
-// In the collection frame, show or hide thumbnails by default? ("hide" is better if collections are not going to be heavily used).
+// Controls how the collection bar should be displayed ("hide" is better if collections are not going to be heavily used).
+// Can be:
+//     show - full display, the default option
+//     actions - minimized bar showing selector for collections and actions
+//     hide - show collection button only
 $thumbs_default = "show";
-//  Automatically show thumbs when you change collection (only if default is show)
+
+// Automatically show thumbs when selecting a collection from My Requests (only if thumbs_default is show)
 $autoshow_thumbs = false;
 
 // Show an Empty Collection link which will empty the collection of resources (not delete them)

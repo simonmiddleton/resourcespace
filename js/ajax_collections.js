@@ -114,8 +114,8 @@ function AddResourceToCollection(event, ui, resource, size, collection_id) {
             }
         else
             {
-            CollectionDivLoad(baseurl_short + 'pages/collections.php');
-            jQuery("#CentralSpace").trigger("resourceremovedfromcollection",[resource_list]);
+            CollectionDivLoad(baseurl_short + 'pages/collections.php', false, true);
+            jQuery("#CentralSpace").trigger("resourceaddedtocollection",[resource_list]);
             }
         },
         artc_csrf 

@@ -11,8 +11,6 @@ if (checkperm("b")) {
     exit($lang["error-permissiondenied"]);
 }
 
-include_once __DIR__ . "/../include/research_functions.php";
-
 $sort            = getval('sort', 'ASC');
 $search          = getval('search', '');
 $last_collection = getval('last_collection', '');
@@ -24,6 +22,8 @@ $resources_count = getval('resources_count', '');
 $collection      = getval('collection', '');
 $entername       = getval('entername', '');
 $res_access      = getval('access', '');
+$addsearch       = getval("addsearch", -1);
+$pulse           = getval("pulse", false);
 
 /*
 IMPORTANT NOTE: Collections should always show their resources in the order set by a user (via sortorder column
@@ -40,6 +40,11 @@ $change_col_url = "search=" . urlencode($search) . "&order_by=" . urlencode($ord
 // Set a flag for logged in users if $external_share_view_as_internal is set and logged on user is accessing an external share
 $internal_share_access = internal_share_access();
 
+// No bar for anonymous users
+if($k != "" && !$internal_share_access) {
+    exit;
+}
+
 // Remove all from collection
 $emptycollection = getval("emptycollection", "", true);
 if ($emptycollection != '' && getval("submitted", "") == 'removeall' && getval("removeall", "") != "" && collection_writeable($emptycollection)) {
@@ -54,7 +59,23 @@ if (!isset($thumbs)) {
     }
 }
 
-    # ------------ Change the collection, if a collection ID has been provided ----------------
+$thumbs_shown = getval("thumbs_shown", "unset");
+if ($thumbs_shown == "unset") {
+    rs_setcookie("thumbs_shown", ($thumbs === "show") ? "true" : "false", 1000, "", "", false, false);
+}
+
+switch ($thumbs) {
+    case "show":
+        $collection_holder_state = "state-thumbs";
+        break;
+    case "actions":
+        $collection_holder_state = "state-actions";
+        break;
+    default:
+        $collection_holder_state = "state-closed";
+}
+
+# ------------ Change the collection, if a collection ID has been provided ----------------
 if ($collection != "" && $collection != "undefined") {
     hook("prechangecollection");
     
@@ -155,16 +176,15 @@ if ($allow_reorder) {
                     * The !collectionX part may be urlencoded, or not, depending on how the page was reached.
                     */
                     var results = new RegExp('[\\?&amp;]' + 'search' + '=([^&amp;#]*)').exec(window.location.href);
-                    var ref = new RegExp('[\\?&amp;]' + 'ref' + '=([^&amp;#]*)').exec(window.location.href);
 
-                    if ((ref == null) && (results !== null) &&
+                    if ((results !== null) &&
                         ('<?php echo urlencode("!collection" . $usercollection); ?>' === results[1]
                         ||
-                        '<?php echo "!collection" . (int) $usercollection; ?>' === results[1])
-
-                        ) CentralSpaceLoad('<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!collection" . $usercollection); ?>',true);
+                        '<?php echo "!collection" . (int) $usercollection; ?>' === results[1])) {
+                            CentralSpaceLoad('<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!collection" . $usercollection); ?>',true);
+                    }
                 }
-            });     
+            });
         }
 
         jQuery(document).ready(function() {
@@ -172,14 +192,15 @@ if ($allow_reorder) {
                 return false;
             }
 
-            jQuery('#CollectionSpace').sortable({
+            jQuery('.collection-bar-thumbnail-row').sortable({
                 distance: 20,
                 appendTo: 'body',
                 zIndex: 99000,
+                forcePlaceholderSize: true,
                 helper: function(event, ui) {
                     //Hack to append the element to the body (visible above others divs), 
                     //but still belonging to the scrollable container
-                    jQuery('#CollectionSpace').append('<div id="CollectionSpaceClone" class="ui-state-default">' + ui[0].outerHTML + '</div>');   
+                    jQuery('.collection-bar-thumbnail-row').append('<div id="CollectionSpaceClone" class="ui-state-default">' + ui[0].outerHTML + '</div>');   
                     jQuery('#CollectionSpaceClone').hide();
                     setTimeout(function() {
                         jQuery('#CollectionSpaceClone').appendTo('body'); 
@@ -187,25 +208,28 @@ if ($allow_reorder) {
                     }, 1);
                     return jQuery('#CollectionSpaceClone');
                 },
-                items: '.CollectionPanelShell',
+                items: '.collection-bar-resource-card[data-draggable="yes"]',
 
                 start: function (event, ui) {
                     InfoBoxEnabled=false;
                     if (jQuery('#InfoBoxCollection')) {
                         jQuery('#InfoBoxCollection').hide();
                     }
-                    jQuery('#trash_bin').show();
                 },
 
                 stop: function(event, ui) {
                     InfoBoxEnabled=true;
-                    var idsInOrder = jQuery('#CollectionSpace').sortable("toArray");
+                    var idsInOrder = jQuery('.collection-bar-thumbnail-row').sortable("toArray");
                     ReorderResourcesInCollection(idsInOrder);
-                    jQuery('#trash_bin').hide();
                 }
             });
 
             jQuery('.CollectionPanelShell').disableSelection();
+
+            jQuery('.collection-bar-resource-card:not([data-draggable="yes"]) a')
+                .on('dragstart', function(e){
+                    e.preventDefault();
+            });
         });
     </script>
 
@@ -215,7 +239,7 @@ if ($allow_reorder) {
     <script type="text/javascript">
         jQuery(document).ready(function() {
             jQuery('.ui-sortable').sortable('disable');
-            jQuery('.CollectionPanelShell').enableSelection();          
+            jQuery('.CollectionPanelShell').enableSelection();
         }); 
     </script>
     <?php
@@ -226,7 +250,12 @@ if ($allow_reorder) {
 <script>
     jQuery('#CentralSpace').on('prepareDragDrop', function() {
         jQuery('#CollectionDiv').droppable({
-            accept: '.resource-card',
+            accept: function(draggable) {
+                return (
+                    jQuery(draggable).hasClass('resource-card') &&
+                    jQuery('#CollectionDiv .collection-bar-holder').hasClass('state-thumbs')
+                );
+            },
 
             drop: function(event, ui) {
                 var query_strings = getQueryStrings();
@@ -238,127 +267,8 @@ if ($allow_reorder) {
                 var resource_id = jQuery(ui.draggable).attr("id");
                 resource_id = resource_id.replace('ResourceShell', '');
 
-                jQuery('#trash_bin').hide();
                 // AddResourceToCollection includes a reload of CollectionDiv 
                 AddResourceToCollection(event, ui, resource_id, '');
-            }
-        });
-
-        jQuery('#trash_bin').droppable({
-            accept: '.CollectionPanelShell, .resource-card',
-            activeClass: "ui-droppable-active ui-state-hover",
-            hoverClass: "ui-state-active",
-
-            drop: function(event, ui) {
-                var resource_id = ui.draggable.attr("id");
-                resource_id = resource_id.replace('ResourceShell', '');
-                jQuery('#trash_bin_delete_dialog').dialog({
-                    autoOpen: false,
-                    modal: true,
-                    resizable: false,
-                    dialogClass: 'delete-dialog no-close',
-                    open: function(event,ui) {
-                        jQuery(this)
-                            .closest(".ui-dialog")
-                            .find(".ui-dialog-title")
-                            .html("<?php echo escape($lang["trash_bin_delete_dialog_title"]) . "<br>(" . $lang["from"]; ?> " + jQuery(this).data('collection_name') + ")");
-                    },
-                    buttons: {
-                        // Confirm removal of this resource from the resolved collection
-                        "<?php echo escape($lang['yes']); ?>": function() {
-                            var class_of_drag = jQuery(this).data('class_of_drag');
-                            var resource_id = jQuery(this).data("resource_id");
-                            var collection_id = jQuery(this).data('collection_id');
-                            var collection_name = jQuery(this).data('collection_name');
-
-                            if (collection_id == "") {
-                                console.error('RS_debug: Unable to resolve from which collection drag and drop resource removal is being requested.');
-                                jQuery(this).dialog('close');
-                            }
-                            // RemoveResourceFromCollection includes call to CollectionDivLoad
-
-                            RemoveResourceFromCollection(event, resource_id, '<?php echo $pagename; ?>', collection_id);
-                            // Remove resource from search results if this is not a collection search   
-                            if (is_special_search('!collection', 11)) {
-                                jQuery('#ResourceShell' + resource_id).fadeOut();
-                            }
-                            jQuery(this).dialog('close');
-                        },
-                        // Cancel resource removal
-                        "<?php echo escape($lang['no']); ?>": function() {
-                            var class_of_drag = jQuery(this).data('class_of_drag');
-                            var resource_id = jQuery(this).data("resource_id");
-                            var collection_id = jQuery(this).data('collection_id');
-                            var collection_name = jQuery(this).data('collection_name');
-
-                            if (collection_id == "") {
-                                console.error('RS_debug: Unable to resolve which collection to reload following cancellation of resource removal.');
-                                jQuery(this).dialog('close');
-                            }
-
-                            // If resource was dragged from the CollectionPanelShell then refresh the current collection within the CollectionDiv
-                            if (class_of_drag.indexOf("CollectionPanelShell") >= 0) {
-                                collection_id = jQuery("#collection").val();
-                                CollectionDivLoad('<?php echo $baseurl; ?>/pages/collections.php?collection=' + collection_id);
-                            }
-                            jQuery(this).dialog('close');
-                        }
-                    }
-                });
-
-                // Resolve the collection depending on the origin of the resource been dragged
-                var class_of_drag = ui.draggable.attr("class");
-                var collection_id = "";
-                var collection_name = "";
-
-                // If resource is dragged from the ResourcePanel (ie. CentralSpace) then collection is in querystring
-                if (class_of_drag.indexOf("ResourcePanel") >= 0) {
-                    var query_strings = getQueryStrings();
-                    if (!is_empty(query_strings)) {
-                        collection_id = query_strings.search.substring(11);
-                        // Collection name now stored in custom attribute
-                        collection_name = jQuery("#CentralSpaceResources").attr("collectionsearchname").trim();
-                    }
-                }
-
-                // If resource is dragged from the CollectionPanelShell then use the collection from within the CollectionDiv
-                if (class_of_drag.indexOf("CollectionPanelShell") >= 0) {
-                    collection_id = jQuery("#collection").val();
-                    collection_name = jQuery("#collection option:selected").text().trim();
-                }
-
-                jQuery('#trash_bin').hide();
-
-                // Cancel re-order in case it was triggered
-                if (jQuery('#CentralSpace').hasClass('ui-sortable')) {
-                    jQuery('#CentralSpace').sortable('cancel');
-                }
-
-                if (jQuery('#CollectionSpace').hasClass('ui-sortable')) {
-                    jQuery('#CollectionSpace').sortable('cancel');
-                }
-
-                // Process drop request without dialog when resource is being dragged from bottom collection panel
-                if (class_of_drag.indexOf("CollectionPanelShell") >= 0) {
-                    // Handle different cases such as Saved searches
-                    if (ui.draggable.data('savedSearch') === 'yes') {
-                        CollectionDivLoad('<?php echo $baseurl; ?>/pages/collections.php?removesearch=' + resource_id + '&nc=<?php echo time(); ?>');
-                    } else {
-                        RemoveResourceFromCollection(event, resource_id, '<?php echo $pagename; ?>', collection_id, <?php echo htmlspecialchars(generate_csrf_js_object('remove_resource_from_collection'), ENT_NOQUOTES); ?>);
-                        // Remove resource from search results if this is not a collection search   
-                        if (is_special_search('!collection', 11)) {
-                            jQuery('#ResourceShell' + resource_id).fadeOut();
-                        }
-                    }
-                } else {
-                    // Show confirmation dialog when resource is being dragged from top (ie. CentralSpace)
-                    jQuery('#trash_bin_delete_dialog').data('class_of_drag',class_of_drag)
-                        .data('resource_id',resource_id)
-                        .data('collection_id',collection_id)
-                        .data('collection_name',collection_name);
-
-                    jQuery('#trash_bin_delete_dialog').dialog('open');
-                }
             }
         });
     });
@@ -370,14 +280,7 @@ if ($allow_reorder) {
     registerResourceSelectDeselectHandlers();
 </script>
 <!-- End of Drag and Drop -->
-
-</head>
-<body class="CollectBack" id="collectbody">
-<div style="display:none;" id="currentusercollection"><?php echo (int) $usercollection; ?></div>
-
-<script>usercollection='<?php echo escape($usercollection) ?>';</script>
-
-<?php
+ <?php
 
 $addarray = array();
 $add = getval("add", "");
@@ -424,7 +327,7 @@ if ($add != "") {
 
     if ($allowadd) {
         foreach ($addarray as $add) {
-            #add to current collection
+            // add to current collection
             if (
                 $usercollection == -$userref
                 || $to_collection == -$userref
@@ -603,6 +506,7 @@ if ($research != "") {
     }
 }
 
+
 $searches = get_saved_searches($usercollection);
 
 # When loading the collection bar from a collection just saved, then use the "collection" order established during that save
@@ -613,127 +517,249 @@ if ($addsearch != -1) {
 $result  = do_search("!collection{$usercollection}", '', $default_collection_sort, 0, -1, "ASC", false, 0, false, false, '', false, true, false);
 $count_result = count($result);
 $feedback = $cinfo ? $cinfo["request_feedback"] : 0;
+
 ?>
+<script type="text/javascript">
+jQuery(function () {
 
-<div>
-<script>
-    var collection_resources = <?php echo json_encode(array_column($result, 'ref'));?>; 
+    // Collection bar scroll buttons
+    const $scroller = jQuery(".collection-bar-thumbnail-row");
+    const $leftBtn = jQuery(".thumbnail-row-arrow.left");
+    const $rightBtn = jQuery(".thumbnail-row-arrow.right");
+
+    function getCards() {
+        return $scroller.find(".collection-bar-resource-card");
+    }
+
+    function getScrollerPaddingLeft() {
+        const scrollerEl = $scroller[0];
+        return parseFloat(window.getComputedStyle(scrollerEl).paddingLeft) || 0;
+    }
+
+    function getCardPositions() {
+        const scrollerEl = $scroller[0];
+        const paddingLeft = getScrollerPaddingLeft();
+        let positions = [];
+
+        getCards().each(function (index) {
+            let extraOffset = index === 0 ? 0 : 6;
+            positions.push(this.offsetLeft - paddingLeft + extraOffset);
+        });
+
+        return {
+            positions: positions,
+            maxScroll: scrollerEl.scrollWidth - scrollerEl.clientWidth
+        };
+    }
+
+    function getFullyVisibleIndexes() {
+        const scrollerEl = $scroller[0];
+        const scrollerLeft = scrollerEl.scrollLeft;
+        const scrollerRight = scrollerLeft + scrollerEl.clientWidth;
+        const paddingLeft = getScrollerPaddingLeft();
+        let visibleIndexes = [];
+
+        getCards().each(function (index) {
+            let cardLeft = this.offsetLeft - paddingLeft + (index === 0 ? 0 : 6);
+            let cardRight = cardLeft + this.offsetWidth;
+
+            if (cardLeft >= scrollerLeft && cardRight <= scrollerRight) {
+                visibleIndexes.push(index);
+            }
+        });
+
+        return visibleIndexes;
+    }
+
+    function getFirstVisibleIndex(positions) {
+        const currentScroll = $scroller.scrollLeft();
+        const tolerance = 2;
+
+        for (var i = 0; i < positions.length; i++) {
+            if (positions[i] >= currentScroll - tolerance) {
+                return i;
+            }
+        }
+
+        return positions.length - 1;
+    }
+
+    function updateScrollButtons() {
+        const el = $scroller[0];
+        if (!el) return;
+
+        let maxScrollLeft = el.scrollWidth - el.clientWidth;
+        let tolerance = 2;
+
+        if (el.scrollLeft <= tolerance) {
+            $leftBtn.hide();
+        } else {
+            $leftBtn.show();
+        }
+
+        if (el.scrollLeft >= maxScrollLeft - tolerance) {
+            $rightBtn.hide();
+        } else {
+            $rightBtn.show();
+        }
+    }
+
+    function scrollPage(direction) {
+        let metrics = getCardPositions();
+        if (!metrics.positions.length) return;
+
+        let fullyVisibleIndexes = getFullyVisibleIndexes();
+        let visibleCount = Math.max(1, fullyVisibleIndexes.length);
+        let moveBy = Math.max(1, visibleCount - 1);
+
+        let currentIndex = getFirstVisibleIndex(metrics.positions);
+        let nextIndex = direction === "right"
+            ? currentIndex + moveBy
+            : currentIndex - moveBy;
+
+        nextIndex = Math.max(0, Math.min(nextIndex, metrics.positions.length - 1));
+
+        let target = metrics.positions[nextIndex];
+        target = Math.max(0, Math.min(target, metrics.maxScroll));
+
+        $scroller.stop().animate({ scrollLeft: target }, 300, updateScrollButtons);
+    }
+
+    $leftBtn.on("click", function () {
+        scrollPage("left");
+    });
+
+    $rightBtn.on("click", function () {
+        scrollPage("right");
+    });
+
+    $scroller.on("scroll", updateScrollButtons);
+    jQuery(window).on("resize", updateScrollButtons);
+
+    // New collection name entry
+    const $input = jQuery("#collection_name_input");
+    const $cancel_button = jQuery("#cancel_creating_collection_button");
+    const $accept_button = jQuery("#accept_creating_collection_button");
+
+    function updateButtons() {
+        if ($input.val().trim().length > 0) {
+            $accept_button.removeClass("inactive");
+        } else {
+            $accept_button.addClass("inactive");
+        }
+    }
+
+    $input.on("input", updateButtons);
+
+    $cancel_button.on("click", function () {
+        $input.val("");
+        updateButtons();
+        document.getElementById("collection").value = jQuery("#currentusercollection").text().trim();
+        document.getElementById('collection').style.display = 'block';
+        document.getElementById('entername').style.display = 'none';
+        document.getElementById('collection').focus();
+    });
+
+    $accept_button.on("click", function () {
+        jQuery("#colselect").submit();
+    });
+
+    // Collection bar state toggle
+    const $bar = jQuery('.collection-bar-holder');
+    const $toggleThumbsBtn = jQuery('.show-thumbs-button');
+
+    function getThumbsShown() {
+
+        const value = getCookie("thumbs_shown");
+
+        if (value === undefined) {
+            const returnVal = <?php echo $thumbs_default == "show" ? "true" : "false"; ?>;;
+            SetCookie('thumbs_shown', returnVal, 1000);
+            return returnVal;
+        }
+
+        return value === "true";
+    }
+
+    function setBarState(state) {
+        $bar.removeClass('state-closed state-actions state-thumbs').addClass(state);
+
+        if (state == 'state-thumbs') {
+            SetCookie('thumbs',"show",1000);
+            $toggleThumbsBtn.find('span').text('<?php echo escape($lang["hidethumbnails"]); ?>');
+        } else if (state == 'state-actions') {
+            SetCookie('thumbs',"actions",1000);
+            $toggleThumbsBtn.find('span').text('<?php echo escape($lang["showthumbnails"]); ?>');
+        } else {
+            SetCookie('thumbs',"hide",1000);
+            $cancel_button.trigger("click");
+            $toggleThumbsBtn.find('span').text('<?php echo escape($lang["showthumbnails"]); ?>');
+        }
+    }
+    
+    jQuery('.collection-bar-toggle-button').on('click', function () {
+        if ($bar.hasClass('state-closed')) {
+            if (getThumbsShown()) {
+                setBarState('state-thumbs');
+            } else {
+                setBarState('state-actions');
+            }
+        } else {
+            setBarState('state-closed');
+        }
+    });
+
+    jQuery('.show-thumbs-button').on('click', function () {
+        if ($bar.hasClass('state-thumbs')) {
+            setBarState('state-actions');
+            SetCookie('thumbs_shown',"false",1000);
+        } else {
+            setBarState('state-thumbs');
+            SetCookie('thumbs_shown',"true",1000);
+        }
+    });
+    
+    // Update scroll and name entry buttons on load
+    updateScrollButtons();
+    updateButtons();
+
+});
 </script>
-
-<div id="CollectionMaxDiv" style="display:<?php echo ($thumbs == 'show') ? 'block' : 'none'; ?>">
-    <?php
-    # ---------------------------- Maximised view ---------------------------------------------------------------------
-    if ($k != "" && !$internal_share_access) {
-        # ------------- Anonymous access, slightly different display ------------------
-        $tempcol = $cinfo;
-        ?>
-        <div id="CollectionMenu">
-            <h2><?php echo i18n_get_collection_name($tempcol)?></h2>
-            <br />
-            <div class="CollectionStatsAnon">
-                <?php echo ($tempcol) ?  escape($lang["created"] . " " . nicedate($tempcol["created"])) : "" ?>
-                <br />
-                <?php echo escape($count_result . " " . $lang["youfoundresources"]); ?>
-                <br />
-            </div>
-
-            <?php
-            $min_access = collection_min_access($result);
-            # Ability to download only if minimum access allows it
-            if (
-                (
-                    isset($zipcommand)
-                    || $collection_download
-                )
-                && $count_result > 0
-                && count($result) > 0
-                && $min_access == 0
-            ) {
-                if ($terms_download) {
-                    if ($download_usage) {
-                        $download_url = generateURL(
-                            $baseurl_short . '/pages/terms.php',
-                            [
-                                'k' => $k,
-                                'collection' => $usercollection,
-                                'url' => generateURL($baseurl_short . 'pages/download_usage.php', ['collection' => $usercollection, 'k' => $k])
-                            ]
-                        );
-                    } else {
-                        $download_url = generateURL(
-                            $baseurl_short . '/pages/terms.php',
-                            [
-                                'k' => $k,
-                                'collection' => $usercollection,
-                                'url' => generateURL($baseurl_short . 'pages/collection_download.php', ['collection' => $usercollection, 'k' => $k])
-                            ]
-                        );
-                    }
-                } elseif ($download_usage) {
-                    $download_url = generateURL($baseurl_short . 'pages/download_usage.php', ['collection' => $usercollection, 'k' => $k]);
-                } else {
-                    $download_url = generateURL($baseurl_short . 'pages/collection_download.php', ['collection' => $usercollection, 'k' => $k]);
-                }
-                ?>
-
-                <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $download_url;?>">
-                    <?php echo LINK_CARET . escape($lang["action-download"])?>
-                </a>
-                <br />
-                <?php
-            }
-
-            if ($feedback) { ?>
-                <br>
-                <br>
-                <a
-                    onclick="return CentralSpaceLoad(this);" 
-                    href="<?php echo generateURL($baseurl_short . 'pages/collection_feedback.php', ['collection' => $usercollection, 'k' => $k]); ?>"
-                >
-                    <?php echo LINK_CARET . escape($lang["sendfeedback"]); ?>
-                </a>
-                <br>
-                <?php
-            }
-
-            if (
-                $count_result > 0
-                && checkperm("q")
-                && $min_access != 0 # Ability to request a whole collection (only if user has restricted access to any of these resources)
-            ) {
-                ?>
-                <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_request.php?ref=<?php echo urlencode($usercollection) ?>&k=<?php echo urlencode($k) ?>">
-                    <?php echo LINK_CARET . escape($lang["requestall"]); ?>
-                </a>
-                <br />
-                <?php
-            }
-            ?>
-
-            <a id="toggleThumbsLink" href="#" onclick="ToggleThumbs();return false;"><i class="icon-chevron-down"></i><?php echo escape($lang["hidethumbnails"])?></a>
-        </div>
-        <?php
-    } else {
-        # -------------------------- Standard display --------------------------------------------
-        ?>
-        <div id="CollectionMenu">
-            <h2 id="CollectionsPanelHeader">
-                <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_manage.php">
-                    <?php echo escape($lang["mycollections"]); ?>
-                </a>
-            </h2>
-
-            <form method="get" id="colselect" onsubmit="newcolname=encodeURIComponent(jQuery('#entername').val());CollectionDivLoad('<?php echo $baseurl_short?>pages/collections.php?collection=new&search=<?php echo urlencode($search)?>&k=<?php echo urlencode($k) ?>&entername='+newcolname);return false;">
-                <div style="padding:0;margin:0;">
-                     <label for="collection"><?php echo escape($lang["currentcollection"]); ?>:</label>
-                    <br />
-                    <select
+<div class="collection-bar-holder <?php echo $collection_holder_state; ?>">
+    <div style="display:none;" id="currentusercollection"><?php echo (int) $usercollection; ?></div>
+    <script>usercollection='<?php echo escape($usercollection) ?>';</script>
+    <div class="collection-bar-toggle-button <?php echo ($collection_holder_state == "state-closed" && $pulse == true) ? "pulse-animation" : ""; ?>"><i class="icon-layout-dashboard"></i></div>
+    <div class="collection-bar-actions-section">
+        <div class="collection-bar-actions-form">
+            <div class="field current-collections-field">
+                <div class="label-holder">
+                    <label for="collection">
+                        <?php echo escape($lang["currentcollection"]); ?>
+                    </label>
+                    <div class="meta">
+                        <?php echo $count_result . " " . ($count_result == 1 ? escape($lang["item"]) : escape($lang["items"])); ?>
+                    </div>
+                </div>
+                <div class="wrapper">
+                    <form method="get" id="colselect" onsubmit="newcolname=encodeURIComponent(jQuery('#collection_name_input').val());CollectionDivLoad('<?php echo $baseurl_short?>pages/collections.php?collection=new&search=<?php echo urlencode($search)?>&k=<?php echo urlencode($k) ?>&entername='+newcolname);return false;">
+                        <div id="entername" class="collection-bar-name-input">
+                            <input id="collection_name_input" type="text" class="SearchWidth"></input>
+                            <div class="collection-bar-name-button-group">
+                                <button id="cancel_creating_collection_button" class="cancel-button" type="button" aria-label="Cancel creating collection">
+                                </button>
+                                <button id="accept_creating_collection_button" class="accept-button inactive" type="button" aria-label="Create new collection">
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <select 
                         name="collection"
                         id="collection"
                         aria-label="<?php echo escape($lang["collections"]) ?>"
                         onchange="if (document.getElementById('collection').value == 'new') {
-                            document.getElementById('entername').style.display = 'block';
-                            document.getElementById('entername').focus();
+                            document.getElementById('collection').style.display = 'none';
+                            document.getElementById('entername').style.display = 'flex';
+                            document.getElementById('collection_name_input').focus();
                             return false;
                             } 
                             <?php if (!checkperm('b')) { ?>
@@ -794,39 +820,33 @@ $feedback = $cinfo ? $cinfo["request_feedback"] : 0;
                             <?php
                         }
                         ?>
-
                     </select>
-                    <br />
-                    <small>
-                        <?php
-                        echo $count_result . " ";
-
-                        if ($count_result == 1) {
-                            echo escape($lang["item"]);
-                        } else {
-                            echo escape($lang["items"]);
-                        }
-                        ?>
-                    </small>
-                    <input type=text id="entername" name="entername" style="display:none;" placeholder="<?php echo escape($lang['entercollectionname'])?>" class="SearchWidth">
                 </div>
-            </form>
-
-            <?php
-            // Render dropdown actions
-            $resources_count = $count_result;
-            render_actions($cinfo, false, !hook('renderactionsononeline', 'collections'), '', $result);
-            ?>
-
-            <ul>
-                <li>
-                    <a id="toggleThumbsLink" href="#" onclick="ToggleThumbs();return false;"><i class="icon-chevron-down"></i><?php echo escape($lang['hidethumbnails']); ?></a>
-                </li>
-            </ul>
+            </div>
+            <div class="field actions-field">
+                <div class="label-holder"><label for="collections_action_selection_bottom_<?php echo (int) $usercollection; ?>">Actions</label></div>
+                <div class="wrapper">
+                    <?php
+                    // Render dropdown actions
+                    $resources_count = $count_result;
+                    render_actions($cinfo, false, false, '', $result);
+                    ?>
+                </div>
+            </div>
+            <button class="show-thumbs-button">
+                <i class="icon-images"></i>
+                <span><?php echo escape(($collection_holder_state == "state-thumbs") ? $lang["hidethumbnails"] : $lang["showthumbnails"]); ?></span>
+            </button>
         </div>
-
-        <!--Resource panels-->
-        <div id="CollectionSpace" class="CollectionSpace">
+    </div>
+    <div class="collection-bar-thumbs-section">
+        <script>
+            var collection_resources = <?php echo json_encode(array_column($result, 'ref'));?>; 
+        </script>
+        <div class="collection-bar-thumbnails">
+            <button class="thumbnail-row-arrow left" aria-label="Scroll left">
+            </button>
+            <div class="collection-bar-thumbnail-row">
             <?php
             # Loop through saved searches
             if (is_null($cinfo['savedsearch']) && ($k == '' || $internal_share_access)) {
@@ -834,33 +854,28 @@ $feedback = $cinfo ? $cinfo["request_feedback"] : 0;
                     $ref = $searches[$n]["ref"];
                     $url = $baseurl_short . "pages/search.php?search=" . urlencode($searches[$n]["search"]) . "&restypes=" . urlencode($searches[$n]["restypes"]) . "&archive=" . urlencode($searches[$n]["archive"]);
                     ?>
-                    <!--Resource Panel-->
-                    <div id="ResourceShell<?php echo $searches[$n]['ref']; ?>" class="CollectionPanelShell" data-saved-search="yes">
-                        <table border="0" class="CollectionResourceAlign">
-                            <tr>
-                                <td>
-                                    <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $url?>">
-                                        <i class="icon-search"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        </table>
-
-                        <div class="CollectionPanelInfo">
-                            <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $url?>">
-                                <?php echo escape(substr($lang["savedsearch"], 6)) . ($n + 1); ?>
-                            </a>
-                            &nbsp;
+                     <!--Resource Panel-->
+                    <div class="collection-bar-resource-card" data-saved-search="yes" data-draggable="no">
+                        <a class="collection-bar-resource-card-link" 
+                               onclick="return CentralSpaceLoad(this,true);" 
+                               href="<?php echo $url?>"
+                               aria-label="Open saved search">
+                        </a>
+                        <div class="collection-bar-resource-card-image">
+                            <i class="icon-search"></i>
+                            <div class="collection-bar-resource-card-image-overlay"></div>
                         </div>
-
-                        <div class="CollectionPanelTools">
+                        <div class="collection-bar-resource-card-remove">
                             <a
                                 class="removeFromCollection icon-circle-minus"
                                 onclick="return CollectionDivLoad(this);"
                                 href="<?php echo $baseurl_short?>pages/collections.php?removesearch=<?php echo urlencode($ref) ?>&nc=<?php echo time()?>"
                             >
                             </a>
-                        </div> 
+                        </div>
+                        <div class="collection-bar-resource-card-title">
+                            <?php echo escape(substr($lang["savedsearch"], 6)) . ($n + 1); ?>
+                        </div>
                     </div>
                     <?php
                 }
@@ -878,16 +893,26 @@ $feedback = $cinfo ? $cinfo["request_feedback"] : 0;
                     $ref = $result[$n]["ref"];
                     $resource_view_title = i18n_get_translated($result[$n]["field" . $view_title_field]);
 
+                    $resource_url = generateURL($baseurl_short . "pages/view.php", [
+                        "ref" => $ref,
+                        "search" => "!collection" . $usercollection,
+                        "order_by" => $order_by,
+                        "sort" => $sort,
+                        "k" => $k,
+                        "curpos" => $n,
+                    ]);
+
                     ?>
                     <!--Resource Panel-->
-                    <div
-                        class="CollectionPanelShell ResourceType<?php echo (int) $result[$n]['resource_type']; ?>"
-                        id="ResourceShell<?php echo urlencode($ref) ?>"
-                        <?php if (in_array($ref, $addarray)) { ?>
-                            style="display:none;"
-                        <?php } # Hide new items by default then animate open ?>
-                    >
+                    <div class="collection-bar-resource-card" id="ResourceShell<?php echo urlencode($ref) ?>"  data-draggable="yes">
 
+                        <a
+                            class="collection-bar-resource-card-link"
+                            onclick="return <?php echo $resource_view_modal ? 'Modal' : 'CentralSpace'; ?>Load(this,true);"
+                            href="<?php echo $resource_url ?>"
+                            aria-label="Open resource"
+                        ></a>
+                        
                         <?php
                         if (!hook("rendercollectionthumb")) {
                             if (isset($result[$n]["access"]) && $result[$n]["access"] == 0 && !checkperm("g") && !$internal_share_access) {
@@ -897,51 +922,58 @@ $feedback = $cinfo ? $cinfo["request_feedback"] : 0;
 
                             $access = isset($result[$n]["access"]) ? $result[$n]["access"] : get_resource_access($result[$n]);
                             $use_watermark = check_use_watermark();
-                            $thumb_url = generateURL($baseurl_short . "pages/view.php", [
-                                "ref" => $ref,
-                                "search" => "!collection" . $usercollection,
-                                "order_by" => $order_by,
-                                "sort" => $sort,
-                                "k" => $k,
-                                "curpos" => $n,
-                            ]);
+
                             ?>
 
-                            <table border="0" class="CollectionResourceAlign">
-                                <tr>
-                                    <td>
-                                        <a
-                                            style="position:relative;" 
-                                            onclick="return <?php echo $resource_view_modal ? 'Modal' : 'CentralSpace'; ?>Load(this,true);"
-                                            href="<?php echo $thumb_url ?>"
-                                    >
-                                            <?php
-                                            $colimg_preview_size = $retina_mode ? 'thm' : 'col';
-                                            $colimgpath = get_resource_preview($result[$n], [$colimg_preview_size]);
-                                            if ($colimgpath !== false && is_safe_url($colimgpath['url'])) {
-                                            ?>
-                                            <img
-                                                class="CollectionPanelThumb"
-                                                border=0
-                                                src="<?php echo $colimgpath['url']; ?>"
-                                                title="<?php echo escape(i18n_get_translated($result[$n]["field" . $view_title_field]))?>"
-                                                alt="<?php echo escape(i18n_get_translated($result[$n]["field" . $view_title_field]))?>"
-                                                <?php if ($retina_mode) { ?>
-                                                    onload="this.width/=2;this.onload=null;"
-                                                <?php } ?>
-                                            />
-                                            <?php
-                                            } else {
-                                                echo get_nopreview_html((string) $result[$n]["file_extension"], $result[$n]["resource_type"]);
-                                            }
-                                            hook("aftersearchimg", "", array($result[$n]));
-                                            ?>
-                                        </a>
-                                    </td>
-                                </tr>
-                            </table>
+                            <div class="collection-bar-resource-card-image">
+                                <?php
+                                $colimg_preview_size = $retina_mode ? 'thm' : 'col';
+                                $colimgpath = get_resource_preview($result[$n], [$colimg_preview_size]);
+                                if ($colimgpath !== false && is_safe_url($colimgpath['url'])) {
+                                    ?>
+                                    <img border="0"
+                                        src="<?php echo $colimgpath['url']; ?>"
+                                        title="<?php echo escape(i18n_get_translated($result[$n]["field" . $view_title_field]))?>"
+                                        alt="<?php echo escape(i18n_get_translated($result[$n]["field" . $view_title_field]))?>"
+                                        <?php if ($retina_mode) { ?>
+                                            onload="this.width/=2;this.onload=null;"
+                                        <?php } ?>                                    
+                                    />
+                                <?php
+                                } else {
+                                    echo get_nopreview_html((string) $result[$n]["file_extension"], $result[$n]["resource_type"]);
+                                }
+                                hook("aftersearchimg", "", array($result[$n]));
+                                ?>
+                                <!-- </a> -->
+                                <div class="collection-bar-resource-card-image-overlay"></div>
+                            </div>
+                        <?php 
+                        } 
+                        ?>
+
+
+                        <div class="collection-bar-resource-card-remove">
                             <?php
-                        } /* end hook rendercollectionthumb */
+                            // Remove from collection icon
+                            if (!checkperm('b') && ($k == '' || $internal_share_access)) {
+                                $col_link_class = ['icon-circle-minus'];
+
+                                if (
+                                    isset($usercollection_resources)
+                                    && is_array($usercollection_resources)
+                                    && !in_array($ref, $usercollection_resources)
+                                ) {
+                                    $col_link_class[] = 'DisplayNone';
+                                }
+
+                                $onclick = 'toggle_addremove_to_collection_icon(this);';
+                                echo remove_from_collection_link($ref, implode(' ', $col_link_class), $onclick, 0, $resource_view_title) . '</a>';
+                            }
+
+                            ?>
+                        </div>
+                        <?php
 
                         $title = $result[$n]["field" . $view_title_field];
                         $title_field = $view_title_field;
@@ -971,252 +1003,41 @@ $feedback = $cinfo ? $cinfo["request_feedback"] : 0;
                             "search" => "!collection" . $usercollection,
                             "k" => $k
                         ]);
+
                         ?>
-
-                        <div class="CollectionPanelInfo">
-                            <a
-                                onclick="return <?php echo $resource_view_modal ? 'Modal' : 'CentralSpace'; ?>Load(this,true);"
-                                href=" <?php echo $replace_resource_url;?>"
-                                title="<?php echo escape(i18n_get_translated($result[$n]["field" . $view_title_field]))?>"
-                            >
-                                <?php echo escape(tidy_trim(i18n_get_translated($title), 14)); ?>
-                            </a>&nbsp;
+                        <div class="collection-bar-resource-card-title">
+                            <?php echo escape(i18n_get_translated($title)); ?>
                         </div>
-
-                        <?php
-                        if ($k != "" && $feedback) { # Allow feedback for external access key users
-                            $comment_url = generateURL($baseurl_short . "pages/collection_comment.php", [
-                                "ref" => $ref,
-                                "collection" => $usercollection,
-                                "k" => $k,
-                                ]);
-                            ?>
-                            <div class="CollectionPanelInfo">
-                                <span>
-                                    <a
-                                        aria-hidden="true"
-                                        class="icon-message-circle"
-                                        onclick="return ModalLoad(this,true);"
-                                        href="<?php echo $comment_url?>"
-                                    >
-                                    </a>
-                                </span>
-                            </div>
-                            <?php
-                        }
-
-                        if ($k == "" || $internal_share_access) {
-                            ?>
-                            <div class="CollectionPanelTools">
-                                <?php
-                                if (!isset($cinfo['savedsearch']) || (isset($cinfo['savedsearch']) && $cinfo['savedsearch'] == null)) {
-                                    // add 'remove' link only if this is not a smart collection
-                                    $rating = '';
-
-                                    if (isset($rating_field)) {
-                                        $rating = "field{$rating_field}";
-                                    }
-
-                                    $url = generateURL(
-                                        $baseurl_short . "pages/view.php",
-                                        ["ref" => $ref,
-                                        "search" => '!collection' . $usercollection,
-                                        "order_by" => $order_by,
-                                        "sort" => $sort,
-                                        "offset" => $offset,
-                                        "archive" => $archive,
-                                        "k" => $k,
-                                        "curpos" => $n,
-                                        "restypes" => $restypes,
-                                        ]
-                                    );
-
-                                    # Include standard search views
-                                    include "search_views/resource_tools.php";
-                                } # End of remove link condition
-                                ?>
-                            </div>
-                            <?php
-                        } # End of k="" condition ?>
                     </div>
-                    <?php
-                } # End of loop through standard display thumbnails ?>
-
-                <div class="clearerleft"></div>
                 <?php
-            } # End of display thumbnails for standard display
-
+                }
+            } else {
+                echo escape($lang['noresources_collection']);
+            }
 
             if ($count_result > $max_collection_thumbs) {
                 ?>
-                <div class="CollectionPanelShell">
-                    <table border="0" class="CollectionResourceAlign">
-                        <tr>
-                            <td><img alt=""/></td>
-                        </tr>
-                    </table>
-                    <div class="CollectionPanelInfo">
-                        <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/search.php?search=!collection<?php echo $usercollection?>&k=<?php echo urlencode($k) ?>">
-                            <?php echo escape($lang['viewall'])?>...
-                        </a>
+                <div class="collection-bar-resource-card" data-draggable="no">
+                    <a class="collection-bar-resource-card-link" 
+                        onclick="return CentralSpaceLoad(this,true);" 
+                        href="<?php echo $baseurl_short?>pages/search.php?search=!collection<?php echo $usercollection?>&k=<?php echo urlencode($k) ?>"
+                        aria-label="<?php echo escape($lang['viewall'])?>">
+                    </a>
+                    <div class="collection-bar-resource-card-image">
+                        <i class="icon-eye"></i>
+                        <span><?php echo escape($lang['viewall']); ?></span>
+                        <div class="collection-bar-resource-card-image-overlay"></div>
+                    </div>
+                    <div class="collection-bar-resource-card-title">
                     </div>
                 </div>
                 <?php
             }
 
-            if (count($addarray) > 0 && $addarray[0] != "") {
-                # Animate the new item
-                ?>
-                <script type="text/javascript">
-                    jQuery("#CollectionSpace #ResourceShell<?php echo escape($addarray[0]) ?>").slideDown('fast');
-                </script>
-                <?php
-            }
             ?>
+            </div>
+            <button class="thumbnail-row-arrow right" aria-label="Scroll right">
+            </button>
         </div>
     </div>
-    <?php
-    } # End of standard display
-    ?>
-    
-    <div id="CollectionMinDiv" style="display:<?php echo ($thumbs == 'hide') ? 'block' : 'none'; ?>">
-        <!--Title-->    
-        <?php
-        # ------------------------- Minimised view
-        if ($k != "" && !$internal_share_access) {
-            # Anonymous access, slightly different display
-            $tempcol = $cinfo;
-            ?>
-            <div id="CollectionMinTitle" class="ExternalShare">
-                <h2><?php echo i18n_get_collection_name($tempcol)?></h2>
-            </div>
-
-            <div id="CollectionMinRightNav" class="ExternalShare">
-                <?php
-                if ((isset($zipcommand) || $collection_download) && $count_result > 0 && count($result) > 0) {
-                    if ($terms_download) {
-                        if ($download_usage) {
-                            $download_url = generateURL(
-                                $baseurl_short . '/pages/terms.php',
-                                [
-                                'k' => $k,
-                                'collection' => $usercollection,
-                                'url' => generateURL($baseurl_short . 'pages/download_usage.php', ['collection' => $usercollection, 'k' => $k])
-                                ]
-                            );
-                        } else {
-                            $download_url = generateURL(
-                                $baseurl_short . '/pages/terms.php',
-                                [
-                                'k' => $k,
-                                'collection' => $usercollection,
-                                'url' => generateURL($baseurl_short . 'pages/collection_download.php', ['collection' => $usercollection, 'k' => $k])
-                                ]
-                            );
-                        }
-                    } elseif ($download_usage) {
-                        $download_url = generateURL($baseurl_short . 'pages/download_usage.php', ['collection' => $usercollection, 'k' => $k]);
-                    } else {
-                        $download_url = generateURL($baseurl_short . 'pages/collection_download.php', ['collection' => $usercollection, 'k' => $k]);
-                    }
-                    ?>
-
-                    <li>
-                        <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $download_url; ?>">
-                            <?php echo escape($lang["action-download"]); ?>
-                        </a>
-                    </li>
-                    <?php
-                }
-
-                if ($feedback) {
-                    ?>
-                    <li>
-                        <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_feedback.php?collection=<?php echo urlencode($usercollection) ?>&k=<?php echo urlencode($k) ?>">
-                            <?php echo escape($lang["sendfeedback"])?>
-                        </a>
-                    </li>
-                    <?php
-                }
-
-                if ($count_result > 0) {
-                    # Ability to request a whole collection (only if user has restricted access to any of these resources)
-                    $min_access = collection_min_access($result);
-                    if ($min_access != 0) {
-                        ?>
-                        <li>
-                            <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_request.php?ref=<?php echo urlencode($usercollection) ?>&k=<?php echo urlencode($k) ?>">
-                                <?php echo escape($lang["requestall"]); ?>
-                            </a>
-                        </li>
-                        <?php
-                    }
-                }
-                ?>
-
-                <li>
-                    <a id="toggleThumbsLink" href="#" onclick="ToggleThumbs();return false;">
-                        <i class="icon-chevron-up"></i><?php echo escape($lang["showthumbnails"])?>
-                    </a>
-                </li>
-            </div>
-            <?php
-        } else {
-            ?>
-            <div class="ToggleThumbsContainer">
-                <a id="toggleThumbsLink" href="#" onclick="ToggleThumbs();return false;">
-                    <i class="icon-chevron-up"></i><?php echo escape($lang['showthumbnails']); ?>
-                </a>
-            </div>
-
-            <!--Menu--> 
-            <div id="CollectionMinRightNav">
-                <?php
-                // Render dropdown actions
-                render_actions($cinfo, false, false, "min", $result);
-                ?>
-            </div>
-
-            <!--Collection Dropdown-->
-            <div id="CollectionMinDropTitle"><?php echo escape($lang['currentcollection']); ?>:</div>
-
-            <div id="CollectionMinDrop">
-                <form
-                    method="get"
-                    id="colselect2" 
-                    onsubmit="newcolname=encodeURIComponent(jQuery('#entername2').val());CollectionDivLoad('<?php echo $baseurl_short; ?>pages/collections.php?thumbs=hide&collection=new&search=<?php echo urlencode($search)?>&k=<?php echo urlencode($k); ?>&search=<?php echo urlencode($search)?>&entername='+newcolname);return false;"
-                >
-                    <div class="MinSearchItem" id="MinColDrop">
-                        <input type=text id="entername2" name="entername" placeholder="<?php echo escape($lang['entercollectionname']); ?>" style="display:inline;display:none;" class="SearchWidthExp">
-                    </div>
-
-                    <script>
-                        jQuery('#collection').clone().attr('id','collection2').attr('onChange',
-                            "if (document.getElementById('collection2').value == 'new') {document.getElementById('entername2').style.display='inline';document.getElementById('entername2').focus();return false;}<?php
-                                if (!checkperm('b')) { ?>
-                                    ChangeCollection(jQuery(this).val(),'<?php echo urlencode($k) ?>','<?php echo urlencode($usercollection) ?>','<?php echo $change_col_url ?>');<?php
-                                } else {
-                                    ?>document.getElementById('colselect2').submit();<?php
-                                } ?>").prependTo('#MinColDrop');
-                    </script>
-                </form>
-            </div>
-            <?php
-        }
-        ?>
-        
-        <!--Collection Count--> 
-        <div id="CollectionMinitems">
-            <strong><?php echo $count_result?></strong>&nbsp;
-            <?php
-            if ($count_result == 1) {
-                echo escape($lang["item"]);
-            } else {
-                echo escape($lang["items"]);
-            }
-            ?>
-        </div>
-    </div>
-
-<?php
-draw_performance_footer();
+</div>

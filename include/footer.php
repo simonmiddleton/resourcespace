@@ -280,54 +280,13 @@ if (getval("ajax", "") == "") {
                 $restypes = implode(',', $restypes);
             }
             ?>
-            <div id="CollectionDiv" class="CollectBack AjaxCollect"></div>
+            <div id="CollectionDiv">
+            </div>
 
             <script type="text/javascript">
-            var collection_frame_height=<?php echo COLLECTION_FRAME_HEIGHT ?>;
-            var thumbs="<?php echo escape($thumbs); ?>";
-
-            function ShowThumbs() {
-                jQuery('body').addClass("collection-bar--maximised");
-                jQuery('body').removeClass("collection-bar--minimised");
-
-                jQuery('#CollectionMinDiv').hide();
-                jQuery('#CollectionMaxDiv').show();
-
-                SetCookie('thumbs',"show",1000);
-                ModalCentre();
-            }
-
-            function HideThumbs() {
-                jQuery('body').addClass("collection-bar--minimised");
-                jQuery('body').removeClass("collection-bar--maximised");
-
-                jQuery('#CollectionMinDiv').show();
-                jQuery('#CollectionMaxDiv').hide();
-
-                SetCookie('thumbs',"hide",1000);
-                ModalCentre();
-            }
-
-            function ToggleThumbs() {
-                thumbs = getCookie("thumbs");
-                if (thumbs == "show") {
-                    HideThumbs();
-                } else { 
-                    ShowThumbs();
-                }
-            }
-
-            function InitThumbs() {
-                if (thumbs != "hide") {
-                    ShowThumbs();
-                } else if (thumbs == "hide") {
-                    HideThumbs();
-                }
-            }
 
             jQuery(document).ready(function() {
                 CollectionDivLoad('<?php echo generateURL($baseurl_short . 'pages/collections.php', ['thumbs' => $thumbs, 'k' => $k ?? '', 'order_by' => $order_by ?? '', 'sort' => $sort ?? '', 'search' => $search ?? '', 'archive' => $archive ?? '', 'daylimit' => $daylimit ?? '', 'offset' => $offset ?? '', 'resource_count' => $resource_count ?? '']) ?>&collection='+usercollection);
-                InitThumbs();
             });
 
             </script>
