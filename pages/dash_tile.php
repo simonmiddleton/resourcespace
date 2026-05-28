@@ -785,7 +785,7 @@ if (!$validpage) {
                 
             jQuery("#previewdashtile").load("<?php echo escape($previewurl); ?>?tltype=<?php echo urlencode($tile_type)?>&tlsize=" + tlsize + "&tlstyle="+prevstyle+"&tlwidth="+width+"&tlheight="+height+tile+'&data='+data);
         }
-
+        
         jQuery("#previewtitle").change(updateDashTilePreview);
         jQuery("#previewtext").change(updateDashTilePreview);
         jQuery("#resource_count").change(updateDashTilePreview);
@@ -794,15 +794,11 @@ if (!$validpage) {
             updateDashTilePreview();
         });
         jQuery("#promotedresource").change(updateDashTilePreview);
-        <?php 
-            if ($tile_type == 'conf' || $tile_type == 'ftxt' || $tile_type == 'fcthm') {
-                ?>
-                    jQuery(document).ready(function() {
-                        updateDashTilePreview();
-                    });
-                <?php
-            } 
-        ?>
+        jQuery(document).ready(function() {
+            if (jQuery('input[name="tlstyle"]').length == 0) {
+                updateDashTilePreview();
+            }
+        });
     </script>
 </div><!-- End of BasicsBox -->
 
