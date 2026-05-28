@@ -1606,7 +1606,7 @@ function save_resource_data_multi($collection, $editsearch = array(), $postvals 
             debug(sprintf('Mode %s - $nodes_to_add = %s', $mode, implode(',', $nodes_to_add)));
             debug(sprintf('Mode %s - $nodes_to_remove = %s', $mode, implode(',', $nodes_to_remove)));
 
-            if ($fields[$n]["required"] == 1 && count($nodes_to_add) == 0 && $mode !== "") {
+            if ($fields[$n]["required"] == 1 && count($nodes_to_add) == 0 && $mode !== "" && $mode !== "Revert") {
                 // Required field and no value now set, revert to existing and add to array of failed edits
                 if (!isset($errors[$fields[$n]["ref"]])) {
                     $errors[$fields[$n]["ref"]] = $lang["requiredfield"] . ". " . $lang["error_batch_edit_resources"] . ": " ;
