@@ -38,6 +38,11 @@ $use_cases = [
         'input' => ['test* -ignoreKeyword', ['-', '*']],
         'expected' => 'test* -ignoreKeyword',
     ],
+    [
+        'name' => 'Allow @ (used by search with the NODE_TOKEN_PREFIX format)',
+        'input' => ['@@1234', ['@']],
+        'expected' => '@@1234',
+    ],
 ];
 foreach ($use_cases as $uc) {
     $result = allow_unicode_characters(...$uc['input']);
