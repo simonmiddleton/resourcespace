@@ -4234,7 +4234,7 @@ header.LoginHeader {
     max-height: var(--form-field-min-height);
     align-items: center;
     border-radius: var(--space-4);
-    background: var(--Colour-Surface-50);
+    background: var(--colour-surface-50);
     border: 1px solid var(--form-field-border);
     padding-left: var(--space-12);
     gap: var(--space-8);
@@ -4250,6 +4250,8 @@ header.LoginHeader {
     padding: 0px;
     min-width: 100px;
     height: 24px;
+    background: var(--colour-surface-50);
+    color: var(--colour-typography-1000);
     border: unset;
     box-shadow: none;
     flex: 1 1 auto;
@@ -4964,7 +4966,7 @@ header.LoginHeader {
         border-radius: var(--space-4);
         font-size: 28px;
         font-weight: inherit;
-        color: var(--colour-neutral-700);
+        color: var(--colour-typography-700);
         background: var(--colour-surface-300);
         box-shadow: none;
     }
