@@ -3745,7 +3745,12 @@ function browser_check()
     if (PHP_SAPI == 'cli') {return;}
     if (isset($disable_browser_check) && $disable_browser_check) {return;} // e.g. API/IIIF
 
-    if (!isset($_SERVER["HTTP_USER_AGENT"])) {exit();} // Terminate requests that do not specify a user agent
+    // Terminate requests that do not specify a user agent
+    if (!isset($_SERVER["HTTP_USER_AGENT"])) {
+        http_response_code(403);
+        exit('Forbidden');
+        } 
+        
     $question_key=hash_hmac("sha512", $_SERVER["HTTP_USER_AGENT"] . date('Ymd'), $browser_check_key);
     $answer_key=xor_base64_encode($question_key);
 
