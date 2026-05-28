@@ -3230,4 +3230,4 @@ $lang["resource-card-menu-delete-perm-button"] = 'Так, назаўжды вы�
 $lang["blue"] = 'Сіні';
 $lang["green"] = 'Зялёны';
 $lang["red"] = 'Чырвоны';
-$lang["purple"] = 'Фіялетавы';>>>>>>> .merge-right.r28843
+$lang["purple"] = 'Фіялетавы';
