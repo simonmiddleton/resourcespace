@@ -40,3 +40,4 @@ $lang["plugin-action_dates-title"] = 'Toimintapäivät';
 $lang["plugin-action_dates-desc"] = 'Mahdollistaa resurssien aikataulutetun poistamisen tai rajoittamisen päivämääräkenttien perusteella';
 
 $lang["page-title_action_dates_setup"] = 'Aseta toimintopäivämäärät laajennus';
+$lang["action_dates_additional_settings_email_admin_days"] = 'Ilmoita ylläpitäjille tämän monta päivää ennen toimintaa (Jätä tyhjäksi poistaaksesi käytöstä)';

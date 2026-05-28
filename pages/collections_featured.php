@@ -285,69 +285,53 @@ include "../include/header.php";
 
 <script>
     /** Show the Featured Collection (category) context menu */
-    function showContextMenu(el)
-    {
+    function showContextMenu(el) {
         hideContextMenu();
 
         const top_right_menu_btn = jQuery(el);
-        const context_menu = top_right_menu_btn.closest('.FeaturedSimpleTile, .BreadcrumbsBox').find('.context-menu-container');
-        let menu_el_tmp = context_menu.clone().appendTo('.FeaturedSimpleLinks');
-        menu_el_tmp.css({
-            'display': 'block',
-            'visibility': 'hidden',
-        });
-        const is_responsive = window.matchMedia("(max-width: 900px)").matches;
-        const uicenter_el = document.getElementById('UICenter');
-        console.debug('top_right_menu_btn = %o', top_right_menu_btn);
-        console.debug('context_menu = %o', context_menu);
-        console.debug('is_responsive = %o', is_responsive);
+        const context_menu = top_right_menu_btn
+            .closest('.FeaturedSimpleTile, .BreadcrumbsBox')
+            .find('.context-menu-container');
 
-        let off_top = 0;
-        let off_left = 0;
-        let off_top_rev = 0;
-        let off_left_rev = 0;
-        const header_bb = document.getElementById('Header').getBoundingClientRect();
-        const container_bb = document.querySelector('.FeaturedSimpleLinks').getBoundingClientRect();
-        const menu_btn_bb = el.getBoundingClientRect();
-        const menu_btn_computed_style = getComputedStyle(el);
+        const menu_el_tmp = context_menu.clone().appendTo('body').css({
+            display: 'block',
+            visibility: 'hidden',
+            position: 'fixed'
+        });
+
+        const btn_bb = el.getBoundingClientRect();
         const menu_bb = menu_el_tmp[0].getBoundingClientRect();
 
-        /*
-        Determine the position offset for the menu so it's within the proximity of the calling top right menu icon. 
-        Notes:
-        - the bounding box (BB) ignores margins so we have to account for those too;
-        - in responsive mode, instead of the UICenter, the body is overflowing vertically (Y axis);
-        */
-        if (is_responsive) {
-            off_top += document.body.scrollTop
-                - header_bb.height
-                - document.getElementById('SearchBarContainer').getBoundingClientRect().height;
-            off_top_rev = menu_bb.height - menu_btn_bb.height + 50;
-            off_left_rev -= menu_bb.width + menu_btn_bb.width + parseInt(menu_btn_computed_style.margin);
-        } else {
-            const menu_btn_margin = 2 * parseInt(menu_btn_computed_style.margin);
-            off_top += uicenter_el.scrollTop - header_bb.height;
-            off_left += menu_btn_margin;
-            off_left_rev -= menu_bb.width + menu_btn_bb.width - menu_btn_margin;
+        let top = btn_bb.top;
+        let left = btn_bb.right - 24;
+
+        // Keep menu inside viewport horizontally
+        if (left < 0) {
+            left = btn_bb.left;
+        }
+        if (left + menu_bb.width > window.innerWidth) {
+            left = left - menu_bb.width - 90;
         }
 
-        // For a better UX, check if the menu will go outside the container/view boundaries to ensure users always have
-        // the menu in sight
-        if ((menu_btn_bb.left + off_left + menu_bb.width) > container_bb.right) {
-            off_left = off_left_rev;
-        }
-        if (is_responsive && (menu_btn_bb.top + menu_bb.height) > window.innerHeight) {
-            off_top -= off_top_rev;
+        // Show below button by default. If it would overflow bottom then show it above
+        top = btn_bb.bottom - 12;
+        if (top + menu_bb.height > window.innerHeight) {
+            top = btn_bb.top - menu_bb.height - 12;
         }
 
-        console.debug("off_top = %o -- off_left = %o", off_top, off_left);
+        // Clamp top just in case
+        if (top < 0) {
+            top = 8;
+        }
+
         menu_el_tmp.remove();
 
         context_menu
             .css({
                 display: 'none',
-                top: menu_btn_bb.top + off_top,
-                left: menu_btn_bb.left + off_left,
+                position: 'fixed',
+                top: `${top}px`,
+                left: `${left}px`
             })
             .slideDown(150);
 

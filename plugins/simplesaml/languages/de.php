@@ -107,3 +107,4 @@ $lang["page-title_simplesaml_setup"] = 'Einfaches SAML-Plugin einrichten';
 $lang["simplesaml_error_not_configured"] = 'SimpleSAML-Plugin ist nicht konfiguriert';
 $lang["simplesaml_error_no_idp_metadata"] = 'SimpleSAML-Plugin ist nicht vollständig konfiguriert (IdP-Metadaten fehlen)';
 $lang["simplesaml_error_no_authsource"] = 'SimpleSAML-Plugin ist nicht vollständig konfiguriert (authsource fehlt)';
+$lang["simplesaml_userlimit_error"] = 'Benutzer konnte nicht erstellt werden, da die Benutzerobergrenze erreicht wurde. Bitte kontaktieren Sie Ihren Administrator.';

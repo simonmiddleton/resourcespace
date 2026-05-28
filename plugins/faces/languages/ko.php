@@ -22,3 +22,10 @@ $lang["faces_count_missing"] = '처리할 이미지';
 $lang["faces-tag-field-not-set"] = '태그 필드가 구성되어 있지 않습니다.';
 
 $lang["page-title_faces_setup"] = '얼굴 플러그인 설정';
+$lang["faces_insight_faces"] = '인사이트페이스';
+$lang["faces_detect_faces"] = '얼굴 감지';
+$lang["faces_tag_faces"] = '얼굴 태그 지정';
+$lang["faces_detect_faces_configure"] = '얼굴 감지 작업 구성';
+$lang["faces_tag_faces_configure"] = '얼굴 태그 지정 작업 구성';
+$lang["faces_detect_faces_intro"] = '여기서 얼굴 감지 작업을 시작하세요 - 이 작업은 매개변수가 필요하지 않으며, 다른 유효한 작업이 없을 경우 시작할 수 있습니다.';
+$lang["faces_tag_faces_collection_refs_help"] = '이 옵션을 설정하면 나열된 컬렉션에 있는 리소스만 업데이트됩니다. 컬렉션이 지정되지 않으면 모든 적합한 리소스에 대해 얼굴 태그가 업데이트됩니다. 컬렉션은 쉼표로 구분된 목록 또는 범위(예: 100,105,110-115)로 지정할 수 있습니다.';

@@ -15,7 +15,7 @@ body, html {
 h1, h2 {color: #000000;}
 a:link {color:#666666;}
 a:visited {color:#666666;}
-a:hover {color:#2E99E6;}
+a:hover {color:var(--colour-brand-primary-hover);}
 a:active {opacity:0.6;}
 
 input[readonly] {
@@ -50,18 +50,15 @@ input[readonly] {
 .ListTitle a:link, 
 .ListTitle a:visited, 
 .ListTitle a:active {color:#666666;}
-.HorizontalWhiteNav a:hover, .BasicsBox .VerticalNav a:hover, .ListTitle a:hover {color:#2e99e6;}
+.HorizontalWhiteNav a:hover, .BasicsBox .VerticalNav a:hover, .ListTitle a:hover {color: var(--colour-brand-primary-hover);}
 
 /* Search Bar */
-#SearchBoxPanel a:link, #SearchBoxPanel a:visited, #SearchBoxPanel a:hover,
-#ResearchBoxPanel a:link, #ResearchBoxPanel a:visited, #ResearchBoxPanel a:hover, #ResearchBoxPanel a:active,
-.SearchSpace a:link, .SearchSpace a:visited, .SearchSpace a:hover, .SearchSpace a:active,
-.PoweredByPanel a:link, .PoweredByPanel a:visited, .PoweredByPanel a:hover {
+#ResearchBoxPanel a:link, #ResearchBoxPanel a:visited, #ResearchBoxPanel a:hover, #ResearchBoxPanel a:active {
     color:#fff;text-decoration:none;
 }
 
 .RecordPanel, .ResourcePanelSmall, .ResourcePanelLarge, div#Metadata div.Title { background: #eee; }
-#ResearchBoxPanel, .HomePanelIN, .RecordPanel .RecordDownload, .RecordPanel, .ResourcePanelLarge {
+#ResearchBoxPanel, .RecordPanel .RecordDownload, .RecordPanel, .ResourcePanelLarge {
     border-radius:8px;
     overflow: hidden;
 }
@@ -85,11 +82,9 @@ tr[id^="ResourceShell"].Selected { background-color: #d5eafa; /* Used a tint of 
 
 .ImageWrapper {background-color: var(--colour-neutral-100);}
 
-#SearchBoxPanel h2, #ThemeBoxPanel h2, #ResearchBoxPanel h2, .SearchSpace h2{color: #fff;}
-
 /* Collection Bar */
 .CollectBack {color:#E0E0E0;background: #2b2b2b;}
-.CollectBack a:link, .CollectBack a:visited, .CollectBack a:active,.CollectBack h2,.BrowseBar a:link,.BrowseBar a:hover, .BrowseBar a:visited, .BrowseBar a:active,.BrowseBar h2 {color:#E0E0E0;}
+.CollectBack a:link, .CollectBack a:visited, .CollectBack a:active,.CollectBack h2 {color:#E0E0E0;}
 .CollectBack a:hover{color:#FFF;}
 .CollectBack h2 a:link, .CollectBack h2 a:visited, .CollectBack h2 a:active, .CollectBack h2 a:hover {color:white;}
 #CollectionMinRightNav li {border-left:1px solid #E0E0E0;}
@@ -100,15 +95,17 @@ tr[id^="ResourceShell"].Selected { background-color: #d5eafa; /* Used a tint of 
 
 /* Home */
 .HomePanel a:link, 
-.HomePanel a:visited, 
 .HomePanel a:active, 
 .HomePanel a:hover,
-.HomePanel h2 {color:#FFF;}
-#HomeSiteText {padding:10px;}
 #HomeSiteText.dashtext h1 {color:#FFF;}
 
+#HomePanelContainer .HomePanel a:link,
+#HomePanelContainer .HomePanel a:active,
+#HomePanelContainer .HomePanel a:hover {
+    color: var(--colour-neutral-700)
+}
 /* Default colours for search, dash tiles, browse bar etc */
-#SearchBox, #HomeSiteText.dashtext, .HomePanelIN, .PopupCategoryTree {
+#HomeSiteText.dashtext, .PopupCategoryTree {
     background: rgba(0, 0, 0, 0.51);
     color:#FFF;
 }
@@ -175,7 +172,7 @@ div.autocomplete ul li {color: #000;}
 .RecordDownloadSpace .HorizontalWhiteNav a:active, .RecordPanel .RecordDownloadSpace .HorizontalWhiteNav a:hover {color:#FFFFFF;} 
 .NoFind {border: none;background: #FFFFFF;}
 .NoFind .highlight {color:#000000;font-weight: bold;}
-.NoFind a:link, .NoFind a:visited, .NoFind a:hover, .NoFind a:active {color:#2e99e6;text-decoration:underline;}
+.NoFind a:link, .NoFind a:visited, .NoFind a:hover, .NoFind a:active {color: var(--colour-brand-primary-default);text-decoration:underline;}
 .ViewPanelTitles .Title { border-bottom: 0; }
 .RecordDownloadSpace {  background: #fff;}
 .RecordPanel .RecordDownload .DownloadDBlend td {border-top: 1px solid #ddd;color: #333;}
@@ -191,7 +188,6 @@ div.autocomplete ul li {color: #000;}
 .BasicsBox .HorizontalNav li {border-right:1px solid #B5C3D4;border-top-style: none;border-bottom-style: none;border-left-style: none;}
 .ThemeBox {border-bottom: 1px solid #BBBBBB;}
 .CategoryBox {border:1px solid rgba(0,0,0,0.25);background-color:#ffffff;color: black;font-weight: normal; border-radius: 4px;}
-.MiniCategoryBox {box-shadow: 0 1px 3px 1px rgba(0,0,0,0.1);background-color:#ffffff;color: black;font-weight: normal; border-radius: 5px;}
 .CategoryTree {border-top:1px solid #737373;border-left:1px solid #999999;border-bottom:1px solid #999999;border-right:1px solid #999999;background-color:white;color: black;font-weight: normal;}
 
 /* Star Ratings */
@@ -259,8 +255,7 @@ div.autocomplete ul li {color: #000;}
 .dash_tile_bin_text {color: #fff;}
 
 .HomePanel h2.title {background: transparent;color:#fff;}
-.HomePanel .HomePanelDynamicDash h2{background: rgba(0,0,0,0.4); text-shadow: 0px 1px 5px #000000;}
-.HomePanelDynamicDash p.tile_corner_box {background: rgba(0,0,0,0.4);border-top-left-radius: 5px;color:#fff;}
+.HomePanelDynamicDash p.tile_corner_box {background: rgba(0,0,0,0.4);color:#fff;}
 
 /* Delete Dialog */
 .delete-dialog .ui-dialog-titlebar, .ui-dialog-titlebar{
@@ -348,7 +343,7 @@ div.MessageBox a {
 
 /* Highlight selected keywords */
 input:checked + .customFieldLabel, .keywordselected {
-    background-color: #2e99e6;
+    background-color: var(--colour-brand-primary-default);
     color: #fff;
 }
   
@@ -385,11 +380,6 @@ input:checked + .customFieldLabel, .keywordselected {
 #SearchResultFound .Selected {
     font-weight: bold;
 }
-
-/* Browse bar */
-#BrowseBar a {color: #fff;}
-.BrowseBarText {color: #fff;}
-.BrowseBarItem.ui-droppable-hover a .BrowseBarLink{border: 2px solid #FFF;}
 
 /* Firefox on macOS optgroup background styling fix */
 /* @supports (-moz-osx-font-smoothing: auto) {
@@ -452,7 +442,7 @@ input:checked + .customFieldLabel, .keywordselected {
 #HomeSiteText h1,#HomeSiteText p {color:#fff;}
 
 button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpace .DownloadDBlend a, .UploadButton a {
-    background-color: #1679c0;
+    background-color: var(--colour-brand-primary-default);
     box-shadow: 0 1px 3px rgba(0,0,0,0.25);
 }
 
@@ -502,7 +492,7 @@ input:focus, textarea:focus, select:focus, .RecordPanel .RecordDownloadSpace .Do
 .uppy-StatusBar.is-waiting .uppy-StatusBar-actionBtn--upload:hover,
 .uppy-DashboardContent-back, .uppy-DashboardContent-back:focus,
 .uppy-DashboardContent-addMore, .uppy-DashboardContent-addMore:focus {
-    background-color: #1988d7;
+    background-color: var(--colour-brand-primary-default);
     color: #fff;
 }
 .uppy-Dashboard-browse {
@@ -552,11 +542,6 @@ input:focus, textarea:focus, select:focus, .RecordPanel .RecordDownloadSpace .Do
 .search-icon:active {
     color: #0299d8;
     background-color: #e8edf1;
-}
-
-.DashTileActions {
-    color: #fff;
-    background: #000;
 }
 
 #modal .BasicsBox .HelpHeader a { color: #999; }
@@ -717,10 +702,6 @@ a.HomePanel:hover {
 }
 .CommentEntry { border: 1px solid lightgray; background: white;}
 
-.BrowseBarRoot {
-    background: rgba(255, 255, 255, 0.1);
-}
-
 #iconpicker-container {
     background: white;
     border: 1px solid rgba(0,0,0,0.25);
@@ -729,8 +710,6 @@ a.HomePanel:hover {
 #SearchBarTabsContainer {
     background: rgb(0 0 0 / 20%);
 }
-
-.MiniCategoryBox {border: 1px solid rgba(0,0,0,0.25);}
 
 /* Custom styling for jQuery UI dialogs */
 

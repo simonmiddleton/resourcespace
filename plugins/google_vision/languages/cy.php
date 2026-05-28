@@ -25,3 +25,7 @@ $lang["page-title_google_vision_process_existing"] = 'Proses Gweledigaeth Google
 $lang["page-title_google_vision_setup"] = 'Gosodwch Plug-in Gweledigaeth Google';
 $lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
 $lang["page-title_google_vision_test"] = 'Google Vision Test';
+$lang["google_vision"] = 'Google Vision';
+$lang["google_vision_process_existing"] = 'Proses adnoddau heb eu prosesio';
+$lang["google_vision_process_existing_configure"] = 'Cyfluni swydd i brosesu adnoddau heb eu prosesio';
+$lang["google_vision_process_existing_collection_refs_help"] = 'Bydd gosod y opsiwn hwn yn golygu y bydd dim ond adnoddau yn y casgliadau a restrir yn cael eu prosesu. Os na fydd unrhyw gasgliadau wedi\'u nodi, yna bydd pob adnodd addas yn cael ei brosesu. Gellir nodi casgliadau gan ddefnyddio rhestr wedi\'i wahanu gan gomau yn ogystal â rhesi e.e. 100,105,110-115';

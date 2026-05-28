@@ -38,3 +38,4 @@ $lang["weekday-5"] = 'ਸ਼ੁੱਕਰਵਾਰ';
 $lang["weekday-6"] = 'ਸ਼ਨੀਵਾਰ';
 
 $lang["page-title_action_dates_setup"] = 'ਐਕਸ਼ਨ ਤਾਰੀਖਾਂ ਪਲੱਗਇਨ ਸੈਟਅਪ';
+$lang["action_dates_additional_settings_email_admin_days"] = 'ਇਹ ਕਿੰਨੇ ਦਿਨਾਂ ਪਹਿਲਾਂ ਐਡਮਿਨਾਂ ਨੂੰ ਸੂਚਿਤ ਕਰੋ ਜਦੋਂ ਕਾਰਵਾਈ ਹੋਵੇ (ਅਸਮਰਥਿਤ ਕਰਨ ਲਈ ਖਾਲੀ ਛੱਡੋ)';

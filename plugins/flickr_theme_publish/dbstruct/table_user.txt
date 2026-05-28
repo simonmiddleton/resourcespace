@@ -1,3 +1,0 @@
-flickr_frob,varchar(200),YES,,,
-flickr_token,varchar(200),YES,,,
-flickr_token_secret,varchar(200),YES,,,

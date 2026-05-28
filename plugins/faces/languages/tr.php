@@ -22,3 +22,10 @@ $lang["faces_count_missing"] = 'İşlenecek görüntüler';
 $lang["faces-tag-field-not-set"] = 'Etiketleme alanı yapılandırılmamış.';
 
 $lang["page-title_faces_setup"] = 'Yüzler Eklentisini Ayarla';
+$lang["faces_insight_faces"] = 'InsightFaces';
+$lang["faces_detect_faces"] = 'Yüzleri tespit et';
+$lang["faces_tag_faces"] = 'Yüzleri etiketle';
+$lang["faces_detect_faces_configure"] = 'Yüzleri tespit etmek için işi yapılandır';
+$lang["faces_tag_faces_configure"] = 'Yüzleri etiketlemek için işi yapılandır';
+$lang["faces_detect_faces_intro"] = 'Burada yüz tespiti başlatmak için bir iş oluşturun - bu iş herhangi bir parametre gerektirmez, bu nedenle başka türdeki bekleyen işler yoksa başlatılabilir.';
+$lang["faces_tag_faces_collection_refs_help"] = 'Bu seçeneği ayarlamak, yalnızca listelenen koleksiyonlardaki kaynakların güncelleneceği anlamına gelir. Koleksiyonlar belirtilmezse, Yüz etiketleme TÜM uygun kaynaklar için güncellenecektir. Koleksiyonlar virgülle ayrılmış liste veya aralıklar kullanılarak da belirtilebilir, örn. 100,105,110-115';

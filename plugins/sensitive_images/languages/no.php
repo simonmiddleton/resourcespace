@@ -8,3 +8,4 @@ $lang["sensitive_images_blur_level"]='Følsomhetsnivå for uskarphet av bilde<br
 $lang["plugin-sensitive_images-title"]='Sensitiv bildeuskarphet';
 $lang["plugin-sensitive_images-desc"]='Uskarper bilder merket som sensitive, med mulighet for brukeren til å klikke for å fjerne uskarpheten.';
 $lang["page-title_sensitive_images_setup"] = 'Sett opp Sensitive Images-plugin';
+$lang["sensitive_images_show"] = 'Klikk på bildet for å vise.';

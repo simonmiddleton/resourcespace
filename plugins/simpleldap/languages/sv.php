@@ -54,3 +54,4 @@ $lang["plugin-simpleldap-title"]='Enkel LDAP';
 $lang["plugin-simpleldap-desc"]='Enklare implementering av ldap-autentisering, riktad mot Active Directory men stöder även Oracle-katalog';
 $lang["page-title_simpleldap_ajax_test_auth"] = 'Testa LDAP-autentisering';
 $lang["page-title_simpleldap_setup"] = 'Konfigurera enkel LDAP-plugin';
+$lang["simpleldap_userlimit_error"] = 'Användaren kunde inte skapas eftersom användargränsen har nåtts. Vänligen kontakta din administratör.';

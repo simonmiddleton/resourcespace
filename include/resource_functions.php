@@ -191,8 +191,8 @@ function get_resource_path(
             } else {
                 $path_suffix = "/original/";
             }
-        } elseif ($size == "") {
-            # Original file (core file or alternative)
+        } elseif (($size == "") || ($extension == 'icc')) {
+            # Original file (core file or alternative) or icc profile
             $path_suffix = "/original/";
         } else {
             # Preview or thumb
@@ -260,7 +260,11 @@ function get_resource_path(
     if ($extension == 'icc') {
         $size = '';
         $icc = true;
-        $extension = ps_value("select file_extension value from resource where ref=?", array("i",$ref), 'jpg');
+        if ($alternative > 0) {
+            $extension = ps_value("SELECT file_extension value FROM resource_alt_files WHERE ref = ?", array("i", $alternative), 'jpg');
+        } else {
+            $extension = ps_value("SELECT file_extension value FROM resource WHERE ref = ?", array("i", $ref), 'jpg');
+        } 
     }
 
     $filefolder = $sdir . $path_suffix . $folder;
@@ -1000,6 +1004,140 @@ function save_resource_data($ref, $multi, $autosave_field = "")
                     continue;
                 }
             } // End of if not a fixed list field
+
+            // Determine whether a required field has a default for the user
+            $field_has_default_for_user = false;
+            if ($userresourcedefaults != '') {
+                foreach (explode(';', $userresourcedefaults) as $rule) {
+                    $rule_detail         = explode('=', trim($rule));
+                    $field_shortname     = $rule_detail[0];
+                    $field_default_value = $rule_detail[1];
+                    if ($field_shortname  == $fields[$n]['name'] && $field_default_value != "") {
+                        $field_has_default_for_user = true;
+                        break;
+                    }
+                }
+            }
+            # Update geolocation if this is a geolocation field
+            if ($fields[$n]["geomapping"] > 0) {
+                if ($fields[$n]["geomapping"] == FIELD_GEO_LOCATION::both->value) {
+                    if ($val == "") {
+                        ps_query("UPDATE resource SET geo_lat=null, geo_long=null WHERE ref= ?", ['i', $ref]);
+                        resource_log(
+                            $ref,
+                            LOG_CODE_EDITED_RESOURCE,
+                            null,
+                            "Removed Location",
+                            $resource_data["geo_lat"] . ", " . $resource_data["geo_long"],
+                            ""
+                        );
+                    } else {
+                        $pattern = '/
+                            ^
+                            (-?\d{1,3}(?:\.\d+)?) # Latitude capture
+                            ,\s*                  # Comma + whitespace
+                            (-?\d{1,3}(?:\.\d+)?) # Longitude capture
+                            $
+                            /x';
+                        $valid_geolocation = false;
+                        if (preg_match($pattern, $val, $matches)) {
+                            $lat = (float) $matches[1];
+                            $lng = (float) $matches[2];
+
+                            // Validate coordinate ranges
+                            if ($lat >= -90 && $lat <= 90 && $lng >= -180 && $lng <= 180) {
+                                $valid_geolocation = true;
+                            }
+                        }
+
+                        if ($valid_geolocation) {
+                            ps_query("UPDATE resource SET geo_lat=?, geo_long=? WHERE ref= ?", ['d', $lat, 'd', $lng, 'i', $ref]);
+                            resource_log(
+                                $ref,
+                                LOG_CODE_EDITED_RESOURCE,
+                                null,
+                                "Updated Location",
+                                $resource_data["geo_lat"] . ", " . $resource_data["geo_long"],
+                                $lat . ", " . $lng
+                            );
+                        } else {
+                            if (is_int_loose($resource_data["geo_lat"]) && is_int_loose($resource_data["geo_lat"])) {
+                                $error_code = 'location' . $resource_data["geo_lat"] . "," . $resource_data["geo_long"];
+                            } else {
+                                $error_code = 'location';
+                            }
+                            $errors[$error_code] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-error-invalid-latlong"];
+                            continue;
+                        }
+                    }
+                } elseif ($fields[$n]["geomapping"] == FIELD_GEO_LOCATION::latitude->value) {
+                    if ($val == "") {
+                        ps_query("UPDATE resource SET geo_lat=null WHERE ref= ?", ['i', $ref]);
+                        resource_log(
+                            $ref,
+                            LOG_CODE_EDITED_RESOURCE,
+                            null,
+                            "Removed Latitude",
+                            $resource_data["geo_lat"],
+                            ""
+                        );
+                    } elseif (is_float_loose($val) && ((float) $val) >= -90 && ((float) $val) <= 90) {
+                        ps_query("UPDATE resource SET geo_lat=? WHERE ref= ?", ['d', $val, 'i', $ref]);
+                        resource_log(
+                            $ref,
+                            LOG_CODE_EDITED_RESOURCE,
+                            null,
+                            "Updated Latitude",
+                            $resource_data["geo_lat"],
+                            $val
+                        );
+                    } else {
+                        if (is_int_loose($resource_data["geo_lat"])) {
+                            $error_code = 'latitude' . $resource_data["geo_lat"];
+                        } else {
+                            $error_code = 'latitude';
+                        }
+                        $errors[$error_code] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-error-invalid-lat"];
+                        continue;
+                    }
+                } elseif ($fields[$n]["geomapping"] == FIELD_GEO_LOCATION::longitude->value) {
+                    if ($val == "") {
+                        ps_query("UPDATE resource SET geo_long=null WHERE ref= ?", ['i', $ref]);
+                        resource_log(
+                            $ref,
+                            LOG_CODE_EDITED_RESOURCE,
+                            null,
+                            "Removed Longitude",
+                            $resource_data["geo_lat"],
+                            ""
+                        );
+                    } elseif (is_float_loose($val) && (float) $val >= -180 && (float) $val <= 180) {
+                        ps_query("UPDATE resource SET geo_long=? WHERE ref= ?", ['d', $val, 'i', $ref]);
+                        resource_log(
+                            $ref,
+                            LOG_CODE_EDITED_RESOURCE,
+                            null,
+                            "Updated Longitude",
+                            $resource_data["geo_long"],
+                            $val
+                        );
+                    } else {
+                        if (is_int_loose($resource_data["geo_long"])) {
+                            $error_code = 'longitude' . $resource_data["geo_long"];
+                        } else {
+                            $error_code = 'longitude';
+                        }
+                        $errors[$error_code] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-error-invalid-long"];
+                        continue;
+                    }
+                }
+            }
+
+            // Populate empty field with the default if necessary
+            if ($field_has_default_for_user && strlen((string) $val) == 0) {
+                $val = $field_default_value;
+                $new_checksums[$fields[$n]['ref']] = md5(trim(preg_replace('/\s\s+/', ' ', $val)));
+            }
 
             if (
                 $fields[$n]['required'] == 1
@@ -2208,11 +2346,16 @@ function save_resource_data_multi($collection, $editsearch = array(), $postvals 
                     "UPDATE resource SET geo_lat = ?,geo_long = ? WHERE ref IN (" . ps_param_insert(count($list)) . ")",
                     array_merge(["d",$geo_lat,"d",$geo_long], ps_param_fill($list, "i"))
                 );
+                update_geolocation_fields($list, [$geo_lat, $geo_long]);
             } elseif (($postvals["location"] ?? "") == "") {
                 ps_query(
                     "UPDATE resource SET geo_lat=NULL,geo_long=NULL WHERE ref IN (" . ps_param_insert(count($list)) . ")",
                     ps_param_fill($list, "i")
                 );
+                update_geolocation_fields($list, "");
+            } else {
+                $errors[] = $lang['location-validation-error'];
+                return $errors;
             }
 
             foreach ($list as $ref) {
@@ -3365,6 +3508,12 @@ function get_resource_field_data_batch($resources, $use_permissions = true, $ext
                 continue;
             }
 
+            // Track the current resource type when rendering metadata and refresh config overrides when it updates.
+            if (empty($exportoptions) && ((!isset($current_restype)) || ($restype[$fields[$n]["resource"]] != $current_restype))) {
+                $current_restype = $restype[$fields[$n]["resource"]];
+                resource_type_config_override($restype[$fields[$n]["resource"]]);
+            }
+
             // Add data to array
             if (
                     (!$use_permissions
@@ -4077,7 +4226,8 @@ function get_exiftool_fields($resource_type, string $option_separator = ",", boo
                   f.exiftool_field,
                   f.exiftool_filter,
                   f.name,
-                  f.read_only
+                  f.read_only,
+                  f.geomapping
              FROM resource_type_field AS f
         LEFT JOIN resource_type_field_resource_type rtfrt ON f.ref=rtfrt.resource_type_field
             WHERE length(exiftool_field) > 0
@@ -4655,6 +4805,45 @@ function get_alternative_files($resource, $order_by = "", $sort = "", $type = ""
     $alt_files_parameters = array_merge(array("i",$resource), $extrasql->parameters);
 
     return ps_query($alt_files_sql, $alt_files_parameters);
+}
+
+/**
+ * Search the alternative file records for matching filenames
+ * Alternative files can be optionally filtered by the Resource ID or by collection
+ *
+ * @param  string $filename Filename of the alternative file(s) to search for
+ * @param  int $collection Collection ID to filter resources, use 0 to ignore
+ * @param  int $min Minimum Resource ID to consider, use 0 to ignore
+ * @param  int $max Maximum Resource ID to consider, use 0 to ignore
+ * 
+ * @return array All matching alternative file records with corresponding:
+ *               resource ID, filename, file size, extension, name, and description
+ */
+function get_alternative_files_by_filename(string $filename, int $collection, int $min, int $max) : array
+{
+    $sql = new PreparedStatementQuery(
+        "SELECT ref, resource, file_name, file_size, file_extension, name, description FROM resource_alt_files WHERE file_name = ?",
+        ["s", $filename]
+    );
+
+    if ($collection) {
+        $sql->sql .= " AND resource IN (SELECT resource FROM collection_resource WHERE collection = ?)";
+        $sql->parameters[] = "i";
+        $sql->parameters[] = $collection;
+    } elseif ($min || $max) {
+        if ($min) {
+            $sql->sql .= " AND resource >= ?";
+            $sql->parameters[] = "i";
+            $sql->parameters[] = $min;
+        }
+        if ($max) {
+            $sql->sql .= " AND resource <= ?";
+            $sql->parameters[] = "i";
+            $sql->parameters[] = $max;
+        }
+    }
+
+    return ps_query($sql->sql, $sql->parameters);
 }
 
 /**
@@ -5689,7 +5878,7 @@ function autocomplete_blank_fields($resource, $force_run, $return_changes = fals
     }
 
     $fields = ps_query(
-        "SELECT rtf.ref, rtf.type, rtf.autocomplete_macro
+        "SELECT rtf.ref, rtf.type, rtf.autocomplete_macro, rtf.display_condition
             FROM resource_type_field rtf
             LEFT JOIN resource_type rt ON rt.ref = ?
             WHERE length(rtf.autocomplete_macro) > 0
@@ -5711,6 +5900,13 @@ function autocomplete_blank_fields($resource, $force_run, $return_changes = fals
         $run_autocomplete_macro = $force_run || hook('run_autocomplete_macro');
         # The autocomplete macro will run if the existing value is blank, or if forced to always run
         if (count(get_resource_nodes($resource, $field['ref'], true)) == 0 || $run_autocomplete_macro) {
+            # Check if the field has a unique display condition blocking it from being rendered
+            if ($field['display_condition'] != '') {
+                $field_data = get_resource_field_data($field['ref']);
+                if (!check_display_condition(0, $field, $field_data, false, $resource)) {
+                    continue;
+                }
+            }
             # Autocomplete and update using the returned value
             $value = eval(eval_check_signed($field['autocomplete_macro']));
             if (in_array($field['type'], $FIXED_LIST_FIELD_TYPES)) {
@@ -7721,7 +7917,7 @@ function get_nopreview_html(string $extension, $resource_type = null): string
 function get_resource_type_fields($restypes = "", $field_order_by = "ref", $field_sort = "asc", $find = "", $fieldtypes = array(), $include_inactive = false)
 {
     debug_function_call(__FUNCTION__, func_get_args());
-    if ($field_order_by != "ref") {
+    if (!in_array($field_order_by, ["ref", "title"])) {
         // Default order by is not being used so check order by columns supplied are valid for the table
         $fields = columns_in("resource_type_field", null, null, true);
         $fields[] = "tab_name";
@@ -9142,4 +9338,19 @@ function can_upload_preview_image(int $ref): bool
         && !checkperm("xupr")
         && !resource_file_readonly($ref) 
         && !$GLOBALS['custompermshowfile'];
+}
+
+/**
+ * Check if a resource has a file to derive previews from.
+ *  
+ * @param int       $ref        Resource ID
+ * @param string    $extension  Resource file extension
+ */
+function resource_has_preview_source(int $ref, string $extension) : bool
+{
+    return file_exists( 
+            in_array($extension, NON_PREVIEW_EXTENSIONS) ? 
+                get_preview_source_file($ref, 'jpg', false, true, -1, false) : 
+                get_resource_path($ref, true, '', false,  $extension)
+        );
 }

@@ -27,3 +27,7 @@ $lang["page-title_google_vision_process_existing"] = 'Google Vision 프로세스
 $lang["page-title_google_vision_setup"] = 'Google Vision 플러그인 설정';
 $lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
 $lang["page-title_google_vision_test"] = 'Google Vision Test';
+$lang["google_vision"] = '구글 비전';
+$lang["google_vision_process_existing"] = '처리되지 않은 자산 처리';
+$lang["google_vision_process_existing_configure"] = '처리되지 않은 자산을 처리하는 작업 구성';
+$lang["google_vision_process_existing_collection_refs_help"] = '이 옵션을 설정하면 나열된 컬렉션에 있는 자산만 처리됩니다. 컬렉션이 지정되지 않으면 모든 적합한 자산이 처리됩니다. 컬렉션은 쉼표로 구분된 목록 또는 범위(예: 100,105,110-115)로 지정할 수 있습니다.';

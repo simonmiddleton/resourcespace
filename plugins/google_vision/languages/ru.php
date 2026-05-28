@@ -27,3 +27,7 @@ $lang["page-title_google_vision_process_existing"] = 'Google Vision Процес
 $lang["page-title_google_vision_setup"] = 'Настроить плагин Google Vision';
 $lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
 $lang["page-title_google_vision_test"] = 'Google Vision Test';
+$lang["google_vision"] = 'Google Vision';
+$lang["google_vision_process_existing"] = 'Обработать необработанные ресурсы';
+$lang["google_vision_process_existing_configure"] = 'Настроить задачу для обработки необработанных ресурсов';
+$lang["google_vision_process_existing_collection_refs_help"] = 'Установка этого параметра означает, что будут обработаны только ресурсы из указанных коллекций. Если коллекции не указаны, будут обработаны ВСЕ подходящие ресурсы. Коллекции можно указывать с помощью списка, разделённого запятыми, а также диапазонов, например 100,105,110-115';

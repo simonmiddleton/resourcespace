@@ -83,3 +83,4 @@ $lang["cropper_preset_sizes"] = '미리 정의된 크기';
 $lang["page-title_transform_collection_transform"] = '리소스 변환';
 $lang["page-title_transform_crop"] = '자원 자르기';
 $lang["page-title_transform_setup"] = '변환 플러그인 설정';
+$lang["use_filename_as_title"] = '파일 이름을 제목으로 사용';

@@ -6,3 +6,4 @@ $lang["sensitive_images_help"] = 'Adjon meg egy metaadat mezőt, amely tárolja 
 $lang["sensitive_images_field"] = 'A metaadat mező, amely tartalmazza, hogy miért érzékeny a kép';
 $lang["sensitive_images_blur_level"] = 'Érzékeny kép elmosási szint<br>(1=legkevésbé, 6=legjobban)';
 $lang["page-title_sensitive_images_setup"] = 'Érzékeny Képek Bővítmény Beállítása';
+$lang["sensitive_images_show"] = 'Kattintson a kép megjelenítéséhez.';

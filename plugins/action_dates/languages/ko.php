@@ -40,3 +40,4 @@ $lang["plugin-action_dates-title"] = '작업 날짜';
 $lang["plugin-action_dates-desc"] = '날짜 필드를 기반으로 리소스의 예약 삭제 또는 제한을 가능하게 합니다';
 
 $lang["page-title_action_dates_setup"] = '액션 날짜 플러그인 설정';
+$lang["action_dates_additional_settings_email_admin_days"] = '작업이 수행되기 며칠 전에 관리자에게 알림 보내기 (비활성화하려면 공백으로 설정)';

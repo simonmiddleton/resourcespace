@@ -10,3 +10,8 @@ $lang["whisper_transcript"] = 'Luo transkripti-tiedosto ja lisää se vaihtoehto
 $lang["whisper_transcript_name"] = 'Automaattisesti luotu transkripti';
 
 $lang["page-title_whisper_setup"] = 'Aseta Whisper-laajennus';
+$lang["whisper_cron_enable"] = 'Ota käyttöön käsittelemättömien resurssien käsittely ajoitetun Cron-tehtävän avulla';
+$lang["whisper"] = 'Whisper';
+$lang["whisper_process_existing"] = 'Käsittele käsittelemättömät resurssit';
+$lang["whisper_process_existing_intro"] = 'Luo tehtävä käynnistääksesi Whisper-äänenkäsittelyn täällä – tätä tehtävää ei tarvita parametreja, joten se voidaan käynnistää niin kauan kuin muita tämän tyyppisiä tehtäviä ei ole käynnissä.';
+$lang["whisper_process_existing_configure"] = 'Määritä tehtävä käsittelemään tiedostoja Whisperillä';

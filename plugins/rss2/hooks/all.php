@@ -1,5 +1,7 @@
 <?php
 
+use Montala\ResourceSpace\UserInterfaceComponents\Icon;
+
 function HookRss2AllInitialise()
     {
     global $rss_fieldvars;
@@ -17,14 +19,22 @@ function HookRss2AllPreheaderoutput()
 function HookRss2AllSearchbarbeforebottomlinks()
     {
     include_once __DIR__ . "/../../../include/api_functions.php";   
-    global $baseurl,$lang,$userpassword,$username,$userref,$api_scramble_key;
+    global $baseurl,$lang,$username,$userref;
     
-    $query="user=" . base64_encode($username) . "&search=!last50";
-    $private_key = get_api_key($userref);
-    // Sign the query using the private key
-    $sign=hash("sha256",$private_key . $query);
+    $query = [
+        'user' => base64_encode($username),
+        'search' => '!last50',
+    ];
+    $url = generateURL(
+        "{$baseurl}/plugins/rss2/pages/rssfilter.php",
+        $query,
+        ['sign' => hash('sha256', get_api_key($userref) . http_build_query($query))]
+    );
     ?>
-    <p><a href="<?php echo $baseurl?>/plugins/rss2/pages/rssfilter.php?<?php echo $query; ?>&sign=<?php echo urlencode($sign); ?>"><i aria-hidden="true" class="icon-rss"></i>&nbsp;<?php echo escape($lang["new_content_rss_feed"]); ?></a></p>
+    <a href="<?php echo $url; ?>">
+        <?php render_icon_wrapper_component(Icon::Rss); ?>
+        <span><?php echo escape($lang['new_content_rss_feed']); ?></span>
+    </a>
     <?php
     }
 

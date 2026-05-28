@@ -107,3 +107,4 @@ $lang["page-title_simplesaml_setup"] = '设置简单 SAML 插件';
 $lang["simplesaml_error_not_configured"] = 'SimpleSAML 插件未配置';
 $lang["simplesaml_error_no_idp_metadata"] = 'SimpleSAML 插件未完全配置（缺少 IdP 元数据）';
 $lang["simplesaml_error_no_authsource"] = 'SimpleSAML 插件未完全配置（缺少 authsource）';
+$lang["simplesaml_userlimit_error"] = '无法创建用户，因为已达到用户限制。请联系您的管理员。';

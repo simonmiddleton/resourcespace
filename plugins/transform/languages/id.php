@@ -83,3 +83,4 @@ $lang["cropper_preset_sizes"] = 'Ukuran yang telah ditentukan';
 $lang["page-title_transform_collection_transform"] = 'Transformasi Sumber Daya';
 $lang["page-title_transform_crop"] = 'Potong Sumber Daya';
 $lang["page-title_transform_setup"] = 'Pengaturan Plugin Transformasi';
+$lang["use_filename_as_title"] = 'Gunakan nama file sebagai judul';

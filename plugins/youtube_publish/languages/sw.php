@@ -51,3 +51,4 @@ $lang["youtube_chunk_size"]='Ukubwa wa kipande cha kutumia unapopakia kwenye You
 $lang["youtube_publish_add_anchor"]='Ongeza vitambulisho vya nanga kwenye URL wakati wa kuhifadhi kwenye uwanja wa metadata wa URL ya YouTube?';
 $lang["page-title_youtube_publish_setup"] = 'Panga Plugin';
 $lang["page-title_youtube_publish_youtube_upload"] = 'Chapisha Rasilimali kwenye Youtube';
+$lang["youtube_publish_video_title"] = 'Kichwa cha video (hadi herufi 100)';

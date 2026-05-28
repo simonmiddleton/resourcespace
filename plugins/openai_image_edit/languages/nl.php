@@ -30,3 +30,4 @@ $lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
 $lang["page-title_openai_image_edit_get_png"] = 'OpenAI Get PNG';
 $lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI Opslaan Alternatief';
 $lang["page-title_openai_image_edit_save_new"] = 'OpenAI Opslaan Nieuw';
+$lang["openai_image_edit__introtext"] = 'Voer in het promptvak een beschrijving in van de wijzigingen die u aan de afbeelding wilt laten aanbrengen. Gebruik indien gewenst de penseel om delen van de afbeelding te wissen, waardoor die gebieden opnieuw gegenereerd worden.';

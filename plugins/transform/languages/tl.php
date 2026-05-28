@@ -81,3 +81,4 @@ $lang["cropper_preset_sizes"] = 'Mga nakatakdang sukat';
 $lang["page-title_transform_collection_transform"] = 'I-convert ang Yaman';
 $lang["page-title_transform_crop"] = 'Gupitin ang Yaman';
 $lang["page-title_transform_setup"] = 'I-set up ang Transform Plugin';
+$lang["use_filename_as_title"] = 'Gamitin ang filename bilang pamagat';

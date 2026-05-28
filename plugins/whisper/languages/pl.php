@@ -10,3 +10,8 @@ $lang["whisper_transcript"] = 'Wygeneruj plik transkrypcji i dodaj jako alternat
 $lang["whisper_transcript_name"] = 'Automatycznie wygenerowany transkrypt';
 
 $lang["page-title_whisper_setup"] = 'Ustawienia wtyczki Whisper';
+$lang["whisper_cron_enable"] = 'Włącz przetwarzanie nieprzetworzonych zasobów za pomocą zaplanowanego zadania Cron';
+$lang["whisper"] = 'Szept';
+$lang["whisper_process_existing"] = 'Przetwarzaj nieprzetworzone zasoby';
+$lang["whisper_process_existing_intro"] = 'Utwórz zadanie, aby rozpocząć przetwarzanie audio za pomocą Whisper — to zadanie nie wymaga żadnych parametrów, więc można je uruchomić, o ile nie ma innych oczekujących zadań tego typu.';
+$lang["whisper_process_existing_configure"] = 'Skonfiguruj zadanie do przetwarzania plików za pomocą Whisper';

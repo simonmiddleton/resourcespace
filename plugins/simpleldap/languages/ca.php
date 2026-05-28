@@ -54,3 +54,4 @@ $lang["plugin-simpleldap-title"]='LDAP simple';
 $lang["plugin-simpleldap-desc"]='[Avançat] Implementació més senzilla de l\'autenticació ldap, dirigida a Active Directory però també compatible amb el directori Oracle';
 $lang["page-title_simpleldap_ajax_test_auth"] = 'Prova d\'autenticació LDAP';
 $lang["page-title_simpleldap_setup"] = 'Configuració del complement LDAP senzill';
+$lang["simpleldap_userlimit_error"] = 'No s\'ha pogut crear l\'usuari ja que s\'ha arribat al límit d\'usuaris. Si us plau, contacteu amb l\'administrador.';

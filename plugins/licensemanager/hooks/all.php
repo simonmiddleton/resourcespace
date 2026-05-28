@@ -76,12 +76,13 @@ function HookLicensemanagerAllRender_actions_add_collection_option($top_actions,
     return $options;
 }
 
-function HookLicensemanagerAllTopnavlinksafterhome()
+function HookLicensemanagerAllHandleuserref()
 {
-    global $baseurl, $lang;
     if (!checkperm("a") && checkperm("lm")) {
-        ?><li class="HeaderLink"><a href="<?php echo $baseurl ?>/plugins/licensemanager/pages/list.php" onClick="CentralSpaceLoad(this,true);return false;"><?php echo '<i aria-hidden="true" class="icon-scroll"></i>&nbsp;' . escape($lang["managelicenses"]); ?></a></li>
-        <?php
+        $GLOBALS['custom_top_nav'][] = [
+            'title' => '(lang)managelicenses',
+            'link' => "{$GLOBALS['baseurl']}/plugins/licensemanager/pages/list.php",
+        ];
     }
 }
 

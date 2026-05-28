@@ -67,6 +67,10 @@ $previewbased = in_array("-previewbased", $argv);
 $videoupdate = in_array("-videoupdate", $argv);
 $delete_existing = in_array("-delete", $argv) && !$previewbased && !$videoupdate && count($sizes) == 0;
 
+# Don't update portrait landscape field using this script. Recreating previews is not expected to change image orientation.
+# Use pages/tools/update_portrait_landscape_field.php to update portrait_landscape_field.
+unset($GLOBALS['portrait_landscape_field']);
+
 function update_preview($ref, $previewbased, $sizes, $delete_existing)
 {
     $resourceinfo = ps_query("select file_path, file_extension from resource where ref = ?", array("i", (int)$ref));
@@ -77,7 +81,11 @@ function update_preview($ref, $previewbased, $sizes, $delete_existing)
             $ingested = true;
         }
         if ($delete_existing) {
-            delete_previews($ref);
+            if (resource_has_preview_source($ref, $resourceinfo['file_extension'])) {
+                delete_previews($ref);
+            } else {
+                $previewbased = true;
+            }
         }
         create_previews(
             $ref, 

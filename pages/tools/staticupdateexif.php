@@ -30,7 +30,7 @@ if (substr($sapi_type, 0, 3) != 'cli') {
     header("Content-type: text/plain");
     $collectionid = getval("col", 0, true);
     $resource_types = array_filter(explode(",", getval("types", "")), "is_int_loose");
-    echo "collection: $collectionid resource types: " . implode(",", $resource_types) . PHP_EOL;
+    echo "collection: " . (int) $collectionid . " resource types: " . implode(",", $resource_types) . PHP_EOL;
 } else {
     $shortopts = "c:t:";
     $longopts = array("col:","types:");
@@ -70,7 +70,7 @@ if (substr($sapi_type, 0, 3) != 'cli') {
 set_time_limit(60 * 60 * 40);
 
 echo "Updating EXIF/IPTC...\n";
-
+ob_flush();
 $sql = new PreparedStatementQuery("SELECT ref, file_extension FROM resource WHERE has_image > ?", ["i",RESOURCE_PREVIEWS_NONE]);
 
 if ($collectionid > 0) {
@@ -90,6 +90,7 @@ $resources = ps_query($sql->sql, $sql->parameters);
 foreach ($resources as $resource) {
     $ref = $resource["ref"];
     echo $resource["ref"] . "... ";
+    ob_flush();
     $GLOBALS["use_error_exception"] = true;
     try {
         extract_exif_comment($resource["ref"], $resource["file_extension"]);

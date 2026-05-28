@@ -20,7 +20,7 @@ function youtube_publish_initialize()
     // Offline access will give you both an access and refresh token so that your app can refresh the access token
     // without user interaction.
     $client->setAccessType('offline');
-    $client->setApprovalPrompt('force');
+    $client->setPrompt('select_account consent');
 
     $access_tokens = ps_query("SELECT youtube_access_token,youtube_refresh_token FROM user WHERE ref = ?", array("i", $userref));
     $access_token = (string) $access_tokens[0]["youtube_access_token"];
@@ -121,13 +121,16 @@ function youtube_publish_initialize()
 
 function get_youtube_authorization_code()
 {
-    global $ref, $baseurl, $youtube_publish_client_id, $youtube_publish_client_secret,$language, $client,$youtube;
+    global $ref, $baseurl, $baseurl_short, $session_hash, $client;
 
     // If the user hasn't authorized the app, initiate the OAuth flow
     $state = $ref;
     $client->setState($state);
     $_SESSION['state'] = $state;
     $authUrl = $client->createAuthUrl();
+
+    // Set a lax user cookie that can be used for auth after the redirect
+    rs_setcookie("user", $session_hash, 1, $baseurl_short . "plugins/youtube_publish/pages/youtube_upload.php", "", substr($baseurl, 0, 5) == "https", true, "Lax");
 
     header("Location: " . $authUrl);
 }

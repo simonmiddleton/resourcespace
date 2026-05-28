@@ -51,3 +51,4 @@ $lang["youtube_chunk_size"] = 'A feltöltéshez használandó darabméret a YouT
 $lang["youtube_publish_add_anchor"] = 'Hozzáadja az anchor tageket az URL-hez, amikor menti a YouTube URL metaadat mezőbe?';
 $lang["page-title_youtube_publish_setup"] = 'Plugin beállítása';
 $lang["page-title_youtube_publish_youtube_upload"] = 'Erőforrás közzététele a Youtube-on';
+$lang["youtube_publish_video_title"] = 'Videó címe (max. 100 karakter)';

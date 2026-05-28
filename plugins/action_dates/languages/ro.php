@@ -40,3 +40,4 @@ $lang["plugin-action_dates-title"] = 'Date de acțiune';
 $lang["plugin-action_dates-desc"] = 'Permite ștergerea sau restricționarea programată a resurselor pe baza câmpurilor de dată';
 
 $lang["page-title_action_dates_setup"] = 'Configurare Plugin pentru Datele de Acțiune';
+$lang["action_dates_additional_settings_email_admin_days"] = 'Notifică administratorii cu atâtea zile înainte ca acțiunea să aibă loc (Lasă gol pentru a dezactiva)';

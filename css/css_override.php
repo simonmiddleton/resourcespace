@@ -15,8 +15,6 @@ if ((is_array($k) || trim($k) === '') && getval('noauth', '') != true) {
 
 header("Content-type: text/css");
 
-global $header_colour_style_override, $header_link_style_override, $home_colour_style_override, $button_colour_override;
-
 // Dark mode styling
 if (isset($user_pref_appearance) && !(isset($high_contrast_mode) && $high_contrast_mode)) {
     if ($user_pref_appearance == "device") {
@@ -60,6 +58,7 @@ if (isset($user_pref_appearance) && !(isset($high_contrast_mode) && $high_contra
             --colour-surface-mode-surface: var(--colour-neutral-850);
             --colour-surface-page-title-background: var(--colour-neutral-850);
             --colour-surface-uploader-background: var(--colour-surface-200);
+            --colour-surface-view-background: var(--colour-surface-100)
 
             /* Colours - Typography - Dark */
             --colour-typography-50: var(--colour-neutral-1000);
@@ -88,6 +87,10 @@ if (isset($user_pref_appearance) && !(isset($high_contrast_mode) && $high_contra
             --form-form-required-stroke: var(--colour-neutral-950);
             --form-tooltip-background: var(--colour-surface-mode-surface);
             --form-tooltip-stroke: var(--form-field-border);
+
+            /* Colours feedback - Dark */
+            --colour-feedback-warning-50: var(--colour-neutral-1000);
+            --colour-feedback-warning-200: var(--colour-feedback-warning-lightest);
         }
 
         body, html {
@@ -327,7 +330,7 @@ if (isset($user_pref_appearance) && !(isset($high_contrast_mode) && $high_contra
         }
         [data-uppy-theme=dark] .uppy-StatusBar.is-waiting .uppy-StatusBar-actionBtn--upload:hover,
         [data-uppy-theme=dark] .uppy-StatusBar.is-waiting .uppy-StatusBar-actionBtn--upload {
-            background-color: #1988d7;
+            background-color: var(--colour-brand-primary-default);
         }
         .lockedQuestion {
             background-color: #404040;
@@ -499,51 +502,6 @@ if (isset($user_pref_appearance) && !(isset($high_contrast_mode) && $high_contra
     }
 }
 
-# Override the header background colour
-if (isset($header_colour_style_override) && $header_colour_style_override != '') { ?>
-    #Header, #OverFlowLinks, #LoginHeader {
-        background: <?php echo $header_colour_style_override; ?>;
-    } <?php
-}
-
-# Override the header link colour
-if (isset($header_link_style_override) && $header_link_style_override != '') { ?>
-    #HeaderNav1, #HeaderNav1 li a, #HeaderNav2 li a, #HiddenLinks li.HeaderLink a {
-        color: <?php echo $header_link_style_override; ?>;
-    }
-    #HeaderNav2 li {
-        border-color: <?php echo $header_link_style_override; ?>;
-    }
-    #HeaderNav1 li.UploadButton a {
-        color: #FFFFFF;
-    } <?php
-}
-
-# Override home UI elements colour (intro text, dash tiles, simple search)
-if (isset($home_colour_style_override) && $home_colour_style_override != '') { ?>
-    #SearchBox, #HomeSiteText.dashtext, .HomePanelIN, #BrowseBar, #NewsPanel.BasicsBox, #remote_assist #SearchBoxPanel,
-    .SearchBarTab.SearchBarTabSelected {
-        background: <?php echo $home_colour_style_override; ?>;
-    } <?php
-}
-
-// Override the button colour
-if (isset($button_colour_override) && $button_colour_override != '') { ?>
-    button,
-    input[type=submit],
-    input[type=button],
-    .RecordPanel .RecordDownloadSpace .DownloadDBlend a,
-    .UploadButton a,
-    .uppy-StatusBar-actionBtn,
-    .uppy-Dashboard-browse,
-    .uppy-StatusBar.is-waiting .uppy-StatusBar-actionBtn--upload,
-    .uppy-StatusBar.is-waiting .uppy-StatusBar-actionBtn--upload:hover,
-    .uppy-DashboardContent-back, .uppy-DashboardContent-back:focus,
-    .uppy-DashboardContent-addMore, .uppy-DashboardContent-addMore:focus {
-        background-color: <?php echo $button_colour_override; ?>;
-    } <?php
-}
-
 // Apply user uploaded custom font
 if (isset($custom_font) && $custom_font != '') {
     $custom_font_url = str_replace('[storage_url]', $storageurl, $custom_font);
@@ -595,7 +553,7 @@ if (isset($high_contrast_mode) && $high_contrast_mode) { ?>
     .Listview tr:last-child {
         border-bottom: 0;
     }
-    #SearchBox, #HomeSiteText.dashtext, .HomePanelIN, .PopupCategoryTree, #BrowseBar {
+    #SearchBox, #HomeSiteText.dashtext, .HomePanelIN, .PopupCategoryTree {
         background: black;
     }
     .SearchBarTab.SearchBarTabSelected {
@@ -801,13 +759,8 @@ if (isset($high_contrast_mode) && $high_contrast_mode) { ?>
         text-decoration: underline;
     } <?php
 }
+?>
 
-// Simple Search pills using jQuery tag editor
-if ($simple_search_pills_view) { ?>
-    .search-icon, .search-icon:hover, .search-icon:active {
-        background-color: #ffffff00;
-        margin-top: -36px;
-        margin-left: 221px;
-    } <?php
+:root {
+--slideshow-photo-delay: <?php echo (int) $slideshow_photo_delay . 's'; ?> 
 }
-

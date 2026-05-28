@@ -6,3 +6,4 @@ $lang["sensitive_images_help"]='Вкажіть поле метаданих, як
 $lang["sensitive_images_field"]='Поле метаданих, що містить причину чутливості зображення';
 $lang["sensitive_images_blur_level"]='Рівень розмиття чутливого зображення<br>(1=найменше, 6=найбільше)';
 $lang["page-title_sensitive_images_setup"] = 'Налаштування плагіна чутливих зображень';
+$lang["sensitive_images_show"] = 'Натисніть зображення, щоб показати.';

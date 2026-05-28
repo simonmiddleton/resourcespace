@@ -90,37 +90,17 @@ $page_def[] = config_add_file_input(
     true
 );
 
-$page_def[] = config_add_colouroverride_input(
-    'header_colour_style_override',
-    $lang["setup-headercolourstyleoverride"],
-    '',
+$page_def[] = config_add_single_select(
+    'colour_theme',
+    $lang['userpreference_colourtheme'],
+    ['blue' => $lang['blue'], 'green' => $lang['green'], 'red' => $lang['red'], 'purple' => $lang["purple"]],
+    true,
+    420,
     null,
     true,
-    "jQuery('#Header').css('background',value);"
-);
-$page_def[] = config_add_colouroverride_input(
-    'header_link_style_override',
-    $lang["setup-headerlinkstyleoverride"],
-    '',
     null,
-    true,
-    "jQuery('#HeaderNav1 li a').css('color',value);jQuery('#HeaderNav1 li.UploadButton a').css('color','white');jQuery('#HeaderNav2 a').css('color',value);jQuery('#HeaderNav2 li').css('border-color', value);"
-);
-$page_def[] = config_add_colouroverride_input(
-    'home_colour_style_override',
-    $lang["setup-homecolourstyleoverride"],
-    '',
-    null,
-    true,
-    "jQuery('#SearchBox').css('background',value); jQuery('#HomeSiteText.dashtext').css('background',value); jQuery('.HomePanelIN').css('background',value); jQuery('#BrowseBar').css('background',value); jQuery('.SearchBarTab.SearchBarTabSelected').css('background', value);"
-);
-$page_def[] = config_add_colouroverride_input(
-    'button_colour_override',
-    $lang["setup-buttoncolouroverride"],
-    '',
-    null,
-    true,
-    "jQuery('button:not(.search-icon),input[type=submit],input[type=button],.RecordPanel .RecordDownloadSpace .DownloadDBlend a,.UploadButton a').css('background-color',value);"
+    false,
+    true
 );
 $page_def[] = config_add_single_select('thumbs_default', $lang['userpreference_thumbs_default_label'], array('show' => $lang['thumbnails_collection_bar'], 'actions' => $lang['minimal_collection_bar'], 'hide' => $lang['hide_collection_bar']), true, 420, null, true);
 $page_def[] = config_add_boolean_select('resource_view_modal', $lang['userpreference_resource_view_modal_label'], $enable_disable_options, 420, null, true);
@@ -302,16 +282,9 @@ $page_def[] = config_add_boolean_select('help_link', $lang['systemconfig_help_li
 $page_def[] = config_add_boolean_select('recent_link', $lang['systemconfig_recent_link_label'], $yes_no_options, 420, null, true);
 $page_def[] = config_add_boolean_select('mycollections_link', $lang['systemconfig_mycollections_link_label'], $yes_no_options, 420, null, true);
 $page_def[] = config_add_boolean_select('myrequests_link', $lang['systemconfig_myrequests_link_label'], $yes_no_options, 420, null, true);
-$page_def[] = config_add_boolean_select('research_link', $lang['systemconfig_research_link_label'], $yes_no_options, 420, null, true);
 $page_def[] = config_add_boolean_select('themes_navlink', $lang['systemconfig_themes_navlink_label'], $yes_no_options, 420, null, true);
 $page_def[] = config_add_boolean_select('use_theme_as_home', $lang['systemconfig_use_theme_as_home_label'], $yes_no_options, 420, null, true);
 $page_def[] = config_add_boolean_select('use_recent_as_home', $lang['systemconfig_use_recent_as_home_label'], $yes_no_options, 420, null, true);
-$page_def[] = config_add_html('</div>');
-
-// Browse Bar section
-$page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed"><i class="icon-list-tree"></i>&nbsp;' . $lang['systemconfig_browse_bar_section'] . '</h3><div id="SystemConfigFeaturedCollectionSection" class="CollapsibleSection">');
-$page_def[] = config_add_boolean_select('browse_bar', $lang['systemconfig_browse_bar_enable'], $yes_no_options, 420, null, true);
-$page_def[] = config_add_boolean_select('browse_bar_workflow', $lang['systemconfig_browse_bar_workflow'], $yes_no_options, 420, null, true);
 $page_def[] = config_add_html('</div>');
 
 // Collection section

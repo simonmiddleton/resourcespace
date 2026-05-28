@@ -30,3 +30,4 @@ $lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
 $lang["page-title_openai_image_edit_get_png"] = 'OpenAI Get PNG';
 $lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI Αποθήκευση Εναλλακτικής';
 $lang["page-title_openai_image_edit_save_new"] = 'OpenAI Αποθήκευση Νέου';
+$lang["openai_image_edit__introtext"] = 'Εισάγετε στο πεδίο προτροπής μια περιγραφή των αλλαγών που θα θέλατε να γίνουν στην εικόνα. Προαιρετικά, χρησιμοποιήστε το πινέλο για να διαγράψετε μέρη της εικόνας, αναγκάζοντας την αναδημιουργία αυτών των περιοχών.';

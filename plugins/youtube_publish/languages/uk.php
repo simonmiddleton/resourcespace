@@ -51,3 +51,4 @@ $lang["youtube_chunk_size"]='Розмір частини для завантаж
 $lang["youtube_publish_add_anchor"]='Додати теги якоря до URL при збереженні в поле метаданих URL YouTube?';
 $lang["page-title_youtube_publish_setup"] = 'Налаштування плагіна';
 $lang["page-title_youtube_publish_youtube_upload"] = 'Опублікувати ресурс на YouTube';
+$lang["youtube_publish_video_title"] = 'Назва відео (максимум 100 символів)';

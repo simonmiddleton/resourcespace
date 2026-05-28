@@ -25,7 +25,5 @@ $lang["home__welcometext"] = "The simple, fast, &amp; free way to organize your 
 
 $lang["userpreferencecolourtheme"] = "Interface color theme";
 $lang['userpreference_colourtheme'] = 'Color theme';
-$lang["setup-headercolourstyleoverride"] = "Custom header color";
 $lang["maximise"] = "Maximize";
 
-$lang["setup-homecolourstyleoverride"] = "Custom intro text, dash tile and simple search color";

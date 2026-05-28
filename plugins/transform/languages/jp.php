@@ -83,3 +83,4 @@ $lang["cropper_preset_sizes"] = '事前定義されたサイズ';
 $lang["page-title_transform_collection_transform"] = 'リソースを変換する';
 $lang["page-title_transform_crop"] = 'リソースをトリミングする';
 $lang["page-title_transform_setup"] = '変換プラグインの設定';
+$lang["use_filename_as_title"] = 'ファイル名をタイトルとして使用';

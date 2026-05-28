@@ -54,3 +54,4 @@ $lang["plugin-simpleldap-title"]='Yksinkertainen LDAP';
 $lang["plugin-simpleldap-desc"]='Yksinkertaisempi ldap-todennuksen toteutus, kohdistettu Active Directoryyn mutta tukee myös Oracle-hakemistoa';
 $lang["page-title_simpleldap_ajax_test_auth"] = 'Testaa LDAP-todennus';
 $lang["page-title_simpleldap_setup"] = 'Aseta Yksinkertainen LDAP-liitännäinen';
+$lang["simpleldap_userlimit_error"] = 'Käyttäjää ei voitu luoda, koska käyttäjäraja on saavutettu. Ota yhteyttä järjestelmänvalvojaan.';

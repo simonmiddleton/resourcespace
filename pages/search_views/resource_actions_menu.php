@@ -44,7 +44,9 @@ if (
     }
 }
 
-$draw_menu = !$add_collection_item_hidden && !$remove_collection_item_hidden;
+$draw_menu = !$add_collection_item_hidden 
+            && !$add_collection_item_hidden 
+            && ($add_collection_item || $remove_collection_item);
 
 // Share
 if ($allow_share && ($k == "" || $internal_share_access)) {
@@ -78,7 +80,12 @@ if (
     $draw_menu = true;
 }
 
-if (!checkperm("D") || hook('check_single_delete')) {
+if (
+    (
+        !checkperm("D") 
+        && ($k == "" || $internal_share_access)
+    )
+    || hook('check_single_delete')) {
     if (isset($resource_deletion_state) && $result[$n]["archive"] == $resource_deletion_state) {
         $delete_perm_item = true;
         $draw_menu = true;
@@ -89,7 +96,6 @@ if (!checkperm("D") || hook('check_single_delete')) {
 }
 
 hook('add_to_resource_tools', '', array($ref));
-
 if ($draw_menu) { ?>
 
 <div class="resource-card-action-menu" aria-haspopup="menu" aria-expanded="false">

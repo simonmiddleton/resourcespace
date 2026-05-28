@@ -885,85 +885,6 @@ function config_file_input($name, $label, $current, $form_action, $width = 420, 
 }
 
 /**
- * Generate colour picker input
- *
- * @param string $name          HTML input name attribute
- * @param string $label
- * @param string $current       Current value
- * @param string $default       Default value
- * @param string $title         Title
- * @param boolean $autosave     Automatically save the value on change
- * @param string on_change_js   JavaScript run onchange of value (useful for "live" previewing of changes)
- */
-function config_colouroverride_input($name, $label, $current, $default, $title = null, $autosave = false, $on_change_js = null, $hidden = false)
-{
-    global $lang;
-    $checked = $current && $current != $default;
-    if (is_null($title)) {
-        // This is how it was used on plugins setup page. Makes sense for developers when trying to debug and not much for non-technical users
-        $title = str_replace('%cvn', $name, $lang['plugins-configvar']);
-    }
-    ?>
-    
-    <div class="Question" style="min-height: 1.5em;" id="question_<?php echo escape($name); ?>" <?php echo $hidden ? "style=\"display:none;\"" : ''; ?>>
-        <label for="<?php echo escape($name); ?>" title="<?php echo escape($title); ?>"><?php echo escape($label); ?></label>
-        <div class="AutoSaveStatus">
-            <span id="AutoSaveStatus-<?php echo escape($name); ?>" style="display:none;"></span>
-        </div>
-        <input
-            type="checkbox"
-            <?php if ($checked) { ?>
-                checked="true"
-            <?php } ?>
-            onchange="
-                jQuery('#container_<?php echo escape($name); ?>').toggle();
-                if (!this.checked) {
-                    // Unchecked, set the default. Must first change the type as a color picker can't hold the empty string.
-                    jQuery('#<?php echo escape($name); ?>').attr('type','text');
-                    jQuery('#<?php echo escape($name); ?>').val('<?php echo escape($default); ?>');
-                    <?php
-                    if (!empty($on_change_js)) {
-                        echo $on_change_js;
-                    }
-                    if ($autosave) {
-                        ?>AutoSaveConfigOption('<?php echo escape($name); ?>');
-                        jQuery('#<?php echo escape($name); ?>').trigger('change');
-                        <?php
-                    }
-                    if (!empty($on_change_js)) {
-                        echo $on_change_js;
-                    }
-                    ?>
-                } else {
-                    jQuery('#<?php echo escape($name); ?>').attr('type','color');
-                }"
-            style="float: left;"
-        />
-        <div id="container_<?php echo escape($name); ?>"<?php echo !$checked ? 'style="display: none;"' : ''; ?>>
-            &nbsp;
-            <input
-                id="<?php echo escape($name); ?>"
-                name="<?php echo escape($name); ?>"
-                type="<?php echo $checked ? "color" : "text"; ?>"
-                value="<?php echo escape($current); ?>"
-                onchange="<?php
-                if ($autosave) {
-                    ?>AutoSaveConfigOption('<?php echo escape($name); ?>');<?php
-                }
-                if (!empty($on_change_js)) {
-                    echo $on_change_js;
-                }
-                ?>"
-                default="<?php echo escape($default); ?>"
-            />
-        </div>
-        <div class="clearerleft"></div>
-    </div>
-        
-    <?php
-}
-
-/**
 * Return a data structure that will be used to generate the HTML for
 * uploading a file
 *
@@ -1505,9 +1426,6 @@ function config_generate_html(array $page_def)
             case 'checkbox_select':
                 config_checkbox_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8], $def[9]);
                 break;
-            case 'colouroverride_input':
-                config_colouroverride_input($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7]);
-                break;
             case 'multi_rtype_select':
                 config_multi_rtype_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3]);
                 break;
@@ -2009,6 +1927,26 @@ function save_resource_type_field(int $ref, array $columns, $postdata): bool
             if ($column === 'tab' && $val == 0) {
                 $val = ''; # set to blank so the code will convert to SQL NULL later
             }
+
+        // Geo mapping only available for single line text fields
+            if ($column == "geomapping") {
+                if (
+                    $postdata["type"] != FIELD_TYPE_TEXT_BOX_SINGLE_LINE
+                    || ($postdata["type"] != FIELD_TYPE_TEXT_BOX_SINGLE_LINE && $val == "")
+                ) {
+                    $val = 0;
+                } else {
+                    $geomapping_fields = ps_array("SELECT geomapping value FROM resource_type_field WHERE ref != ?", ["i", $ref]);
+                    if (
+                        in_array($val, $geomapping_fields) // This option is used elsewhere
+                        || in_array(FIELD_GEO_LOCATION::both->value, $geomapping_fields) // A different field is set to both
+                        || (in_array(FIELD_GEO_LOCATION::latitude->value, $geomapping_fields)
+                            && in_array(FIELD_GEO_LOCATION::longitude->value, $geomapping_fields)) // Both lat and long are set elsewhere
+                        ) {
+                        $val = 0;
+                    }
+                }
+            }
         }
 
         if (isset($sql)) {
@@ -2142,7 +2080,6 @@ function get_resource_type_field_columns()
         'full_width'               => [$lang['property-field_full_width'],'',1,1],
         'advanced_search'          => [$lang['property-enable_advanced_search'],'',1,1],
         'simple_search'            => [$lang['property-enable_simple_search'],'',1,1],
-        'browse_bar'               => [$lang['field_show_in_browse_bar'],'',1,1],
         'read_only'                => [$lang['property-read_only_field'], '', 1, 1],
         'exiftool_field'           => [$lang['property-exiftool_field'],'',0,1],
         'fits_field'               => [$lang['property-fits_field'], $lang['information-fits_field'], 0, 1],
@@ -2168,6 +2105,7 @@ function get_resource_type_field_columns()
         'value_filter'             => [$lang['property-value_filter'],'',2,1],
         'onchange_macro'           => [$lang['property-onchange_macro'],$lang['information-onchange_macro'],2,1],
         'sort_method'              => [$lang['property-sort_method'], $lang['information-sort_method'], 0, 1],
+        'geomapping'               => [$lang['property-geomapping'], $lang['information-geomapping'], 0, 1],
     ]);
 
     $modify_resource_type_field_definitions = hook("modifyresourcetypefieldcolumns", "", array($resource_type_field_column_definitions));

@@ -107,3 +107,4 @@ $lang["page-title_simplesaml_setup"] = 'Nastavenie jednoduchého SAML pluginu';
 $lang["simplesaml_error_not_configured"] = 'Plugin SimpleSAML nie je nakonfigurovaný';
 $lang["simplesaml_error_no_idp_metadata"] = 'Plugin SimpleSAML nie je úplne nakonfigurovaný (chýbajúce IdP metadata)';
 $lang["simplesaml_error_no_authsource"] = 'Plugin SimpleSAML nie je úplne nakonfigurovaný (chýba authsource)';
+$lang["simplesaml_userlimit_error"] = 'Používateľa sa nepodarilo vytvoriť, pretože bol dosiahnutý limit používateľov. Kontaktujte svojho správcu.';

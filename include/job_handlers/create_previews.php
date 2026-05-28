@@ -38,19 +38,11 @@ if (!$resdata) {
 }
 
 // Check to make sure that there is a valid file that we can generate previews for
-$source_file = get_preview_source_file(
-    $resource, 
-    in_array($extension, NON_PREVIEW_EXTENSIONS) ? 'jpg' : $extension, 
-    $previewonly,
-    in_array($extension, NON_PREVIEW_EXTENSIONS) || $previewbased, 
-    $alternative,
-    $ingested
-);
-$valid_source = file_exists($source_file);
+$valid_source = resource_has_preview_source($resource, $extension);
 
 // Only delete the existing previews if there is something that we can generate more from
 if ($resource > 0 && $valid_source) {
-    delete_previews($resource);
+    delete_previews($resource, $alternative);
 }
 
 logScript("[create_previews] Creating previews", $log_file);
@@ -88,7 +80,11 @@ if ($resource > 0 && $success) {
         job_queue_update($jobref, $job_data, STATUS_ERROR);
         get_config_option(['user' => $job['user']], 'user_pref_resource_notifications', $send_notifications, false);
         if ($send_notifications) {
-            $create_previews_job_failure_text = str_replace('%RESOURCE', $resource, $lang['jq_create_previews_failure_text']);
+            if ($alternative == -1) {
+                $create_previews_job_failure_text = str_replace('%RESOURCE', $resource, $lang['jq_create_previews_failure_text']);
+            } else {
+                $create_previews_job_failure_text = str_replace('%ALTFILE', $alternative, $lang['jq_create_alt_previews_failure_text']);
+            }
             $message = $job["failure_text"] != '' ? $job["failure_text"] : $create_previews_job_failure_text;
             message_add($job['user'], $message, $url, 0);
         }
@@ -105,6 +101,5 @@ unset(
     $ignoremaxsize,
     $ingested,
     $checksum_required,
-    $source_file,
     $valid_source
 );

@@ -461,6 +461,10 @@ function add_resource_to_collection(
             collection_log($collection, LOG_CODE_COLLECTION_ADDED_RESOURCE, $resource);
         }
 
+        if ($collection_data['type'] === COLLECTION_TYPE_FEATURED) {
+            clear_query_cache("featured_collections");
+        }
+
         // Clear theme image cache
         clear_query_cache("themeimage");
         clear_query_cache('col_total_ref_count_w_perm');
@@ -5851,7 +5855,26 @@ function compute_featured_collections_access_control()
         return $CACHE_FC_ACCESS_CONTROL;
     }
 
-    $all_fcs = ps_query("SELECT ref, parent FROM collection WHERE `type` = ?", ['i', COLLECTION_TYPE_FEATURED], "featured_collections");
+    $mysql_version = ps_query('SELECT LEFT(VERSION(), 3) AS ver');
+    if (version_compare($mysql_version[0]['ver'], '8.0', '>=')) {
+        $all_fcs = ps_query("
+        WITH RECURSIVE cte(ref,parent, level) AS
+        (
+            SELECT  ref, parent, 1 AS level
+            FROM  collection
+                WHERE parent IS NULL AND type = ?
+        UNION ALL
+            SELECT  c.ref, c.parent, level + 1 AS LEVEL
+            FROM  collection c
+            INNER JOIN  cte
+                ON  cte.ref = c.parent
+        )
+        SELECT cte.ref, cte.parent FROM cte ORDER BY level
+        ", ['i', COLLECTION_TYPE_FEATURED], "featured_collections");
+    } else {
+        $all_fcs = ps_query("SELECT ref, parent FROM collection WHERE `type` = ?", ['i', COLLECTION_TYPE_FEATURED], "featured_collections");
+    }
+
     $all_fcs_rp = reshape_array_by_value_keys($all_fcs, 'ref', 'parent');
     // Set up arrays to store permitted/blocked featured collections
     $includerefs = array();

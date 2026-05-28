@@ -53,3 +53,4 @@ $lang["plugin-youtube_publish-title"]='YouTube Publikacija';
 $lang["plugin-youtube_publish-desc"]='Objavi video vir na konfiguriran račun YouTube.';
 $lang["page-title_youtube_publish_setup"] = 'Nastaviť plugin';
 $lang["page-title_youtube_publish_youtube_upload"] = 'Zverejniť zdroj na YouTube';
+$lang["youtube_publish_video_title"] = 'Názov videa (max. 100 znakov)';

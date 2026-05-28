@@ -503,3 +503,65 @@ function update_archive_required_fields_check(int|array $resource, int $archive_
     $GLOBALS['update_archive_required_fields_check'][$resource_ref] = $result;
     return $result;
 }
+
+/**
+ * Update the geo location fields (if set) for the given resource(s).
+ * User permissions are not checked as this should be used in cases where the user has already edited the location.
+ *
+ * @param  integer|array $resources The resource ref(s) as a single integer or an array of integers.
+ * @param  string|array $location   The new location to use, a blank string to clear the location from the resource(s).
+ *                                  Otherwise an array with two integer values being the latitude and longitude.
+ * @return void
+ */
+function update_geolocation_fields(int|array $resources, string|array $location): void
+{
+    if (
+        $location !== "" 
+        && (!is_array($location) || count($location) !== 2
+            || !is_numeric($location[0]) || !is_numeric($location[1])
+            || (float)$location[0] < -90 || (float)$location[0] > 90
+            || (float)$location[1] < -180 || (float)$location[1] > 180
+            )
+        ) {
+        throw new InvalidArgumentException('Invalid location format');
+    }
+
+    $fields = ps_query("SELECT ref, geomapping FROM resource_type_field WHERE geomapping != 0", []);
+    if (empty($fields)) {
+        return;
+    }
+
+    if (!is_array($resources)) {
+        $resources = [$resources];
+    } else {
+        $resources = array_filter($resources, 'is_positive_int_loose');
+    }
+
+    foreach($resources as $ref) {
+        foreach($fields as $field) {
+            if ($location == "") {
+                update_field($ref, $field["ref"], "");
+            } elseif ($field["geomapping"] == FIELD_GEO_LOCATION::both->value) {
+                update_field($ref, $field["ref"], $location[0] . ", " . $location[1]);
+            } elseif ($field["geomapping"] == FIELD_GEO_LOCATION::latitude->value) {
+                update_field($ref, $field["ref"], $location[0]);
+            } elseif ($field["geomapping"] == FIELD_GEO_LOCATION::longitude->value) {
+                update_field($ref, $field["ref"], $location[1]);
+            }
+        }
+    }
+}
+
+enum FIELD_GEO_LOCATION: int 
+{
+    case none = 0;
+    case latitude = 1;
+    case longitude = 2;
+    case both = 3;
+
+    public function i18n(array $lang): string
+    {
+        return $lang["geo_location-{$this->name}"];
+    }
+
+}

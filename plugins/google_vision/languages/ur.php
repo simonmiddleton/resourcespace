@@ -25,3 +25,7 @@ $lang["page-title_google_vision_process_existing"] = 'گوگل وژن پروسی
 $lang["page-title_google_vision_setup"] = 'گوگل وژن پلگ ان سیٹ اپ کریں';
 $lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
 $lang["page-title_google_vision_test"] = 'Google Vision Test';
+$lang["google_vision"] = 'گوگل وژن';
+$lang["google_vision_process_existing"] = 'غیر عمل شدہ وسائل کو پروسیس کریں';
+$lang["google_vision_process_existing_configure"] = 'غیر عمل شدہ وسائل کو پروسیس کرنے کے لیے کام کو ترتیب دیں';
+$lang["google_vision_process_existing_collection_refs_help"] = 'اس آپشن کو سیٹ کرنے کا مطلب ہے کہ صرف درج کردہ مجموعوں میں موجود وسائل کو پروسیس کیا جائے گا۔ اگر کوئی مجموعہ مخصوص نہیں کیا گیا تو پھر تمام مناسب وسائل کو پروسیس کیا جائے گا۔ مجموعوں کو کاما سے جدا فہرست یا رینجز کے طور پر بھی مخصوص کیا جا سکتا ہے مثلاً 100,105,110-115';

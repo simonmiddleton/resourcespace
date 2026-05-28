@@ -38,3 +38,4 @@ $lang["weekday-5"] = 'جمعہ';
 $lang["weekday-6"] = 'ہفتہ';
 
 $lang["page-title_action_dates_setup"] = 'ایکشن تاریخوں کا پلگ ان ترتیب دیں';
+$lang["action_dates_additional_settings_email_admin_days"] = 'ایڈمنز کو اس سے پہلے کتنے دنوں میں اطلاع دیں کہ عمل انجام دیا جائے (غیر فعال کرنے کے لیے خالی چھوڑیں)';

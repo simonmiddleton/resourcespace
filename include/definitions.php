@@ -203,12 +203,6 @@ define('LINK_PLUS_CIRCLE', '<i aria-hidden="true" class="icon-circle-plus"></i>&
 define('LINK_CHEVRON_RIGHT', '<i aria-hidden="true" class="icon-chevron-right"></i>&nbsp;');
 define('UPLOAD_ICON', '<i aria-hidden="true" class="icon-upload"></i>&nbsp;');
 define('CONTRIBUTIONS_ICON', '<i aria-hidden="true" class="icon-user-round-plus"></i>&nbsp;');
-define('DASH_ICON', '<i aria-hidden="true" class="icon-layout-dashboard"></i>&nbsp;');
-define('FEATURED_COLLECTION_ICON', '<i aria-hidden="true" class="icon-folder"></i>&nbsp;');
-define('RECENT_ICON', '<i aria-hidden="true" class="icon-clock"></i>&nbsp;');
-define('HELP_ICON', '<i aria-hidden="true" class="icon-book-marked"></i>&nbsp;');
-define('HOME_ICON', '<i aria-hidden="true" class="icon-house"></i>&nbsp;');
-define('SEARCH_ICON', '<i class="icon-search" aria-hidden="true"></i>&nbsp;');
 define('ICON_EDIT', '<i class="icon-pencil" aria-hidden="true"></i>&nbsp;');
 define('ICON_REMOVE', '<i class="icon-circle-minus" aria-hidden="true"></i>&nbsp;');
 define('ICON_FOLDER', '<i class="icon-folder" aria-hidden="true"></i>&nbsp;');
@@ -775,7 +769,6 @@ const SENSITIVE_VARIABLE_NAMES = [
     'ldapauth',
     'tms_link_user',
     'tms_link_password',
-    'wordpress_sso_secret',
     'youtube_publish_username',
     'youtube_publish_password',
     'vimeo_publish_client_id',
@@ -896,6 +889,13 @@ const API_ISSUE_VALID_DESTINATIONS = [
     "linkrui" => [
         "name" => "LinkrUI",
         "url" => "https://resourcespace.linkrui.com/saml",
+        "querydata" => ["username"],
+        "stateparam" => "state",
+    ],
+    "tagquest" => [
+        "name" => "TagQuest",
+        "url" => "https://resourcespace.tagquest.io/api/auth/rs-callback",
+        "querydata" => ["username", "email", "fullname"],
         "stateparam" => "state",
     ],
 ];

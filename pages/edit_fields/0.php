@@ -112,11 +112,22 @@ if ($show_merge_options) {
             </tbody>
         </table>
         <?php
-} ?>
+}
+
+if ($field['geomapping'] == FIELD_GEO_LOCATION::both->value) {
+    $class = "stdwidth location";
+} elseif ($field['geomapping'] == FIELD_GEO_LOCATION::latitude->value) {
+    $class = "stdwidth latitude";
+} elseif ($field['geomapping'] == FIELD_GEO_LOCATION::longitude->value) {
+    $class = "stdwidth longitude";
+} else {
+    $class = "stdwidth";
+}
+?>
 
 <input
     <?php echo ($field['field_constraint'] == 1) ? "type=number" : ''; ?>
-    class="stdwidth"
+    class="<?php echo $class?>"
     type=text
     name="<?php echo $name?>"
     id="<?php echo $name?>"

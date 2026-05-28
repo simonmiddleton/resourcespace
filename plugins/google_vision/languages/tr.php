@@ -27,3 +27,7 @@ $lang["page-title_google_vision_process_existing"] = 'Google Vision İşlem Mevc
 $lang["page-title_google_vision_setup"] = 'Google Vision Eklentisini Kurun';
 $lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
 $lang["page-title_google_vision_test"] = 'Google Vision Test';
+$lang["google_vision"] = 'Google Görüntüleme';
+$lang["google_vision_process_existing"] = 'İşlenmemiş kaynakları işle';
+$lang["google_vision_process_existing_configure"] = 'İşlenmemiş kaynakları işlemek için görev yapılandır';
+$lang["google_vision_process_existing_collection_refs_help"] = 'Bu seçeneği ayarlamak, yalnızca listelenen koleksiyonlardaki kaynakların işleneceği anlamına gelir. Hiç koleksiyon belirtilmemişse, TÜM uygun kaynaklar işlenecektir. Koleksiyonlar virgülle ayrılmış liste veya aralıklar kullanılarak da belirtilebilir örn 100,105,110-115';

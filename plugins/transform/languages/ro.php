@@ -83,3 +83,4 @@ $lang["cropper_preset_sizes"] = 'Dimensiuni predefinite';
 $lang["page-title_transform_collection_transform"] = 'Transformă resursa';
 $lang["page-title_transform_crop"] = 'Decupare resursă';
 $lang["page-title_transform_setup"] = 'Configurare plugin de transformare';
+$lang["use_filename_as_title"] = 'Folosește numele fișierului ca titlu';

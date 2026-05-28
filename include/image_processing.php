@@ -665,9 +665,12 @@ function extract_exif_comment($ref, $extension = "")
             $metadata['STRIPPEDFILENAME'] = strip_extension($metadata['FILENAME']);
         }
 
+        $location_set = false;
         # Geolocation Metadata Support
         if (!$disable_geocoding && $dec_long != 0 && $dec_lat != 0) {
             ps_query("UPDATE resource SET geo_long= ?,geo_lat= ? WHERE ref= ?", ['d', $dec_long, 'd', $dec_lat, 'i', $ref]);
+            update_geolocation_fields($ref, [$dec_lat, $dec_long]);
+            $location_set = true;
         }
 
         # Update portrait_landscape_field (when reverting metadata this was getting lost)
@@ -736,6 +739,78 @@ function extract_exif_comment($ref, $extension = "")
                         }
                     }
 
+                    if ($read_from[$i]["geomapping"] > 0) {
+                        if ($location_set) {
+                            debug("EXIF - location field set from Geolocation");
+                            continue;
+                        }
+
+                        if ($read_from[$i]["geomapping"] == FIELD_GEO_LOCATION::latitude->value) {
+                            // Latitude field, use decimal values
+                            if (preg_match("/^(?<degrees>\d+) deg (?<minutes>\d+)' (?<seconds>\d+\.?\d*)\"/", $value, $latitude)) {
+                                $dec_lat = $latitude['degrees'] + ($latitude['minutes'] / 60) + ($latitude['seconds'] / (60 * 60));
+                                if (strpos($value, 'S') !== false) {
+                                    $dec_lat = -1 * $dec_lat;
+                                }
+                                $value = $dec_lat;
+                            }
+
+                            if (
+                                !is_float_loose($value) || $value === false
+                                || (float) $value > 90 || (float) $value < -90
+                            ) {
+                                debug("EXIF - invalid latitude value: " . $value);
+                                continue;
+                            }
+                        } elseif ($read_from[$i]["geomapping"] == FIELD_GEO_LOCATION::longitude->value) {
+                            // Longitude field, use decimal values
+                            if (preg_match("/^(?<degrees>\d+) deg (?<minutes>\d+)' (?<seconds>\d+\.?\d*)\"/", $value, $longitude)) {
+                                $dec_long = $longitude['degrees'] + ($longitude['minutes'] / 60) + ($longitude['seconds'] / (60 * 60));
+                                if (strpos($value, 'W') !== false) {
+                                    $dec_long = -1 * $dec_long;
+                                }
+                                $value = $dec_long;
+                            }
+
+                            if (
+                                !is_float_loose($value) || $value === false
+                                || (float) $value > 180 || (float) $value < -180
+                            ) {
+                                debug("EXIF - invalid latitude value: " . $value);
+                                continue;
+                            }
+                        } elseif ($read_from[$i]["geomapping"] == FIELD_GEO_LOCATION::both->value) {
+                            // Longitude field, use decimal values
+                            $pattern = "/(?<degrees>\d+) deg (?<minutes>\d+)' (?<seconds>\d+\.?\d*)/";
+                            if (preg_match_all($pattern, $value, $matches, PREG_SET_ORDER) && count($matches) == 2) {
+                                $dec_lat = $matches[0]['degrees'] + ($matches[0]['minutes'] / 60) + ($matches[0]['seconds'] / (60 * 60));
+                                $dec_long = $matches[1]['degrees'] + ($matches[1]['minutes'] / 60) + ($matches[1]['seconds'] / (60 * 60));
+                                if (strpos($value, 'S') !== false) {
+                                    $dec_lat = -1 * $dec_lat;
+                                }
+                                if (strpos($value, 'W') !== false) {
+                                    $dec_long = -1 * $dec_long;
+                                }
+                                $value = round($dec_lat, 6) . ", " . round($dec_long, 6);
+                            }
+
+                            $pattern = '/
+                                ^
+                                (-?\d{1,3}(?:\.\d+)?) # Latitude capture
+                                ,\s*                  # Comma + whitespace
+                                (-?\d{1,3}(?:\.\d+)?) # Longitude capture
+                                $
+                                /x';
+                            if (
+                                !preg_match($pattern, $value) || $value === false
+                                || (float) $dec_lat > 90 || (float) $dec_lat < -90
+                                || (float) $dec_long > 180 || (float) $dec_long < -180
+                            ) {
+                                debug("EXIF - invalid location value: " . $value);
+                                continue;
+                            }
+                        }
+                    }
                     # Read the data.
                     if ($read) {
                         if ($read_from[$i]['exiftool_filter'] != "") {
@@ -1314,6 +1389,7 @@ function create_previews($ref, $thumbonly = false, $extension = "jpg", $previewo
             "previewonly" => $previewonly,
             "previewbased" => $previewbased,
             "ingested" => $ingested],
+            true
         );
     }
 
@@ -2536,6 +2612,11 @@ function upload_file_by_url(int $ref, bool $no_exif = false, bool $revert = fals
     }
 
     $upload_result = upload_file($ref, $no_exif, $revert, $autorotate, $file_path);   # Process as a normal upload...
+
+    if (!$upload_result && file_exists($file_path)) {
+        unlink($file_path);
+        debug("upload_file_by_url failed. Deleting temp file: $file_path");
+    }
     remove_empty_temp_directory($file_path);
 
     return $upload_result;
@@ -3279,7 +3360,12 @@ function start_previews(int $ref, string $extension = ""): int
 
     $minimal_previews = false;
     $resource_data = get_resource_data($ref, false);
-    delete_previews($resource_data);
+    $preview_based = false;
+    if (resource_has_preview_source($ref, $extension)) {
+        delete_previews($resource_data);   
+    } else {
+        $preview_based = true;
+    }
     if (trim($extension) == "") {
         $extension = $resource_data["file_extension"];
     }
@@ -3290,7 +3376,7 @@ function start_previews(int $ref, string $extension = ""): int
             'thumbonly' => false,
             'extension' => $resource_data["file_extension"],
             'previewonly' => false,
-            'previewbased' => false,
+            'previewbased' => $preview_based,
             'alternative' => -1,
             'ignoremaxsize' => true,
         ];
@@ -3314,7 +3400,7 @@ function start_previews(int $ref, string $extension = ""): int
                 false, 
                 in_array($extension, NON_PREVIEW_EXTENSIONS) ? 'jpg' : $extension, 
                 false, 
-                in_array($extension, NON_PREVIEW_EXTENSIONS), 
+                $preview_based || in_array($extension, NON_PREVIEW_EXTENSIONS), 
                 -1, 
                 true, 
                 $ingested, 
@@ -3332,7 +3418,7 @@ function start_previews(int $ref, string $extension = ""): int
         false, 
         in_array($resource_data["file_extension"], NON_PREVIEW_EXTENSIONS) ? 'jpg' : $resource_data["file_extension"],  
         false, 
-        in_array($resource_data["file_extension"], NON_PREVIEW_EXTENSIONS), 
+        $preview_based || in_array($resource_data["file_extension"], NON_PREVIEW_EXTENSIONS), 
         -1, 
         false, 
         $ingested);
@@ -3630,7 +3716,7 @@ function transform_apply_icc_profile(int $ref, string $original_file_path): arra
         return array();
     }
 
-    global $icc_preview_options, $icc_preview_profile_embed, $icc_preview_profile, $imagemagick_preserve_profiles;
+    global $icc_preview_options, $icc_preview_profile_embed, $icc_preview_profile, $imagemagick_preserve_profiles, $icc_embed_source_profile;
 
     if ($imagemagick_preserve_profiles) {
         // Don't touch the ICC profile
@@ -3639,7 +3725,7 @@ function transform_apply_icc_profile(int $ref, string $original_file_path): arra
 
     $targetprofile = __DIR__ . '/../iccprofiles/' . $icc_preview_profile;
 
-    $transform_actions['icc_profile']['command'] = " -strip -profile %%ICCPATH%% " . $icc_preview_options . " -profile %%TARGETPROFILE%% " . ($icc_preview_profile_embed ? " " : " -strip ");
+    $transform_actions['icc_profile']['command'] = " -strip -profile %%ICCPATH%% " . ($icc_embed_source_profile ? " " : $icc_preview_options . " -profile %%TARGETPROFILE%% ") . ($icc_preview_profile_embed ? " " : " -strip ");
     $transform_actions['icc_profile']['cmdparams']["%%ICCPATH%%"] = new CommandPlaceholderArg($iccpath, 'is_valid_rs_path');
     $transform_actions['icc_profile']['cmdparams']["%%TARGETPROFILE%%"] = new CommandPlaceholderArg($targetprofile, 'file_exists');
 
@@ -4048,10 +4134,10 @@ function create_previews_using_im(
                     && file_exists($iccpath)
                     && (!$imagemagick_mpr || ($imagemagick_mpr_preserve_profiles && in_array($id, ["pre","thm","col","scr"])))
                 ) {
-                    global $icc_preview_profile_embed;
+                    global $icc_preview_profile_embed, $icc_embed_source_profile;
                     // we have an extracted ICC profile, so use it as source
                     $targetprofile = __DIR__ . '/../iccprofiles/' . $icc_preview_profile;
-                    $profile = " -strip -profile %%ICCPATH%% " . $icc_preview_options . " -profile %%TARGETPROFILE%% ";
+                    $profile = " -strip -profile %%ICCPATH%% " . ($icc_embed_source_profile ? " " : $icc_preview_options . " -profile %%TARGETPROFILE%% ");
 
                     if ($imagemagick_mpr && $mpr_metadata_profiles !== '') {
                         $profile .= " +profile %%MPR_METADATA_PROFILES%%";
@@ -4328,10 +4414,11 @@ function create_previews_using_im(
             create_image_alternatives(
                 $ref,
                 ["extension" => $extension,
-                "file" => $file,
+                "file" => $origfile,
                 "previewonly" => $previewonly,
                 "previewbased" => $previewbased,
                 "ingested" => $ingested],
+                true
             );
         }
         hook('afterpreviewcreation', '', array($ref, $alternative, $generateall));

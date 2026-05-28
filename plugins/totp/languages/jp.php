@@ -17,3 +17,4 @@ $lang["totp_date_binding_m"] = '今月';
 $lang["totp_date_binding_y"] = '現在の年';
 $lang["page-title_totp_setup"] = 'TOTPプラグインの設定';
 $lang["page-title_totp_totp"] = 'TOTP';
+$lang["totp_saml"] = 'SAMLを介して既に認証されているユーザーのTOTPを無効にする（SAMLプラグインが必要）';

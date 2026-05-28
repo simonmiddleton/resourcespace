@@ -4,6 +4,8 @@
 *
 */
 
+use Montala\ResourceSpace\UserInterfaceComponents\Icon;
+use Montala\ResourceSpace\UserInterfaceComponents\IconSize;
 
 /**
 * Renders the HTML for the provided $field for inclusion in a search form, for example the
@@ -16,9 +18,18 @@
 * $reset    is non-blank if the caller requires the field to be reset
 * @param array $searched_nodes Array of all the searched nodes previously
 */
-function render_search_field($field,$fields,$value="",$autoupdate=false,$class="stdwidth",$forsearchbar=false,$limit_keywords=array(), 
-                             $searched_nodes = array(), $reset="",$simpleSearchFieldsAreHidden=false)
-    {
+function render_search_field(
+    $field,
+    $fields,
+    $value="",
+    $autoupdate=false,
+    $class="stdwidth",
+    $forsearchbar=false,
+    $limit_keywords=array(), 
+    $searched_nodes = array(),
+    $reset="",
+    $simpleSearchFieldsAreHidden=false
+) {
     node_field_options_override($field);
 
     global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $lang, $category_tree_open, $minyear, $daterange_search, $searchbyday, 
@@ -79,6 +90,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                     $scriptconditions[$condref]["name"]                = $fields[$cf]["name"];
                     $scriptconditions[$condref]['type']                = $fields[$cf]['type'];
                     $scriptconditions[$condref]['display_as_dropdown'] = $fields[$cf]['display_as_dropdown'];
+                    $scriptconditions[$condref]['resource_types']      = $fields[$cf]['resource_types'];
                     # Get the node references of the governing field
                     $scriptconditionnodes = get_nodes($fields[$cf]['ref'], null, (FIELD_TYPE_CATEGORY_TREE == $fields[$cf]['type'] ? true : false));
 
@@ -366,11 +378,17 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                 <?php
                 }?>
 
-                // If no governing node found then disable this governed field
-                if(!field<?php echo $field['ref']; ?>valuefound)
-                {
-                field<?php echo $field['ref']; ?>visibility = false;
-                }
+                if (
+                    !field<?php echo escape($field['ref']); ?>valuefound
+                    && (<?php if ($forsearchbar) { ?>
+                        !(ssearchhiddenfieldsarray.includes("<?php echo escape("simplesearch_{$scriptcondition['field']}") ?>"))
+                    <?php } else { ?>
+                        (selectedtypes.includes(<?php echo encode_js_value($scriptcondition['resource_types']); ?>))
+                    <?php } ?>
+                        || <?php echo escape(empty($scriptcondition['resource_types'])) ? 'true' : 'false'; ?>)
+                    ) {
+                        field<?php echo escape($field['ref']); ?>visibility = false;
+                    }
 
             <?php
                 echo "// End of checking values on field ".$scriptcondition['field']."\n\n            ";
@@ -496,8 +514,8 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
         {
         hook("modifysearchfieldtitle");
         ?>
-        <div class="SearchItem" id="simplesearch_<?php echo $field["ref"]; ?>" <?php if (!$displaycondition || $simpleSearchFieldsAreHidden) {?>style="display:none;"<?php } if (strlen($field["tooltip_text"] ?? "" ) >= 1){ echo "title=\"" . escape(lang_or_i18n_get_translated($field["tooltip_text"], "fieldtooltip-")) . "\"";} ?> ><label for="simplesearch_<?php echo $field["ref"]; ?>"><?php echo escape(lang_or_i18n_get_translated($field["title"], "fieldtitle-")) ?></label><br/>
-
+        <div class="field-input" id="simplesearch_<?php echo $field["ref"]; ?>" <?php if (!$displaycondition || $simpleSearchFieldsAreHidden) {?>style="display:none;"<?php } if (strlen($field["tooltip_text"] ?? "" ) >= 1){ echo "title=\"" . escape(lang_or_i18n_get_translated($field["tooltip_text"], "fieldtooltip-")) . "\"";} ?> >
+            <label for="<?php echo escape($id); ?>"><?php echo escape(lang_or_i18n_get_translated($field["title"], "fieldtitle-")); ?></label>
         <?php
         #hook to modify field type in special case. Returning zero (to get a standard text box) doesn't work, so return 1 for type 0, 2 for type 1, etc.
         if(hook("modifyfieldtype")){$fields[$n]["type"]=hook("modifyfieldtype")-1;}
@@ -534,21 +552,18 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
              $clear_function.="document.getElementById('".$name."').value='';";
             }
 
-
-
         if ($forsearchbar && $autocomplete_search) { 
-                # Auto-complete search functionality
-                ?></div>
-                <script type="text/javascript">
+            # Auto-complete search functionality
+            ?>
+            <script type="text/javascript">
+            jQuery(document).ready(function () { 
 
-                jQuery(document).ready(function () { 
+                jQuery("#field_<?php echo escape($field["ref"])?>").autocomplete( { source: "<?php echo $baseurl?>/pages/ajax/autocomplete_search.php?field=<?php echo escape($field["name"]) ?>&fieldref=<?php echo escape($field["ref"]) ?>"} );
+                })
 
-                    jQuery("#field_<?php echo escape($field["ref"])?>").autocomplete( { source: "<?php echo $baseurl?>/pages/ajax/autocomplete_search.php?field=<?php echo escape($field["name"]) ?>&fieldref=<?php echo escape($field["ref"]) ?>"} );
-                    })
-
-                </script>
-                <div class="SearchItem">
-<?php }
+            </script>
+        <?php
+        }
 
         break;
 
@@ -721,12 +736,10 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
         case FIELD_TYPE_DATE: 
         case FIELD_TYPE_DATE_RANGE: 
         $found_year='';$found_month='';$found_day='';$found_start_year='';$found_start_month='';$found_start_day='';$found_end_year='';$found_end_month='';$found_end_day='';
-        if (!$forsearchbar && $daterange_search)
-            {
+        if ($daterange_search) {
+            // Note: the "$clear_function" logic for date range fields is done generically in ResetTicks().
             render_date_range_field($name, $value, true, $autoupdate, array(), $reset);
-            }
-        else
-            {
+        } else {
             $s=explode("|",$value);
             if(is_array($s))
                 {
@@ -735,7 +748,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                 $found_day   = (array_key_exists(2, $s)) ? $s[2] : '';
                 }
             ?>      
-            <select name="<?php echo escape($name);?>-y" id="<?php echo $id?>-y" class="SearchWidth<?php if ($forsearchbar){ echo "Half";} ?>" style="width:120px;" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
+            <select name="<?php echo escape($name);?>-y" id="<?php echo $id?>-y" class="SearchWidth<?php if ($forsearchbar){ echo "Half";} ?>" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
               <option value=""><?php echo escape($lang["anyyear"])?></option>
               <?php
               $y=date("Y");
@@ -746,10 +759,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                 }
               ?>
             </select>
-
-            <?php if ($forsearchbar && $searchbyday) { ?><br /><?php } ?>
-
-            <select name="<?php echo escape($name);?>-m" id="<?php echo $id?>-m" class="SearchWidth<?php if ($forsearchbar){ echo "Half SearchWidthRight";} ?>" style="width:120px;" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
+            <select name="<?php echo escape($name);?>-m" id="<?php echo $id?>-m" class="SearchWidth<?php if ($forsearchbar){ echo "Half SearchWidthRight";} ?>" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
               <option value=""><?php echo escape($lang["anymonth"])?></option>
               <?php
               for ($d=1;$d<=12;$d++)
@@ -763,7 +773,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
             <?php if (!$forsearchbar || ($forsearchbar && $searchbyday)) 
                 { 
                 ?>
-                <select name="<?php echo escape($name);?>-d" id="<?php echo $id?>-d" class="SearchWidth<?php if ($forsearchbar){ echo "Half";} ?>" style="width:120px;" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
+                <select name="<?php echo escape($name);?>-d" id="<?php echo $id?>-d" class="SearchWidth<?php if ($forsearchbar){ echo "Half";} ?>" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
                   <option value=""><?php echo escape($lang["anyday"])?></option>
                   <?php
                   for ($d=1;$d<=31;$d++)
@@ -922,14 +932,8 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                 }
 
             include __DIR__ . '/../pages/edit_fields/12.php';
-            // need to adjust the field's name value
-            ?>
-            <script type="text/javascript">
-                jQuery("#field_<?php echo $field['ref']; ?>").attr('name', 'field_<?php echo $field["name"]; ?>');
-            </script>
-            <?php
         break;
-        } ## END CASE
+    }
     ?>
     <div class="clearerleft"> </div>
     </div>
@@ -1262,7 +1266,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                 </select>
                 <?php } ?>
         <script>
-        function action_onchange_<?php echo $action_selection_id; ?>(v)
+        function action_onchange_<?php echo escape($action_selection_id); ?>(v)
             {
             if(v == '')
                 {
@@ -1396,13 +1400,13 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
             ?>
 
                 case 'save_search_to_collection':
-                    var option_url = jQuery('#<?php echo $action_selection_id; ?> option:selected').data('url');
+                    var option_url = jQuery('#<?php echo escape($action_selection_id); ?> option:selected').data('url');
                     CollectionDivLoad(option_url);
                     break;
 
                 case 'save_search_to_dash':
-                    var option_url  = jQuery('#<?php echo $action_selection_id; ?> option:selected').data('url');
-                    var option_link = jQuery('#<?php echo $action_selection_id; ?> option:selected').data('link');
+                    var option_url  = jQuery('#<?php echo escape($action_selection_id); ?> option:selected').data('url');
+                    var option_link = jQuery('#<?php echo escape($action_selection_id); ?> option:selected').data('link');
                     
                     // Dash requires to have some search parameters (even if they are the default ones)
                     if((basename(option_link).substr(0, 10)) != 'search.php')
@@ -1416,12 +1420,12 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                     break;
 
                 case 'save_search_smart_collection':
-                    var option_url = jQuery('#<?php echo $action_selection_id; ?> option:selected').data('url');
+                    var option_url = jQuery('#<?php echo escape($action_selection_id); ?> option:selected').data('url');
                     CollectionDivLoad(option_url);
                     break;
 
                 case 'save_search_items_to_collection':
-                    var option_url = jQuery('#<?php echo $action_selection_id; ?> option:selected').data('url');
+                    var option_url = jQuery('#<?php echo escape($action_selection_id); ?> option:selected').data('url');
                     CollectionDivLoad(option_url);
                     break;
 
@@ -1431,12 +1435,12 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                         break;
                         }
 
-                    var option_url = jQuery('#<?php echo $action_selection_id; ?> option:selected').data('url');
+                    var option_url = jQuery('#<?php echo escape($action_selection_id); ?> option:selected').data('url');
                     CollectionDivLoad(option_url);
                     break;
 
                 case 'copy_collection':
-                    var option_url = jQuery('#<?php echo $action_selection_id; ?> option:selected').data('url');
+                    var option_url = jQuery('#<?php echo escape($action_selection_id); ?> option:selected').data('url');
                     ModalLoad(option_url, false, true);
                     break;
 
@@ -1488,7 +1492,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                     case 'hide_collection':
                         var action = 'hidecollection';
                         var collection = <?php echo urlencode($collection_data['ref']);?>;
-                        var mycol = jQuery('#<?php echo $action_selection_id; ?> option:selected').data('mycol');
+                        var mycol = jQuery('#<?php echo escape($action_selection_id); ?> option:selected').data('mycol');
 
                         jQuery.ajax({
                             type: 'POST',
@@ -1509,9 +1513,9 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                 ?>
 
                 default:
-                    var option_url = jQuery('#<?php echo $action_selection_id; ?> option:selected').data('url');
-                    var option_callback = jQuery('#<?php echo $action_selection_id; ?> option:selected').data('callback');
-                    var option_no_ajax = jQuery('#<?php echo $action_selection_id; ?> option:selected').data('no-ajax');
+                    var option_url = jQuery('#<?php echo escape($action_selection_id); ?> option:selected').data('url');
+                    var option_callback = jQuery('#<?php echo escape($action_selection_id); ?> option:selected').data('callback');
+                    var option_no_ajax = jQuery('#<?php echo escape($action_selection_id); ?> option:selected').data('no-ajax');
 
                     // If action option has a defined data-callback attribute, then we can call it
                     // IMPORTANT: never allow callback data attribute to be input/saved by user. Only ResourceSpace should
@@ -1538,7 +1542,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                 }
                 
                 // Go back to no action option
-                jQuery('#<?php echo $action_selection_id; ?> option[value=""]').prop('selected', true);
+                jQuery('#<?php echo escape($action_selection_id); ?> option[value=""]').prop('selected', true);
                 
 
         }
@@ -1672,42 +1676,58 @@ function render_split_text_question($label, $inputs = array(), $additionaltext="
 
 /**
 * render_dropdown_question - Used to display a question with a dropdown selector
+*
+* IMPORTANT: careful when having to handle untrusted data! If you have to pass it to elements, make sure they're encoded
+* accordingly.
 * 
 * @param string $label     Label of question
 * @param string $inputname Name of input field
 * @param array  $options   Array of options (value and text pairs) (eg. array('pixelwidthmin'=>'From','pixelwidthmin'=>'To')
-* @param string $current   The current selected value
+* @param string|list<int> $current The current selected value. For a multiple selector, a list of currently selected values.
 * @param string $extra     Extra attributes used on the selector element
-* @param array  $ctx       Rendering context. Should be used to inject different elements (e.g set the div class, add onchange for select)
-* 
-* @return void
+* @param array{
+*   no_div_class_question?: bool,
+*   div_class?: list<string>,
+*   div_content?: string,
+*   div_extra_attr?: string,
+*   input_class?: string,
+*   onchange?: string,
+* } $ctx Rendering context. Should be used to inject different elements (e.g set the div class, add onchange for select).
 */
-function render_dropdown_question($label, $inputname, $options = array(), $current="", $extra="", array $ctx = array())
+function render_dropdown_question($label, $inputname, $options = array(), string|array $current="", $extra="", array $ctx = array()): void
     {
-    $div_class = array("Question");
+    $input_name_escaped = escape($inputname);
+    $div_class = isset($ctx["no_div_class_question"]) ? [] : ["Question"];
     if(isset($ctx["div_class"]) && is_array($ctx["div_class"]) && !empty($ctx["div_class"]))
         {
         $div_class = array_merge($div_class, $ctx["div_class"]);
         }
+    $div_content = $ctx["div_content"] ?? "";
+    $div_extra_attr = $ctx["div_extra_attr"] ?? "";
     $input_class = isset($ctx["input_class"]) ? $ctx["input_class"] : "stdwidth";
 
     $onchange = (isset($ctx["onchange"]) && trim($ctx["onchange"]) != "" ? trim($ctx["onchange"]) : "");
     $onchange = ($onchange != "" ? sprintf("onchange=\"%s\"", $onchange) : "");
 
     $extra .= " {$onchange}";
+
+    $is_option_selected = static fn (string $option): bool => is_array($current)
+        ? in_array($option, $current)
+        : trim((string) $option) === trim((string) $current);
     ?>
-    <div class="<?php echo escape(implode(" ", $div_class)); ?>">
-        <label><?php echo escape($label); ?></label>
-        <select  name="<?php echo escape($inputname); ?>" class="<?php echo escape($input_class); ?>" id="<?php echo escape($inputname); ?>" <?php echo $extra; ?>>
+    <div class="<?php echo escape(implode(" ", $div_class)); ?>" <?php echo $div_extra_attr; ?>>
+        <label for="<?php echo $input_name_escaped; ?>"><?php echo escape($label); ?></label>
+        <select  name="<?php echo $input_name_escaped; ?>" class="<?php echo escape($input_class); ?>" id="<?php echo $input_name_escaped; ?>" <?php echo $extra; ?>>
         <?php
         foreach ($options as $optionvalue=>$optiontext)
             {
             ?>
-            <option value="<?php echo escape(trim((string)$optionvalue))?>" <?php if (trim((string)$optionvalue)==trim((string)$current)) {?>selected<?php } ?>><?php echo escape(trim((string)$optiontext))?></option>
+            <option value="<?php echo escape(trim((string)$optionvalue))?>" <?php if ($is_option_selected($optionvalue)) {?>selected<?php } ?>><?php echo escape(trim((string)$optiontext))?></option>
             <?php
             }
         ?>
         </select>
+        <?php echo $div_content; ?>
         <div class="clearerleft"></div>
     </div>
     <?php
@@ -2434,7 +2454,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
         }?>
     <!--  date range search start -->
     <!--- start date -->
-    <div class="stdwidth indent <?php echo escape($name); ?>_range" id="<?php echo escape($name); ?>_start">
+    <div id="<?php echo escape($name); ?>_start" class="stdwidth indent <?php echo escape($name); ?>_range date-range-search">
     <label class="InnerLabel"><?php echo escape($lang["fromdate"])?></label>
 
         <?php
@@ -2449,7 +2469,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             elseif (!$forsearch  && $edit_autosave)
             {?>onChange="if(sufficientDateParts('<?php echo escape($name); ?>_start')){AutoSave('<?php echo $field["ref"]; ?>');}"<?php } ?>
               >
-              <option value=""><?php echo escape($forsearch?$lang["anyday"]:$lang["day"]); ?></option>
+              <option value=""><?php echo escape($lang["day"]); ?></option>
               <?php
               for ($d=1;$d<=31;$d++)
                 {
@@ -2466,7 +2486,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 elseif (!$forsearch  && $edit_autosave)
                     {?>onChange="if(sufficientDateParts('<?php echo escape($name); ?>_start')){AutoSave('<?php echo $field["ref"]; ?>');}"<?php } ?>
                     >
-                <option value=""><?php echo escape($forsearch?$lang["anymonth"]:$lang["month"]); ?></option>
+                <option value=""><?php echo escape($lang["month"]); ?></option>
                 <?php
                 for ($d=1;$d<=12;$d++)
                     {
@@ -2487,7 +2507,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 elseif (!$forsearch  && $edit_autosave)
                     {?>onChange="if(sufficientDateParts('<?php echo escape($name); ?>_start')){AutoSave('<?php echo $field["ref"]; ?>');}"<?php } ?>
                     >
-                <option value=""><?php echo escape($forsearch?$lang["anymonth"]:$lang["month"]); ?></option>
+                <option value=""><?php echo escape($lang["month"]); ?></option>
                 <?php
                 for ($d=1;$d<=12;$d++)
                     {
@@ -2503,7 +2523,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 elseif (!$forsearch  && $edit_autosave)
                     {?>onChange="if(sufficientDateParts('<?php echo escape($name); ?>_start')){AutoSave('<?php echo $field["ref"]; ?>');}"<?php } ?>
                     >
-              <option value=""><?php echo escape($forsearch?$lang["anyday"]:$lang["day"]); ?></option>
+              <option value=""><?php echo escape($lang["day"]); ?></option>
               <?php
               for ($d=1;$d<=31;$d++)
                 {
@@ -2524,7 +2544,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 elseif (!$forsearch  && $edit_autosave)
                 {?>onChange="if(sufficientDateParts('<?php echo escape($name); ?>_start')){AutoSave('<?php echo $field["ref"]; ?>');}"<?php } ?>
                 >
-                <option value=""><?php echo escape($forsearch?$lang["anyyear"]:$lang["year"]); ?></option>
+                <option value=""><?php echo escape($lang["year"]); ?></option>
                 <?php
                 $y=date("Y");
                 $y += $maxyear_extends_current;
@@ -2555,7 +2575,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
     <!--- to date -->
     <label  class='daterangelabel'></label>
 
-    <div class="stdwidth indent <?php echo escape($name); ?>_range" id="<?php echo escape($name); ?>_to" >
+    <div id="<?php echo escape($name); ?>_to" class="stdwidth indent <?php echo escape($name); ?>_range date-range-search">
     <label class="InnerLabel"><?php echo escape($lang["todate"])?></label>
     <?php
         if($date_d_m_y)
@@ -2569,7 +2589,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 elseif (!$forsearch  && $edit_autosave)
                     {?>onChange="if(sufficientDateParts('<?php echo escape($name); ?>_end')){AutoSave('<?php echo $field["ref"]; ?>');}"<?php } ?>
                     >
-                <option value=""><?php echo escape($forsearch?$lang["anyday"]:$lang["day"]); ?></option>
+                <option value=""><?php echo escape($lang["day"]); ?></option>
                 <?php
                 for ($d=1;$d<=31;$d++)
                     {
@@ -2585,7 +2605,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 elseif (!$forsearch  && $edit_autosave)
                     {?>onChange="if(sufficientDateParts('<?php echo escape($name); ?>_end')){AutoSave('<?php echo $field["ref"]; ?>');}"<?php } ?>
                     >
-                <option value=""><?php echo escape($forsearch?$lang["anymonth"]:$lang["month"]); ?></option>
+                <option value=""><?php echo escape($lang["month"]); ?></option>
                 <?php
                 for ($d=1;$d<=12;$d++)
                     {
@@ -2605,7 +2625,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 else
                     {?>onChange="UpdateResultCount();"<?php } ?>
                     >
-                <option value=""><?php echo escape($forsearch?$lang["anymonth"]:$lang["month"]); ?></option>
+                <option value=""><?php echo escape($lang["month"]); ?></option>
                 <?php
                 for ($d=1;$d<=12;$d++)
                     {
@@ -2621,7 +2641,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 elseif (!$forsearch  && $edit_autosave)
                     {?>onChange="if(sufficientDateParts('<?php echo escape($name); ?>_end')){AutoSave('<?php echo $field["ref"]; ?>');}"<?php } ?>
                     >
-              <option value=""><?php echo escape($forsearch?$lang["anyday"]:$lang["day"]); ?></option>
+              <option value=""><?php echo escape($lang["day"]); ?></option>
               <?php
               for ($d=1;$d<=31;$d++)
                 {
@@ -2641,7 +2661,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 elseif (!$forsearch  && $edit_autosave)
                     {?>onChange="if(sufficientDateParts('<?php echo escape($name); ?>_end')){AutoSave('<?php echo $field["ref"]; ?>');}"<?php } ?>
                     >
-              <option value=""><?php echo escape($forsearch?$lang["anyyear"]:$lang["year"]); ?></option>
+              <option value=""><?php echo escape($lang["year"]); ?></option>
               <?php
               $y=date("Y");
               $y += $maxyear_extends_current;
@@ -2656,7 +2676,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             else
                 {?>
                 <label class="accessibility-hidden" for="<?php echo escape($name) ?>_end-y"><?php echo escape($lang["year"]); ?></label>
-                <input size="5" name="<?php echo escape($name) ?>_end-y" id="<?php echo escape($name) ?>_end-y" type="text" value="<?php echo $found_end_year ?>"
+                <input size="5" name="<?php echo escape($name) ?>_end-y" id="<?php echo escape($name) ?>_end-y" type="text" value="<?php echo (int) $found_end_year ?>"
                     <?php
 
                     if ($forsearch && $autoupdate)
@@ -3379,89 +3399,6 @@ function render_trash($type, $deletetext,$forjs=false)
     }
 
 /**
-* Renders the browse bar
-*  
-* @return void
-*/ 
-
-function render_browse_bar()
-    {
-    global $lang, $browse_bar_workflow, $enable_themes;
-    $bb_html = '<div id="BrowseBarContainer" style="display:none;">';
-    $bb_html .= '<div id="BrowseBar" class="BrowseBar">';
-    $bb_html .= '<div id="BrowseBarContent" >'; 
-    
-    //Browse row template
-    // script will replace %BROWSE_TYPE%, %BROWSE_EXPAND_CLASS%, %BROWSE_CLASS% %BROWSE_LEVEL%, %BROWSE_EXPAND%, %BROWSE_NAME%, %BROWSE_TEXT%, %BROWSE_ID%
-    $bb_html .= "
-            <div id='BrowseBarTemplate' style='display: none;'>
-            <div class='BrowseBarItem BrowseRowOuter %BROWSE_DROP%' data-browse-id='%BROWSE_ID%' data-browse-parent='%BROWSE_PARENT%'  data-browse-loaded='0' data-browse-status='closed' data-browse-level='%BROWSE_LEVEL%' style='display: none;'>
-                <div class='BrowseRowInner' >
-                    %BROWSE_INDENT%
-                    %BROWSE_EXPAND%
-                    %BROWSE_TEXT%
-                    %BROWSE_REFRESH%
-                </div><!-- End of BrowseRowInner -->
-            </div><!-- End of BrowseRowOuter -->
-            </div><!-- End of BrowseBarTemplate -->
-            ";
-
-    // Add root elements
-    $bb_html .= generate_browse_bar_item("R", $lang['browse_by_tag']);
-    if($enable_themes)
-        {
-        $bb_html .= generate_browse_bar_item("FC", $lang["themes"]);
-        }
-    if(!checkperm('b'))
-        {
-        $bb_html .= generate_browse_bar_item("C", $lang["mycollections"]);
-        }
-        
-    if($browse_bar_workflow)
-        {
-        $bb_html .= generate_browse_bar_item("WF", $lang['browse_by_workflow_state']);
-        }
-
-    $bb_html .= '</div><!-- End of BrowseBarContent -->
-                </div><!-- End of BrowseBar -->
-                </div><!-- End of BrowseBarContainer -->';
-    echo $bb_html;
-    
-    echo '<script>
-        b_loading = new Array();
-        // Expand tree to previous state based on stored cookie
-        jQuery(document).ready(function()
-            {
-            ReloadBrowseBar();
-            });
-        </script>';
-    }
-
-
-/**
-* Generates a root row item for the browse bar
-*  
-* @return string  $html
-*/    
-function generate_browse_bar_item($id, $text)
-    {
-    global $lang;
-    $html = '<div class="BrowseBarItem BrowseRowOuter BrowseBarRoot" data-browse-id="' . $id . '" data-browse-parent="root" data-browse-loaded="0" data-browse-status="closed" data-browse-level="0" >';
-    $html .= '<div class="BrowseRowInner" >';
-    
-    $html .= '<div class="BrowseBarStructure">
-            <a href="#" class="browse_expand browse_closed" onclick="toggleBrowseElements(\'' . $id . '\',false,true);" alt="' . escape($lang["expand"]) . '"></a>
-            </div><!-- End of BrowseBarStructure -->';  
-    $html .= '<div onclick="toggleBrowseElements(\'' . $id . '\',false,true);" class="BrowseBarLink" >' . $text . '</div>';
-    
-    $html .= '<a href="#" class="BrowseRefresh " onclick="toggleBrowseElements(\'' . $id . '\',true, true);" ><i class="icon-refresh-cw"></i></a>';  
-    
-    $html .= "</div><!-- End of BrowseRowInner -->
-            </div><!-- End of BrowseRowOuter -->";
-    return $html;
-    }
-    
-/**
 * Generates a help icon that opens the relevant Knowledge Base article in a modal
 * 
 * @param string  $page              Knowledge Base article to display, leave blank to show the Knowledge Base homepage
@@ -4007,13 +3944,13 @@ function check_display_condition($n, array $field, array $fields, $render_js, in
                             if($GLOBALS["multiple"] === false)
                                 {
                                 ?>
-                                checkDisplayCondition<?php echo $field['ref']; ?>();
+                                checkDisplayCondition<?php echo (int) $field['ref']; ?>();
                                 <?php
                                 }
                             ?>
                             jQuery('#CentralSpace').on('categoryTreeChanged', function(e,node)
                                 {
-                                checkDisplayCondition<?php echo $field['ref']; ?>();
+                                checkDisplayCondition<?php echo (int) $field['ref']; ?>();
                                 });
                             });
                         </script>
@@ -4032,15 +3969,15 @@ function check_display_condition($n, array $field, array $fields, $render_js, in
                             if($GLOBALS["multiple"] === false)
                                 {
                                 ?>
-                                console.debug('[document.ready] Going to call checkDisplayCondition<?php echo $field['ref']; ?>()');
-                                checkDisplayCondition<?php echo $field['ref']; ?>();
+                                console.debug('[document.ready] Going to call checkDisplayCondition<?php echo (int) $field['ref']; ?>()');
+                                checkDisplayCondition<?php echo (int) $field['ref']; ?>();
                                 <?php
                                 }
                             ?>
                             jQuery('#CentralSpace').on('dynamicKeywordChanged', function(e,node)
                                 {
-                                console.debug('#CentralSpace-on-dynamicKeywordChanged for field #<?php echo $field['ref']; ?>');
-                                checkDisplayCondition<?php echo $field['ref']; ?>();
+                                console.debug('#CentralSpace-on-dynamicKeywordChanged for field #<?php echo (int) $field['ref']; ?>');
+                                checkDisplayCondition<?php echo (int) $field['ref']; ?>();
                                 });
                             });
                         </script>
@@ -4072,13 +4009,13 @@ function check_display_condition($n, array $field, array $fields, $render_js, in
                         if($GLOBALS["multiple"] === false)
                             {
                             ?>
-                            checkDisplayCondition<?php echo $field['ref']; ?>();
+                            checkDisplayCondition<?php echo (int) $field['ref']; ?>();
                             <?php
                             }
                         ?>
                         jQuery('<?php echo $jquery_selector; ?>').change(function ()
                             {
-                            checkDisplayCondition<?php echo $field['ref']; ?>();
+                            checkDisplayCondition<?php echo (int) $field['ref']; ?>();
                             });
                         });
                     </script>
@@ -4094,13 +4031,13 @@ function check_display_condition($n, array $field, array $fields, $render_js, in
                         if($GLOBALS["multiple"] === false)
                             {
                             ?>
-                            checkDisplayCondition<?php echo $field['ref']; ?>();
+                            checkDisplayCondition<?php echo (int) $field['ref']; ?>();
                             <?php
                             }
                         ?>
-                        jQuery('#field_<?php echo $display_check_data[$cf]["ref"]; ?>').change(function ()
+                        jQuery('#field_<?php echo (int) $display_check_data[$cf]["ref"]; ?>').change(function ()
                             {
-                            checkDisplayCondition<?php echo $field['ref']; ?>();
+                            checkDisplayCondition<?php echo (int) $field['ref']; ?>();
                             });
                         });
                     </script>
@@ -4118,9 +4055,9 @@ function check_display_condition($n, array $field, array $fields, $render_js, in
         $question_id = '#question_' . $n . ($GLOBALS["multiple"] === true ? '' : '_' . $resource_ref);
         ?>
         <script type="text/javascript">
-        function checkDisplayCondition<?php echo $field["ref"];?>()
+        function checkDisplayCondition<?php echo (int) $field["ref"];?>()
             {
-            console.debug('(<?php echo str_replace(dirname(__DIR__), '', __FILE__) . ':' . __LINE__?>) checkDisplayCondition<?php echo $field["ref"]; ?>()');
+            console.debug('(<?php echo str_replace(dirname(__DIR__), '', __FILE__) . ':' . __LINE__?>) checkDisplayCondition<?php echo (int) $field["ref"]; ?>()');
 
             if (jQuery('#field_<?php echo (int) $field["ref"]; ?>_displayed').length === 0)
                 {
@@ -4129,78 +4066,83 @@ function check_display_condition($n, array $field, array $fields, $render_js, in
                 }
 
             // Get current display state for governed field ("block" or "none")
-            field<?php echo $field['ref']; ?>status    = jQuery('<?php echo escape($question_id); ?>').css('display');
-            newfield<?php echo $field['ref']; ?>status = 'none';
+            field<?php echo (int) $field['ref']; ?>status    = jQuery('<?php echo escape($question_id); ?>').css('display');
+            newfield<?php echo (int) $field['ref']; ?>status = 'none';
 
             // Assume visible by default
-            field<?php echo $field['ref']; ?>visibility = true;
+            field<?php echo (int) $field['ref']; ?>visibility = true;
             <?php
             foreach($scriptconditions as $scriptcondition)
                 {
-                /* Example of $scriptconditions:
-                    [{"field":"73","type":"3","display_as_dropdown":"0","valid":["267","266"]}]
-                */
-                ?>
-
-                field<?php echo $field['ref']; ?>valuefound = false;
-                fieldokvalues<?php echo $scriptcondition['field']; ?> = <?php echo json_encode($scriptcondition['valid']); ?>;
-                console.debug('[checkDisplayCondition<?php echo $field["ref"]; ?>] fieldokvalues<?php echo $scriptcondition['field']; ?> = %o', fieldokvalues<?php echo $scriptcondition['field']; ?>);
-
-                <?php
-                ############################
-                ### Field type specific
-                ############################
-                if(in_array($scriptcondition['type'], $FIXED_LIST_FIELD_TYPES))
-                    {
-                    $jquery_condition_selector = "input[name=\"nodes[{$scriptcondition['field']}][]\"]";
-                    $js_conditional_statement  = "fieldokvalues{$scriptcondition['field']}.indexOf(element.value) != -1";
-
-                    if(FIELD_TYPE_CHECK_BOX_LIST == $scriptcondition['type'])
-                        {
-                        $js_conditional_statement = "element.checked && {$js_conditional_statement}";
-                        }
-
-                    if(FIELD_TYPE_DROP_DOWN_LIST == $scriptcondition['type'])
-                        {
-                        $jquery_condition_selector = "select[name=\"nodes[{$scriptcondition['field']}]\"] option:selected";
-                        }
-
-                    if(FIELD_TYPE_RADIO_BUTTONS == $scriptcondition['type'])
-                        {
-                        $jquery_condition_selector = "input[name=\"nodes[{$scriptcondition['field']}]\"]:checked";
-                        }
+                if(is_field_displayed(get_field($scriptcondition['field']))) {
+                    /* Example of $scriptconditions:
+                        [{"field":"73","type":"3","display_as_dropdown":"0","valid":["267","266"]}]
+                    */
                     ?>
-                        jQuery('<?php echo $jquery_condition_selector; ?>').each(function(index, element)
-                            {
-                            if(<?php echo $js_conditional_statement; ?>)
-                                {
-                                field<?php echo $field['ref']; ?>valuefound = true;
-                                }
-                            });
+
+                    field<?php echo (int) $field['ref']; ?>valuefound = false;
+                    fieldokvalues<?php echo (int) $scriptcondition['field']; ?> = <?php echo json_encode($scriptcondition['valid']); ?>;
+                    console.debug('[checkDisplayCondition<?php echo (int) $field["ref"]; ?>] fieldokvalues<?php echo (int) $scriptcondition['field']; ?> = %o', fieldokvalues<?php echo (int) $scriptcondition['field']; ?>);
 
                     <?php
+                    ############################
+                    ### Field type specific
+                    ############################
+                    if(in_array($scriptcondition['type'], $FIXED_LIST_FIELD_TYPES))
+                        {
+                        $jquery_condition_selector = "input[name=\"nodes[{$scriptcondition['field']}][]\"]";
+                        $js_conditional_statement  = "fieldokvalues{$scriptcondition['field']}.indexOf(element.value) != -1";
+
+                        if(FIELD_TYPE_CHECK_BOX_LIST == $scriptcondition['type'])
+                            {
+                            $js_conditional_statement = "element.checked && {$js_conditional_statement}";
+                            }
+
+                        if(FIELD_TYPE_DROP_DOWN_LIST == $scriptcondition['type'])
+                            {
+                            $jquery_condition_selector = "select[name=\"nodes[{$scriptcondition['field']}]\"] option:selected";
+                            }
+
+                        if(FIELD_TYPE_RADIO_BUTTONS == $scriptcondition['type'])
+                            {
+                            $jquery_condition_selector = "input[name=\"nodes[{$scriptcondition['field']}]\"]:checked";
+                            }
+                        ?>
+                            jQuery('<?php echo $jquery_condition_selector; ?>').each(function(index, element)
+                                {
+                                if(<?php echo $js_conditional_statement; ?>)
+                                    {
+                                    field<?php echo (int) $field['ref']; ?>valuefound = true;
+                                    }
+                                });
+
+                        <?php
+                        }
+                    ?>
+                    if(!field<?php echo (int) $field['ref']; ?>valuefound)
+                        {
+                        field<?php echo (int) $field['ref']; ?>visibility = false;
+                        }
+    <?php
+                    } else {
+                        $current_nodes = get_resource_nodes($resource_ref, $scriptcondition['field'], false);
+                        echo count(array_intersect($current_nodes, $scriptcondition['valid'])) > 0 ? '' : "field{$field['ref']}visibility = false;";
                     }
-                ?>
-                if(!field<?php echo $field['ref']; ?>valuefound)
-                    {
-                    field<?php echo $field['ref']; ?>visibility = false;
-                    }
-<?php
                 }
                 ?>
 
                 // Is field to be displayed
-                if(field<?php echo $field['ref']; ?>visibility)
+                if(field<?php echo (int) $field['ref']; ?>visibility)
                     {
-                    newfield<?php echo $field['ref']; ?>status = 'block';
+                    newfield<?php echo (int) $field['ref']; ?>status = 'block';
                     }
 
                 // If display status changed then toggle the visibility
-                if(newfield<?php echo $field['ref']; ?>status != field<?php echo $field['ref']; ?>status)
+                if(newfield<?php echo (int) $field['ref']; ?>status != field<?php echo (int) $field['ref']; ?>status)
                     {
-                    jQuery('<?php echo escape($question_id); ?>').css("display", newfield<?php echo $field['ref']; ?>status); 
+                    jQuery('<?php echo escape($question_id); ?>').css("display", newfield<?php echo (int) $field['ref']; ?>status); 
                     // The visibility status (block/none) will be sent to the server in the following field
-                    jQuery('#field_<?php echo $field['ref']; ?>_displayed').attr("value",newfield<?php echo $field['ref']; ?>status);
+                    jQuery('#field_<?php echo (int) $field['ref']; ?>_displayed').attr("value",newfield<?php echo (int) $field['ref']; ?>status);
 
                 <?php
                 // Batch edit mode
@@ -4229,22 +4171,6 @@ function check_display_condition($n, array $field, array $fields, $render_js, in
         }
 
     return $displaycondition;
-    }
-
-
-/**
-* Utility to check if browse bar should be rendered
-*  
-* @return boolean
-*/   
-function has_browsebar()
-    {
-    global $username, $pagename, $loginterms, $not_authenticated_pages, $k, $internal_share_access, $browse_bar;
-    return isset($username)
-    && is_array($not_authenticated_pages) && !in_array($pagename, $not_authenticated_pages)
-    && ('' == $k || $internal_share_access)
-    && $browse_bar;
-    //   && false == $loginterms ?
     }
 
 /**
@@ -4315,6 +4241,9 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
 
     if ($field['value_filter']!="")
         {
+        if ($field["type"] != FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE) {
+            $value = nl2br(escape($value));
+        }
         debug('Calling value_filter...');
         eval(eval_check_signed($field['value_filter']));
         }
@@ -4415,7 +4344,7 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
         # Do not convert HTML formatted fields (that are already HTML) to HTML. Added check for extracted fields set to 
         # TinyMCE that have not yet been edited.
         if(
-            ($field["type"] != FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE && !(in_array($field['type'], $FIXED_LIST_FIELD_TYPES) && is_authenticated()))
+            ($field["type"] != FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE && !(in_array($field['type'], $FIXED_LIST_FIELD_TYPES) && is_authenticated()) && (eval_check_signed((string) $field['value_filter'])==''))
             || ($field["type"] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_TINYMCE && $value == strip_tags($value))
             )
             {
@@ -6168,6 +6097,38 @@ function escape(string $unsafe): string
     return htmlspecialchars($unsafe, ENT_QUOTES | ENT_SUBSTITUTE);
 }
 
+/**
+ * Output encoding for Javascript (JS) context. Allows PHP code to embed data as a JS value by producing a JS-compatible
+ * literal for the common JSON types.
+ * IMPORTANT: encoding failures result in NULL. 
+ *
+ * @example echo 'const x = ' . encode_js_value($value) . ';';
+ * @see https://www.resourcespace.com/knowledge-base/developers/security/injection
+ */
+function encode_js_value(mixed $unsafe): string
+{
+    $use_error_exception_cache = $GLOBALS['use_error_exception'] ?? false;
+    $GLOBALS['use_error_exception'] = true;
+    try {
+        $encoded_val = json_encode(
+            $unsafe,
+            JSON_HEX_TAG
+            | JSON_HEX_AMP
+            | JSON_HEX_QUOT
+            | JSON_HEX_APOS
+            | JSON_UNESCAPED_SLASHES
+            | JSON_INVALID_UTF8_SUBSTITUTE
+            | JSON_THROW_ON_ERROR
+        );
+    } catch (\JsonException $e) {
+        debug("Failed to encode value for JS context. Reason: {$e}");
+        $encoded_val = 'null';
+    }
+    $GLOBALS['use_error_exception'] = $use_error_exception_cache;
+
+    return $encoded_val;
+}
+
 
 /**
  * HTML aware function to break up long words onto multiple lines for
@@ -6851,6 +6812,65 @@ function admin_resource_type_field_option(string $propertyname,string $propertyt
             <?php }
             ?>
             </select>
+            <?php
+        } elseif ($propertyname == 'geomapping') {
+            $geo_location_fields = ps_array("SELECT geomapping value FROM resource_type_field WHERE geomapping !=0 ORDER BY geomapping", []);
+            $disabled_options = [];
+            if (!empty($geo_location_fields) && [$currentvalue] != $geo_location_fields) {
+                // At least one other field is using geo mapping
+                if (in_array(FIELD_GEO_LOCATION::both->value, $geo_location_fields)) {
+                    // A field is set to both, no options here except none
+                    $disabled_options = [
+                        FIELD_GEO_LOCATION::both,
+                        FIELD_GEO_LOCATION::latitude,
+                        FIELD_GEO_LOCATION::longitude
+                    ];
+                } else {
+                    // At least one field is lat or long, only allow one of these if not set elsewhere
+                    $disabled_options[] = FIELD_GEO_LOCATION::both;
+                    if (in_array(FIELD_GEO_LOCATION::latitude->value, $geo_location_fields)
+                        && $currentvalue != FIELD_GEO_LOCATION::latitude->value) {
+                        $disabled_options[] = FIELD_GEO_LOCATION::latitude;
+                    }
+                    if (in_array(FIELD_GEO_LOCATION::longitude->value, $geo_location_fields)
+                        && $currentvalue !=FIELD_GEO_LOCATION::longitude->value) {
+                        $disabled_options[] = FIELD_GEO_LOCATION::longitude;
+                    }
+                }
+            }
+            ?>
+            <select 
+                class="stdwidth"
+                id="field_edit_geomapping"
+                name="geomapping"
+                <?php if (count($disabled_options) == 3) {?>
+                    disabled
+                    title="<?php echo escape($lang["disabled-geomapping-title"]);?>"
+                <?php } ?>
+                >
+            <?php 
+            foreach(FIELD_GEO_LOCATION::cases() as $case) {
+                $selected = $case->value === $currentvalue ? 'selected' : '';
+                $disabled = in_array($case, $disabled_options) ? 'disabled' : '';
+                $value = "\"$case->value\" $selected $disabled";
+                ?>
+                <option
+                    value=<?php echo $value; ?>
+                    ><?php echo escape($case->i18n($lang)); ?>
+                </option>
+            <?php }
+            ?>
+            </select>
+            <script>
+                jQuery(document).ready(function()  {
+                    var selectedValue = jQuery('#field_edit_type').val();
+                    var geoSelect = jQuery('#field_edit_<?php echo escape((string) $propertyname); ?>');
+
+                    if (selectedValue !== '<?php echo FIELD_TYPE_TEXT_BOX_SINGLE_LINE; ?>') {
+                        geoSelect.prop('disabled', true).val(0);
+                    }
+                });
+            </script>
             <?php
         }
         elseif($type==1)
@@ -7731,3 +7751,192 @@ enum ToastNotificationType
     case Error;
 }
 // phpcs:enable
+
+function render_icon_wrapper_component(Icon $name, IconSize $size = IconSize::Default): void
+{
+    $class = [
+        $name->value,
+        "{$size->value}-icon-size",
+    ];
+
+    printf('<i class="%s" aria-hidden="true"></i>', escape(join(' ', $class)));
+}
+
+/**
+ * Render the header's primary navigation. In responsive mode, all the nav links are being overflown.
+ *
+ * @param array{button: Icon, force_overflow?: bool} $ctx Change behaviour based on context (e.g. normal vs responsive)
+ */
+function render_header_links(array $ctx): void
+{
+    global $pagename, $terms_login, $baseurl, $nav2contact_link, $advanced_search_nav, $search_results_link,
+    $enable_themes, $theme_direct_jump, $themes_navlink, $public_collections_top_nav, $mycollections_link, $recent_link,
+    $recent_search_by_days, $recent_search_by_days_default, $recent_search_quantity, $myrequests_link,
+    $mycontributions_link, $research_request, $custom_top_nav, $lang, $search;
+
+    if (
+        $pagename == 'terms'
+        && isset($_SERVER['HTTP_REFERER'])
+        && strpos($_SERVER['HTTP_REFERER'], 'login') !== false
+        && $terms_login
+    ) {
+        return;
+    }
+
+    /**
+     * Nav link list. Each link follows the $custom_top_nav structure for consistency reasons.
+     *
+     * @var list<array{title: string, link: string, modal?: bool}>
+     */
+    $nav_links = [];
+    $contact_us_link = $nav2contact_link ? [['title' => '(lang)contactus', 'link' => "{$baseurl}/pages/contact.php"]] : [];
+
+    if ($advanced_search_nav) {
+        $nav_links[] = [
+            'title' => '(lang)advancedsearch',
+            'link' => "{$baseurl}/pages/search_advanced.php",
+        ];
+    }
+
+    if ($search_results_link) {
+        if (
+            checkperm("s")
+            && (
+                isset($_COOKIE["search_form_submit"])
+                || (isset($_COOKIE["search"]) && strlen($_COOKIE["search"]) > 0)
+                || (isset($search) && strlen($search) > 0 && strpos($search, "!") === false)
+            )
+        ) {
+            $nav_links[] = [
+                'title' => '(lang)searchresults',
+                'link' => "{$baseurl}/pages/search.php",
+            ];
+        } else {
+            $nav_links[] = [
+                'title' => '(lang)searchresults',
+                'link' => '#',
+            ];
+        }
+    }
+
+    if (checkperm("s") && $enable_themes && !$theme_direct_jump && $themes_navlink) {
+        $nav_links[] = [
+            'title' => '(lang)themes',
+            'link' => "{$baseurl}/pages/collections_featured.php",
+        ];
+    }
+
+    if (checkperm("s") && ($public_collections_top_nav)) {
+        $nav_links[] = [
+            'title' => '(lang)publiccollections',
+            'link' => "{$baseurl}/pages/collection_public.php",
+        ];
+    }
+
+    if (checkperm("s") && $mycollections_link && !checkperm("b")) {
+        $nav_links[] = [
+            'title' => '(lang)mycollections',
+            'link' => "{$baseurl}/pages/collection_manage.php",
+        ];
+    }
+
+    if (checkperm("s") && $recent_link) {
+        $recent_url_params = $recent_search_by_days
+            ? [
+                "search" => "",
+                "recentdaylimit" => $recent_search_by_days_default,
+            ]
+            : ["search" => "!last{$recent_search_quantity}"];
+        $recent_url_params["order_by"]  = "resourceid";
+        $recent_url_params["sort"]      = "desc";
+        $recenturl = generateURL("$baseurl/pages/search.php", $recent_url_params);
+
+        $nav_links[] = [
+            'title' => '(lang)recent',
+            'link' => $recenturl,
+        ];
+    }
+
+    if (checkperm("s") && $myrequests_link && checkperm("q")) {
+        $nav_links[] = [
+            'title' => '(lang)myrequests',
+            'link' => "{$baseurl}/pages/requests.php",
+        ];
+    }
+
+    if (checkperm("d") || ($mycontributions_link && checkperm("c"))) {
+        $nav_links[] = [
+            'title' => '(lang)mycontributions',
+            'link' => "{$baseurl}/pages/contribute.php",
+        ];
+    }
+
+    if ($research_request && checkperm("s") && checkperm("q")) {
+        $nav_links[] = [
+            'title' => '(lang)researchrequest',
+            'link' => "{$baseurl}/pages/research_request.php",
+        ];
+    }
+
+    $nav_links = array_merge($nav_links, $custom_top_nav ?? [], $contact_us_link);
+
+    // Group links into primary and overflown. For the responsive mode, all the links will be overflown by design.
+    // (note: the overflow menu logic is handled by the MenuOverlay module in JS)
+    $force_overflow = $ctx['force_overflow'] ?? false;
+    $max_links_to_show = 6;
+    $nav_groupings = !$force_overflow && count($nav_links) > $max_links_to_show
+        ? [array_slice($nav_links, 0, $max_links_to_show), array_slice($nav_links, $max_links_to_show)]
+        : [$nav_links];
+    ?>
+    <nav class="primary-navigation menu" aria-label="<?php echo escape(text('mainmenu')); ?>" data-menu>
+        <ul>
+        <?php
+            foreach ($nav_groupings as $idx => $nav_group_links) {
+                $overflow = $force_overflow ?: $idx === 1;
+                $li_class = '';
+                $role_menuitem = '';
+
+                if ($overflow) {
+                    echo '<li class="menu-overflow"><ul class="menu-panel" data-menu-panel role="menu" hidden>';
+                    $li_class = 'menu-item';
+                    $role_menuitem = ' role="menuitem"';
+                }
+
+                foreach ($nav_group_links as $nav) {
+                    if (!url_starts_with($baseurl, $nav['link'])) {
+                        // External links always open in a new tab
+                        $on_click = '';
+                        $target   = ' target="_blank" rel="noopener noreferrer"';
+                    } else {
+                        if (isset($nav['modal']) && $nav['modal']) {
+                            $on_click = ' onClick="return ModalLoad(this, true);"';
+                            $target   = '';
+                        } elseif (!isset($nav['modal']) || (isset($nav['modal']) && !$nav['modal'])) {
+                            $on_click = ' onClick="return CentralSpaceLoad(this, true);"';
+                            $target   = '';
+                        }
+                    }
+
+                    if (strpos($nav['title'], '(lang)') !== false) {
+                        $custom_top_nav_title = str_replace("(lang)", "", $nav["title"]);
+                        $nav["title"] = $lang[$custom_top_nav_title];
+                    }
+                    ?>
+                    <li class="<?php echo $li_class; ?>">
+                        <a href="<?php echo sanitise_url($nav["link"]); ?>"<?php echo $target . $on_click . $role_menuitem; ?>><?php
+                            echo escape(i18n_get_translated($nav["title"]));
+                        ?></a>
+                    </li>
+                    <?php
+                }
+
+                if ($overflow) {
+                    echo '</ul></li>';
+                }
+            }
+        ?>
+        </ul>
+        <button type="button" class="<?php echo escape($ctx['button']->value); ?>" data-menu-trigger aria-haspopup="menu" aria-expanded="false"></button>
+    </nav>
+    <?php
+}

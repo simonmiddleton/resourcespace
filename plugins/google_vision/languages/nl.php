@@ -29,3 +29,7 @@ $lang["page-title_google_vision_process_existing"] = 'Google Vision Proces Besta
 $lang["page-title_google_vision_setup"] = 'Instellen van de Google Vision Plugin';
 $lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
 $lang["page-title_google_vision_test"] = 'Google Vision Test';
+$lang["google_vision"] = 'Google Vision';
+$lang["google_vision_process_existing"] = 'Verwerk niet-verwerkte bronnen';
+$lang["google_vision_process_existing_configure"] = 'Configureer taak om niet-verwerkte bronnen te verwerken';
+$lang["google_vision_process_existing_collection_refs_help"] = 'Het instellen van deze optie betekent dat alleen bronnen in de vermelde collecties worden verwerkt. Als er geen collecties zijn opgegeven, worden ALLE geschikte bronnen verwerkt. Collecties kunnen worden opgegeven met een door komma\'s gescheiden lijst of bereiken, bijv. 100,105,110-115';

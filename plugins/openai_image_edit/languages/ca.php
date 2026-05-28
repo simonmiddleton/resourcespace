@@ -30,3 +30,4 @@ $lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
 $lang["page-title_openai_image_edit_get_png"] = 'OpenAI Get PNG';
 $lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI Desa Alternativa';
 $lang["page-title_openai_image_edit_save_new"] = 'OpenAI Desa Nou';
+$lang["openai_image_edit__introtext"] = 'Introdueix a la caixa de text una descripció dels canvis que voldries que s\'apliquessin a la imatge. Opcionalment, utilitza el pinzell per esborrar parts de la imatge, forçant la regeneració d\'aquestes àrees.';

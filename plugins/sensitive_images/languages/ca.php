@@ -8,3 +8,4 @@ $lang["sensitive_images_blur_level"]='Nivell de desenfocament d\'imatges sensibl
 $lang["plugin-sensitive_images-title"]='Difuminat d\'imatge sensible';
 $lang["plugin-sensitive_images-desc"]='Difumina les imatges marcades com a sensibles amb la possibilitat que l\'usuari faci clic per desdifuminar.';
 $lang["page-title_sensitive_images_setup"] = 'Configurar el complement d\'Imatges Sensibles';
+$lang["sensitive_images_show"] = 'Fes clic a la imatge per mostrar-la.';

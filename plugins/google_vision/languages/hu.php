@@ -25,3 +25,7 @@ $lang["page-title_google_vision_process_existing"] = 'Google Vision Folyamat Meg
 $lang["page-title_google_vision_setup"] = 'Google Vision Plugin beállítása';
 $lang["page-title_google_vision_test_jpg"] = 'Google Vision Test';
 $lang["page-title_google_vision_test"] = 'Google Vision Teszt';
+$lang["google_vision"] = 'Google Vision';
+$lang["google_vision_process_existing"] = 'Feldolgozatlan erőforrások feldolgozása';
+$lang["google_vision_process_existing_configure"] = 'Feladat konfigurálása a feldolgozatlan erőforrások feldolgozásához';
+$lang["google_vision_process_existing_collection_refs_help"] = 'Ennek a beállításnak az aktiválásával csak a felsorolt gyűjteményekben lévő erőforrásokat dolgozza fel a rendszer. Ha nem ad meg gyűjteményeket, akkor MINDEN alkalmas erőforrást feldolgoz. A gyűjteményeket vesszővel elválasztott listában, illetve tartományok megadásával is megadhatja pl. 100,105,110-115';

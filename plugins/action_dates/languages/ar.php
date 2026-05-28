@@ -40,3 +40,4 @@ $lang["plugin-action_dates-title"] = 'تواريخ الإجراءات';
 $lang["plugin-action_dates-desc"] = 'يُمكّن الحذف المجدول أو تقييد الموارد بناءً على حقول التاريخ';
 
 $lang["page-title_action_dates_setup"] = 'إعداد مكون تواريخ الإجراءات';
+$lang["action_dates_additional_settings_email_admin_days"] = 'إبلاغ المسؤولين قبل عدد الأيام التالية من تنفيذ الإجراء (اتركه فارغًا لتعطيله)';

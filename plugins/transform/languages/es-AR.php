@@ -83,3 +83,4 @@ $lang["cropper_preset_sizes"] = 'Tamaños predefinidos';
 $lang["page-title_transform_collection_transform"] = 'Transformar Recurso';
 $lang["page-title_transform_crop"] = 'Recortar Recurso';
 $lang["page-title_transform_setup"] = 'Configurar el Plugin de Transformación';
+$lang["use_filename_as_title"] = 'Usar el nombre del archivo como título';

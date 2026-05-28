@@ -30,3 +30,4 @@ $lang["page-title_openai_image_edit_edit"] = 'OpenAI Edit';
 $lang["page-title_openai_image_edit_get_png"] = 'OpenAI Hämta PNG';
 $lang["page-title_openai_image_edit_save_alternative"] = 'OpenAI Spara Alternativ';
 $lang["page-title_openai_image_edit_save_new"] = 'OpenAI Spara Ny';
+$lang["openai_image_edit__introtext"] = 'Ange en beskrivning av de ändringar du vill göra i bildens promptfält. Använd eventuellt penseln för att radera delar av bilden, vilket tvingar fram en regenerering av dessa områden.';
