@@ -4536,7 +4536,7 @@ function collection_download_process_text_file(array $dl_data, int $ref, string 
             $fields = get_resource_field_data($ref, false, true, null, true);
         }
         $commentdata = get_collection_resource_comment($ref, $dl_data['collection']);
-        $fields_count = count($fields);
+        $fields_count = count($fields ?: []);
         if ($fields_count > 0) {
             $hook_replace_text = hook('replacecollectiontext', '', array($text, $sizetext, $filename, $ref, $fields, $fields_count, $commentdata));
             if (!$hook_replace_text) {
