@@ -2505,6 +2505,9 @@ p.LoginLinks {
     border-radius: 6px;
     margin-bottom: var(--space-8);
 }
+#LoginHeader img{
+    max-width: 200px;
+}
 .login-welcome-text {
     padding-bottom: var(--form-field-margin-bottom);
 }
