@@ -2271,7 +2271,10 @@ function AutoRotateImage($src_image, $ref = false)
     # from a non-ingested image to properly rotate a preview image
     global $imagemagick_path, $camera_autorotation_ext;
 
-    $src_image = safe_file_name($src_image);
+    if (!is_safe_basename($src_image)) {
+        return false;
+    }
+
     debug("AutoRotateImage(src_image = $src_image, ref = $ref)");
 
     if (!isset($imagemagick_path)) {
