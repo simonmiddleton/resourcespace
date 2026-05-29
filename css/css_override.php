@@ -492,7 +492,8 @@ if (isset($user_pref_appearance) && !(isset($high_contrast_mode) && $high_contra
             border: 1px solid var(--colour-colour-dark-alternates-red);
         }
     
-        .select2-selection.select2-selection--multiple {
+        .select2-selection.select2-selection--multiple,
+        .field-input select {
             background-image: url(data:image/svg+xml;base64,PHN2ZyBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1jaGV2cm9uLWRvd24taWNvbiBsdWNpZGUtY2hldnJvbi1kb3duIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgMjQgMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0ibTYgOSA2IDYgNi02IiBzdHJva2U9IiNBREIwQUIiLz48L3N2Zz4=);
         }
 

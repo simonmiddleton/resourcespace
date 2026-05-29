@@ -3807,6 +3807,7 @@ button[data-menu-trigger-close] {
     padding-left: var(--space-12);
     background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1jaGV2cm9uLWRvd24taWNvbiBsdWNpZGUtY2hldnJvbi1kb3duIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgMjQgMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0ibTYgOSA2IDYgNi02IiBzdHJva2U9IiM0YTRjNDgiLz48L3N2Zz4K);
     background-position: top var(--space-12) right var(--space-12);
+    background-color: var(--form-form-field-background);
     margin: 0;
 
     /* Prevent long option values from overlapping with the background image (our custom dropdown arrow) */
@@ -3830,6 +3831,13 @@ button[data-menu-trigger-close] {
     font-size: 16px;
     line-height: 24px;
     margin: 0;
+    background-color: var(--form-form-field-background);
+}
+
+.field-input input[type="text"]:focus,
+.field-input input[type="password"]:focus,
+.field-input textarea:focus {
+    background-color: var(--colour-surface-50);
 }
 
 .field-input textarea { 
