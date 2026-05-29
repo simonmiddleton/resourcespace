@@ -4721,35 +4721,6 @@ header.LoginHeader {
     line-height: 100%; /* 18px */
 }
 
-.PoweredByPanel {
-    /* padding: 0 var(--space-16) var(--space-36) var(--space-16); */
-    padding-bottom: var(--space-36);
-    color: var(--colour-surface-600);
-}
-
-.PoweredByPanel > a {
-    display: flex;
-    height: 25px;
-    justify-content: center;
-    align-items: center;
-    gap: var(--space-12);
-    text-decoration: underline;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 150%; /* 21px */
-}
-
-.PoweredByPanel > a:hover {
-    color: var(--colour-surface-800);
-}
-
-.PoweredByPanel > a > svg {
-    height: 25px;
-    width: auto;
-}
-
-
 /* ===== Responsive layouts ===== */
 /* ===== Breakpoints =====
    - mobile:  360px (base)

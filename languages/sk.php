@@ -2715,8 +2715,6 @@ $lang["information_index_warning"] = 'Prosím, pozrite si <a href=\'https://www.
 $lang["property-field_full_width"] = 'Zobraziť na celej šírke na stránke zobrazenia';
 $lang["property-system_date_help_text"] = 'Nie je možné toto vypnúť, pretože toto pole je nastavené ako systémové pole dátumu. Môžete to zmeniť pomocou konfigurácie alebo požiadania administrátora';
 $lang["property-icon"] = 'Ikona';
-$lang["powered_by"] = 'Poháňané pomocou';
-$lang["powered_by_resourcespace"] = 'Používa technológiu ResourceSpace';
 $lang["emailmarkedinvalid"] = 'E-mail bol označený ako neplatný';
 $lang["system_tabs"] = 'Zavihki';
 $lang["manage_tabs_instructions"] = 'Použite túto sekciu na správu záložiek. Tieto môžu byť vybrané pre metadátové polia a typy zdrojov.';
