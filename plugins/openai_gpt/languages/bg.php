@@ -1,0 +1,41 @@
+<?php
+
+
+$lang["openai_gpt_title"] = 'Обработка на метаданни с OpenAI/Ollama';
+$lang["openai_gpt_intro"] = 'Добавя метаданни, генерирани чрез подаване на съществуващи данни или преглед на ресурс към OpenAI API (или съвместим, като Ollama) с персонализирано подканване. Вижте <a href=\'https://platform.openai.com/docs/introduction\' target=\'_blank\'>документацията на OpenAI</a> за по-подробна информация.';
+$lang["property-openai_gpt_prompt"] = 'Подканване за обработка с AI';
+$lang["property-openai_gpt_input_field"] = 'Вход за обработка с AI';
+$lang["openai_gpt_api_key"] = 'API ключ за OpenAI. Вземете своя API ключ от <a href=\'https://openai.com/api\' target=\'_blank\'>https://openai.com/api</a>';
+$lang["openai_gpt_model"] = 'Модел на OpenAI за използване (например \'gpt-4o\')';
+$lang["openai_gpt_temperature"] = 'Температура на сэмплиране между 0 и 1 (по-високи стойности означават, че моделът ще поема повече рискове)';
+$lang["openai_gpt_max_tokens"] = 'Максимален брой токени';
+$lang["openai_gpt_advanced"] = 'ПРЕДУПРЕЖДЕНИЕ - Този раздел е само за тестови цели и не трябва да се променя в работещи системи. Промяната на някоя от опциите тук ще повлияе на поведението на всички полета за метаданни, които са конфигурирани. Бъдете внимателни!';
+$lang["openai_gpt_system_message"] = 'Начален системен текст на съобщението. Запълващите %%IN_TYPE%% и %%OUT_TYPE%% ще бъдат заменени с \'текст\' или \'json\' в зависимост от типа на източника/целта';
+$lang["openai_gpt_model_override"] = 'Моделът е заключен в глобалната конфигурация към: [model]';
+$lang["openai_gpt_processing_multiple_resources"] = 'Множество ресурси';
+$lang["openai_gpt_processing_resource"] = 'Ресурс [resource]';
+$lang["openai_gpt_processing_field"] = 'Генериране на метаданни с AI за поле \'[field]\'';
+$lang["property-gpt_source"] = 'Източник GPT';
+$lang["openai_gpt_language"] = 'Език на изхода';
+$lang["openai_gpt_language_user"] = 'Езикът на текущия потребител';
+$lang["openai_gpt_overwrite_data"] = 'Да презапише съществуващите данни в конфигурираните полета?';
+$lang["openai_gpt"] = 'OpenAI GPT';
+$lang["openai_gpt_process_existing"] = 'Обработка на съществуващи AI полета';
+$lang["openai_gpt_process_existing_configure"] = 'Конфигурирайте задача за обработка на съществуващите AI полета';
+$lang["openai_gpt_process_existing_field_ref"] = 'AI Поле';
+$lang["openai_gpt_process_existing_overwrite"] = 'Презаписване';
+$lang["openai_gpt_process_existing_field_ref_help"] = 'Това е целевото поле, което ще бъде актуализирано.';
+$lang["openai_gpt_process_existing_collection_refs_help"] = 'Настройването на тази опция означава, че ще бъдат обработени само ресурсите в изброените колекции. Ако не са посочени колекции, ще бъдат обработени ВСИЧКИ подходящи ресурси. Колекциите могат да бъдат посочени чрез списък, разделен със запетаи, както и диапазони, например 100,105,110-115';
+$lang["openai_gpt_process_existing_overwrite_help"] = 'Настройването на тази опция означава, че всички съществуващи данни в целевото поле ще бъдат презаписани. Моля, имайте предвид, че ако е активирано презаписването и входното поле няма данни, целевото поле ще бъде изчистено.';
+$lang["openai_gpt_limit_warning"] = 'ПРЕДУПРЕЖДЕНИЕ - Броят на токените е надвишен, затова повече заявки към OpenAI API няма да работят. Полетата GPT няма да бъдат обработени.';
+$lang["openai_gpt_limit_warning_short"] = 'ПРЕДУПРЕЖДЕНИЕ - Броят на токените е надвишен, затова полетата GPT няма да бъдат обработени.';
+$lang["openai_gpt_usage_days"] = 'Използване на токени през последните %%DAYS%% дни';
+$lang["openai_gpt_token_limit"] = 'Лимит на токени';
+$lang["openai_gpt_no_token_limit"] = 'Няма конфигуриран лимит на токени';
+$lang["openai_gpt_configured_limit"] = '%%TOKEN_LIMIT%% за %%DAYS%% дни';
+$lang["openai_gpt_token_count"] = '%%TOKEN_COUNT%% токена';
+$lang["openai_gpt_provider"] = 'Доставчик на AI';
+$lang["openai_gpt_provider_override"] = 'Доставчикът е заключен в глобалната конфигурация към: [provider]';
+$lang["ollama_name"] = 'Ollama';
+$lang["ollama_model"] = 'Модел Ollama за използване (напр. \'gemma3:12b\')';
+$lang["ollama_endpoint"] = 'Крайна точка Ollama за използване (напр. http://[IP]:11434/v1/chat/completions)';

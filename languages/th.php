@@ -3265,3 +3265,5 @@ $lang["noresources_collection"] = 'ไม่มีทรัพยากรใน
 $lang["hide_collection_bar"] = 'ซ่อนแล้ว';
 $lang["minimal_collection_bar"] = 'แถบแบบเรียบง่าย';
 $lang["thumbnails_collection_bar"] = 'ภาพขนาดย่อ';
+$lang["language-bg"] = 'บัลแกเรีย';
+$lang["language-zh-TW"] = 'ภาษาจีนแบบดั้งเดิม';

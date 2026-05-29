@@ -3418,3 +3418,5 @@ $lang["noresources_collection"] = 'Tidak ada sumber daya dalam koleksi';
 $lang["hide_collection_bar"] = 'Tersembunyi';
 $lang["minimal_collection_bar"] = 'Bilah minimal';
 $lang["thumbnails_collection_bar"] = 'Thumbnail';
+$lang["language-bg"] = 'Bulgaria';
+$lang["language-zh-TW"] = 'Tionghoa Tradisional';

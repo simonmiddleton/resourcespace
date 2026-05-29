@@ -3460,6 +3460,7 @@ $lang["language-en-US"] = "American English";
 $lang["language-ar"] = "Arabic";
 $lang["language-id"] = "Indonesian";
 $lang["language-be"] = "Belarusian";
+$lang["language-bg"] = "Bulgarian";
 $lang["language-bn"] = "Bengali";
 $lang["language-ca"] = "Catalan";
 $lang["language-cs"] = "Czech";
@@ -3497,6 +3498,8 @@ $lang["language-uk"] = "Ukranian";
 $lang["language-ur"] = "Urdu";
 $lang["language-vi"] = "Vietnamese";
 $lang["language-zh-CN"] = "Simplified Chinese";
+$lang["language-zh-TW"] = "Traditional Chinese";
+
 
 $lang["workflow-actions-archive"] = "Archive";
 $lang["workflow-actions-return-to-user-review"] = "Return to user review";

@@ -3281,3 +3281,5 @@ $lang["noresources_collection"] = 'هیچ منبعی در مجموعه وجود 
 $lang["hide_collection_bar"] = 'مخفی شده';
 $lang["minimal_collection_bar"] = 'نوار حداقل';
 $lang["thumbnails_collection_bar"] = 'تصاویر بند انگشتی';
+$lang["language-bg"] = 'بلغاریایی';
+$lang["language-zh-TW"] = 'چینی سنتی';

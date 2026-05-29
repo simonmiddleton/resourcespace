@@ -3406,3 +3406,5 @@ $lang["noresources_collection"] = 'コレクションにリソースがありま
 $lang["hide_collection_bar"] = '非表示';
 $lang["minimal_collection_bar"] = '最小バー';
 $lang["thumbnails_collection_bar"] = 'サムネイル';
+$lang["language-bg"] = 'ブルガリア語';
+$lang["language-zh-TW"] = '繁体字中国語';

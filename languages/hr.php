@@ -3347,3 +3347,5 @@ $lang["noresources_collection"] = 'Nema resursa u kolekciji';
 $lang["hide_collection_bar"] = 'Skriveno';
 $lang["minimal_collection_bar"] = 'Minimalna traka';
 $lang["thumbnails_collection_bar"] = 'Sličice';
+$lang["language-bg"] = 'Bugarski';
+$lang["language-zh-TW"] = 'Tradicionalni kineski';

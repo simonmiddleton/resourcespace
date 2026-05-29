@@ -3272,3 +3272,5 @@ $lang["noresources_collection"] = 'সংগ্রহে কোনও সম্�
 $lang["hide_collection_bar"] = 'লুকানো';
 $lang["minimal_collection_bar"] = 'সর্বনিম্ন বার';
 $lang["thumbnails_collection_bar"] = 'থাম্বনেল';
+$lang["language-bg"] = 'বুলগেরিয়ান';
+$lang["language-zh-TW"] = 'পরম্পরাগত চীনা';

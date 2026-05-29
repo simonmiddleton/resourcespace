@@ -1,0 +1,40 @@
+<?php
+
+
+$lang["vimeo_publish_configuration"] = 'Vimeo 發佈插件設定';
+$lang["vimeo_publish_resource_tool_link"] = '發佈到 Vimeo';
+$lang["vimeo_publish_base"] = '基本 URL';
+$lang["vimeo_publish_callback_url"] = '回調 URL';
+$lang["vimeo_publish_authentication"] = '認證';
+$lang["vimeo_publish_vimeo_instructions"] = 'Vimeo OAuth 2.0 指示';
+$lang["vimeo_publish_oauth2_client_id"] = '客戶端 ID';
+$lang["vimeo_publish_oauth2_client_secret"] = '客戶端密鑰';
+$lang["vimeo_publish_rs_field_mappings"] = 'ResourceSpace - Vimeo 欄位對應';
+$lang["vimeo_publish_video_details"] = 'Vimeo - 影片詳情';
+$lang["vimeo_publish_vimeo_link"] = 'Vimeo 連結';
+$lang["vimeo_publish_video_title"] = '影片標題';
+$lang["vimeo_publish_video_description"] = '影片描述';
+$lang["vimeo_publish_resource_types_to_include"] = '選擇適用於 Vimeo 的有效影片資源類型';
+$lang["vimeo_publish_publish_as_user"] = '您將以以下身份在 Vimeo 發佈：';
+$lang["vimeo_publish_delete_token"] = '使用不同的Vimeo帳戶（請確保您已登出此Vimeo帳戶）';
+$lang["vimeo_publish_button_text"] = '發布';
+$lang["vimeo_publish_legal_warning"] = '點擊「確定」即表示您證明您擁有內容的所有權利，或已獲得所有者授權在Vimeo上公開內容，並且內容符合Vimeo的服務條款，詳見https://vimeo.com/terms';
+$lang["vimeo_api_instructions_condition_1"] = '您需要將ResourceSpace註冊為Vimeo的應用程式，並取得OAuth客戶端ID和密鑰';
+$lang["vimeo_api_instructions_condition_2"] = '使用任何有效的Vimeo帳戶登入Vimeo（此帳戶不必與您的Vimeo帳戶相關聯），然後前往<a href="https://developer.vimeo.com/" target="_blank">https://developer.vimeo.com/</a>';
+$lang["vimeo_api_instructions_condition_3"] = '點擊右上角的「新建應用程式」';
+$lang["vimeo_api_instructions_condition_4"] = '填寫所有詳細資料。';
+$lang["vimeo_api_instructions_condition_5"] = '在「應用程式網址」中使用基本網址（位於這些指示之前）';
+$lang["vimeo_api_instructions_condition_6"] = '在「應用程式回調網址」中使用回調網址（位於這些指示之前）';
+$lang["vimeo_api_instructions_condition_7"] = '建立應用程式後，打開它並點擊「認證」標籤，以找到客戶端ID和密鑰';
+$lang["vimeo_api_instructions_condition_8"] = '複製客戶端ID和密鑰，並將這些資料貼到下方';
+$lang["vimeo_api_instructions_condition_9"] = '發送請求以獲得上傳影片到Vimeo的許可。請確保提供足夠的資訊，說明您將上傳的影片類型';
+$lang["vimeo_publish_no_vimeoAPI_files"] = 'ResourceSpace似乎無法存取Vimeo的PHP API檔案！';
+$lang["vimeo_publish_access_denied"] = '存取被拒！';
+$lang["vimeo_publish_not_configured"] = 'ResourceSpace的插件"vimeo_publish"尚未設定。請前往：';
+$lang["vimeo_publish_resource_already_published"] = 'ID為 [ref] 的資源已經發布到Vimeo。您可以在 [vimeo_url] 查看';
+$lang["vimeo_publish_resource_published"] = '資源已發布到Vimeo。您可以在 [vimeo_url] 查看';
+$lang["vimeo_publish_account_options"] = 'Vimeo帳戶選項';
+$lang["vimeo_publish_allow_user_accounts"] = '允許用戶發布到他們自己的Vimeo帳戶。如果為假，則必須在下面配置對單一Vimeo帳戶的訪問權限';
+$lang["vimeo_publish_set_account"] = '設置Vimeo帳戶';
+$lang["page-title_vimeo_publish_setup"] = '設置Vimeo發布插件';
+$lang["page-title_vimeo_publish_vimeo_api"] = '發布到Vimeo';

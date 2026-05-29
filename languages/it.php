@@ -3344,3 +3344,5 @@ $lang["noresources_collection"] = 'Nessuna risorsa nella collezione';
 $lang["hide_collection_bar"] = 'Nascosto';
 $lang["minimal_collection_bar"] = 'Bar minimale';
 $lang["thumbnails_collection_bar"] = 'Miniature';
+$lang["language-bg"] = 'Bulgaro';
+$lang["language-zh-TW"] = 'Cinese Tradizionale';

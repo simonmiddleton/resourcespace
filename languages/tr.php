@@ -3278,3 +3278,5 @@ $lang["noresources_collection"] = 'Koleksiyonda kaynak yok';
 $lang["hide_collection_bar"] = 'Gizli';
 $lang["minimal_collection_bar"] = 'Minimal çubuk';
 $lang["thumbnails_collection_bar"] = 'Küçük resimler';
+$lang["language-bg"] = 'Bulgarca';
+$lang["language-zh-TW"] = 'Geleneksel Çince';

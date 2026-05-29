@@ -3275,3 +3275,5 @@ $lang["noresources_collection"] = 'Nincs forrás a gyűjteményben';
 $lang["hide_collection_bar"] = 'Elrejtve';
 $lang["minimal_collection_bar"] = 'Minimális sáv';
 $lang["thumbnails_collection_bar"] = 'Előnézeti képek';
+$lang["language-bg"] = 'Bulgár';
+$lang["language-zh-TW"] = 'Hagyományos kínai';

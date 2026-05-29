@@ -3669,3 +3669,5 @@ $lang["noresources_collection"] = 'V kolekcii nie sú žiadne zdroje';
 $lang["hide_collection_bar"] = 'Skryté';
 $lang["minimal_collection_bar"] = 'Minimálna lišta';
 $lang["thumbnails_collection_bar"] = 'Náhľady';
+$lang["language-bg"] = 'Bulharčina';
+$lang["language-zh-TW"] = 'Tradičná čínština';

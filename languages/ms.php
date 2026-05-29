@@ -3267,3 +3267,5 @@ $lang["noresources_collection"] = 'Tiada sumber dalam koleksi';
 $lang["hide_collection_bar"] = 'Disembunyikan';
 $lang["minimal_collection_bar"] = 'Bar minimal';
 $lang["thumbnails_collection_bar"] = 'Gambar kecil';
+$lang["language-bg"] = 'Bahasa Bulgaria';
+$lang["language-zh-TW"] = 'Cina Tradisional';

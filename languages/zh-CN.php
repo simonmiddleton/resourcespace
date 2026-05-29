@@ -3474,3 +3474,5 @@ $lang["noresources_collection"] = '收藏中没有资源';
 $lang["hide_collection_bar"] = '隐藏';
 $lang["minimal_collection_bar"] = '极简栏';
 $lang["thumbnails_collection_bar"] = '缩略图';
+$lang["language-bg"] = '保加利亚语';
+$lang["language-zh-TW"] = '繁体中文';

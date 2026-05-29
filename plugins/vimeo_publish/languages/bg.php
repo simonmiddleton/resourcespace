@@ -1,0 +1,40 @@
+<?php
+
+
+$lang["vimeo_publish_configuration"] = 'Настройка на плъгина за публикуване във Vimeo';
+$lang["vimeo_publish_resource_tool_link"] = 'Публикуване във Vimeo';
+$lang["vimeo_publish_base"] = 'Основен URL';
+$lang["vimeo_publish_callback_url"] = 'URL за обратно извикване';
+$lang["vimeo_publish_authentication"] = 'Автентикация';
+$lang["vimeo_publish_vimeo_instructions"] = 'Инструкции за Vimeo OAuth 2.0';
+$lang["vimeo_publish_oauth2_client_id"] = 'ID на клиента';
+$lang["vimeo_publish_oauth2_client_secret"] = 'Тайна на клиента';
+$lang["vimeo_publish_rs_field_mappings"] = 'ResourceSpace - mappings на полета във Vimeo';
+$lang["vimeo_publish_video_details"] = 'Vimeo - подробности за видеото';
+$lang["vimeo_publish_vimeo_link"] = 'Връзка към Vimeo';
+$lang["vimeo_publish_video_title"] = 'Заглавие на видеото';
+$lang["vimeo_publish_video_description"] = 'Описание на видеото';
+$lang["vimeo_publish_resource_types_to_include"] = 'Изберете валидни типове ресурси за видео за Vimeo';
+$lang["vimeo_publish_publish_as_user"] = 'Ще публикувате във Vimeo като:';
+$lang["vimeo_publish_delete_token"] = 'Използвайте друг акаунт във Vimeo (уверете се, че сте излезли от този акаунт във Vimeo първо)';
+$lang["vimeo_publish_button_text"] = 'Публикувай';
+$lang["vimeo_publish_legal_warning"] = 'Кликайки „OK“, вие удостоверявате, че притежавате всички права върху съдържанието или че имате разрешение от собственика да направите съдържанието публично достъпно във Vimeo и че то в противен случай съответства на Условията за ползване на Vimeo, намиращи се на https://vimeo.com/terms';
+$lang["vimeo_api_instructions_condition_1"] = 'Ще трябва да регистрирате ResourceSpace като приложение във Vimeo и да получите OAuth клиентски идентификатор и тайна';
+$lang["vimeo_api_instructions_condition_2"] = 'Влезте във Vimeo с всеки валиден акаунт във Vimeo (това не е задължително да е свързано с вашия акаунт във Vimeo), след което отидете на <a href="https://developer.vimeo.com/" target="_blank">https://developer.vimeo.com/</a>';
+$lang["vimeo_api_instructions_condition_3"] = 'Кликнете върху „Нов ап“ в горния десен ъгъл';
+$lang["vimeo_api_instructions_condition_4"] = 'Попълнете всички детайли.';
+$lang["vimeo_api_instructions_condition_5"] = 'За „URL на приложението“ използвайте Основния URL (намира се преди тези инструкции)';
+$lang["vimeo_api_instructions_condition_6"] = 'За „URL за обратно извикване на приложението“ използвайте URL за обратно извикване (намира се преди тези инструкции)';
+$lang["vimeo_api_instructions_condition_7"] = 'След като създадете приложението, го отворете и кликнете върху таба „Автентикация“, за да намерите Client ID и Secret';
+$lang["vimeo_api_instructions_condition_8"] = 'Копирайте Client ID и Secret и ги поставете по-долу';
+$lang["vimeo_api_instructions_condition_9"] = 'Изпратете заявка за разрешение да качвате видеа във Vimeo. Уверете се, че предоставяте достатъчно информация за вида видеа, които ще качвате';
+$lang["vimeo_publish_no_vimeoAPI_files"] = 'ResourceSpace изглежда не може да достъпи PHP API файловете на Vimeo!';
+$lang["vimeo_publish_access_denied"] = 'Достъп отказан!';
+$lang["vimeo_publish_not_configured"] = 'Плъгинът "vimeo_publish" за ResourceSpace не е конфигуриран. Моля, отидете на: ';
+$lang["vimeo_publish_resource_already_published"] = 'Ресурс с ID  [ref] вече е публикуван във Vimeo. Можете да го проверите на [vimeo_url]';
+$lang["vimeo_publish_resource_published"] = 'Ресурсът е публикуван във Vimeo. Можете да го проверите на [vimeo_url]';
+$lang["vimeo_publish_account_options"] = 'Опции за акаунт във Vimeo';
+$lang["vimeo_publish_allow_user_accounts"] = 'Позволете на потребителите да публикуват във своите собствени акаунти във Vimeo. Ако е false, трябва да бъде конфигуриран достъп до един акаунт във Vimeo по-долу';
+$lang["vimeo_publish_set_account"] = 'Настройте акаунт във Vimeo';
+$lang["page-title_vimeo_publish_setup"] = 'Настройка на плъгина за публикуване във Vimeo';
+$lang["page-title_vimeo_publish_vimeo_api"] = 'Публикуване във Vimeo';

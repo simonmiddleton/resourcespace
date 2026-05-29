@@ -3281,3 +3281,5 @@ $lang["noresources_collection"] = 'ਸੰਗ੍ਰਹਿ ਵਿੱਚ ਕੋਈ 
 $lang["hide_collection_bar"] = 'ਲੁਕਾਇਆ ਗਿਆ';
 $lang["minimal_collection_bar"] = 'ਘੱਟੋ ਘੱਟ ਬਾਰ';
 $lang["thumbnails_collection_bar"] = 'ਥੰਬਨੇਲ';
+$lang["language-bg"] = 'ਬੁਲਗਾਰੀਆਈ';
+$lang["language-zh-TW"] = 'ਪਰੰਪਰਾਗਤ ਚੀਨੀ';

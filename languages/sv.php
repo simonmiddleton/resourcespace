@@ -3544,3 +3544,5 @@ $lang["noresources_collection"] = 'Inga resurser i samlingen';
 $lang["hide_collection_bar"] = 'Dold';
 $lang["minimal_collection_bar"] = 'Minimal stapel';
 $lang["thumbnails_collection_bar"] = 'Miniatyrbilder';
+$lang["language-bg"] = 'Bulgariska';
+$lang["language-zh-TW"] = 'Traditionell Kinesiska';

@@ -3277,3 +3277,5 @@ $lang["noresources_collection"] = 'Hakuna rasilimali kwenye mkusanyiko';
 $lang["hide_collection_bar"] = 'Imefichwa';
 $lang["minimal_collection_bar"] = 'Bara ndogo';
 $lang["thumbnails_collection_bar"] = 'Vibonye';
+$lang["language-bg"] = 'Kibulgaria';
+$lang["language-zh-TW"] = 'Kichina cha Jadi';

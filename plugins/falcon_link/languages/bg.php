@@ -1,0 +1,45 @@
+<?php
+
+
+$lang["falcon_link_title"] = 'Falcon Link';
+$lang["falcon_link_manage"] = 'Публикуване/архивиране във Falcon';
+$lang["falcon_link_publish"] = 'Публикувай във Falcon';
+$lang["falcon_link_archive"] = 'Архивирай във Falcon';
+$lang["falcon_link_configuration"] = 'Настройка на Falcon линка';
+$lang["falcon_link_api_key"] = 'API ключ за Falcon';
+$lang["falcon_link_notconfigured"] = 'Плъгинът Falcon Link не е конфигуриран. Моля, попитайте вашия администратор да конфигурира плъгина.';
+$lang["falcon_link_resource_types_to_include"] = 'Изберете валидни типове ресурси за Falcon';
+$lang["falcon_link_not_permitted_extension"] = 'Типът файл %TYPE% не може да бъде качен във Falcon';
+$lang["falcon_link_text_field"] = 'Текстово поле за шаблон Falcon';
+$lang["falcon_link_default_tag"] = 'Стандартен текст на таг, който ще бъде автоматично добавен към цялото съдържание, публикувано във Falcon. Ако включите текста \'[ID]\', той ще бъде заменен с идентификатора на ресурса в тагa';
+$lang["falcon_link_template_url"] = 'URL на шаблона Falcon. Това ви позволява да видите публикувания ресурс директно във Falcon. Тагът [id] ще бъде заменен с идентификатора, издаден от Falcon, когато ресурсът бъде публикуван';
+$lang["falcon_link_tag_fields"] = 'Полета за тагове ResourceSpace - Falcon. Те ще бъдат съединени и добавени към таговете на шаблона Falcon';
+$lang["falcon_link_id_field"] = 'Поле за метаданни за съхраняване на идентификатора Falcon';
+$lang["falcon_link_log_share"] = 'Публикувано във Falcon';
+$lang["falcon_link_archived"] = 'Архивирано';
+$lang["falcon_link_access_denied"] = 'Нямате разрешение да публикувате избрания ресурс(и)';
+$lang["falcon_link_already_published"] = 'Този ресурс е публикуван във Falcon';
+$lang["falcon_link_resources_already_published"] = 'Някои ресурси вече са публикувани във Falcon и не могат да бъдат публикувани повторно';
+$lang["falcon_link_resource_not_published"] = 'Ресурсът не е публикуван във Falcon';
+$lang["falcon_link_resource_publish_unavailable"] = 'Ресурсът не може да бъде публикуван във Falcon';
+$lang["falcon_link_template_description"] = 'Описание на шаблона';
+$lang["falcon_link_template_tags"] = 'Тагове на шаблона, които ще бъдат добавени';
+$lang["falcon_link_missing_file"] = 'Ресурсът няма оригинален файл';
+$lang["falcon_link_existing_id"] = 'Съществуващ Falcon ID';
+$lang["falcon_link_not_uploaded"] = 'Не е качено';
+$lang["falcon_link_publish_button_text"] = 'Публикувай';
+$lang["falcon_link_archive_button_text"] = 'Архивирай';
+$lang["falcon_link_publish_success"] = 'Успешно публикувано';
+$lang["falcon_link_archived_success"] = 'Успешно архивирано.<br />Споделянето на ресурса все още е активно и ще трябва да бъде изтрито ръчно, ако е необходимо.';
+$lang["falcon_link_usergroups"] = 'Групи, които имат достъп за управление на шаблоните Falcon';
+$lang["falcon_link_filter"] = 'Филтър за определяне на ресурсите, които могат да бъдат публикувани във Falcon';
+$lang["falcon_link_error_no_resources"] = 'Няма ресурси за публикуване';
+$lang["falcon_link_error_falcon_api"] = 'Възникна грешка при комуникацията с Falcon. Моля, проверете статуса за повече подробности.';
+$lang["falcon_link_error_falcon_api_detailed"] = 'Грешка Falcon';
+$lang["falcon_link_view_in_falcon"] = 'Вижте във Falcon';
+$lang["falcon_link_share_user"] = 'Текст за потребителя, който се показва за споделени ресурси, създадени за Falcon, т.е. \'споделено с user@falcon.io\'';
+$lang["falcon_link_log_publish"] = 'Споделен ресурс чрез Falcon';
+$lang["falcon_link_log_archive"] = 'Архивиран ресурс чрез Falcon';
+$lang["falcon_link_error_falcon_check_tags"] = 'Моля, проверете дали описанието и таговете не са празни';
+$lang["page-title_falcon_link_falcon_link"] = 'Falcon Link';
+$lang["page-title_falcon_link_setup"] = 'Настройка на Falcon Link плъгина';

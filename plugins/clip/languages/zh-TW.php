@@ -1,0 +1,46 @@
+<?php
+
+
+$lang["clip-natural-language-search"] = '以描述搜尋';
+$lang["clip-natural-language-search-help"] = '輸入圖像的描述，例如「一輛紅色跑車」。';
+$lang["clip-configuration"] = 'CLIP 配置';
+$lang["clip-ai-smart-search"] = 'AI 智能搜尋';
+$lang["clip-visually-similar-images"] = '視覺相似的圖像';
+$lang["clip-duplicate-images"] = '重複的圖像';
+$lang["clip-duplicate-images-all"] = '查看所有重複的圖像';
+$lang["clip-search-upload-image"] = '提供圖像進行搜尋';
+$lang["clip_search_cutoff"] = '自然語言搜尋向量距離截止值（建議 25%；增加以聚焦搜尋，降低以擴展搜尋）';
+$lang["clip_similar_cutoff"] = '相似圖像向量距離截止值（建議 50%；增加以聚焦搜尋，降低以擴展搜尋）';
+$lang["clip_duplicate_cutoff"] = '重複圖像向量距離截止值（建議 90%；增加以聚焦搜尋，降低以擴展搜尋）';
+$lang["clip_results_limit_search"] = '顯示的搜尋結果數量';
+$lang["clip_results_limit_similar"] = '顯示的相似資源數量';
+$lang["clip_service_url"] = 'CLIP 服務 URL';
+$lang["clip_text_search_fields"] = '用於組合文字向量的元資料欄位。只選擇有助於構建簡短有意義描述的欄位。過多欄位會稀釋意義。建議：僅標題。不要包含含有代碼的欄位。';
+$lang["clip-vector-on-upload"] = '上傳檔案時產生 CLIP 向量';
+$lang["clip-generating"] = 'CLIP 正在為資源生成 CLIP 向量：';
+$lang["clip-tagging"] = 'CLIP 正在自動標記資源：';
+$lang["clip-automatic-tagging"] = '自動標記';
+$lang["clip-title-field"] = '根據外部向量資料庫中最接近的匹配自動產生標題的欄位';
+$lang["clip-title-url"] = '用於標題的外部向量資料庫';
+$lang["clip-keyword-field"] = '在外部向量資料庫中最接近匹配的關鍵詞欄位';
+$lang["clip-keyword-url"] = '用於關鍵詞的外部向量資料庫';
+$lang["clip-keyword-count"] = '設定的關鍵詞數量（以餘弦相似度排序的前 x 個關鍵詞）';
+$lang["clip_show_on_searchbar"] = '在搜尋列顯示 CLIP 功能';
+$lang["clip_show_on_view"] = '在資源檢視頁面顯示 CLIP 功能';
+$lang["clip_resource_types"] = '建立這些資源類型的向量（啟用搜尋）';
+$lang["clip_vector-statistics"] = '向量統計';
+$lang["clip_count_vectors"] = '向量數量';
+$lang["clip_missing_vectors"] = '缺少的向量';
+$lang["clip-vector-generation"] = '向量生成';
+$lang["clip-vector-cleanup"] = '刪除孤立向量';
+$lang["clip-vector-cleanup-description"] = '移除屬於不存在或非上述所選資源類型的資源的向量';
+$lang["clip_enable_full_duplicate_search"] = '測試版：在 AI 智能搜尋中啟用「重複圖像」搜尋選項';
+$lang["page-title_clip_search"] = 'AI 智能搜尋';
+$lang["page-title_clip_setup"] = '設定 CLIP 插件';
+$lang["page-title_clip_webcam"] = '網路攝影機標籤產生器';
+$lang["clip-ai_smart_search"] = 'CLIP AI 智能搜尋';
+$lang["clip-generate_vectors"] = '產生 CLIP 向量';
+$lang["clip-configure_job"] = '設定產生 CLIP 向量的工作';
+$lang["clip-job_limit"] = '批次大小限制';
+$lang["clip-job_limit_help"] = '設定此選項將限制每次處理的資源數量。';
+$lang["clip-job_limit_error"] = '值必須介於 1 和 100000 之間，或留空表示不限制';

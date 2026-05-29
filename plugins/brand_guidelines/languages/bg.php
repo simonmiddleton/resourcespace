@@ -1,0 +1,43 @@
+<?php
+
+
+$lang["brand_guidelines_permission_bgv"] = 'Може да преглежда Насоките за марката';
+$lang["brand_guidelines_permission_bge"] = 'Може да редактира Насоките за марката';
+$lang["brand_guidelines_top_nav_title"] = 'Насоки';
+$lang["brand_guidelines_new_resource"] = 'Нов ресурс';
+$lang["brand_guidelines_existing_resource"] = 'Съществуващ ресурс';
+$lang["brand_guidelines_new_content"] = 'Добавяне на ново съдържание';
+$lang["brand_guidelines_new_page"] = '+ Нова страница';
+$lang["brand_guidelines_new_section"] = '+ Нов раздел';
+$lang["brand_guidelines_view_table_of_content"] = 'Преглед на съдържанието';
+$lang["brand_guidelines_new_section_title"] = 'Създаване на нов раздел';
+$lang["brand_guidelines_new_page_title"] = 'Създаване на нова страница';
+$lang["brand_guidelines_edit_section_title"] = 'Редактиране на раздел';
+$lang["brand_guidelines_edit_page_title"] = 'Редактиране на страница';
+$lang["brand_guidelines_section"] = 'Раздел';
+$lang["brand_guidelines_full_width"] = 'Пълна ширина';
+$lang["brand_guidelines_half_width"] = 'Полуширина';
+$lang["brand_guidelines_title_new_text"] = 'Създаване на нов елемент с текст';
+$lang["brand_guidelines_title_edit_text"] = 'Редактиране на текст';
+$lang["brand_guidelines_title_select_resource"] = 'Изберете съществуващ ресурс';
+$lang["brand_guidelines_err_invalid_input"] = 'Въведени са невалидни данни';
+$lang["brand_guidelines_hex"] = 'HEX';
+$lang["brand_guidelines_hex_help_txt"] = 'Шестнадесетичен (0-9A-F). Примери: #0FA, 0FA, 00FFAA';
+$lang["brand_guidelines_rgb"] = 'RGB';
+$lang["brand_guidelines_rgb_help_txt"] = 'RGB (0-255). Пример: 116,182,50';
+$lang["brand_guidelines_cmyk"] = 'CMYK';
+$lang["brand_guidelines_cmyk_help_txt"] = 'CMYK (0-100). Примери: 36,0,73,29';
+$lang["brand_guidelines_move_left"] = 'Премести наляво';
+$lang["brand_guidelines_move_right"] = 'Премести надясно';
+$lang["brand_guidelines_confirm_delete_group_members"] = 'Наистина ли искате да изтриете всички в тази група?';
+$lang["brand_guidelines_layout"] = 'Подредба';
+$lang["brand_guidelines_view_mode"] = 'Режим на преглед';
+$lang["brand_guidelines_edit_mode"] = 'Режим на редактиране';
+$lang["brand_guidelines_configuration"] = 'Конфигурация на насоките за марката';
+$lang["brand_guidelines_fallback_size_thm"] = 'Размер на изображението за резервен изглед на миниатюра';
+$lang["brand_guidelines_fallback_size_half_width"] = 'Размер на изображението за резервен изглед на полув ширина';
+$lang["brand_guidelines_fallback_size_full_width"] = 'Размер на изображението за резервен изглед на пълна ширина';
+$lang["page-title_brand_guidelines_content"] = 'Управление на съдържанието на насоките за марката';
+$lang["page-title_brand_guidelines_guidelines"] = 'Насоки за марката';
+$lang["page-title_brand_guidelines_setup"] = 'Настройка на приставката за насоки за марката';
+$lang["page-title_brand_guidelines_toc"] = 'Редактиране на съдържанието';

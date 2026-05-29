@@ -3280,3 +3280,5 @@ $lang["noresources_collection"] = 'مجموعہ میں کوئی وسائل نہ�
 $lang["hide_collection_bar"] = 'چھپایا ہوا';
 $lang["minimal_collection_bar"] = 'محدود بار';
 $lang["thumbnails_collection_bar"] = 'تھمب نیلز';
+$lang["language-bg"] = 'بلغاری';
+$lang["language-zh-TW"] = 'روایتی چینی';

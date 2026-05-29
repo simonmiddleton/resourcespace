@@ -3505,3 +3505,5 @@ $lang["noresources_collection"] = 'Ei resursseja kokoelmassa';
 $lang["hide_collection_bar"] = 'Piilotettu';
 $lang["minimal_collection_bar"] = 'Minimaalinen palkki';
 $lang["thumbnails_collection_bar"] = 'Esikatselukuvat';
+$lang["language-bg"] = 'Bulgari';
+$lang["language-zh-TW"] = 'Perinteinen kiina';

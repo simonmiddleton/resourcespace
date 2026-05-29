@@ -3503,3 +3503,5 @@ $lang["noresources_collection"] = 'Ingen ressurser i samlingen';
 $lang["hide_collection_bar"] = 'Skjult';
 $lang["minimal_collection_bar"] = 'Minimal bar';
 $lang["thumbnails_collection_bar"] = 'Miniatyrbilder';
+$lang["language-bg"] = 'Bulgarsk';
+$lang["language-zh-TW"] = 'Tradisjonell kinesisk';

@@ -3270,3 +3270,5 @@ $lang["noresources_collection"] = 'Không có tài nguyên trong bộ sưu tập
 $lang["hide_collection_bar"] = 'Đã ẩn';
 $lang["minimal_collection_bar"] = 'Thanh tối thiểu';
 $lang["thumbnails_collection_bar"] = 'Hình thu nhỏ';
+$lang["language-bg"] = 'Tiếng Bulgaria';
+$lang["language-zh-TW"] = 'Tiếng Trung Phồn thể';

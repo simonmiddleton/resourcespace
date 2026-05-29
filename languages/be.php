@@ -3255,3 +3255,5 @@ $lang["noresources_collection"] = 'У калекцыі няма рэсурсаў
 $lang["hide_collection_bar"] = 'Схаваць';
 $lang["minimal_collection_bar"] = 'Мінімальная панэль';
 $lang["thumbnails_collection_bar"] = 'Мініяцюры';
+$lang["language-bg"] = 'Балгарскі';
+$lang["language-zh-TW"] = 'Традыцыйны кітайскі';

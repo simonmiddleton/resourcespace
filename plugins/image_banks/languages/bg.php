@@ -1,0 +1,41 @@
+<?php
+
+
+$lang["image_banks_configuration"] = 'Банки с изображения';
+$lang["image_banks_search_image_banks_label"] = 'Търсене в външни банки с изображения';
+$lang["image_banks_pixabay_api_key"] = 'API ключ';
+$lang["image_banks_image_bank"] = 'Банка с изображения';
+$lang["image_banks_image_bank_source"] = 'Източник на банка с изображения';
+$lang["image_banks_create_new_resource"] = 'Създаване на нов ресурс';
+$lang["image_banks_shutterstock_token"] = 'Shutterstock токен (<a href=\'https://www.shutterstock.com/account/developers/apps\' target=\'_blank\'>генерирай</a>)';
+$lang["image_banks_shutterstock_result_limit"] = 'Ограничение на резултатите (макс. 1000 за безплатни акаунти)';
+$lang["image_banks_shutterstock_id"] = 'Shutterstock ID на изображението';
+$lang["image_banks_label_resourcespace_instances_cfg"] = 'Достъп до инстанции (формат: i18n име|базов URL|потребителско име|ключ|конфигурация)';
+$lang["image_banks_resourcespace_file_information_description"] = 'ResourceSpace %SIZE_CODE размер';
+$lang["image_banks_label_select_providers"] = 'Изберете активни доставчици';
+$lang["image_banks_view_on_provider_system"] = 'Вижте в системата на %PROVIDER';
+$lang["image_banks_system_unmet_dependencies"] = 'Плъгинът ImageBanks има неизпълнени системни зависимости!';
+$lang["image_banks_provider_unmet_dependencies"] = 'Доставчикът \'%PROVIDER\' има неизпълнени зависимости!';
+$lang["image_banks_provider_id_required"] = 'Изисква се ID на доставчика, за да се завърши търсенето';
+$lang["image_banks_provider_not_found"] = 'Доставчикът не можа да бъде идентифициран с помощта на ID';
+$lang["image_banks_bad_request_title"] = 'Грешна заявка';
+$lang["image_banks_bad_request_detail"] = 'Заявката не можа да бъде обработена от \'%FILE\'';
+$lang["image_banks_unable_to_create_resource"] = 'Неуспешно създаване на нов ресурс!';
+$lang["image_banks_unable_to_upload_file"] = 'Неуспешно качване на файл от външна Image Bank за ресурс #%RESOURCE';
+$lang["image_banks_try_again_later"] = 'Моля, опитайте отново по-късно!';
+$lang["image_banks_warning"] = 'ПРЕДУПРЕЖДЕНИЕ: ';
+$lang["image_banks_warning_rate_limit_almost_reached"] = 'Доставчикът \'%PROVIDER\' ще позволи още %RATE-LIMIT-REMAINING търсения. Този лимит ще бъде нулиран след %TIME';
+$lang["image_banks_try_something_else"] = 'Опитайте нещо друго.';
+$lang["image_banks_error_detail_curl"] = 'Пакетът php-curl не е инсталиран';
+$lang["image_banks_error_generic_parse"] = 'Неуспешно парсиране на конфигурацията на доставчиците (за множество инстанции)';
+$lang["image_banks_error_resourcespace_invalid_instance_cfg"] = 'Невалиден формат на конфигурацията за \'%PROVIDER\' (доставчик) инстанция';
+$lang["image_banks_error_bad_url_scheme"] = 'Невалидна схема на URL за \'%PROVIDER\' (доставчик) инстанция';
+$lang["image_banks_error_unexpected_response"] = 'Извинете, получихме неочакван отговор от доставчика. Моля, свържете се с вашия системен администратор за допълнително разследване (вижте debug лог).';
+$lang["image_banks_local_download_attempt"] = 'Потребителят се опита да изтегли \'%FILE\' чрез плъгина ImageBank, като сочи към система, която не е част от разрешените доставчици';
+$lang["image_banks_bad_file_create_attempt"] = 'Потребителят се опита да създаде ресурс с файл \'%FILE\' чрез плъгина ImageBank, като сочи към система, която не е част от разрешените доставчици';
+$lang["image_banks_createdfromimagebanks"] = 'Създадено от плъгина Image Banks';
+$lang["page-title_image_banks_download"] = 'Изтегляне на ресурс';
+$lang["page-title_image_banks_search"] = 'Търсене';
+$lang["page-title_image_banks_setup"] = 'Настройка на плъгина Image Banks';
+$lang["page-title_image_banks_shutterstock_license"] = 'Преглед на изображение от Shutterstock';
+$lang["page-title_image_banks_view"] = 'Преглед на ресурс';

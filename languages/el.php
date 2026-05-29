@@ -3347,3 +3347,5 @@ $lang["noresources_collection"] = 'Δεν υπάρχουν πόροι στη σ�
 $lang["hide_collection_bar"] = 'Κρυμμένο';
 $lang["minimal_collection_bar"] = 'Ελάχιστη γραμμή';
 $lang["thumbnails_collection_bar"] = 'Προβολή μικρογραφιών';
+$lang["language-bg"] = 'Βουλγαρικά';
+$lang["language-zh-TW"] = 'Παραδοσιακά Κινέζικα';

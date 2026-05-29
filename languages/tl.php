@@ -3267,3 +3267,5 @@ $lang["noresources_collection"] = 'Walang mga mapagkukunan sa koleksyon';
 $lang["hide_collection_bar"] = 'Nakatago';
 $lang["minimal_collection_bar"] = 'Minimal na bar';
 $lang["thumbnails_collection_bar"] = 'Mga thumbnail';
+$lang["language-bg"] = 'Bulgarian';
+$lang["language-zh-TW"] = 'Tradisyong Tsino';

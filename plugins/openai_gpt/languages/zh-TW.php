@@ -1,0 +1,41 @@
+<?php
+
+
+$lang["openai_gpt_title"] = 'OpenAI/Ollama 元資料處理';
+$lang["openai_gpt_intro"] = '將現有資料或資源預覽圖像傳遞給 OpenAI API（或相容的，例如 Ollama）並加入可自訂提示，以生成元資料。詳情請參閱 <a href=\'https://platform.openai.com/docs/introduction\' target=\'_blank\'>OpenAI 文件</a>。';
+$lang["property-openai_gpt_prompt"] = 'AI 處理提示';
+$lang["property-openai_gpt_input_field"] = 'AI 處理輸入';
+$lang["openai_gpt_api_key"] = 'OpenAI API 金鑰。取得您的 API 金鑰請至 <a href=\'https://openai.com/api\' target=\'_blank\'>https://openai.com/api</a>';
+$lang["openai_gpt_model"] = '使用的 OpenAI 模型（例如 \'gpt-4o\'）';
+$lang["openai_gpt_temperature"] = '取樣溫度，範圍為 0 到 1（數值越高，模型越冒險）';
+$lang["openai_gpt_max_tokens"] = '最大標記數';
+$lang["openai_gpt_advanced"] = '警告 - 本區段僅供測試用途，請勿在正式系統中更改。更改此處的插件選項將影響所有已配置的元資料欄位的行為。請謹慎操作！';
+$lang["openai_gpt_system_message"] = '初始系統訊息文字。佔位符 %%IN_TYPE%% 和 %%OUT_TYPE%% 會根據來源/目標欄位類型被替換為 \'text\' 或 \'json\'。';
+$lang["openai_gpt_model_override"] = '模型已在全域設定中鎖定為： [model]';
+$lang["openai_gpt_processing_multiple_resources"] = '多個資源';
+$lang["openai_gpt_processing_resource"] = '資源 [resource]';
+$lang["openai_gpt_processing_field"] = '為欄位 \'[field]\' 生成 AI 元資料';
+$lang["property-gpt_source"] = 'GPT 資料來源';
+$lang["openai_gpt_language"] = '輸出語言';
+$lang["openai_gpt_language_user"] = '當前用戶的語言';
+$lang["openai_gpt_overwrite_data"] = '是否覆蓋已配置字段中的現有數據？';
+$lang["openai_gpt"] = 'OpenAI GPT';
+$lang["openai_gpt_process_existing"] = '處理現有的 AI 字段';
+$lang["openai_gpt_process_existing_configure"] = '配置任務以處理現有的 AI 字段';
+$lang["openai_gpt_process_existing_field_ref"] = 'AI 字段';
+$lang["openai_gpt_process_existing_overwrite"] = '覆蓋';
+$lang["openai_gpt_process_existing_field_ref_help"] = '這是將被更新的目標字段。';
+$lang["openai_gpt_process_existing_collection_refs_help"] = '設置此選項將只處理列出集合中的資源。如果未指定集合，則將處理所有適用的資源。集合可以使用逗號分隔的列表或範圍，例如 100,105,110-115。';
+$lang["openai_gpt_process_existing_overwrite_help"] = '設置此選項將覆蓋目標字段中的任何現有數據。請注意，如果啟用覆蓋且輸入字段沒有數據，則目標字段將被清空。';
+$lang["openai_gpt_limit_warning"] = '警告 - 已超過令牌限制，因此將不再進行其他 OpenAI API 請求。GPT 字段將不被處理。';
+$lang["openai_gpt_limit_warning_short"] = '警告 - 已超過令牌限制，因此將不處理 GPT 字段。';
+$lang["openai_gpt_usage_days"] = '過去 %%DAYS%% 天的令牌使用情況';
+$lang["openai_gpt_token_limit"] = '令牌限制';
+$lang["openai_gpt_no_token_limit"] = '未設定令牌限制';
+$lang["openai_gpt_configured_limit"] = '每 %%DAYS%% 天 %%TOKEN_LIMIT%% 令牌';
+$lang["openai_gpt_token_count"] = '%%TOKEN_COUNT%% 令牌';
+$lang["openai_gpt_provider"] = 'AI 提供者';
+$lang["openai_gpt_provider_override"] = '提供者已在全域設定中鎖定為: [provider]';
+$lang["ollama_name"] = 'Ollama';
+$lang["ollama_model"] = '要使用的 Ollama 模型（例如 \'gemma3:12b\'）';
+$lang["ollama_endpoint"] = '要使用的 Ollama 端點（例如 http://[IP]:11434/v1/chat/completions）';

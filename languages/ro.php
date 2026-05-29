@@ -3354,3 +3354,5 @@ $lang["noresources_collection"] = 'Nicio resursă în colecție';
 $lang["hide_collection_bar"] = 'Ascuns';
 $lang["minimal_collection_bar"] = 'Bară minimală';
 $lang["thumbnails_collection_bar"] = 'Miniaturi';
+$lang["language-bg"] = 'Limba română';
+$lang["language-zh-TW"] = 'Chineză tradițională';

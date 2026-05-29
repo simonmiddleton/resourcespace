@@ -1,0 +1,57 @@
+<?php
+
+
+$lang["offline_archive_configuration"] = '離線存檔配置頁面';
+$lang["offline_archive_archivefield"] = '請選擇將用於存放存檔參考碼的元資料欄位';
+$lang["offline_archive_archivepath"] = '請輸入存檔將建立的位置';
+$lang["offline_archive_restorepath"] = '若要還原 StaticSync 資料夾中的資源，您可以輸入一個子資料夾，還原的檔案將放置在該子資料夾中';
+$lang["offline_archive_preservedate"] = '保留檔案時間戳記？';
+$lang["offline_archive_administer_archive"] = '管理存檔';
+$lang["offline_archive_view_pending"] = '查看待存檔的資源';
+$lang["offline_archive_view_pending_restore"] = '查看待還原的資源';
+$lang["offline_archive_view_completed"] = '查看存檔作業';
+$lang["offline_archive_view_associated"] = '查看相關資源';
+$lang["offline_archive_view_as_search"] = '以搜尋方式查看資源';
+$lang["offline_archive_entername"] = '請輸入存檔名稱';
+$lang["offline_archive_input_text"] = '請輸入資源清單或集合ID以標記為還原';
+$lang["offline_archive_input_resources"] = '請輸入要還原的資源ID，以逗號分隔';
+$lang["offline_archive_input_collection"] = '請輸入要還原的集合ID';
+$lang["offline_archive_name"] = '存檔前綴';
+$lang["offline_archive_createnew"] = '建立新存檔工作';
+$lang["offline_archive_archive_created"] = '存檔成功建立';
+$lang["offline_archive_archive_ref"] = '存檔參考';
+$lang["offline_archive_archive_date"] = '存檔日期';
+$lang["offline_archive_archive_status"] = '存檔狀態';
+$lang["offline_archive_request_restore"] = '請求還原';
+$lang["offline_archive_cancel_restore"] = '取消還原';
+$lang["offline_archive_cancel_confirm"] = '您確定要取消此資源的還原嗎';
+$lang["offline_archive_restore_pending"] = '待還原自存檔';
+$lang["offline_archive_restore_confirm"] = '確認還原';
+$lang["offline_archive_restore_resources"] = '從存檔還原資源';
+$lang["offline_archive_restore_resource"] = '從存檔還原';
+$lang["offline_archive_request_restore_text"] = '請輸入請求原因';
+$lang["offline_archive_request_restore_reason"] = '還原請求原因';
+$lang["offline_archive_request_email_subject"] = '離線存檔還原請求';
+$lang["offline_archive_requestsenttext"] = '您的存檔還原請求已提交，稍後將進行處理。';
+$lang["offline_archive_resources_restore_confirmed"] = '資源已成功設定為還原，並將在相關存檔插入或複製到配置的存檔位置後還原';
+$lang["offline_archive_resources_restore_cancel_confirmed"] = '資源已成功從待還原列表中移除';
+$lang["offline_archive_resource_log_archived"] = '- 由離線存檔插件存檔。存檔代碼：';
+$lang["offline_archive_resource_log_restored"] = '- 由離線存檔插件還原';
+$lang["offline_archive_resource_log_restore_set"] = '標記為從存檔還原';
+$lang["offline_archive_resource_log_restore_removed"] = '取消存檔還原';
+$lang["offline_archive_resource_log_restore_request"] = '請求從存檔還原';
+$lang["offline_archive_resource_restore"] = '還原資源';
+$lang["offline_archive_statustype"] = array (
+  0 => '待處理',
+  1 => '進行中',
+  2 => '已完成',
+);
+$lang["offline_archive_administer_archive-tooltip"] = '將已存檔的文件移動到離線位置';
+$lang["page-title_offline_archive_administer_archive"] = '管理存檔';
+$lang["page-title_offline_archive_offline_archive_action"] = '離線存檔';
+$lang["page-title_offline_archive_pending_restore"] = '待處理資源還原';
+$lang["page-title_offline_archive_restore_request"] = '請求資源還原';
+$lang["page-title_offline_archive_restore"] = '還原存檔';
+$lang["page-title_offline_archive_setup"] = '設定離線存檔插件';
+$lang["page-title_offline_archive_view_archives"] = '查看資源存檔';
+$lang["page-title_offline_archive_view_pending"] = '查看待處理存檔';

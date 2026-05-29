@@ -916,6 +916,7 @@ $languages["en-US"] = "American English";
 $languages["ar"] = "العربية";
 $languages["id"] = "Bahasa Indonesia"; # Indonesian
 $languages["be"] = "беларуская мова"; # Belarusian
+$languages["bg"] = "Български"; # Bulgarian
 $languages["bn"] = "বাংলা"; # Bengali
 $languages["ca"] = "Català"; # Catalan
 $languages["cs"] = "čeština"; # Czech
@@ -953,6 +954,7 @@ $languages["uk"] = "українська мова"; # Ukranian
 $languages["ur"] = "اُردُو"; # Urdu
 $languages["vi"] = "Tiếng Việt"; # Vietnamese
 $languages["zh-CN"] = "简体字"; # Simplified Chinese
+$languages["zh-TW"] = "繁體中文"; # Traditional Chinese
 
 # English stop words
 $noadd = array("", "a","the","this","then","another","is","with","in","and","where","how","on","of","to", "from", "at", "for", "-", "by", "be");

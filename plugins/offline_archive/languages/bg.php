@@ -1,0 +1,57 @@
+<?php
+
+
+$lang["offline_archive_configuration"] = 'Страница за конфигурация на офлайн архив';
+$lang["offline_archive_archivefield"] = 'Моля, изберете метаданното поле, което ще съдържа кода за архивиране';
+$lang["offline_archive_archivepath"] = 'Моля, въведете местоположението, където ще се създават архивите';
+$lang["offline_archive_restorepath"] = 'За възстановяване на ресурси в папката StaticSync, можете да въведете под-папка на папката StaticSync, в която ще се поставят възстановените файлове';
+$lang["offline_archive_preservedate"] = 'Запазване на времевия печат на файла?';
+$lang["offline_archive_administer_archive"] = 'Управление на архивите';
+$lang["offline_archive_view_pending"] = 'Преглед на ресурси, чакащи архивиране';
+$lang["offline_archive_view_pending_restore"] = 'Преглед на ресурси, чакащи възстановяване';
+$lang["offline_archive_view_completed"] = 'Преглед на архивните задачи';
+$lang["offline_archive_view_associated"] = 'Преглед на свързаните ресурси';
+$lang["offline_archive_view_as_search"] = 'Преглед на ресурси като търсене';
+$lang["offline_archive_entername"] = 'Моля, въведете име на архива';
+$lang["offline_archive_input_text"] = 'Моля, въведете списък с ресурси или идентификатор на колекция за възстановяване';
+$lang["offline_archive_input_resources"] = 'Моля, въведете идентификатори на ресурси за възстановяване, разделени с запетаи';
+$lang["offline_archive_input_collection"] = 'Моля, въведете идентификатор на колекция за възстановяване';
+$lang["offline_archive_name"] = 'Префикс на архива';
+$lang["offline_archive_createnew"] = 'Създаване на нова задача за архивиране';
+$lang["offline_archive_archive_created"] = 'Архивирането е успешно завършено';
+$lang["offline_archive_archive_ref"] = 'Референтен номер на архива';
+$lang["offline_archive_archive_date"] = 'Дата на архива';
+$lang["offline_archive_archive_status"] = 'Статус на архива';
+$lang["offline_archive_request_restore"] = 'Заявка за възстановяване';
+$lang["offline_archive_cancel_restore"] = 'Отказване на възстановяването';
+$lang["offline_archive_cancel_confirm"] = 'Наистина ли искате да отмените възстановяването на този ресурс';
+$lang["offline_archive_restore_pending"] = 'Изчакващо възстановяване от архив';
+$lang["offline_archive_restore_confirm"] = 'Потвърдете възстановяването';
+$lang["offline_archive_restore_resources"] = 'Възстановяване на ресурси от архив';
+$lang["offline_archive_restore_resource"] = 'Възстановяване от архив';
+$lang["offline_archive_request_restore_text"] = 'Моля, въведете причината за заявката';
+$lang["offline_archive_request_restore_reason"] = 'Причина за заявката за възстановяване';
+$lang["offline_archive_request_email_subject"] = 'заявка за възстановяване на офлайн архив';
+$lang["offline_archive_requestsenttext"] = 'Вашата заявка за възстановяване на архив е изпратена и ще бъде разгледана скоро.';
+$lang["offline_archive_resources_restore_confirmed"] = 'Ресурсите са успешно зададени за възстановяване и ще бъдат възстановени, когато съответните архиви бъдат въведени или копирани в конфигурираната архивна локация';
+$lang["offline_archive_resources_restore_cancel_confirmed"] = 'Ресурсът е успешно премахнат от чакащото възстановяване състояние';
+$lang["offline_archive_resource_log_archived"] = '- архивиран от плъгина за офлайн архив. Код на архива: ';
+$lang["offline_archive_resource_log_restored"] = '- възстановен от плъгина за офлайн архив';
+$lang["offline_archive_resource_log_restore_set"] = 'Обозначен за възстановяване от архив';
+$lang["offline_archive_resource_log_restore_removed"] = 'Отменено възстановяване от архив';
+$lang["offline_archive_resource_log_restore_request"] = 'Заявен е възстановителен процес от архив';
+$lang["offline_archive_resource_restore"] = 'Възстановяване на ресурси';
+$lang["offline_archive_statustype"] = array (
+  0 => 'Очакващ',
+  1 => 'В процес',
+  2 => 'Завършен',
+);
+$lang["offline_archive_administer_archive-tooltip"] = 'Преместване на архивираните файлове в офлайн локация';
+$lang["page-title_offline_archive_administer_archive"] = 'Управление на архиви';
+$lang["page-title_offline_archive_offline_archive_action"] = 'Офлайн архив';
+$lang["page-title_offline_archive_pending_restore"] = 'Очакващо възстановяване на ресурси';
+$lang["page-title_offline_archive_restore_request"] = 'Заявете възстановяване на ресурс';
+$lang["page-title_offline_archive_restore"] = 'Възстановяване на архив';
+$lang["page-title_offline_archive_setup"] = 'Настройка на плъгина за офлайн архив';
+$lang["page-title_offline_archive_view_archives"] = 'Преглед на архивите на ресурси';
+$lang["page-title_offline_archive_view_pending"] = 'Преглед на чакащите архиви';

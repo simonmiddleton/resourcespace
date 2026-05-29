@@ -1,0 +1,41 @@
+<?php
+
+
+$lang["image_banks_configuration"] = '圖像庫';
+$lang["image_banks_search_image_banks_label"] = '搜尋外部圖像庫';
+$lang["image_banks_pixabay_api_key"] = 'API 金鑰';
+$lang["image_banks_image_bank"] = '圖像庫';
+$lang["image_banks_image_bank_source"] = '圖像庫來源';
+$lang["image_banks_create_new_resource"] = '建立新資源';
+$lang["image_banks_shutterstock_token"] = 'Shutterstock 令牌 (<a href=\'https://www.shutterstock.com/account/developers/apps\' target=\'_blank\'>產生</a>)';
+$lang["image_banks_shutterstock_result_limit"] = '結果限制 (免費帳戶最多 1000)';
+$lang["image_banks_shutterstock_id"] = 'Shutterstock 圖像 ID';
+$lang["image_banks_label_resourcespace_instances_cfg"] = '實例存取 (格式：i18n 名稱|baseURL|使用者名稱|金鑰|設定)';
+$lang["image_banks_resourcespace_file_information_description"] = 'ResourceSpace %SIZE_CODE 大小';
+$lang["image_banks_label_select_providers"] = '選擇啟用的提供者';
+$lang["image_banks_view_on_provider_system"] = '在 %PROVIDER 系統中查看';
+$lang["image_banks_system_unmet_dependencies"] = 'ImageBanks 插件有未滿足的系統依賴！';
+$lang["image_banks_provider_unmet_dependencies"] = '\'%PROVIDER\' 提供者有未滿足的依賴！';
+$lang["image_banks_provider_id_required"] = '需要提供者ID以完成搜尋';
+$lang["image_banks_provider_not_found"] = '無法使用ID識別提供者';
+$lang["image_banks_bad_request_title"] = '錯誤的請求';
+$lang["image_banks_bad_request_detail"] = '請求無法由 \'%FILE\' 處理';
+$lang["image_banks_unable_to_create_resource"] = '無法建立新資源！';
+$lang["image_banks_unable_to_upload_file"] = '無法從外部圖像庫上傳檔案至資源 #%RESOURCE';
+$lang["image_banks_try_again_later"] = '請稍後再試！';
+$lang["image_banks_warning"] = '警告：';
+$lang["image_banks_warning_rate_limit_almost_reached"] = '提供者 \'%PROVIDER\' 只允許剩餘 %RATE-LIMIT-REMAINING 次搜尋。此限制將在 %TIME 後重置';
+$lang["image_banks_try_something_else"] = '嘗試其他方法。';
+$lang["image_banks_error_detail_curl"] = '未安裝 php-curl 套件';
+$lang["image_banks_error_generic_parse"] = '無法解析提供者的設定（多實例模式）';
+$lang["image_banks_error_resourcespace_invalid_instance_cfg"] = '\'%PROVIDER\'（提供者）實例的設定格式無效';
+$lang["image_banks_error_bad_url_scheme"] = '找到 \'%PROVIDER\'（提供者）實例的URL方案無效';
+$lang["image_banks_error_unexpected_response"] = '抱歉，收到來自提供者的意外回應。請聯絡您的系統管理員進行進一步調查（參見除錯日誌）';
+$lang["image_banks_local_download_attempt"] = '使用 ImageBank 插件，使用者嘗試下載 \'%FILE\'，但指向的系統不在允許的供應商範圍內';
+$lang["image_banks_bad_file_create_attempt"] = '使用者嘗試使用 ImageBank 插件，透過指向非允許供應商的系統，建立包含 \'%FILE\' 的資源';
+$lang["image_banks_createdfromimagebanks"] = '由圖像庫插件建立';
+$lang["page-title_image_banks_download"] = '下載資源';
+$lang["page-title_image_banks_search"] = '搜尋';
+$lang["page-title_image_banks_setup"] = '設定圖像庫插件';
+$lang["page-title_image_banks_shutterstock_license"] = '查看 Shutterstock 圖像';
+$lang["page-title_image_banks_view"] = '查看資源';

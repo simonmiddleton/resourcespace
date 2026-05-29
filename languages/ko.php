@@ -3281,3 +3281,5 @@ $lang["noresources_collection"] = '컬렉션에 리소스가 없습니다';
 $lang["hide_collection_bar"] = '숨김';
 $lang["minimal_collection_bar"] = '최소화 바';
 $lang["thumbnails_collection_bar"] = '썸네일';
+$lang["language-bg"] = '불가리아어';
+$lang["language-zh-TW"] = '번체 중국어';

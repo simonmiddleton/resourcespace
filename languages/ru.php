@@ -3362,3 +3362,5 @@ $lang["noresources_collection"] = 'Нет ресурсов в коллекции
 $lang["hide_collection_bar"] = 'Скрыто';
 $lang["minimal_collection_bar"] = 'Минимальная панель';
 $lang["thumbnails_collection_bar"] = 'Миниатюры';
+$lang["language-bg"] = 'Български';
+$lang["language-zh-TW"] = 'Традиционен китайски';

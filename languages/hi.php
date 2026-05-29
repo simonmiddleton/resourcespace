@@ -3286,3 +3286,5 @@ $lang["noresources_collection"] = 'संग्रह में कोई सं
 $lang["hide_collection_bar"] = 'छुपा हुआ';
 $lang["minimal_collection_bar"] = 'मिनिमल बार';
 $lang["thumbnails_collection_bar"] = 'थंबनेल्स';
+$lang["language-bg"] = 'बुल्गारियाई';
+$lang["language-zh-TW"] = 'परंपरागत चीनी';

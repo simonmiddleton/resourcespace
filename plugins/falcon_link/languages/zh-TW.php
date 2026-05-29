@@ -1,0 +1,45 @@
+<?php
+
+
+$lang["falcon_link_title"] = 'Falcon 連結';
+$lang["falcon_link_manage"] = 'Falcon 發佈／存檔';
+$lang["falcon_link_publish"] = '發佈到 Falcon';
+$lang["falcon_link_archive"] = '在 Falcon 中存檔';
+$lang["falcon_link_configuration"] = 'Falcon 連結- 設定';
+$lang["falcon_link_api_key"] = 'Falcon API 金鑰';
+$lang["falcon_link_notconfigured"] = 'Falcon 連結插件未設定。請請求您的管理員設定插件。';
+$lang["falcon_link_resource_types_to_include"] = '選擇有效的 Falcon 資源類型';
+$lang["falcon_link_not_permitted_extension"] = '檔案類型 %TYPE% 無法上傳到 Falcon';
+$lang["falcon_link_text_field"] = 'Falcon 範本文字欄位';
+$lang["falcon_link_default_tag"] = '預設標籤文字，將自動加入所有 Falcon 發佈的內容。如果包含 \'[ID]\'，則會被資源 ID 替換';
+$lang["falcon_link_template_url"] = 'Falcon 範本 URL。這允許您直接在 Falcon 中查看已發佈的資源。 [id] 標籤將被 Falcon 發佈資源時發出的識別碼取代';
+$lang["falcon_link_tag_fields"] = 'ResourceSpace - Falcon 標籤欄位。這些將被串接並加入到 Falcon 範本標籤中';
+$lang["falcon_link_id_field"] = '用於存放 Falcon 識別碼的元資料欄位';
+$lang["falcon_link_log_share"] = '在 Falcon 上已發佈';
+$lang["falcon_link_archived"] = '已歸檔';
+$lang["falcon_link_access_denied"] = '您沒有權限發布所選資源';
+$lang["falcon_link_already_published"] = '此資源已發布到 Falcon';
+$lang["falcon_link_resources_already_published"] = '部分資源已經發布到 Falcon，無法重新發布';
+$lang["falcon_link_resource_not_published"] = '資源尚未發布到 Falcon';
+$lang["falcon_link_resource_publish_unavailable"] = '資源無法發布到 Falcon';
+$lang["falcon_link_template_description"] = '範本描述';
+$lang["falcon_link_template_tags"] = '將新增的範本標籤';
+$lang["falcon_link_missing_file"] = '資源沒有原始檔案';
+$lang["falcon_link_existing_id"] = '現有的 Falcon ID';
+$lang["falcon_link_not_uploaded"] = '未上傳';
+$lang["falcon_link_publish_button_text"] = '發布';
+$lang["falcon_link_archive_button_text"] = '歸檔';
+$lang["falcon_link_publish_success"] = '發布成功';
+$lang["falcon_link_archived_success"] = '已成功歸檔。<br />資源分享仍然有效，如果需要，請手動刪除。';
+$lang["falcon_link_usergroups"] = '具有管理 Falcon 範本權限的群組';
+$lang["falcon_link_filter"] = '篩選條件以決定哪些資源可以發佈到 Falcon';
+$lang["falcon_link_error_no_resources"] = '沒有提交用於發佈的資源';
+$lang["falcon_link_error_falcon_api"] = '與 Falcon 通訊時發生錯誤。請檢查狀態以獲取更多詳細資訊。';
+$lang["falcon_link_error_falcon_api_detailed"] = 'Falcon 錯誤';
+$lang["falcon_link_view_in_falcon"] = '在 Falcon 中查看';
+$lang["falcon_link_share_user"] = '用於顯示分享給 Falcon 使用者的文字，例如 \'與 user@falcon.io 共享\'';
+$lang["falcon_link_log_publish"] = '通過 Falcon 分享資源';
+$lang["falcon_link_log_archive"] = '通過 Falcon 存檔資源';
+$lang["falcon_link_error_falcon_check_tags"] = '請檢查描述和標籤是否為空';
+$lang["page-title_falcon_link_falcon_link"] = 'Falcon 連結';
+$lang["page-title_falcon_link_setup"] = '設定 Falcon 連結插件';

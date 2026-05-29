@@ -1,0 +1,41 @@
+<?php
+
+
+$lang["action_dates_configuration"] = '選擇將用於自動執行指定操作的欄位。';
+$lang["action_dates_deletesettings"] = '自動資源主要操作設定 - 請謹慎使用';
+$lang["action_dates_delete"] = '當達到此欄位中的日期時，自動刪除或更改資源狀態';
+$lang["action_dates_eligible_states"] = '符合主要自動操作資格的狀態。如果未選擇任何狀態，則所有狀態皆符合資格。';
+$lang["action_dates_restrict"] = '當達到此欄位中的日期時，自動限制對資源的存取。此設定僅適用於目前開放存取的資源。';
+$lang["action_dates_delete_logtext"] = ' - 由 action_dates 插件自動執行';
+$lang["action_dates_restrict_logtext"] = ' - 由 action_dates 插件自動限制存取';
+$lang["action_dates_reallydelete"] = '在操作日期過後完全刪除資源？若設定為 false，資源將移至設定的 resource_deletion_state，仍可恢復';
+$lang["action_dates_email_admin_days"] = '在此日期到達前若干天通知系統管理員。留空則不發送通知。';
+$lang["action_dates_email_text_restrict"] = '以下資源將於 [days] 天後被限制存取。';
+$lang["action_dates_email_text_state"] = '以下資源將於 [days] 天後變更狀態。';
+$lang["action_dates_email_text"] = '以下資源將於 [days] 天後被限制存取和／或變更狀態。';
+$lang["action_dates_email_range_restrict"] = '以下資源將在 [days_min] 至 [days_max] 天內被限制存取。';
+$lang["action_dates_email_range_state"] = '以下資源將在 [days_min] 至 [days_max] 天內變更狀態。';
+$lang["action_dates_email_range"] = '以下資源將在 [days_min] 至 [days_max] 天內被限制存取和／或變更狀態。';
+$lang["action_dates_email_subject_restrict"] = '資源即將被限制的通知';
+$lang["action_dates_email_subject_state"] = '資源狀態變更通知';
+$lang["action_dates_email_subject"] = '資源限制及/或狀態變更通知';
+$lang["action_dates_new_state"] = '要移動到的新狀態（如果上述選項設定為完全刪除資源，則此設定將被忽略）';
+$lang["action_dates_notification_subject"] = '來自行動日期插件的通知';
+$lang["action_dates_additional_settings"] = '其他動作';
+$lang["action_dates_additional_settings_info"] = '此外，當達到指定欄位時，將資源移動到所選擇的狀態';
+$lang["action_dates_additional_settings_date"] = '當此日期到達時';
+$lang["action_dates_additional_settings_status"] = '將資源移動到此存檔狀態';
+$lang["action_dates_additional_settings_email_admin_days"] = '在動作發生前幾天通知管理員（留空則停用）';
+$lang["action_dates_remove_from_collection"] = '在狀態變更時，將資源從所有相關集合中移除？';
+$lang["action_dates_email_for_state"] = '在資源狀態變更時發送通知。需要先設定上述狀態變更欄位。';
+$lang["action_dates_email_for_restrict"] = '在資源被限制時發送通知。需要先設定上述限制資源欄位。';
+$lang["action_dates_workflow_actions"] = '如果啟用進階工作流程插件，是否應將其通知應用於由此插件啟動的狀態變更？';
+$lang["action_dates_weekdays"] = '選擇將處理動作的星期幾。';
+$lang["weekday-0"] = '星期日';
+$lang["weekday-1"] = '星期一';
+$lang["weekday-2"] = '星期二';
+$lang["weekday-3"] = '星期三';
+$lang["weekday-4"] = '星期四';
+$lang["weekday-5"] = '星期五';
+$lang["weekday-6"] = '星期六';
+$lang["page-title_action_dates_setup"] = '設定動作日期插件';

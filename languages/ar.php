@@ -3476,3 +3476,5 @@ $lang["noresources_collection"] = 'لا موارد في المجموعة';
 $lang["hide_collection_bar"] = 'مخفي';
 $lang["minimal_collection_bar"] = 'شريط بسيط';
 $lang["thumbnails_collection_bar"] = 'صور مصغرة';
+$lang["language-bg"] = 'بلغارية';
+$lang["language-zh-TW"] = 'صينية تقليدية';

@@ -3372,3 +3372,5 @@ $lang["noresources_collection"] = 'Geen bronnen in collectie';
 $lang["hide_collection_bar"] = 'Verborgen';
 $lang["minimal_collection_bar"] = 'Minimale balk';
 $lang["thumbnails_collection_bar"] = 'Miniaturen';
+$lang["language-bg"] = 'Bulgaars';
+$lang["language-zh-TW"] = 'Traditioneel Chinees';

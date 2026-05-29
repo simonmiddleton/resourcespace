@@ -3267,3 +3267,5 @@ $lang["noresources_collection"] = 'Dim adnoddau yn y casgliad';
 $lang["hide_collection_bar"] = 'Cuddiedig';
 $lang["minimal_collection_bar"] = 'Bar lleiaf';
 $lang["thumbnails_collection_bar"] = 'Delweddau bach';
+$lang["language-bg"] = 'Bwlgareg';
+$lang["language-zh-TW"] = 'Chineeg traddodiadol';
