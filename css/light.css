@@ -92,18 +92,6 @@ tr[id^="ResourceShell"].Selected { background-color: #d5eafa; /* Used a tint of 
 
 /* Related resources */
 #RelatedResources .CollectionPanelShell {background-color: #fff;}
-
-/* Home */
-.HomePanel a:link, 
-.HomePanel a:active, 
-.HomePanel a:hover,
-#HomeSiteText.dashtext h1 {color:#FFF;}
-
-#HomePanelContainer .HomePanel a:link,
-#HomePanelContainer .HomePanel a:active,
-#HomePanelContainer .HomePanel a:hover {
-    color: var(--colour-neutral-700)
-}
 /* Default colours for search, dash tiles, browse bar etc */
 #HomeSiteText.dashtext, .PopupCategoryTree {
     background: rgba(0, 0, 0, 0.51);

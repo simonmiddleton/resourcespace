@@ -1642,7 +1642,6 @@ input.contactadminbutton  {
     container-type: inline-size;
     
     padding-top: var(--space-24);
-    float: left;
     display: flex;
     width: 100%;
     max-width: 1376px;
@@ -1652,6 +1651,7 @@ input.contactadminbutton  {
     gap: var(--space-32);
     background-color: var(--colour-surface-view-background);
     justify-content: center;
+    margin: 0 auto;
 }
 
 #HomePanelContainer a {-webkit-user-drag: none;}
