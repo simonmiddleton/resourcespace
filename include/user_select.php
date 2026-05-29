@@ -46,7 +46,7 @@ if (!isset($autocomplete_user_scope)) {
                 }
                 ?>" />
 
-                <?php if ($found_single_user_select_field_value != '') { ?>
+                <?php if (isset($found_single_user_select_field_value) && $found_single_user_select_field_value != '') { ?>
                     <script>jQuery("#<?php echo escape($autocomplete_user_scope); ?>adduserbutton").attr('value', '<?php echo escape($lang["clearbutton"]); ?>');</script>
                 <?php } ?>
 
