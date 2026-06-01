@@ -2855,30 +2855,23 @@ function render_new_featured_collection_cta(string $url, array $ctx)
         return;
         }
 
-    $full_width = (isset($ctx["full_width"]) && $ctx["full_width"]);
     $centralspaceload = (isset($ctx["centralspaceload"]) && $ctx["centralspaceload"]);
-    $html_h2_span_class = (isset($ctx["html_h2_span_class"]) && trim($ctx["html_h2_span_class"]) != "" ? trim($ctx["html_h2_span_class"]) : "icon-circle-plus");
-
-    $html_tile_class = array("FeaturedSimplePanel", "HomePanel", "DashTile", "FeaturedSimpleTile", "FeaturedCallToActionTile");
-    $html_contents_h2_class = array();
-
-    if($full_width)
-        {
-        $html_tile_class[] = "FullWidth";
-        $html_contents_h2_class[] = "MarginZeroAuto";
-        }
+    $tile_icon_clas = (isset($ctx["html_h2_span_class"]) && trim($ctx["html_h2_span_class"]) != "" ? trim($ctx["html_h2_span_class"]) : "icon-plus");
 
     $onclick_fn = ($centralspaceload ? "CentralSpaceLoad(this, true);" : "ModalLoad(this, true, true);");
     ?>
-    <div id="FeaturedSimpleTile" class="<?php echo implode(" ", $html_tile_class); ?>">
-        <a href="<?php echo $url; ?>" onclick="return <?php echo $onclick_fn; ?>">
-            <div class="FeaturedSimpleTileContents">
-                <div class="FeaturedSimpleTileText">
-                    <h2 class="<?php echo implode(" ", $html_contents_h2_class); ?>"><span class="<?php echo $html_h2_span_class; ?>"></span></h2>
+    <a class="FeaturedSimpleTile HomePanel" href="<?php echo $url; ?>" onclick="return <?php echo $onclick_fn; ?>">
+        <div id="FeaturedSimpleTile" class="HomePanel featured-tile">
+            <div class="tile-special-content">
+                <div class="tile-special-icon">
+                    <i class="<?php echo $tile_icon_clas; ?>"></i>
                 </div>
             </div>
-        </a>
-    </div>
+            <div class="tile-desc">
+                <h2><?php echo escape($ctx["h2_text"] ?? "") ?></h2>
+            </div>
+        </div>
+    </a>
     <?php
     }
 
@@ -4775,7 +4768,7 @@ function render_featured_collection_category_selector(int $parent, array $contex
 */
 function render_featured_collections(array $ctx, array $items)
     {
-    global $baseurl_short, $lang, $k, $themes_simple_images, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS, $themes_simple_view,$show_theme_collection_stats;
+    global $baseurl_short, $lang, $k, $themes_simple_images, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS,$show_theme_collection_stats;
 
     $is_smart_featured_collection = (isset($ctx["smart"]) ? (bool) $ctx["smart"] : false);
     $general_url_params = (isset($ctx["general_url_params"]) && is_array($ctx["general_url_params"]) ? $ctx["general_url_params"] : array());
@@ -4833,7 +4826,7 @@ function render_featured_collections(array $ctx, array $items)
 
         // Prepare FC images
         $thumbnail_selection_method = $fc["thumbnail_selection_method"];
-        $show_images = ($themes_simple_view && in_array($thumbnail_selection_method, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS) && $thumbnail_selection_method != $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["no_image"]);
+        $show_images = (in_array($thumbnail_selection_method, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS) && $thumbnail_selection_method != $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["no_image"]);
         unset($fc_resources);
         if($themes_simple_images && $show_images)
             {
@@ -4902,13 +4895,10 @@ function render_featured_collections(array $ctx, array $items)
 
 
         if ($is_featured_collection_category && !$is_smart_featured_collection) {
-            global $enable_theme_category_edit;
-
             $fc_category_url = generateURL("{$baseurl_short}pages/collections_featured.php", $general_url_params, array("parent" => $fc["ref"]));
             $fc_category_has_children = (isset($fc["has_children"]) ? (bool) $fc["has_children"] : false);
 
             $render_ctx["href"] = $fc_category_url;
-            $render_ctx["icon"] = ICON_FOLDER;
             $render_ctx["tools"] = array();
 
             if(checkPermission_dashmanage())
@@ -4972,7 +4962,6 @@ function render_featured_collections(array $ctx, array $items)
                         "smart_fc_parent" => $fc["parent"],
                     ));
                 }
-            $render_ctx["icon"] = ICON_FOLDER;
             $render_ctx["tools"] = array();
             }
             
@@ -4996,23 +4985,20 @@ function render_featured_collections(array $ctx, array $items)
 * @return void
 */
 function render_featured_collection(array $ctx, array $fc)
-    {
+{
     if(empty($fc))
         {
         return;
         }
 
-    global $baseurl_short, $lang, $k, $flag_new_themes, $flag_new_themes_age, $view_title_field;
+    global $baseurl_short, $lang, $flag_new_themes, $flag_new_themes_age, $view_title_field, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS;
 
     $is_smart_featured_collection = (isset($ctx["smart"]) ? (bool) $ctx["smart"] : false);
-    $full_width = (isset($ctx["full_width"]) && $ctx["full_width"]);
     $general_url_params = (isset($ctx["general_url_params"]) && is_array($ctx["general_url_params"]) ? $ctx["general_url_params"] : array());
     $show_resources_count = (isset($ctx["show_resources_count"]) ? (bool) $ctx["show_resources_count"] : false);
     $reorder = (bool) ($ctx['reorder'] ?? false);
 
-
-    $html_container_class = array("FeaturedSimplePanel", "HomePanel", "DashTile", "FeaturedSimpleTile");
-    $html_container_style = array();
+    $html_container_class = array("FeaturedSimpleTile", "HomePanel");
     $html_container_data_items = [];
 
     // Make featured collection tile sortable
@@ -5022,64 +5008,45 @@ function render_featured_collection(array $ctx, array $fc)
         $html_container_data_items['data-fc-ref'] = $fc['ref'];
         }
 
-
     // Set main featured collection URL (e.g for collections it's the !collection[ID], for categories it's for collection_featured.php)
     $html_fc_a_href = generateURL("{$baseurl_short}pages/search.php", $general_url_params, array("search" => "!collection{$fc["ref"]}"));
     $html_fc_a_href = (isset($ctx["href"]) && trim($ctx["href"]) !== "" ? $ctx["href"] : $html_fc_a_href);
 
-
-    $html_contents_class = array("FeaturedSimpleTileContents");
-    $html_contents_icon = (isset($ctx["icon"]) && trim($ctx["icon"]) != "" ? $ctx["icon"] : ICON_CUBE);
     $fc_display_name = strip_prefix_chars(i18n_get_collection_name($fc),"*");
 
-    $html_contents_h2 = $html_contents_icon . $fc_display_name;
-    $html_contents_h2_style = array();
-    if(!$is_smart_featured_collection && $flag_new_themes && (time() - strtotime((string)$fc["created"])) < (60 * 60 * 24 * $flag_new_themes_age))
-        {
-        $html_contents_h2 .= sprintf(' <div class="NewFlag">%s</div>', escape($lang['newflag']));
-        }
-    if($full_width)
-        {
-        $html_container_class[] = "FullWidth";
-        $html_contents_h2_style[] = "max-width: unset;";
-
-        $action_selection_id = "themes_action_selection{$fc["ref"]}_bottom_{$fc["ref"]}";
-
-        if($show_resources_count && !$is_smart_featured_collection)
-            {
-            $html_contents_h2 .= sprintf(
-                ' <span data-tag="resources_count" data-fc-ref="%s">%s</span>',
-                escape($fc['ref']),
-                escape($lang['counting_resources']));
-            }
-        }
-
+    $html_contents_h2 = $fc_display_name;
+    $counter_html = "";
+    if (
+        !$is_smart_featured_collection 
+        && $flag_new_themes 
+        && (time() - strtotime((string)$fc["created"])) < (60 * 60 * 24 * $flag_new_themes_age)
+        && !$show_resources_count
+    ) {
+        $counter_html = "<p class=\"tile_corner_box\">" . escape($lang['newflag']) . "</p>";
+    } elseif ($show_resources_count) {
+        $counter_html = "<p data-tag=\"resources_count\" 
+                            data-fc-ref=\"{$fc['ref']}\"
+                            class=\"tile_corner_box\">" . escape($lang['counting_resources']) . "</p>";
+    }
 
     $theme_images = (isset($ctx["images"]) ? $ctx["images"] : array());
     $theme_images = array_map(
         function($theme_image) use ($view_title_field, $lang){
-            if (!isset($theme_image['ref'])) {return $theme_image;} // Invalid data [t35944]
+            if (!is_array($theme_image)) {
+                return null;
+            }
+            if (!isset($theme_image['ref'])) {
+                return $theme_image; // Invalid data [t35944]
+            }
             $ref = $theme_image['ref'];
             $resource_data = get_resource_data($ref);
-            if ($resource_data===false) {return $theme_image;} // Resource not found
+            if ($resource_data===false) {
+                return $theme_image;
+            }
             $theme_image['alt_text'] = $resource_data['field' . $view_title_field] ?? $lang['resource-1'] . ' ' . $ref;
             return $theme_image;
         }
     , $theme_images);
-    if(!empty($theme_images))
-        {
-        $html_container_class[] = "FeaturedSimpleTileImage";
-
-        if(count($theme_images) == 1)
-            {
-            $alt_string = $theme_images[0]['alt_text'] ?? "";
-            $theme_image_path = $theme_images[0]["path"] ?? "";
-            $html_container_style[] = "background: url({$theme_image_path});";
-            $html_container_style[] = "background-size: cover;";
-            $theme_images = array();
-            }
-        }
-
 
     $html_container_data = '';
     foreach($html_container_data_items as $name => $value)
@@ -5087,76 +5054,161 @@ function render_featured_collection(array $ctx, array $fc)
         $html_container_data .= sprintf(' %s="%s"', $name, escape($value));
         }
 
-    $tools = (isset($ctx["tools"]) && is_array($ctx["tools"]) && !$full_width ? $ctx["tools"] : array());
+    $tools = (isset($ctx["tools"]) && is_array($ctx["tools"]) ? $ctx["tools"] : array());
+
+    if (
+        isset($fc['thumbnail_selection_method']) 
+        && $fc['thumbnail_selection_method'] == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS['most_popular_images']
+    ) {
+        $theme_images = array_pad($theme_images, 3, null);
+    }
+
+    if (count($theme_images) == 1) {
+        $image_html = sprintf("<img class=\"thmbs-tile-img\" src=\"%s\" alt=\"%s\">", 
+                        $theme_images[0]['path'], escape($theme_images[0]['alt_text'] ?? ""));
+    } elseif (count($theme_images) >= 3) {
+        if ($theme_images[0] == null) {
+            $image_html = "<div class=\"tile-placeholder\">
+                                <div class=\"thumbs-tile-image\"></div>
+                           </div>
+                           <div class=\"tile-sub-multi\">
+                               <div></div>
+                               <div></div>
+                           </div> 
+                           ";
+        } else {
+            $image_html = sprintf("<img class=\"thmbs-tile-img\" src=\"%s\" alt=\"%s\">", 
+            $theme_images[0]['path'], escape($theme_images[0]['alt_text'] ?? ""));
+            $image_html .= "<div class=\"tile-sub-multi\">";
+            $image_html .= $theme_images[1] == null ? 
+                "<div></div>" : 
+                sprintf("<img class=\"thmbs-tile-img\" src=\"%s\" alt=\"%s\">", $theme_images[1]['path'], escape($theme_images[1]['alt_text'] ?? ""));
+            $image_html .= $theme_images[2] == null ? 
+                "<div></div>" : 
+                sprintf("<img class=\"thmbs-tile-img\" src=\"%s\" alt=\"%s\">", $theme_images[2]['path'], escape($theme_images[2]['alt_text'] ?? ""));
+            $image_html .= "</div>";
+        }
+        
+        $image_html = sprintf("<div class=\"tile-multi\">%s</div>", $image_html);
+    } else {
+        $image_html = "<div class=\"tile-placeholder\">
+                           <div class=\"thumbs-tile-image\"></div>
+                       </div>";
+    }
 
     // DEVELOPER NOTE: anything past this point should be set. All logic is handled above
     ?>
-    <div id="FeaturedSimpleTile_<?php echo md5($fc['ref']); ?>" 
-         class="<?php echo implode(" ", $html_container_class); ?>" 
-         alt="<?php echo escape($alt_string ?? '') ?>"
-         style="<?php echo implode(" ", $html_container_style); ?>" <?php echo $html_container_data; ?> >
-    <?php
-    if (!$full_width) {
-        ?>
-        <div>
-            <a href="<?php echo $html_fc_a_href; ?>" onclick="return CentralSpaceLoad(this, true);" id="featured_tile_<?php echo escape($fc["ref"]); ?>" class="FeaturedSimpleLink">
-                <div id="FeaturedSimpleTileContents_<?php echo escape($fc["ref"]); ?>" class="<?php echo implode(" ", $html_contents_class); ?>">
-                    <h2 style="<?php echo implode(" ", $html_contents_h2_style); ?>"><?php echo $html_contents_h2; ?></h2>
-                <?php
-                foreach($theme_images as $i => $theme_image)
-                    {
-                    ?>
-                    <div class="FeaturedImageTile" style="background-image: url('<?php echo $theme_image['path']; ?>')"></div>
-                    <?php
-                    }
-                    ?>
-                </div>
-            </a>
+    <a class="<?php echo implode(' ', $html_container_class); ?>" 
+    href="<?php echo $html_fc_a_href; ?>" 
+    onclick="return CentralSpaceLoad(this, true);" 
+    id="FeaturedSimpleTile_<?php echo md5($fc['ref']); ?>"
+    <?php echo $html_container_data; ?> >
+        <div 
+        class="HomePanel featured-tile"
+        href="<?php echo $html_fc_a_href; ?>" 
+        onclick="return CentralSpaceLoad(this, true);" 
+        id="featured_tile_<?php echo md5($fc['ref']); ?>"
+        <?php echo $html_container_data; ?>
+        >
             <?php
-            render_top_right_menu_btn($tools);
+            echo $image_html;
             ?>
+            <div class="tile-desc">
+                <h2><?php echo $html_contents_h2; ?></h2>
+                <?php
+                render_top_right_menu_btn($tools);
+                ?>
+            </div>
+            <?php echo $counter_html; ?>
         </div>
         <?php
         render_featured_collection_context_menu(md5($fc['ref']), $tools);
-    } else if ($full_width && !$is_smart_featured_collection) {
         ?>
-        <a href="<?php echo $html_fc_a_href; ?>" onclick="return CentralSpaceLoad(this, true);" id="featured_tile_<?php echo escape($fc["ref"]); ?>" class="FeaturedSimpleLink">
-            <div id="FeaturedSimpleTileContents_<?php echo escape($fc["ref"]); ?>" class="<?php echo implode(" ", $html_contents_class); ?>">
-                <h2 style="<?php echo implode(" ", $html_contents_h2_style); ?>"><?php echo $html_contents_h2; ?></h2>
-            <?php
-            foreach($theme_images as $i => $theme_image)
-                {
-                ?>
-                <div class="FeaturedImageTile" style="background-image: url('<?php echo $theme_image['path']; ?>')"></div>
-                <?php
-                }
-                ?>
-            </div>
-        </a>
-        <div class="ListTools">
-            <div class="ActionsContainer">
-                <select class="fcollectionactions" id="<?php echo $action_selection_id ?>" data-actions-loaded="0" data-actions-populating="0" data-col-id="<?php echo escape($fc["ref"]);?>" onchange="action_onchange_<?php echo $action_selection_id ?>(this.value);">
-                    <option><?php echo escape($lang["actions-select"]); ?></option>
-                </select>
-            </div>            
-        </div><!-- End of ListTools -->
-        <?php
-    } else {
-        ?>
-        <div>
-            <a href="<?php echo $html_fc_a_href; ?>" onclick="return CentralSpaceLoad(this, true);" id="featured_tile_<?php echo escape($fc["ref"]); ?>" class="FeaturedSimpleLink">
-                <div id="FeaturedSimpleTileContents_<?php echo escape($fc["ref"]); ?>" class="<?php echo implode(" ", $html_contents_class); ?>">
-                    <h2 style="<?php echo implode(" ", $html_contents_h2_style); ?>"><?php echo $html_contents_h2; ?></h2>
-                </div>
-            </a>
-        </div>
+    </a>
+    <script>
+        jQuery(document).ready(function() {
+            var fctilename = "#FeaturedSimpleTile_<?php echo md5($fc["ref"]); ?>";
+            var tilehref; //Used to switch off and on tile link to stop issue clicking on tool bar but opening tile link
+            var tileonclick; //Used to switch off and on tile link to stop issue clicking on tool bar but opening tile link
 
-        <?php
-    }
+            var fcactionsid = ".top-right-menu > i";
+
+            jQuery(`${fctilename} ${fcactionsid}, #<?php echo md5($fc['ref']); ?>`).hover(
+                function(e) {
+                    tilehref = jQuery(fctilename).attr("href");
+                    tileonclick = jQuery(fctilename).attr("onclick");
+                    jQuery(fctilename).attr("href", "#");
+                    jQuery(fctilename).attr("onclick", "return false;");
+
+                    jQuery(`a.FeaturedSimpleTile:not(${fctilename})`).css('pointer-events', 'none')
+                },
+                function(e) {
+                    jQuery(fctilename).attr("href", tilehref);
+                    jQuery(fctilename).attr("onclick", tileonclick);
+                    tilehref = '';
+                    tileonclick = '';
+
+                    jQuery(`a.FeaturedSimpleTile:not(fctilename)`).css('pointer-events', 'initial')
+                }
+            );
+        })
+    </script>  
+    <?php
+}
+
+function render_fc_actions($id, $tools)
+{
     ?>
-    </div><!-- End of FeaturedSimpleTile_<?php echo escape($fc["ref"]); ?>-->
-<?php
-    }
+    <div class="DashTileActions" id="fc_tile_actions_<?php echo md5($id); ?>">
+        <?php
+        foreach($tools as $tool) {
+            if(isset($tool['custom_onclick']) && trim($tool['custom_onclick']) != '') {
+                $onclick = "{$tool['custom_onclick']}";
+            } else {
+                $href = sanitise_url(isset($tool['href']) && trim($tool['href']) != '' ? $tool['href'] : '#');
+                $onclick = (isset($tool['modal_load']) && $tool['modal_load'])
+                    ? "return ModalLoad('{$href}', true);"
+                    : "return CentralSpaceLoad('{$href}', true);";
+            }
+            ?>
+            <div class="tool">               
+                <div href="<?php echo $href ?? "#"; ?>" 
+                onclick="<?php echo $onclick; ?>"
+                title="<?php echo $tool['text']; ?>"
+                >
+                    <i class="<?php echo $tool['icon']; ?>"></i>
+                </div>
+            </div>
+            <?php
+        }
+        ?>
+        <script>
+            jQuery(document).ready(function() {
+                var usertileidname = "#FeaturedSimpleTile_<?php echo md5($id); ?>";
+                var tilehref; //Used to switch off and on tile link to stop issue clicking on tool bar but opening tile link
+                var tileonclick; //Used to switch off and on tile link to stop issue clicking on tool bar but opening tile link
+
+                var fcactionsid = "#fc_tile_actions_<?php echo md5($id); ?>";
+
+                jQuery(fcactionsid).hover(
+                    function(e) {
+                        tilehref = jQuery(usertileidname).attr("href");
+                        tileonclick = jQuery(usertileidname).attr("onclick");
+                        jQuery(usertileidname).attr("href", "#");
+                        jQuery(usertileidname).attr("onclick", "return false;");
+                    },
+                    function(e) {
+                        jQuery(usertileidname).attr("href", tilehref);
+                        jQuery(usertileidname).attr("onclick", tileonclick);
+                        tilehref = '';
+                        tileonclick = '';
+                    }
+                );
+            })
+        </script>
+    </div>
+    <?php
+}
 
 /**
  * Render the top right menu button ellipsis icon.

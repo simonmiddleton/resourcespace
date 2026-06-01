@@ -407,7 +407,6 @@ if (isset($user_pref_appearance) && !(isset($high_contrast_mode) && $high_contra
             color: white;
         }
         .FeaturedSimpleTile {
-            background: white;
             color: white;  
         }
         .FeaturedSimpleTile.FullWidth {

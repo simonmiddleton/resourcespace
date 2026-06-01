@@ -368,6 +368,7 @@ $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS = array(
     "most_recent_image" => 20,
     "manual" => 100,
 );
+define("THEME_IMAGES_NUMBER", 3);
 $COLLECTION_PUBLIC_TYPES = array(COLLECTION_TYPE_PUBLIC, COLLECTION_TYPE_FEATURED);
 
 // ----------------------------------------------

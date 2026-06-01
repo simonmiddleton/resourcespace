@@ -13,7 +13,6 @@ This provides a mechanism for enabling new features for new installations withou
 $imagemagick_colorspace = "sRGB";
 
 $contact_link=false;
-$themes_simple_view=true;
 
 $stemming=true;
 $case_insensitive_username=true;

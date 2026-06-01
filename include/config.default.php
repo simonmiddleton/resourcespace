@@ -586,8 +586,7 @@ $use_recent_as_home = false;
 
 // Show images along with theme category headers (image selected is the most popular within the theme category)
 $theme_images = true;
-$theme_images_number = 6; // How many to auto-select (if none chosen manually). Smart FCs only display one.
-$show_theme_collection_stats = false; // Show count of themes and resources in category. $themes_simple_view=false only.
+$show_theme_collection_stats = false; // Show count of themes and resources in category.
 
 // Theme direct jump mode
 // If set, sub category levels DO NOT appear and must be directly linked to using custom home panels or top navigation items (or similar).
@@ -1603,10 +1602,7 @@ $public_collections_top_nav = false;
 // Show collection name below breadcrumbs?
 $show_collection_name = false;
 
-// Themes simple view - option to show featured collection categories and featured collections (themes) as basic tiles wih no images.
-// Can be tested or used for custom link by adding querystring parameter simpleview=true to collections_featured.php e.g. pages/collections_featured.php?simpleview=true
-$themes_simple_view = false;
-// Option to show images on featured collection and featured collection category tiles if $themes_simple_view is enabled
+// Option to show images on featured collection and featured collection category tiles
 $themes_simple_images = true;
 
 // Change featured collections root by pointing at a new featured collection category (using a collection has an undefined behaviour).

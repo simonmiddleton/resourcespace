@@ -2674,7 +2674,7 @@ function allow_multi_edit($collection, $collectionid = 0)
 function get_featured_collection_resources(array $c, array $ctx)
 {
     global $usergroup, $userref, $CACHE_FC_RESOURCES, $themes_simple_images,$collection_allow_not_approved_share;
-    global $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS, $theme_images_number;
+    global $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS;
 
     if (!isset($c["ref"]) || !is_int((int) $c["ref"])) {
         return array();
@@ -2755,7 +2755,7 @@ function get_featured_collection_resources(array $c, array $ctx)
         elseif (in_array($c["thumbnail_selection_method"], [$FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"],$FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_recent_image"]]) && is_null($limit)) {
             $limit = 1;
         } elseif ($c["thumbnail_selection_method"] == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_images"] && is_null($limit)) {
-            $limit = $theme_images_number;
+            $limit = THEME_IMAGES_NUMBER;
         }
     }
 
@@ -2946,8 +2946,6 @@ function get_featured_collection_categ_sub_fcs(array $c, array $ctx = array())
 */
 function generate_featured_collection_image_urls(array $resource_refs, string $size)
 {
-    global $baseurl;
-
     $images = array();
 
     $refs_list = array_filter($resource_refs, 'is_numeric');
@@ -2967,7 +2965,7 @@ function generate_featured_collection_image_urls(array $resource_refs, string $s
     }
 
     if (count($images) == 0 && count($refs_rtype) != 0) {
-        $images[] = $baseurl . '/gfx/no_preview/default.png';
+        $images[] = null;
     }
 
     return $images;

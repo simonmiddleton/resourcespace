@@ -291,7 +291,6 @@ $page_def[] = config_add_html('</div>');
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed"><i class="icon-folder"></i>&nbsp;' . $lang['collections'] . '</h3><div id="SystemConfigCollectionSection" class="CollapsibleSection">');
 $page_def[] = config_add_boolean_select('show_collection_name', $lang['systemconfig_show_collection_name'], $yes_no_options, 420, null, true);
 $page_def[] = config_add_boolean_select('enable_themes', $lang['systemconfig_enable_themes'], $yes_no_options, 420, null, true);
-$page_def[] = config_add_boolean_select('themes_simple_view', $lang['systemconfig_themes_simple_view'], $yes_no_options, 420, null, true);
 $page_def[] = config_add_html('</div>');
 
 // Actions section
