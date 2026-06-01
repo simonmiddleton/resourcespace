@@ -13,9 +13,9 @@ body, html {
 }
 
 h1, h2 {color: #000000;}
-a:link {color:#666666;}
-a:visited {color:#666666;}
-a:hover {color:var(--colour-brand-primary-hover);}
+a:link {color: var(--colour-typography-900);}
+a:visited {color: var(--colour-typography-900);}
+a:hover {color: var(--colour-brand-primary-hover);}
 a:active {opacity:0.6;}
 
 input[readonly] {
@@ -281,7 +281,7 @@ div.autocomplete ul li {color: #000;}
     color: #999;
 }
 #modal .RecordHeader h1, #modal .BasicsBox h1 {
-    color: #333;
+    color: var(--colour-typography-900);
 }
 
 /* Messaging */
