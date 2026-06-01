@@ -1793,7 +1793,7 @@ function generate_dash_tile_toolbar(array $tile, $tile_id)
             <?php
                 if ((checkPermission_dashadmin() || (isset($tile['all_users']) && $tile['all_users'] == 0)) && !(isset($tile['no_edit']) && $tile['no_edit'])) {
                     ?>
-                        <div class="tool edit">
+                        <div class="tool edit" title="<?php echo escape($lang["editdashtile"]); ?>">
                             <a href="<?php echo $editlink ?>" onClick="return CentralSpaceLoad(this,true);">
                                 <i class="icon-pencil"></i>
                             </a>
@@ -1801,7 +1801,7 @@ function generate_dash_tile_toolbar(array $tile, $tile_id)
                     <?php
                 }
             ?>
-            <div class="tool dash-delete_<?php echo substr($tile_id, 18); ?>">
+            <div class="tool dash-delete_<?php echo substr($tile_id, 18); ?>" title="<?php echo escape($lang["dashtiledelete"]); ?>">
                 <a href="#">
                     <i class="icon-trash-2"></i>
                 </a>
