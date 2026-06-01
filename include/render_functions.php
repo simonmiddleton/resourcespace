@@ -5023,7 +5023,7 @@ function render_featured_collection(array $ctx, array $fc)
         && !$show_resources_count
     ) {
         $counter_html = "<p class=\"tile_corner_box\">" . escape($lang['newflag']) . "</p>";
-    } elseif ($show_resources_count) {
+    } elseif ($show_resources_count && !is_anonymous_user() && !is_authenticated()) {
         $counter_html = "<p data-tag=\"resources_count\" 
                             data-fc-ref=\"{$fc['ref']}\"
                             class=\"tile_corner_box\">" . escape($lang['counting_resources']) . "</p>";
