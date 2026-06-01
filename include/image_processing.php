@@ -2359,7 +2359,7 @@ function AutoRotateImage($src_image, $ref = false)
 
         # we'll remove the exiftool created file copy (as a result of using -TagsFromFile)
         if (file_exists($new_image . '_original')) {
-            unlink(safe_file_name($new_image) . '_original');
+            unlink($new_image . '_original');
         }
     }
 
