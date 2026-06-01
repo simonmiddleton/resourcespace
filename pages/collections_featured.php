@@ -176,7 +176,7 @@ if ($parent > 0) {
 }
 
 ?>
-<div class="fc-header">
+<div class="page-title">
     <h1>
         <?php 
         if ($parent > 0) {

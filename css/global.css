@@ -1370,26 +1370,13 @@ div.autocomplete ul li {
 }
 
 #uploader .uppy-size--md .uppy-DashboardContent-addMore {
-    margin-right: 25px;
+    margin-right: -4px;
 }
 
 
 .uppy-Dashboard-browse{
     font-size: 20px;
     margin-bottom: 8px;
-}
-
-.uppy-DashboardContent-addMore svg{
-    display:none;
-}
-
-.uppy-size--xl .uppy-Dashboard-Item {
-    width: calc(10% - 30px);
-    height: 125px;
-}
-
-.uppy-size--xl .uppy-Dashboard-Item-preview {
-    height: 60px;
 }
 
 .uppy-Dashboard-Item-preview img.uppy-Dashboard-Item-previewImg {
@@ -2310,25 +2297,6 @@ div.MessageBox a {
 .fc-breadcrumbs .BreadcrumbsBoxTheme.BreadcrumbsBox a:active,
 .fc-breadcrumbs .BreadcrumbsBoxTheme.BreadcrumbsBox a:link{
     color: var(--colour-brand-primary-default);
-}
-.fc-header {
-    width: 100%;
-    position: relative;
-    padding: var(--space-16) 0 var(--space-8) 0;
-    background: var(--colour-surface-page-title-background);
-}
-.fc-header h1 {
-    width: 1376px;
-    margin: 0 auto;
-    
-    color: var(--colour-typography-900);
-    /* Desktop/Header/H1 */
-    /*font-family: "Space Grotesk";*/
-    font-size: 32px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 125%; /* 40px */
-    letter-spacing: -0.25px;
 }
 
 .FeaturedSimpleLinks {
@@ -3809,6 +3777,42 @@ div.slide:not([style]) {
 }
 
 /* ===== New UI elements ===== */
+
+.main-content {
+    width: 1376px;
+    margin: 0 auto;
+    padding-top: var(--space-36);
+}
+
+.page-title {
+    width: 100%;
+    position: relative;
+    padding: var(--space-16) 0 var(--space-8) 0;
+    background: var(--colour-surface-page-title-background);
+}
+.page-title h1 {
+    width: 1376px;
+    margin: 0 auto;
+    color: var(--colour-typography-900);
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 125%;
+    letter-spacing: -0.25px;
+    padding: 0 0 var(--space-8) 0;
+}
+
+.page-title p {
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%;
+    color: var(--colour-typography-900);
+    width: 1376px;
+    margin: 0 auto;
+    padding-bottom: var(--space-12);
+}
+
 
 .default-icon-size {
     width: 24px;
@@ -6144,4 +6148,20 @@ body:has(.collection-bar-holder.state-thumbs) #UICenter {
         width: calc(100% - 6px);
     }
 
+}
+
+@media(max-width: 1420px) {
+    .page-title {
+        padding-left: 16px;
+        padding-right: 16px;
+        width: unset;
+    }
+    .page-title h1, .page-title p {
+        width: unset;
+    }
+    .main-content {
+        padding-left: 16px;
+        padding-right: 16px;
+        width: unset;
+    }
 }

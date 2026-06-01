@@ -494,10 +494,6 @@ input:focus, textarea:focus, select:focus, .RecordPanel .RecordDownloadSpace .Do
     background-color: unset;
 }
 
-.uppy-Dashboard-Item-previewInnerWrap {
-    background-color: #f2f2f2 !important;
-}
-
 .uppy-ProviderBrowserItem-inner {
     color: #000;
     background-color: #F0F0F0;

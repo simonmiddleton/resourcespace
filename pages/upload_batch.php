@@ -1316,7 +1316,6 @@ jQuery(document).ready(function () {
         inline: true,
         width: '100%',
         height: 450,
-        thumbnailWidth: 125,
         showLinkToFileUploadResult: false,
         showProgressDetails: true,
         hideUploadButton: false,
@@ -1949,211 +1948,191 @@ function postUploadActions()
     processerrors = [];
     }
 </script>
-<div class="BasicsBox" >
-<?php if ($overquota)
-{
-echo "<h1>" . escape($lang["diskerror"]) . "</h1><p>" . escape($lang["overquota"]) . "</p>";
-include "../include/footer.php";
-exit();
-}
 
-if  ($alternative!="")
-    {
-    $alturl = generateURL($baseurl_short . 'pages/alternative_files.php',$searchparams,array("ref"=>$alternative));
-    ?>
-    <p>
-        <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $alturl ?>"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtomanagealternativefiles"])?></a>
-    </p><?php
-    }
-elseif ($replace_resource!="")
-    {
-    $editurl = generateURL($baseurl_short . 'pages/edit.php',$searchparams,array("ref"=>$replace_resource));
-    $viewurl = generateURL($baseurl_short . 'pages/view.php',$searchparams,array("ref"=>$replace_resource));
-    ?>
-    <p>
-        <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $editurl ?>"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoeditmetadata"])?></a>
-    <br />
-        <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $viewurl ?>"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresourceview"])?></a>
-    </p>
-    <?php
-    }
-
-if ($alternative!="")
-    {
-    $resource=get_resource_data($alternative);
-    if ($alternative_file_resource_preview)
-        {
-        $imgpath=get_resource_path($resource['ref'],true,"col",false);
-        if (file_exists($imgpath))
-            {?>
-            <img alt="<?php echo escape(i18n_get_translated($resource['field'.$view_title_field] ?? ""));?>"
-            src="<?php echo get_resource_path($resource['ref'],false,"col",false);?>"/>
-            <?php
-            }
-        }
-    echo "<h2>" . escape((string) $resource['field'.$view_title_field]) . "</h2><br/>";
-    }
-
+<?php
 # Define the titles:
-if ($replace!="")
-    {
+if ($replace != "") {
     # Replace Resource Batch
     $titleh1 = $lang["replaceresourcebatch"];
-    $titleh2 = "";
     $intro = $lang["intro-plupload_upload-replace_resource"];
-    }
-elseif ($replace_resource!="")
-    {
+} elseif ($replace_resource != "") {
     # Replace file
     $titleh1 = $lang["replacefile"];
-    $titleh2 = "";
     $intro = $lang["intro-plupload_upload-replace_resource"];
-    }
-elseif ($alternative!="")
-    {
+} elseif ($alternative != "") {
     # Batch upload alternative files
     $titleh1 = $lang["alternativebatchupload"];
-    $titleh2 = "";
     $intro = $lang["intro-plupload"];
-    }
-else
-    {
+} else {
     # Add Resource Batch - In Browser
     $titleh1 = $lang["addresourcebatchbrowser"];
     $intro = $lang["intro-plupload"];
-    }
+}
 
+hook("upload_page_top");
 ?>
-<?php hook("upload_page_top"); ?>
 
-<?php if (!hook("replacepluploadtitle")){?><h1><?php echo $titleh1 ?></h1><?php } ?>
-<div id="upload_instructions"><p><?php echo $intro;render_help_link("user/uploading");?></p></div>
-<?php
+<div class="page-title">
+    <?php 
+    if ($overquota) {
+        echo "<h1>" . escape($lang["diskerror"]) . "</h1><p>" . escape($lang["overquota"]) . "</p>";
+        include "../include/footer.php";
+        exit();
+    }
+    ?>
+    <h1><?php echo $titleh1 ?></h1>
+    <div id="upload_instructions">
+        <p><?php echo $intro;render_help_link("user/uploading");?></p>
+    </div>
+</div>
 
-if (isset($upload_max_file_size))
-    {
-    if (is_numeric($upload_max_file_size))
-        {
-        $sizeText = formatfilesize($upload_max_file_size);
-        }
-    else
-        {
-        $sizeText = formatfilesize(filesize2bytes($upload_max_file_size));
-        }
-    echo ' '.sprintf(escape($lang['plupload-maxfilesize']), $sizeText);
+<div class="main-content">
+    <?php
+    if ($alternative != "") {
+        $alturl = generateURL($baseurl_short . 'pages/alternative_files.php', $searchparams, array("ref" => $alternative));
+        ?>
+        <p>
+            <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $alturl ?>"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtomanagealternativefiles"])?></a>
+        </p>
+        <?php
+    } elseif ($replace_resource != "") {
+        $editurl = generateURL($baseurl_short . 'pages/edit.php',$searchparams, array("ref" => $replace_resource));
+        $viewurl = generateURL($baseurl_short . 'pages/view.php',$searchparams, array("ref" => $replace_resource));
+        ?>
+        <p>
+            <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $editurl ?>"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoeditmetadata"])?></a>
+            <br />
+            <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $viewurl ?>"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresourceview"])?></a>
+        </p>
+        <?php
     }
 
-hook("additionaluploadtext");
+    if ($alternative != "") {
+        $resource = get_resource_data($alternative);
+        if ($alternative_file_resource_preview) {
+            $imgpath = get_resource_path($resource['ref'], true, "col", false);
+            if (file_exists($imgpath)) {
+                ?>
+                <img alt="<?php echo escape(i18n_get_translated($resource['field'.$view_title_field] ?? ""));?>" src="<?php echo get_resource_path($resource['ref'],false,"col",false);?>"/>
+                <?php
+            }
+        }
+        echo "<h2>" . escape((string) $resource['field' . $view_title_field]) . "</h2><br/>";
+    }
 
-if (isset($allowedmime) && $alternative=='')
-    {
-    sort($allowedmime);
-    $allowed_types=implode(",",$allowedmime);
-    ?><p><?php echo str_replace_formatted_placeholder("%extensions", str_replace(",",", ",$allowed_types), $lang['allowedextensions-extensions'])?></p>
-    <?php
+    if (isset($upload_max_file_size)) {
+        if (is_numeric($upload_max_file_size)) {
+            $sizeText = formatfilesize($upload_max_file_size);
+        } else {
+            $sizeText = formatfilesize(filesize2bytes($upload_max_file_size));
+        }
+        echo ' ' . sprintf(escape($lang['plupload-maxfilesize']), $sizeText);
+    }
+
+    hook("additionaluploadtext");
+
+    if (isset($allowedmime) && $alternative == '') {
+        sort($allowedmime);
+        $allowed_types = implode(",", $allowedmime);
+        ?>
+        <p><?php echo str_replace_formatted_placeholder("%extensions", str_replace(",",", ",$allowed_types), $lang['allowedextensions-extensions'])?></p>
+        <?php
     } ?>
 
+    <div id="uploader"></div>
 
-    <div id="uploader" ></div>
-
-<?php
-hook ("beforeuploadform");
-if(($replace_resource != '' || $replace != '' || $upload_then_edit) && !(isset($alternative) && (int) $alternative > 0) && (display_upload_options() || $replace_resource_preserve_option))
-    {
-    // Show options on the upload page if in 'upload_then_edit' mode or replacing a resource
-    ?>
-    <h2 class="CollapsibleSectionHead <?php if ($upload_collection_name_required && $replace_resource == '' && $replace == '') { ?>expanded<?php } else { ?>collapsed<?php } ?>" onClick="UICenterScrollBottom();" id="UploadOptionsSectionHead"><?php echo escape($lang["upload-options"]); ?></h2>
-    <div class="CollapsibleSection" id="UploadOptionsSection">
-    <form id="UploadForm" class="uploadform FormWide" action="<?php echo $baseurl_short?>pages/upload_batch.php">
     <?php
-    generateFormToken("upload_batch");
+    hook ("beforeuploadform");
 
-    // Show the option to keep the existing file as alternative when replacing the resource
-    if($replace_resource_preserve_option && ($replace_resource != '' || $replace != ''))
-        {
-        if(!isset($default_replace_resource_original_alt_filename))
-            {
-            $default_replace_resource_original_alt_filename = '';
-            }
+    if (($replace_resource != '' || $replace != '' || $upload_then_edit) && !(isset($alternative) && (int) $alternative > 0) && (display_upload_options() || $replace_resource_preserve_option)) {
+        // Show options on the upload page if in 'upload_then_edit' mode or replacing a resource
         ?>
-        <div class="Question">
-            <label for="keep_original"><?php echo escape($lang["replace_resource_preserve_original"]); ?></label>
-            <input id="keep_original" type="checkbox" name="keep_original" <?php if($replace_resource_preserve_default) { ?>checked<?php } ?> value="yes">
-            <div class="clearerleft"></div>
-        </div>
-        <div class="Question">
-            <label for="replace_resource_original_alt_filename"><?php echo escape($lang['replace_resource_original_alt_filename']); ?></label>
-            <input id="replace_resource_original_alt_filename" type="text" name="replace_resource_original_alt_filename" value="<?php echo $default_replace_resource_original_alt_filename; ?>">
-            <div class="clearerleft"></div>
-            <script>
-            jQuery(document).ready(function () {
-                if(jQuery('#keep_original').is(':checked'))
-                    {
-                    jQuery('#replace_resource_original_alt_filename').parent().show();
-                    }
-                else
-                    {
-                    jQuery('#replace_resource_original_alt_filename').parent().hide();
-                    }
-            });
+        <h2 class="CollapsibleSectionHead <?php if ($upload_collection_name_required && $replace_resource == '' && $replace == '') { ?>expanded<?php } else { ?>collapsed<?php } ?>" onClick="UICenterScrollBottom();" id="UploadOptionsSectionHead">
+            <?php echo escape($lang["upload-options"]); ?>
+        </h2>
+        <div class="CollapsibleSection" id="UploadOptionsSection">
+            <form id="UploadForm" class="uploadform FormWide" action="<?php echo $baseurl_short?>pages/upload_batch.php">
+                <?php
+                generateFormToken("upload_batch");
 
-            jQuery('#keep_original').change(function() {
-                if(jQuery(this).is(':checked'))
-                    {
-                    jQuery('#replace_resource_original_alt_filename').parent().show();
+                // Show the option to keep the existing file as alternative when replacing the resource
+                if ($replace_resource_preserve_option && ($replace_resource != '' || $replace != '')) {
+                    if (!isset($default_replace_resource_original_alt_filename)) {
+                        $default_replace_resource_original_alt_filename = '';
                     }
-                else
-                    {
-                    jQuery('#replace_resource_original_alt_filename').parent().hide();
-                    }
-            });
-            </script>
-        </div>
+                    ?>
+
+                    <div class="Question">
+                        <label for="keep_original"><?php echo escape($lang["replace_resource_preserve_original"]); ?></label>
+                        <input id="keep_original" type="checkbox" name="keep_original" <?php if ($replace_resource_preserve_default) { ?>checked<?php } ?> value="yes">
+                        <div class="clearerleft"></div>
+                    </div>
+                    <div class="Question">
+                        <label for="replace_resource_original_alt_filename"><?php echo escape($lang['replace_resource_original_alt_filename']); ?></label>
+                        <input id="replace_resource_original_alt_filename" type="text" name="replace_resource_original_alt_filename" value="<?php echo $default_replace_resource_original_alt_filename; ?>">
+                        <div class="clearerleft"></div>
+                        <script>
+                            jQuery(document).ready(function () {
+                                if (jQuery('#keep_original').is(':checked')) {
+                                    jQuery('#replace_resource_original_alt_filename').parent().show();
+                                } else {
+                                    jQuery('#replace_resource_original_alt_filename').parent().hide();
+                                }
+                            });
+
+                            jQuery('#keep_original').change(function() {
+                                if (jQuery(this).is(':checked')) {
+                                    jQuery('#replace_resource_original_alt_filename').parent().show();
+                                } else {
+                                    jQuery('#replace_resource_original_alt_filename').parent().hide();
+                                }
+                            });
+                        </script>
+                    </div>
+                    <?php
+                } elseif ($upload_then_edit && $replace == "" && $replace_resource == "") {
+                    include '../include/edit_upload_options.php';
+                }
+
+                /* Show the import embedded metadata checkbox when uploading a missing file or replacing a file.
+                In the other upload workflows this checkbox is shown in a previous page. */
+                if (
+                    !hook("replacemetadatacheckbox")
+                    && $metadata_read
+                    && 
+                    (
+                        getval("upload_a_file","")!="" 
+                        || getval("replace_resource","")!=""  
+                        || getval("replace","")!=""
+                    )
+                ) {
+                    ?>
+                    <div class="Question">
+                        <label for="no_exif"><?php echo escape($lang["no_exif"])?></label>
+                        <input type=checkbox <?php if (!$metadata_read_default){?>checked<?php } ?> id="no_exif" name="no_exif" value="yes">
+                        <div class="clearerleft"></div>
+                    </div>
+                    <?php
+                }
+                ?>
+            </form>
+        </div><!-- End of UploadOptionsSection -->
         <?php
-        }
-    elseif ($upload_then_edit && $replace == "" && $replace_resource == "")
-        {
-        include '../include/edit_upload_options.php';
-        }
+    }
+    hook('plupload_before_status');
+    ?>
 
-    /* Show the import embedded metadata checkbox when uploading a missing file or replacing a file.
-    In the other upload workflows this checkbox is shown in a previous page. */
-    if (
-        !hook("replacemetadatacheckbox")
-        && $metadata_read
-        && 
-        (
-            getval("upload_a_file","")!="" 
-            || getval("replace_resource","")!=""  
-            || getval("replace","")!=""
-        )
-        ) {
-            ?>
-            <div class="Question">
-                <label for="no_exif"><?php echo escape($lang["no_exif"])?></label><input type=checkbox <?php if (!$metadata_read_default){?>checked<?php } ?> id="no_exif" name="no_exif" value="yes">
-                <div class="clearerleft"> </div>
-            </div>
-            <?php
-        }
+    <h2 class="CollapsibleSectionHead collapsed" id="UploadLogSectionHead" onClick="UICenterScrollBottom();"><?php echo escape($lang["log"]); ?></h2>
+    <div class="CollapsibleSection" id="UploadLogSection">
+        <textarea id="upload_log" rows=10 cols=100 style="width: 100%; border: solid 1px;" ><?php echo escape($lang["plupload_log_intro"]) . date("d M y @ H:i"); ?></textarea>
+    </div> <!-- End of UploadLogSection -->
 
-    } // End of upload options
-hook('plupload_before_status');
-?>
-</form>
-</div><!-- End of UploadOptionsSection -->
-
-<h2 class="CollapsibleSectionHead collapsed" id="UploadLogSectionHead" onClick="UICenterScrollBottom();"><?php echo escape($lang["log"]); ?></h2>
-<div class="CollapsibleSection" id="UploadLogSection">
-    <textarea id="upload_log" rows=10 cols=100 style="width: 100%; border: solid 1px;" ><?php echo escape($lang["plupload_log_intro"]) . date("d M y @ H:i"); ?></textarea>
-</div> <!-- End of UploadLogSection -->
-
-</div>
-
-<!-- Continue button, hidden unless errors are encountered so that user can view log before continuing -->
-<div class="BasicsBox" >
-    <input name="continue" id="upload_continue" type="button" style="display: none;" value="&nbsp;&nbsp;<?php echo escape($lang['continue']); ?>&nbsp;&nbsp;"
-        onclick="return CentralSpaceLoad('<?php echo $redirecturl; ?>',true);">
-</div>
+    <!-- Continue button, hidden unless errors are encountered so that user can view log before continuing -->
+    <div class="BasicsBox" >
+        <input name="continue" id="upload_continue" type="button" style="display: none;" value="&nbsp;&nbsp;<?php echo escape($lang['continue']); ?>&nbsp;&nbsp;"
+            onclick="return CentralSpaceLoad('<?php echo $redirecturl; ?>',true);">
+    </div>
+</div><!-- End of main-content -->
 <?php
 
 hook("upload_page_bottom");
