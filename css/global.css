@@ -822,6 +822,7 @@ img[src$=".svg"]
 }
 
 #CentralSpaceContainer {
+    margin-bottom: 60px;
     padding: 0 0 0 0;
     text-align:left;
 }
@@ -1163,7 +1164,7 @@ input[type="number"].NumberSearchWidth {width:80px; margin: 0 10px;}
 .RecordPanel p{padding:0; margin:0.5em 0 0.5em 0;}
 
 /* Basic page */
-.BasicsBox {margin: 15px 15px 15px 20px;}
+.BasicsBox {margin: 15px 15px 10px 20px;}
 .BasicsBox h1 {padding: 0 0 0.5em;}
 .BasicsBox h2 {font-size: 1.2em;margin-bottom: 4px;}
 .BasicsBox .HorizontalNav ul {padding:0.2em 0;margin:0 0 1.5em;list-style:none;}
