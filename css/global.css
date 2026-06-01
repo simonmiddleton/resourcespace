@@ -390,12 +390,12 @@ button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpac
 
     background-color: var(--colour-surface-card-content-background);
     color: var(--colour-typography-900);
-    /* Desktop/Body/Default */
+
     font-family: "Atkinson Hyperlegible Next";
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
-    line-height: 140%; /* 22.4px */
+    line-height: 140%;
     border-radius: var(--space-4) var(--space-4);
     overflow: hidden;
     flex: 0 2.1 320px;
@@ -515,7 +515,7 @@ button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpac
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
-    line-height: 100%; /* 18px */
+    line-height: 100%;
 
     padding: 2px 5px;
 }
@@ -535,12 +535,11 @@ button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpac
     align-items: flex-start;
     align-self: stretch;
 
-    /* Desktop/Header/H4 */
     /*font-family: Space Grotesk;*/
     font-size: 18px;
     font-style: normal;
     font-weight: 700;
-    line-height: 125%; /* 22.5px */
+    line-height: 125%;
     letter-spacing: -0.25px;
 }
 .tile-graph-container {
@@ -549,6 +548,9 @@ button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpac
 }
 .tile-graph-container.tile-pie-graph canvas{
     margin: auto;
+}
+.tile-graph-container.tile-line-graph {
+    height: auto;
 }
 .tile-graph-legend {
     display: flex;
@@ -586,7 +588,7 @@ button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpac
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
-    line-height: 140%; /* 19.6px */
+    line-height: 140%;
 }
 .tile-summary {
     display: flex;
@@ -607,7 +609,7 @@ button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpac
     font-size: 32px;
     font-style: normal;
     font-weight: 500;
-    line-height: 125%; /* 40px */
+    line-height: 125%;
 }
 .tile-summary > h2 {
     color: var(--colour-link-primary-default);
@@ -616,7 +618,7 @@ button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpac
     font-size: 14.941px;
     font-style: normal;
     font-weight: 400;
-    line-height: 140%; /* 20.918px */
+    line-height: 140%;
 }
 div.tile-select {
     padding-bottom: var(--space-8);
@@ -1666,8 +1668,6 @@ a.HomePanel:hover {
     position: absolute;
     top: 130px;
     left: 10px;
-    padding: 2px 10px;
-    font-size: 1.5em;
 
     display: inline-flex;
     height: 26px;
@@ -1681,7 +1681,7 @@ a.HomePanel:hover {
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
-    line-height: 150%; /* 21px */
+    line-height: 150%;
 
     border-radius: var(--space-4);
     background: var(--colour-transparency-black-50);
@@ -1768,12 +1768,12 @@ a.HomePanel:hover {
 .DoubleWidthDashTile .tile-summary > p{
     font-size: 64px;
     font-weight: 500;
-    line-height: 125%; /* 80px */
+    line-height: 125%;
 }
 .DoubleWidthDashTile .tile-summary > h{
     font-size: 18px;
     font-weight: 400;
-    line-height: 140%; /* 25.2px */
+    line-height: 140%;
 }
 .DoubleWidthDashTile .tile-graph {
     flex: 1 1 0;
@@ -1794,7 +1794,6 @@ a.HomePanel:hover {
     gap: var(--space-8);
     flex: 1 0 0;
     border-radius: var(--space-4);
-    /*background: var(--colour-surface-200);*/
 }
 
 .DashTileActions .tool {

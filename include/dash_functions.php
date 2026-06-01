@@ -1689,7 +1689,7 @@ function get_tile_custom_style($buildstring)
             $return_value .= '#';
         }
 
-        $return_value .= $buildstring['tlstylecolour'] . ';';
+        $return_value .= escape($buildstring['tlstylecolour']) . ';';
 
         return $return_value;
     } else {

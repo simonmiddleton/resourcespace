@@ -296,7 +296,7 @@ function tile_config_themeselector($tile, $tile_id, $tile_width, $tile_height)
                 if ($resources[$i] !== null && $i == 0) {
                     ?>
                         <img
-                            alt="<?php echo $resources[$i]['title']; ?>"
+                            alt="<?php echo escape($resources[$i]['title']); ?>"
                             src="<?php echo get_resource_path($resources[$i]['ref'], false, 'pre', false, 'jpg'); ?>">
                     <?php
                 } elseif ($i == 0) { 
@@ -314,7 +314,7 @@ function tile_config_themeselector($tile, $tile_id, $tile_width, $tile_height)
                             if ($resources[$i] !== null) {
                                 ?>
                                     <img
-                                        alt="<?php echo $resources[$i]['title']; ?>"
+                                        alt="<?php echo escape($resources[$i]['title']); ?>"
                                         src="<?php echo get_resource_path($resources[$i]['ref'], false, 'pre', false, 'jpg'); ?>">
                                 <?php
                             } else {
@@ -373,7 +373,7 @@ function tile_config_themeselector($tile, $tile_id, $tile_width, $tile_height)
  *  @param array    $tile array usually from get_tile()
  *  @param string   $tile_id string used to identify the tile on the page
  */
-function tile_icon($tile, $tile_id)
+function tile_icon(array $tile, string $tile_id): void
 {
     global $lang, $search_all_workflow_states;
     
@@ -471,12 +471,11 @@ function tile_icon($tile, $tile_id)
 /**
  *  Generate HTML for a freetext tile
  * 
- *  @param array    $tile array usually from get_tile()
- *  @param string   $tile_id string used to identify the tile on the page
+ *  @param array         $tile array usually from get_tile()
+ *  @param string|null   $tile_id string used to identify the tile on the page
  */
-function tile_freetext($tile, $tile_id = null)
+function tile_freetext(array $tile, string|null $tile_id = null): void
 {
-    global $lang;
     ?>
     <div class="tile-desc">
         <h2><?php echo escape(i18n_get_translated($tile["title"])); ?></h2>
@@ -655,13 +654,13 @@ function tile_featured_collection_multi($tile, $tile_id, $tile_width, $tile_heig
                     if ($preview_paths[$i]['path'] !== null && $i == 0) {
                         ?>
                             <img
-                                alt="<?php echo $preview_paths[$i]['title']; ?>"
+                                alt="<?php echo escape($preview_paths[$i]['title']); ?>"
                                 src="<?php echo $preview_paths[$i]['path']; ?>">
                         <?php
                     } elseif ($i == 0) { 
                         ?>
                             <div class="tile-placeholder">
-                                <div class="thumbs-tile-image" alt="<?php echo $preview_paths[$i]['title']?>"></div>
+                                <div class="thumbs-tile-image" alt="<?php echo escape($preview_paths[$i]['title']); ?>"></div>
                             </div>
                         <?php
                     } else {
@@ -673,12 +672,12 @@ function tile_featured_collection_multi($tile, $tile_id, $tile_width, $tile_heig
                             if ($preview_paths[$i]['path'] !== null) {
                                 ?>
                                     <img
-                                        alt="<?php echo $preview_paths[$i]['title']; ?>"
+                                        alt="<?php echo escape($preview_paths[$i]['title']); ?>"
                                         src="<?php echo $preview_paths[$i]['path']; ?>">
                                 <?php
                             } else {
                                 ?>
-                                    <div alt="<?php echo $preview_paths[$i]['title']; ?>"></div>
+                                    <div alt="<?php echo escape($preview_paths[$i]['title']); ?>"></div>
                                 <?php
                             }
                         if ($i == 2) {
