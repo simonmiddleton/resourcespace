@@ -5064,8 +5064,14 @@ function render_featured_collection(array $ctx, array $fc)
     }
 
     if (count($theme_images) == 1) {
-        $image_html = sprintf("<img class=\"thmbs-tile-img\" src=\"%s\" alt=\"%s\">", 
+        if ($theme_images[0] == null) {
+            $image_html = "<div class=\"tile-placeholder\">
+                                <div class=\"thumbs-tile-image\"></div>
+                           </div>";
+        } else {
+            $image_html = sprintf("<img class=\"thmbs-tile-img\" src=\"%s\" alt=\"%s\">", 
                         $theme_images[0]['path'], escape($theme_images[0]['alt_text'] ?? ""));
+        }
     } elseif (count($theme_images) >= 3) {
         if ($theme_images[0] == null) {
             $image_html = "<div class=\"tile-placeholder\">
