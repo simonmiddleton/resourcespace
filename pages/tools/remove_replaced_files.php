@@ -81,7 +81,7 @@ foreach ($resource_alt_files as $alt_file) {
         }
     }
 
-    $alt_file_thm_location = get_resource_path($alt_file['resource'], true, 'thm', true, $alt_file['alt_file_extension'], -1, 1, false, "", $alt_file['previous_file_alt_ref']);
+    $alt_file_thm_location = get_resource_path($alt_file['resource'], true, 'thm', true, 'jpg', -1, 1, false, "", $alt_file['previous_file_alt_ref']);
     if (file_exists($alt_file_thm_location)) {
         if ($dry_run) {
             echo "Resource {$alt_file['resource']} - Found alternative file thumb $alt_file_thm_location" . PHP_EOL;
