@@ -2053,9 +2053,9 @@ if (isset($allowedmime) && $alternative=='')
     <?php
     } ?>
 
-<div class="BasicsBox">
-        <div id="uploader" ></div>
-</div>
+
+    <div id="uploader" ></div>
+
 <?php
 hook ("beforeuploadform");
 if(($replace_resource != '' || $replace != '' || $upload_then_edit) && !(isset($alternative) && (int) $alternative > 0) && (display_upload_options() || $replace_resource_preserve_option))
@@ -2142,12 +2142,11 @@ hook('plupload_before_status');
 </form>
 </div><!-- End of UploadOptionsSection -->
 
-<div class="BasicsBox" >
-    <h2 class="CollapsibleSectionHead collapsed" id="UploadLogSectionHead" onClick="UICenterScrollBottom();"><?php echo escape($lang["log"]); ?></h2>
-    <div class="CollapsibleSection" id="UploadLogSection">
-        <textarea id="upload_log" rows=10 cols=100 style="width: 100%; border: solid 1px;" ><?php echo escape($lang["plupload_log_intro"]) . date("d M y @ H:i"); ?></textarea>
-    </div> <!-- End of UploadLogSection -->
-</div>
+<h2 class="CollapsibleSectionHead collapsed" id="UploadLogSectionHead" onClick="UICenterScrollBottom();"><?php echo escape($lang["log"]); ?></h2>
+<div class="CollapsibleSection" id="UploadLogSection">
+    <textarea id="upload_log" rows=10 cols=100 style="width: 100%; border: solid 1px;" ><?php echo escape($lang["plupload_log_intro"]) . date("d M y @ H:i"); ?></textarea>
+</div> <!-- End of UploadLogSection -->
+
 </div>
 
 <!-- Continue button, hidden unless errors are encountered so that user can view log before continuing -->
