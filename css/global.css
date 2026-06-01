@@ -1658,7 +1658,6 @@ input.contactadminbutton  {
     align-items: stretch;
     gap: var(--space-32);
     background-color: var(--colour-surface-view-background);
-    justify-content: center;
     margin: 0 auto;
 }
 
