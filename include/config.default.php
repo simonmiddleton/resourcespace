@@ -652,6 +652,7 @@ $terms_upload = false;
 $terms_login = false;
 
 // Controls how the collection bar should be displayed ("hide" is better if collections are not going to be heavily used).
+// Will be overriden by local value stored in cookie, or via user preferences/group config override being set
 // Can be:
 //     show - full display, the default option
 //     actions - minimized bar showing selector for collections and actions
