@@ -156,6 +156,7 @@
     --toggle-height: var(--space-60);
     --actions-height: 110px;
     --thumbs-height: 184px;
+    --uicenter-height: calc(100% - 66px);
     
 }
 
@@ -815,7 +816,7 @@ img[src$=".svg"]
 #login_box #Footer {margin: 0 0 10px 0;}
 
 #UICenter {
-    height: calc(100% - 66px);
+    height: var(--uicenter-height);
     transition: height 0.25s ease;
     overflow-y: scroll;
     /*background: var(--colour-surface-view-background);*/
@@ -6042,11 +6043,11 @@ header.LoginHeader {
 }
 
 body:has(.collection-bar-holder.state-actions) #UICenter {
-    height: calc(100% - 66px - var(--actions-height));
+    height: calc(var(--uicenter-height) - var(--actions-height));
 }
 
 body:has(.collection-bar-holder.state-thumbs) #UICenter {
-    height: calc(100% - 66px - var(--actions-height) - var(--thumbs-height));
+    height: calc(var(--uicenter-height) - var(--actions-height) - var(--thumbs-height));
 }
 
 .ui-droppable-active .collection-bar-actions-section, .ui-droppable-active .collection-bar-thumbs-section {
@@ -6071,6 +6072,7 @@ body:has(.collection-bar-holder.state-thumbs) #UICenter {
     :root {
         --toggle-height: var(--space-48);
         --thumbs-height: 128px;
+        --uicenter-height: calc(100% - 54px);
     }
 
     .collection-bar-holder .collection-bar-toggle-button {
@@ -6104,10 +6106,13 @@ body:has(.collection-bar-holder.state-thumbs) #UICenter {
         height: var(--space-20);
         line-height: var(--space-20);
     }
-
 }
 
 @media(max-width: 1000px) {
+
+    :root {
+        --uicenter-height: calc(100% - var(--space-64) - 54px);
+    }
 
     .collection-bar-actions-form select {
         width: 328px;
@@ -6132,6 +6137,7 @@ body:has(.collection-bar-holder.state-thumbs) #UICenter {
 
     :root {
         --actions-height: 268px;
+        --uicenter-height: calc(100% - 54px);
     }
 
     .collection-bar-holder .collection-bar-toggle-button {
