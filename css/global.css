@@ -3314,14 +3314,8 @@ input[type="text"]#iconpicker-input {
     {
     white-space: pre-wrap;word-wrap: break-word; width:100%;padding:5px;
     }
-    
-
 
 #HomeSiteText {
-    background: var(--Hero-Gradient,
-        linear-gradient(90deg, rgba(0,0,0,.5) 0%, rgba(0,0,0,0) 50.48%),
-        linear-gradient(90deg, rgba(12,13,12,.3) 0%, rgba(106,115,106,.3) 100%)
-    ) !important;
     width: 100%;
     position: relative;
     z-index: 2;
@@ -3329,10 +3323,22 @@ input[type="text"]#iconpicker-input {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    max-width: 1376px;
+}
+
+#HomeSiteTextPanel{
+    background: var(--Hero-Gradient,
+        linear-gradient(90deg, rgba(0,0,0,.5) 0%, rgba(0,0,0,0) 50.48%),
+        linear-gradient(90deg, rgba(12,13,12,.3) 0%, rgba(106,115,106,.3) 100%)
+    ) !important;
+    width: 100%;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
 }
 
 #HomeSiteTextInner {
-    padding: var(--space-32, 32px) 14%;
     max-width: 656px;
 }
 
@@ -3403,7 +3409,7 @@ input[type="text"]#iconpicker-input {
     to   { stroke-dashoffset: 0; }
     }
 
-@media (max-width: 1365px) {
+@media (max-width: 1440px) {
     .hero-banner-progress{
         z-index: -1; /* Not display:none to keep progress timer running and in sync */
     }
