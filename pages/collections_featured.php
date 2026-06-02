@@ -330,7 +330,7 @@ if ($parent > 0) {
 
         // Show below button by default. If it would overflow bottom then show it above
         top = btn_bb.bottom;
-        if (top + menu_bb.height > container.bottom) {
+        if (top + menu_bb.height > window.outerHeight) {
             top = btn_bb.top - menu_bb.height;
         }
 
