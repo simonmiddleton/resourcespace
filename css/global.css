@@ -1408,6 +1408,15 @@ div.autocomplete ul li {
     margin: 0 8px;
 }
 
+/* Reduce z-index to prevent overlapping with modals and overlays */
+.uppy-DashboardContent-bar,
+.uppy-StatusBar,
+.uppy-Dashboard-AddFilesPanel,
+.uppy-DashboardContent-panel,
+.uppy-size--md .uppy-Dashboard-Item-action--remove {
+    z-index: 100;
+}
+
 #showlog,#hidelog
     {
     margin-top:10px;
