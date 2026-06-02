@@ -2437,19 +2437,18 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
     margin-left: auto;
 }
 .FeaturedSimpleTile .top-right-menu {
-    grid-area: box;
+    display: flex;
+    flex-shrink: 0;
     place-self: start end;
     margin: 4px;
-    width: 28px;
-    height: 28px;
-    border-radius: 30px;
-    text-align: center;
     font-size: 20px;
     cursor: pointer;
-    z-index: 1;
-    display: flex;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 2px;
+    transition: background-color 0.15s ease, transform 0.05s ease;
 }
-.FeaturedSimpleTile:hover .top-right-menu { display: block; }
 .FeaturedSimpleLinks .context-menu-container {
     border-radius: 8px;
     padding: 6px;
@@ -5174,7 +5173,7 @@ header.LoginHeader {
     background: var(--colour-surface-200);
 }
 
-.resource-card-action-menu.is-open {
+.is-open {
     background-color: var(--colour-surface-1000);
     color: var(--colour-surface-50);
 }
