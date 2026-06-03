@@ -1,0 +1,6 @@
+grant_edit,1,resource_user_expiry,1,resource,A,1,,,YES,BTREE
+grant_edit,1,resource_user_expiry,2,user,A,2,,,YES,BTREE
+grant_edit,1,resource_user_expiry,3,expiry,A,2,,,YES,BTREE
+grant_edit,1,resource_usergroup_expiry,1,resource,A,1,,,YES,BTREE
+grant_edit,1,resource_usergroup_expiry,2,usergroup,A,2,,,YES,BTREE
+grant_edit,1,resource_usergroup_expiry,3,expiry,A,2,,,YES,BTREE
