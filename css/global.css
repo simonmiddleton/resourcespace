@@ -4345,6 +4345,10 @@ header.LoginHeader {
     object-fit: contain;
 }
 
+#header-container .logo a {
+    align-content: center;
+}
+
 #header-container .header-search-field {
     flex: 0 1 clamp(320px, 38vw, 400px);
     min-width: 0;
