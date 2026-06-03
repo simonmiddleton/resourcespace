@@ -164,7 +164,7 @@ $setarchivestate                        = getval('status', '', true);
 $setarchivestate                        = get_default_archive_state($setarchivestate);
 $alternative                            = getval('alternative', ''); # Batch upload alternative files
 $replace                                = getval('replace', ''); # Replace Resource Batch
-$replace_alternatives                   = getval('replace_alternatives', ""); # Option to replace alternative files
+$replace_alternatives                   = getval('replace_alternatives', 0); # Option to replace alternative files
 $batch_replace_min                      = getval("batch_replace_min",0,true); # Replace Resource Batch - minimum ID of resource to replace
 $batch_replace_max                      = getval("batch_replace_max",0,true); # Replace Resource Batch - maximum ID
 $batch_replace_col                      = getval("batch_replace_col",0,true); # Replace Resource Batch - collection to replace
@@ -586,7 +586,7 @@ if ($processupload)
         }
     elseif(!hook("initialuploadprocessing"))
         {
-        if ($alternative != "" || $replace_alternatives != "")
+        if ($alternative != "" || $replace_alternatives != "0")
             {
             # Determine whether to autorotate for alternative upload
             $autorotate = false;
@@ -597,7 +597,7 @@ if ($processupload)
                 }
             }
 
-            if ($replace_alternatives != "") {
+            if ($replace_alternatives != "0") {
                 # Add to an existing alternative file record
                 $alternatives = get_alternative_files_by_filename(
                     $upfilename,
@@ -643,7 +643,7 @@ if ($processupload)
                 }
             else
                 {
-                if ($replace_alternatives == "") {
+                if ($replace_alternatives == "0") {
                     # Add a new alternative file
                     $aref=add_alternative_file($alternative,$upfilename);
                 }
@@ -671,7 +671,7 @@ if ($processupload)
                         AutoRotateImage($path);
                     }
 
-                    if ($replace_alternatives != "") {
+                    if ($replace_alternatives != "0") {
                         $sql = new PreparedStatementQuery();
                         $sql->sql = "UPDATE resource_alt_files SET file_size=?, creation_date=NOW()";
                         $sql->parameters = ["i", $file_size];
@@ -731,7 +731,7 @@ if ($processupload)
                     hook('upload_alternative_extra', '', array($path));
 
                     $result["status"] = true;
-                    $result["message"] = $replace_alternatives != "" ? $lang["alternative_file_replaced"] : $lang["alternative_file_created"];
+                    $result["message"] = $replace_alternatives != "0" ? $lang["alternative_file_replaced"] : $lang["alternative_file_created"];
                     $result["id"] = $alternative;
                     $result["alternative"] = $aref;
                     set_processing_message("");
