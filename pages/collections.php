@@ -927,17 +927,13 @@ jQuery(function () {
 
                             <div class="collection-bar-resource-card-image">
                                 <?php
-                                $colimg_preview_size = $retina_mode ? 'thm' : 'col';
-                                $colimgpath = get_resource_preview($result[$n], [$colimg_preview_size]);
+                                $colimgpath = get_resource_preview($result[$n], ['thm']);
                                 if ($colimgpath !== false && is_safe_url($colimgpath['url'])) {
                                     ?>
                                     <img border="0"
                                         src="<?php echo $colimgpath['url']; ?>"
                                         title="<?php echo escape(i18n_get_translated($result[$n]["field" . $view_title_field]))?>"
-                                        alt="<?php echo escape(i18n_get_translated($result[$n]["field" . $view_title_field]))?>"
-                                        <?php if ($retina_mode) { ?>
-                                            onload="this.width/=2;this.onload=null;"
-                                        <?php } ?>                                    
+                                        alt="<?php echo escape(i18n_get_translated($result[$n]["field" . $view_title_field]))?>"                                   
                                     />
                                 <?php
                                 } else {
