@@ -191,6 +191,9 @@ function tile_graph(array $tile, string $tile_id): void
                                     unit: 'seconds',
                                     ticks: {
                                         display: false
+                                    },
+                                    border: {
+                                        display: false
                                     }
                                 }
                             }

@@ -414,7 +414,7 @@ button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpac
 }
 .tile-desc {
     display: flex;
-    padding: var(--space-24) var(--space-16) var(--space-16) var(--space-16);
+    padding: var(--space-16);
     flex-direction: column;
     align-items: flex-start;
     flex: 1 0 0;
@@ -570,13 +570,16 @@ button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpac
     display: flex;
     flex-direction: column;
     list-style: none;
-    margin: 0
+    margin: 0;
+    gap: var(--space-8);
+    padding-bottom: 0;
 }
 .tile-graph-legend li {
     gap: var(--space-8);
     display: flex;
     width: 100%;
     align-items: flex-start;
+    padding-bottom: 0;
 }
 .tile-graph-legend-bullet {
     width: 12px;
@@ -1663,9 +1666,6 @@ input.contactadminbutton  {
 
 .HomePanelPromotedIN h3 {
     padding-top:20px;
-}
-a.HomePanel:hover {
-    border-radius:8px;
 }
 
 p.tile_corner_box {
