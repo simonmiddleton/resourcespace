@@ -4853,6 +4853,8 @@ function render_featured_collections(array $ctx, array $items)
                     array(
                         'create'            => 'true',
                         'tltype'            => 'srch',
+                        'tlstyle'           => $fc['thumbnail_selection_method'] 
+                                                    == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS['most_popular_images'] ? 'multi' : 'thmbs',
                         'title'             => "{$fc['name']}",
                         'freetext'          => 'true',
                         'tile_audience'     => 'false',

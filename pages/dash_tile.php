@@ -329,8 +329,6 @@ if ($create) {
         $title = getval("title", "");
         $resource_count = getval("resource_count", 0, true);
 
-        unset($tile_style);
-
         $srch = urldecode($srch);
         $link = $srch . "&order_by=" . urlencode($order_by) . "&sort=" . urlencode($sort) . "&archive=" . urlencode($archive) . "&daylimit=" . urlencode($daylimit) . "&k=" . urlencode($k) . "&restypes=" . urlencode($restypes);
         $title = preg_replace("/^.*search=/", "", $srch);
@@ -353,6 +351,7 @@ if ($create) {
                 $title          = $returned_title['name'];
             }
         }
+        $tile_style_colour = '';
     }
 
     $pagetitle = $lang["createnewdashtile"];
