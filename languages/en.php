@@ -2562,7 +2562,7 @@ $lang["edit__multiple"] = "Please select which fields you wish to overwrite. Fie
 $lang["help__introtext"] = '<p>Get the most out of ResourceSpace. The Knowledge Base will help you use the system and the resources more effectively.</p><p><a href="https://www.resourcespace.com/knowledge-base/" target="_blank" rel="noopener noreferrer">ResourceSpace Knowledge Base</a></p>';
 $lang["home__restrictedtext"] = "Please click on the link that you were e-mailed to access the resources selected for you.";
 $lang["home__restrictedtitle"] = "Welcome to ResourceSpace [ver]";
-$lang["home__welcometext"] = "The simple, fast, &amp; free way to organise your digital assets.";
+$lang["home__welcometext"] = "The leading open source enterprise digital asset management system.";
 $lang["home__welcometitle"] = "Welcome to ResourceSpace [ver]";
 $lang["login__welcomelogin"] = "Welcome to ResourceSpace. Please log in.";
 $lang["local_tz"] = "Local time zone";
