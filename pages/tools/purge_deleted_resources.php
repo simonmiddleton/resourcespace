@@ -2,11 +2,9 @@
 
 // Script to purge all resources in the deletion state (status 3)
 // set following line to true to enable this script
+require __DIR__ . "/../../include/boot.php";
 command_line_only();
-
-include __DIR__ . "/../../include/boot.php";
 ob_end_clean(); // Discard output buffering as it's causing the script to stop working
-include __DIR__ . "/../../include/image_processing.php";
 
 if (ini_get('max_execution_time') < 1800 || $php_time_limit < 1800) {
     echo "Script maximum execution time should be set to at least 1800 seconds! Edit the config.php file and set \$php_time_limit.";
