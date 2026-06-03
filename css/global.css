@@ -2292,13 +2292,13 @@ div.MessageBox a {
     text-underline-position: from-font;
 }
 .fc-breadcrumbs .BreadcrumbsBox {
-    width: 100%;
-    padding: 0 var(--space-272);
+    width: 1376px;
+    padding: 0;
     background-color: unset;
     color: var(--colour-brand-primary-default);
 }
 .fc-breadcrumbs .BreadcrumbsBoxTheme {
-    margin: 0;
+    margin: 0 auto;
 }
 .fc-breadcrumbs .BreadcrumbsBox.BreadcrumbsBoxTheme .top-right-menu i {
     vertical-align: middle;
@@ -2307,6 +2307,11 @@ div.MessageBox a {
 .fc-breadcrumbs .BreadcrumbsBoxTheme.BreadcrumbsBox a:active,
 .fc-breadcrumbs .BreadcrumbsBoxTheme.BreadcrumbsBox a:link{
     color: var(--colour-brand-primary-default);
+}
+
+.fc-breadcrumbs .icon-chevron-right {
+    width: var(--space-16);
+    height: var(--space-16);
 }
 
 .FeaturedSimpleLinks {
@@ -2815,7 +2820,11 @@ a.Enabled, a:visited.Enabled {
     margin: 0 0 8px 0;
     padding: 0 0 8px 0;
 }
-.BreadcrumbsBox > .SearchBreadcrumbs{
+.BreadcrumbsBox > .SearchBreadcrumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-8);
+    align-items: center;
     margin: 0;
 }
 
@@ -6176,7 +6185,10 @@ body:has(.collection-bar-holder.state-thumbs) #UICenter {
 }
 
 @media(max-width: 1420px) {
-    .page-title {
+    .fc-breadcrumbs .BreadcrumbsBoxTheme {
+        width: 100%;
+    }
+    .page-title, .fc-breadcrumbs {
         padding-left: 16px;
         padding-right: 16px;
         width: unset;

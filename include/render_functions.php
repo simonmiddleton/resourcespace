@@ -2765,7 +2765,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
 * @return void
 */
 function renderBreadcrumbs(array $links, $pre_links = '', $class = '')
-    {
+{
     global $lang;
     /*
     NOTE: implemented as seen on themes and search. There is a lot of room for improvement UI wise
@@ -2775,18 +2775,17 @@ function renderBreadcrumbs(array $links, $pre_links = '', $class = '')
     are being created and make sure they all use this function (or any future related functions - like generateBreadcrumb() ).
     */
 
-    if(0 === count($links))
-        {
+    if (count($links) === 0) {
         return;
-        }
+    }
+
     ?>
     <div class="BreadcrumbsBox <?php echo $class; ?>">
         <div class="SearchBreadcrumbs">
         <?php
-        if('' !== $pre_links && $pre_links !== strip_tags($pre_links))
-            {
+        if ($pre_links !== '' && $pre_links !== strip_tags($pre_links)) {
             echo $pre_links . '&nbsp;' . LINK_CHEVRON_RIGHT;
-            }
+        }
 
         for ($i = 0; $i < count($links); $i++) {
             $anchor = isset($links[$i]['href']);
@@ -2796,39 +2795,37 @@ function renderBreadcrumbs(array $links, $pre_links = '', $class = '')
             // search_title_processing.php is building spans with different class names. We need to allow HTML in link titles.
             $title = get_inner_html_from_tag(strip_tags_and_attributes($links[$i]['title']), "p");
 
-            if(0 < $i)
-                {
+            if ($i >= 1) {
                 echo LINK_CHEVRON_RIGHT;
-                }
+            }
                 
-            if ($anchor) { ?>
-                <a href="<?php echo escape($links[$i]['href']); ?>"
+            if ($anchor) {
+                ?><a href="<?php echo escape($links[$i]['href']); ?>"
                     <?php if (isset($links[$i]["menu"]) && $links[$i]["menu"]) { ?>
                         onclick="ModalClose(); return ModalLoad(this, true, true, 'right');"
                     <?php } else { ?>
                         onclick="return CentralSpaceLoad(this, true);"
                     <?php }
-                    echo escape($anchor_attrs); ?>>
-            <?php } ?>
+                    echo escape($anchor_attrs); ?>><?php
+            }
+            
+            ?><span><?php echo $title; ?></span><?php
+            
+            if ($anchor) {
+                ?></a><?php
+            }
 
-            <span><?php echo $title; ?></span>
-
-            <?php if ($anchor) { ?>
-                </a>
-            <?php }
-
-            if (isset($links[$i]['help']))
-                {
+            if (isset($links[$i]['help'])) {
                 render_help_link($links[$i]['help']);
-                }
+            }
 
             if (isset($links[$i]['context_menu'])) {
                 ?>
                 <div>
-                <?php
-                render_top_right_menu_btn($links[$i]['context_menu']);
-                render_featured_collection_context_menu("BreadCrumb{$i}", $links[$i]['context_menu']);
-                ?>
+                    <?php
+                    render_top_right_menu_btn($links[$i]['context_menu']);
+                    render_featured_collection_context_menu("BreadCrumb{$i}", $links[$i]['context_menu']);
+                    ?>
                 </div>
                 <?php
             }
@@ -2837,7 +2834,7 @@ function renderBreadcrumbs(array $links, $pre_links = '', $class = '')
         </div>
     </div>
     <?php
-    }
+}
 
 
 /**

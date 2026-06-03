@@ -200,7 +200,7 @@ define('LINK_CARET', '<i aria-hidden="true" class="icon-chevron-right"></i>&nbsp
 define('LINK_CARET_BACK', '<i aria-hidden="true" class="icon-chevron-left"></i>&nbsp;');
 define('LINK_PLUS', '<i aria-hidden="true" class="icon-plus"></i>&nbsp;');
 define('LINK_PLUS_CIRCLE', '<i aria-hidden="true" class="icon-circle-plus"></i>&nbsp;');
-define('LINK_CHEVRON_RIGHT', '<i aria-hidden="true" class="icon-chevron-right"></i>&nbsp;');
+define('LINK_CHEVRON_RIGHT', '<i aria-hidden="true" class="icon-chevron-right"></i>');
 define('UPLOAD_ICON', '<i aria-hidden="true" class="icon-upload"></i>&nbsp;');
 define('CONTRIBUTIONS_ICON', '<i aria-hidden="true" class="icon-user-round-plus"></i>&nbsp;');
 define('ICON_EDIT', '<i class="icon-pencil" aria-hidden="true"></i>&nbsp;');
