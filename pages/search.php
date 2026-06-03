@@ -1512,7 +1512,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
         {
         $list_displayed = true;
         ?>
-        <div class="BasicsBox"><div class="Listview">
+        <div class="BasicsBox nopadding"><div class="Listview">
         <table class="ListviewStyle">
 
         <?php if(!hook("replacelistviewtitlerow")){?>   
