@@ -216,7 +216,7 @@ if ($job_add_error) {
             </div>
             <div class="clearerleft"></div>
         </div>
-            <div class="Question">
+        <div class="Question">
             <label for="video_update"><?php echo escape($lang['oj_recreate_previews_video_update']); ?></label>
             <input name="video_update" id="video_update" type="checkbox" value="1"<?php echo ($video_update ? 'checked="checked"' : ''); ?>>
             <div class="FormHelp JobFormHelp">
@@ -224,8 +224,7 @@ if ($job_add_error) {
             </div>
             <div class="clearerleft"></div>
         </div>
-        </div>
-            <div class="Question">
+        <div class="Question">
             <label for="delete_existing"><?php echo escape($lang['oj_recreate_previews_delete_existing']); ?></label>
             <input name="delete_existing" id="delete_existing" type="checkbox" value="1"<?php echo ($delete_existing ? 'checked="checked"' : ''); ?>>
             <div class="FormHelp JobFormHelp">
