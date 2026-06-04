@@ -45,7 +45,7 @@ if (
 }
 
 $draw_menu = !$add_collection_item_hidden 
-            && !$add_collection_item_hidden 
+            && !$remove_collection_item_hidden 
             && ($add_collection_item || $remove_collection_item);
 
 // Share
