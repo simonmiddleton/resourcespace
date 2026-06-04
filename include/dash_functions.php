@@ -1622,11 +1622,8 @@ function render_dash_tile_colour_chooser($tile_style, $tile_colour)
 {
     global $lang, $baseurl;
 
-    if ('ftxt' == $tile_style) { ?>
-        <div class="Question">
-    <?php } else { ?>
-        <span id="tile_style_colour_chooser" style="display: none;">
-    <?php } ?>
+    ?>
+    <div id="tile_style_colour_chooser" class="Question"  stlye="<?php echo $tile_style == 'ftxt' ? '' : 'display: none;'?>" >
 
     <label for="tile_style_colour"><?php echo escape($lang['colour']); ?></label>
     <input id="tile_style_colour" name="tlstylecolour" type="color" onchange="update_tile_preview_colour(this.value);" value="<?php echo $tile_colour; ?>">
@@ -1649,17 +1646,16 @@ function render_dash_tile_colour_chooser($tile_style, $tile_colour)
                     jQuery('#tile_style_colour_chooser').show();
                     update_tile_preview_colour('<?php echo $tile_colour; ?>');
                 }
-            });
-
-            jQuery('input:radio[name="tlstyle"]').change(function() {
-                if (jQuery(this).prop('checked') && jQuery(this).val() == '<?php echo $tile_style; ?>') {
-                    jQuery('#tile_style_colour_chooser').show();
-                } else {
-                    jQuery('#tile_style_colour_chooser').hide();
-                    jQuery('#tile_style_colour').val('');
-                    jQuery('#tile_style_colour').removeAttr('style');
-                    jQuery('#previewdashtile').removeAttr('style');
-                }
+                jQuery('input:radio[name="tlstyle"]').change(function() {
+                    if (jQuery(this).prop('checked') && jQuery(this).val() == '<?php echo $tile_style; ?>') {
+                        jQuery('#tile_style_colour_chooser').show();
+                        update_tile_preview_colour('<?php echo $tile_colour; ?>');
+                    } else if (jQuery(this).prop('checked') && jQuery(this).val() !== '<?php echo $tile_style; ?>') {
+                        jQuery('#tile_style_colour_chooser').hide();
+                        jQuery('#tile_style_colour').removeAttr('style');
+                        jQuery('#previewdashtile').removeAttr('style');
+                    }
+                });
             });
         <?php } ?>
     </script>
@@ -2005,7 +2001,15 @@ function validate_build_url($buildurl)
                         foreach ($tile_styles as $tile_type_style) {
                             $all_tile_styles = array_merge($all_tile_styles, $tile_type_style);
                         }
-                        if (!in_array($value, $all_tile_styles)) {
+                        if (
+                            !in_array($value, $all_tile_styles) 
+                            && 
+                                (
+                                    $value !== ""
+                                    && isset($build_url_parts_param['tltype'])
+                                    && $build_url_parts_param['tltype'] == 'ftxt'
+                                )
+                            ) {
                             $buildurl = "";
                         }
                         break;
