@@ -1908,7 +1908,9 @@ if($display != 'map')
 
             if(jQuery(elementScroll).length)
                 {
-                elementScroll.scrollIntoView();
+                elementScroll.scrollIntoView({
+                    container: 'nearest'
+                });
                 }
             }
         });
