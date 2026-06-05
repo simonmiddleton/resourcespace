@@ -208,70 +208,60 @@
 }
 .text-style-global-header-h-1 {
     font-size: 32px;
-    font-family: Atkinson Hyperlegible Next;
     font-weight: 600;
     font-style: normal;
     line-height: 125%;
 }
 .text-style-global-header-h-2 {
     font-size: 22px;
-    font-family: Atkinson Hyperlegible Next;
     font-weight: 600;
     font-style: normal;
     line-height: 125%;
 }
 .text-style-global-header-h-3 {
     font-size: 20px;
-    font-family: Atkinson Hyperlegible Next;
     font-weight: 600;
     font-style: normal;
     line-height: 125%;
 }
 .text-style-global-header-h-4 {
     font-size: 18px;
-    font-family: Atkinson Hyperlegible Next;
     font-weight: 600;
     font-style: normal;
     line-height: 125%;
 }
 .text-style-global-header-h-5 {
     font-size: 16px;
-    font-family: Atkinson Hyperlegible Next;
     font-weight: 600;
     font-style: normal;
     line-height: 125%;
 }
 .text-style-global-body-x-large {
     font-size: 20px;
-    font-family: Atkinson Hyperlegible Next;
     font-weight: 400;
     font-style: normal;
     line-height: 140%;
 }
 .text-style-global-body-large {
     font-size: 18px;
-    font-family: Atkinson Hyperlegible Next;
     font-weight: 400;
     font-style: normal;
     line-height: 140%;
 }
 .text-style-global-body-default {
     font-size: 16px;
-    font-family: Atkinson Hyperlegible Next;
     font-weight: 400;
     font-style: normal;
     line-height: 140%;
 }
 .text-style-global-body-small {
     font-size: 14px;
-    font-family: Atkinson Hyperlegible Next;
     font-weight: 400;
     font-style: normal;
     line-height: 140%;
 }
 .text-style-global-body-x-small {
     font-size: 13px;
-    font-family: Atkinson Hyperlegible Next;
     font-weight: 400;
     font-style: normal;
     line-height: 130%;
@@ -392,7 +382,6 @@ button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpac
     background-color: var(--colour-surface-card-content-background);
     color: var(--colour-typography-900);
 
-    font-family: "Atkinson Hyperlegible Next";
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -425,7 +414,6 @@ button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpac
 }
 .tile-desc p {
     color: var(--colour-typography-900);
-    font-family: "Atkinson Hyperlegible Next";
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -517,7 +505,6 @@ button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpac
 
     color: var(--colour-global-white);
     text-align: center;
-    font-family: "Atkinson Hyperlegible Next";
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
@@ -593,7 +580,6 @@ button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpac
 }
 .tile-graph-legend-label {
     color: var(--colour-typography-900);
-    font-family: "Atkinson Hyperlegible Next";
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
@@ -623,7 +609,6 @@ button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpac
 .tile-summary > h2 {
     color: var(--colour-link-primary-default);
     text-align: center;
-    font-family: "Atkinson Hyperlegible Next";
     font-size: 14.941px;
     font-style: normal;
     font-weight: 400;
@@ -1680,7 +1665,6 @@ p.tile_corner_box {
     gap: var(--space-6, 6px);
 
     color: var(--colour-global-white);
-    font-family: "Atkinson Hyperlegible Next";
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
@@ -2278,7 +2262,6 @@ div.MessageBox a {
     background: var(--colour-surface-breadcrumb-background);
 }
 .fc-breadcrumbs a {
-    font-family: "Atkinson Hyperlegible Next";
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
