@@ -1785,7 +1785,7 @@ function generate_dash_tile_toolbar(array $tile, $tile_id)
 
     if (!$managed_home_dash && (checkPermission_dashadmin() || checkPermission_dashuser())) {
         ?>
-        <div id="DashTileActions_<?php echo substr($tile_id, 18); ?>" class="DashTileActions">
+        <div id="DashTileActions_<?php echo escape(substr($tile_id, 18)); ?>" class="DashTileActions">
             <?php
                 if ((checkPermission_dashadmin() || (isset($tile['all_users']) && $tile['all_users'] == 0)) && !(isset($tile['no_edit']) && $tile['no_edit'])) {
                     ?>
@@ -1797,7 +1797,7 @@ function generate_dash_tile_toolbar(array $tile, $tile_id)
                     <?php
                 }
             ?>
-            <div class="tool dash-delete_<?php echo substr($tile_id, 18); ?>" title="<?php echo escape($lang["dashtiledelete"]); ?>">
+            <div class="tool dash-delete_<?php echo escape(substr($tile_id, 18)); ?>" title="<?php echo escape($lang["dashtiledelete"]); ?>">
                 <a href="#">
                     <i class="icon-trash-2"></i>
                 </a>
