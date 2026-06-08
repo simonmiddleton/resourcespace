@@ -1621,9 +1621,11 @@ function allow_tile_colour_change($tile_type, $tile_style = '')
 function render_dash_tile_colour_chooser($tile_style, $tile_colour)
 {
     global $lang, $baseurl;
-
+    
+    $tile_style  = escape($tile_style);
+    $tile_colour = escape($tile_colour);
     ?>
-    <div id="tile_style_colour_chooser" class="Question"  stlye="<?php echo $tile_style == 'ftxt' ? '' : 'display: none;'?>" >
+    <div id="tile_style_colour_chooser" class="Question"  style="<?php echo $tile_style == 'ftxt' ? '' : 'display: none;'?>" >
 
     <label for="tile_style_colour"><?php echo escape($lang['colour']); ?></label>
     <input id="tile_style_colour" name="tlstylecolour" type="color" onchange="update_tile_preview_colour(this.value);" value="<?php echo $tile_colour; ?>">
@@ -1659,12 +1661,7 @@ function render_dash_tile_colour_chooser($tile_style, $tile_colour)
             });
         <?php } ?>
     </script>
-
-    <?php if ('ftxt' == $tile_style) { ?>
-        </div>
-    <?php } else { ?>
-        </span>
-    <?php } ?>
+    </div>
     <div class="clearerleft"></div>
     <?php
 }
