@@ -1,9 +1,6 @@
 <?php
 
 include_once "../include/boot.php";
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 $k = trim(getval("k", ""));
 $parent = (int) getval("parent", $featured_collections_root_collection, true);
 

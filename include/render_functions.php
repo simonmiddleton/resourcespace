@@ -2853,7 +2853,7 @@ function render_new_featured_collection_cta(string $url, array $ctx)
         }
 
     $centralspaceload = (isset($ctx["centralspaceload"]) && $ctx["centralspaceload"]);
-    $tile_icon_clas = (isset($ctx["html_h2_span_class"]) && trim($ctx["html_h2_span_class"]) != "" ? trim($ctx["html_h2_span_class"]) : "icon-plus");
+    $tile_icon_class = (isset($ctx["html_h2_span_class"]) && trim($ctx["html_h2_span_class"]) != "" ? trim($ctx["html_h2_span_class"]) : "icon-plus");
 
     $onclick_fn = ($centralspaceload ? "CentralSpaceLoad(this, true);" : "ModalLoad(this, true, true);");
     ?>
@@ -2861,11 +2861,11 @@ function render_new_featured_collection_cta(string $url, array $ctx)
         <div id="FeaturedSimpleTile" class="HomePanel featured-tile">
             <div class="tile-special-content">
                 <div class="tile-special-icon">
-                    <i class="<?php echo $tile_icon_clas; ?>"></i>
+                    <i class="<?php echo escape($tile_icon_class); ?>"></i>
                 </div>
             </div>
             <div class="tile-desc">
-                <h2><?php echo escape($ctx["h2_text"] ?? "") ?></h2>
+                <h2><?php echo escape($ctx["h2_text"] ?? ""); ?></h2>
             </div>
         </div>
     </a>
@@ -5062,17 +5062,15 @@ function render_featured_collection(array $ctx, array $fc)
         $theme_images = array_pad($theme_images, 3, null);
     }
 
-    if (count($theme_images) == 1) {
-        if ($theme_images[0] == null) {
-            $image_html = "<div class=\"tile-placeholder\">
+    if (count($theme_images) === 0) {
+        $image_html = "<div class=\"tile-placeholder\">
                                 <div class=\"thumbs-tile-image\"></div>
                            </div>";
-        } else {
+    } elseif (count($theme_images) === 1) {
             $image_html = sprintf("<img class=\"thmbs-tile-img\" src=\"%s\" alt=\"%s\">", 
                         $theme_images[0]['path'], escape($theme_images[0]['alt_text'] ?? ""));
-        }
     } elseif (count($theme_images) >= 3) {
-        if ($theme_images[0] == null) {
+        if ($theme_images[0] === null) {
             $image_html = "<div class=\"tile-placeholder\">
                                 <div class=\"thumbs-tile-image\"></div>
                            </div>
@@ -5085,10 +5083,10 @@ function render_featured_collection(array $ctx, array $fc)
             $image_html = sprintf("<img class=\"thmbs-tile-img\" src=\"%s\" alt=\"%s\">", 
             $theme_images[0]['path'], escape($theme_images[0]['alt_text'] ?? ""));
             $image_html .= "<div class=\"tile-sub-multi\">";
-            $image_html .= $theme_images[1] == null ? 
+            $image_html .= $theme_images[1] === null ? 
                 "<div></div>" : 
                 sprintf("<img class=\"thmbs-tile-img\" src=\"%s\" alt=\"%s\">", $theme_images[1]['path'], escape($theme_images[1]['alt_text'] ?? ""));
-            $image_html .= $theme_images[2] == null ? 
+            $image_html .= $theme_images[2] === null ? 
                 "<div></div>" : 
                 sprintf("<img class=\"thmbs-tile-img\" src=\"%s\" alt=\"%s\">", $theme_images[2]['path'], escape($theme_images[2]['alt_text'] ?? ""));
             $image_html .= "</div>";
@@ -5104,17 +5102,16 @@ function render_featured_collection(array $ctx, array $fc)
     // DEVELOPER NOTE: anything past this point should be set. All logic is handled above
     ?>
     <a class="<?php echo implode(' ', $html_container_class); ?>" 
-    href="<?php echo $html_fc_a_href; ?>" 
-    onclick="return CentralSpaceLoad(this, true);" 
-    id="FeaturedSimpleTile_<?php echo md5($fc['ref']); ?>"
-    <?php echo $html_container_data; ?> >
-        <div 
-        class="HomePanel featured-tile"
         href="<?php echo $html_fc_a_href; ?>" 
         onclick="return CentralSpaceLoad(this, true);" 
-        id="featured_tile_<?php echo md5($fc['ref']); ?>"
-        <?php echo $html_container_data; ?>
-        >
+        id="FeaturedSimpleTile_<?php echo md5($fc['ref']); ?>"
+        <?php echo $html_container_data; ?> >
+        <div 
+            class="HomePanel featured-tile"
+            href="<?php echo $html_fc_a_href; ?>" 
+            onclick="return CentralSpaceLoad(this, true);" 
+            id="featured_tile_<?php echo md5($fc['ref']); ?>"
+            <?php echo $html_container_data; ?> >
             <?php
             echo $image_html;
             ?>
@@ -5132,11 +5129,11 @@ function render_featured_collection(array $ctx, array $fc)
     </a>
     <script>
         jQuery(document).ready(function() {
-            var fctilename = "#FeaturedSimpleTile_<?php echo md5($fc["ref"]); ?>";
-            var tilehref; //Used to switch off and on tile link to stop issue clicking on tool bar but opening tile link
-            var tileonclick; //Used to switch off and on tile link to stop issue clicking on tool bar but opening tile link
+            let fctilename = "#FeaturedSimpleTile_<?php echo md5($fc["ref"]); ?>";
+            let tilehref; //Used to switch off and on tile link to stop issue clicking on tool bar but opening tile link
+            let tileonclick; //Used to switch off and on tile link to stop issue clicking on tool bar but opening tile link
 
-            var fcactionsid = ".top-right-menu > i";
+            let fcactionsid = ".top-right-menu > i";
 
             jQuery(`${fctilename} ${fcactionsid}, #<?php echo md5($fc['ref']); ?>`).hover(
                 function(e) {
@@ -5158,60 +5155,6 @@ function render_featured_collection(array $ctx, array $fc)
             );
         })
     </script>  
-    <?php
-}
-
-function render_fc_actions($id, $tools)
-{
-    ?>
-    <div class="DashTileActions" id="fc_tile_actions_<?php echo md5($id); ?>">
-        <?php
-        foreach($tools as $tool) {
-            if(isset($tool['custom_onclick']) && trim($tool['custom_onclick']) != '') {
-                $onclick = "{$tool['custom_onclick']}";
-            } else {
-                $href = sanitise_url(isset($tool['href']) && trim($tool['href']) != '' ? $tool['href'] : '#');
-                $onclick = (isset($tool['modal_load']) && $tool['modal_load'])
-                    ? "return ModalLoad('{$href}', true);"
-                    : "return CentralSpaceLoad('{$href}', true);";
-            }
-            ?>
-            <div class="tool">               
-                <div href="<?php echo $href ?? "#"; ?>" 
-                onclick="<?php echo $onclick; ?>"
-                title="<?php echo $tool['text']; ?>"
-                >
-                    <i class="<?php echo $tool['icon']; ?>"></i>
-                </div>
-            </div>
-            <?php
-        }
-        ?>
-        <script>
-            jQuery(document).ready(function() {
-                var usertileidname = "#FeaturedSimpleTile_<?php echo md5($id); ?>";
-                var tilehref; //Used to switch off and on tile link to stop issue clicking on tool bar but opening tile link
-                var tileonclick; //Used to switch off and on tile link to stop issue clicking on tool bar but opening tile link
-
-                var fcactionsid = "#fc_tile_actions_<?php echo md5($id); ?>";
-
-                jQuery(fcactionsid).hover(
-                    function(e) {
-                        tilehref = jQuery(usertileidname).attr("href");
-                        tileonclick = jQuery(usertileidname).attr("onclick");
-                        jQuery(usertileidname).attr("href", "#");
-                        jQuery(usertileidname).attr("onclick", "return false;");
-                    },
-                    function(e) {
-                        jQuery(usertileidname).attr("href", tilehref);
-                        jQuery(usertileidname).attr("onclick", tileonclick);
-                        tilehref = '';
-                        tileonclick = '';
-                    }
-                );
-            })
-        </script>
-    </div>
     <?php
 }
 

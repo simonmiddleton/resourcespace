@@ -2964,10 +2964,6 @@ function generate_featured_collection_image_urls(array $resource_refs, string $s
         }
     }
 
-    if (count($images) == 0 && count($refs_rtype) != 0) {
-        $images[] = null;
-    }
-
     return $images;
 }
 
