@@ -2132,8 +2132,8 @@ hook("upload_page_top");
         <input name="continue" id="upload_continue" type="button" style="display: none;" value="&nbsp;&nbsp;<?php echo escape($lang['continue']); ?>&nbsp;&nbsp;"
             onclick="return CentralSpaceLoad('<?php echo $redirecturl; ?>',true);">
     </div>
+    <?php hook("upload_page_bottom"); ?>
 </div><!-- End of main-content -->
 <?php
 
-hook("upload_page_bottom");
 include "../include/footer.php";
