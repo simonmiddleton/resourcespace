@@ -1,0 +1,45 @@
+<?php
+
+
+$lang["falcon_link_title"] = 'Falcon Link';
+$lang["falcon_link_manage"] = 'پەیوەندیدانی Falcon / کۆکردنەوە';
+$lang["falcon_link_publish"] = 'بڵاو کردنەوە بۆ Falcon';
+$lang["falcon_link_archive"] = 'کۆکردنەوە لە Falcon';
+$lang["falcon_link_configuration"] = 'پێوەندیدانی Falcon - دامەزراندن';
+$lang["falcon_link_api_key"] = 'کلیل API ی Falcon';
+$lang["falcon_link_notconfigured"] = 'پێوەندیدانی Falcon لە کۆنفیگڕەکراو نیە. تکایە لە بەڕێوەبەرەکەت داوای کۆنفیگڕکردنی پێوەندیدان بکە.';
+$lang["falcon_link_resource_types_to_include"] = 'جۆرەکانی سەرچاوەی Falcon دروست هەڵبژێرە';
+$lang["falcon_link_not_permitted_extension"] = 'جۆری فایل %TYPE% ناتوانێت بارکراو بۆ Falcon بکرێت';
+$lang["falcon_link_text_field"] = 'خانەی دەقی قالب Falcon';
+$lang["falcon_link_default_tag"] = 'تایگ لە بنەڕەت کە بە خۆکار زیاد دەکرێت بۆ هەموو ناوەڕۆکی بڵاوکراوی Falcon. ئەگەر دەربارەی دەقی \'[ID]\' داخڵ بکەیت، ئەوا ئەم دەقە لەگەڵ ناسەی سەرچاوەکە لە تایگەکە دەگۆڕێت';
+$lang["falcon_link_template_url"] = 'URL ی قالب Falcon. ئەمە ڕێگە دەدات بەڕێوەبەری بتوانێت سەرچاوەی بڵاوکراوەکە بە راستەوخۆ لە Falcon ببینێت. تایگ [id] لەگەڵ ناسەی کە Falcon دەدات کاتێک سەرچاوەکە بڵاو دەکرێت، دەگۆڕدرێت';
+$lang["falcon_link_tag_fields"] = 'خانەکانی تایگ لە ResourceSpace - Falcon. ئەمانە بە یەکەوە کۆدەکرێن و زیاد دەکرێن بۆ تایگەکانی قالب Falcon';
+$lang["falcon_link_id_field"] = 'خانەی داتاکان بۆ هەڵگرتنی ناسەی Falcon';
+$lang["falcon_link_log_share"] = 'لە Falcon بڵاو کراو';
+$lang["falcon_link_archived"] = 'پاشەکەوت کراو';
+$lang["falcon_link_access_denied"] = 'هەق ندارن بۆ بڵاو کردنەوەی سەرچاوە(ە) دیاری کراوەکان';
+$lang["falcon_link_already_published"] = 'ئەم سەرچاوەیە پێشتر بڵاو کراوە بۆ Falcon';
+$lang["falcon_link_resources_already_published"] = 'هەندێک لە سەرچاوەکان پێشتر بڵاو کراون بۆ Falcon و ناتوانن دووبارە بڵاو بکرن';
+$lang["falcon_link_resource_not_published"] = 'سەرچاوەکە بۆ Falcon بڵاو نەکراوە';
+$lang["falcon_link_resource_publish_unavailable"] = 'ناتوانرێت سەرچاوەکە بۆ Falcon بڵاو بکرێت';
+$lang["falcon_link_template_description"] = 'وەسفەی قالب';
+$lang["falcon_link_template_tags"] = 'تاگەکانی قالب کە زیاد دەکرن';
+$lang["falcon_link_missing_file"] = 'سەرچاوەکە هیچ فایلە سەرەکییەکە نیە';
+$lang["falcon_link_existing_id"] = 'IDی Falcon هەیە';
+$lang["falcon_link_not_uploaded"] = 'نەبارکراوە';
+$lang["falcon_link_publish_button_text"] = 'بڵاو کردنەوە';
+$lang["falcon_link_archive_button_text"] = 'پاشەکەوت کردن';
+$lang["falcon_link_publish_success"] = 'بە سەرکەوتوویی بڵاو کرا';
+$lang["falcon_link_archived_success"] = 'پاشەکەوت کرا.<br />هاوبەشەکانی سەرچاوە هێشتا چالاکن و پێویستە بە دەستی لەسەرەوە سڕدرێن ئەگەر پێویست بوو.';
+$lang["falcon_link_usergroups"] = 'گروپەکان کە دەگەڕێن بۆ بەڕێوەبردنی قالبەکانی Falcon';
+$lang["falcon_link_filter"] = 'فلتەر بۆ دیاریکردنی کەسایەتی کە دەتوانن بڵاو بکەنەوە بۆ Falcon';
+$lang["falcon_link_error_no_resources"] = 'هیچ سەرچاوەیەک بۆ بڵاو کردنەوە نەنێردراوە';
+$lang["falcon_link_error_falcon_api"] = 'هەڵەیەک ڕویداوە کاتێک پەیوەندی لەگەڵ Falcon کرد. تکایە دۆخی بەرزکردنەوە بپشکنە بۆ وردەکاری زیاتر.';
+$lang["falcon_link_error_falcon_api_detailed"] = 'هەڵەی Falcon';
+$lang["falcon_link_view_in_falcon"] = 'بینین لە Falcon';
+$lang["falcon_link_share_user"] = 'دەقەکەی بەکارهێنەر بۆ بەشداریکردنەوەکان کە دروست دەکرێن بۆ بەکارهێنانی Falcon، یانە \'هاوبەش کراوە لەگەڵ user@falcon.io\'';
+$lang["falcon_link_log_publish"] = 'سەرچاوەی هاوبەشکراو لە ڕێگەی Falcon';
+$lang["falcon_link_log_archive"] = 'سەرچاوەی کۆکردنەوە لە ڕێگەی Falcon';
+$lang["falcon_link_error_falcon_check_tags"] = 'تکایە دڵنیابە کە وەسف و تاگەکان بەتاڵن نەبن';
+$lang["page-title_falcon_link_falcon_link"] = 'Linkی Falcon';
+$lang["page-title_falcon_link_setup"] = 'ڕێکخستنەوەی پلاگین Linkی Falcon';

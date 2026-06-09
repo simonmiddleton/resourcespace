@@ -1,0 +1,40 @@
+<?php
+
+
+$lang["vimeo_publish_configuration"] = 'ڕێکخستنەوەی پلاگینەکانی ڤیمێۆ';
+$lang["vimeo_publish_resource_tool_link"] = 'بڵاو کردنەوە بۆ ڤیمێۆ';
+$lang["vimeo_publish_base"] = 'ئەندامەی بنەڕەتی URL';
+$lang["vimeo_publish_callback_url"] = 'URLی وەلامدانەوە';
+$lang["vimeo_publish_authentication"] = 'پەیوەندیدانی';
+$lang["vimeo_publish_vimeo_instructions"] = 'رێنماییەکانی ڤیمێۆ OAuth 2.0';
+$lang["vimeo_publish_oauth2_client_id"] = 'ناسنامەی کڕیار';
+$lang["vimeo_publish_oauth2_client_secret"] = 'تێپەڕەوشتی کڕیار';
+$lang["vimeo_publish_rs_field_mappings"] = 'ResourceSpace - پەیوەندییەکانی فیلدەکانی ڤیمێۆ';
+$lang["vimeo_publish_video_details"] = 'وردەکارییەکانی ڤیمێۆ - ویدیو';
+$lang["vimeo_publish_vimeo_link"] = 'لینکی ڤیمێۆ';
+$lang["vimeo_publish_video_title"] = 'ناونیشانی ویدیو';
+$lang["vimeo_publish_video_description"] = 'وەسفەی ویدیو';
+$lang["vimeo_publish_resource_types_to_include"] = 'هەڵبژاردنی جۆرەکانی ویدیوەکانی دروست بۆ ڤیمێۆ';
+$lang["vimeo_publish_publish_as_user"] = 'تۆ لە ڤیمێۆ وەک:';
+$lang["vimeo_publish_delete_token"] = 'بەکارهێنانی هەژماری Vimeo جیاواز (دڵنیابە لەوە کە سەرەتا لە ئەم هەژمارەی Vimeo دەرچووی)';
+$lang["vimeo_publish_button_text"] = 'بڵاو کردنەوە';
+$lang["vimeo_publish_legal_warning"] = 'لە کەرتەکردنەوەی \'باشە\'، تۆ دەڵێیت کە هەموو مافەکانت بەسەر ناوەڕۆکەوە هەیە یان لە لایەن مالکەوە دەستەواژەکراوە کە ناوەڕۆکە بەردەوام بێت لەسەر Vimeo و ئەوە پێویستە پەیوەندیدار بێت بە مەرجەکانی خزمەتگوزاری Vimeo کە لە https://vimeo.com/terms دۆزرایەوە';
+$lang["vimeo_api_instructions_condition_1"] = 'پێویستە ResourceSpace وەک ئەپێک لە Vimeo تۆمار بکەیت و ID و سێرڤێتی OAuth بدۆزەوە';
+$lang["vimeo_api_instructions_condition_2"] = 'لەگەڵ هەر هەژماری Vimeo دروستەکەیەک لە Vimeo داخڵبە، ئەمە پێویست نیە پەیوەندیدار بێت بە هەژماری Vimeo یەکەت، پاشان بڕۆ بۆ <a href="https://developer.vimeo.com/" target="_blank">https://developer.vimeo.com/</a>';
+$lang["vimeo_api_instructions_condition_3"] = 'کلیک لەسەر "نەوەی ئەپ" لە سەر سەرەوەی راست';
+$lang["vimeo_api_instructions_condition_4"] = 'هەموو وردەکاریەکان پڕ بکە.';
+$lang["vimeo_api_instructions_condition_5"] = 'بۆ "App URL" بەکاربێنە URL یاسایی (لە پێش ئەم ڕێنماییانەوە)';
+$lang["vimeo_api_instructions_condition_6"] = 'بۆ "App Callback URL" بەکاربێنە Callback URL (لە پێش ئەم ڕێنماییانەوە)';
+$lang["vimeo_api_instructions_condition_7"] = 'کاتێک ئەپەکە دروست کرد، بکەوە و لە تابی "پەیوەندیدانی" بکەوە بۆ دۆزینەوەی ID و سێرڤێتی Client';
+$lang["vimeo_api_instructions_condition_8"] = 'ID و سێرڤێتی client کۆپی بکە و ئەم وردەکاریانە لە خوارەوە پەیست بکە';
+$lang["vimeo_api_instructions_condition_9"] = 'داواکاری بکە بۆ ڕێگەدان بۆ بارکردنی ڤیدیۆ لە Vimeo. دڵنیابە کە زانیاری کافی پێشکەش دەکەیت لەبارەی ئەوەی کە کەیفی ڤیدیۆکانت دەبێت بباردرێت';
+$lang["vimeo_publish_no_vimeoAPI_files"] = 'ResourceSpace وەک پێویست ناتوانێت فایلەکانی API PHP ی Vimeo بەدەستهێنێت!';
+$lang["vimeo_publish_access_denied"] = 'دەستپێکردن ڕەتە!';
+$lang["vimeo_publish_not_configured"] = 'پلاگینەکەی ResourceSpace "vimeo_publish" هەڵەیە، تکایە بڕۆ بۆ:';
+$lang["vimeo_publish_resource_already_published"] = 'سەرچاوە بە ID  [ref] پێشتر بۆ Vimeo بڵاوکراوە. دەتوانیت لە [vimeo_url] ببینیت';
+$lang["vimeo_publish_resource_published"] = 'سەرچاوە بۆ Vimeo بڵاوکراوە. دەتوانیت لە [vimeo_url] ببینیت';
+$lang["vimeo_publish_account_options"] = 'هەڵبژاردنی ئەکاونتی Vimeo';
+$lang["vimeo_publish_allow_user_accounts"] = 'ڕێگە بده بە بەکارهێنەرانی بڵاوکردنەوە بۆ ئەکاونتی Vimeo خۆیان. ئەگەر دروست نەبێت، دەبێت دەستگەیشتن بۆ یەک ئەکاونتی Vimeo لە خوارەوە ڕێکبخەیت';
+$lang["vimeo_publish_set_account"] = 'ڕێکخستنەوەی ئەکاونتی Vimeo';
+$lang["page-title_vimeo_publish_setup"] = 'ڕێکخستنەوەی پلاگینەکەی Vimeo Publish';
+$lang["page-title_vimeo_publish_vimeo_api"] = 'بڵاوکردنەوە بۆ Vimeo';

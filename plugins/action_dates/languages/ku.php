@@ -1,0 +1,41 @@
+<?php
+
+
+$lang["action_dates_configuration"] = 'هەڵبژێرە خانەکان کە بەکار دەهێنرێن بۆ ئەنجامدانی خۆکارەکانی دیاریکراو.';
+$lang["action_dates_deletesettings"] = 'ڕێکخستنەکانی کارە سەرەکییەکانی سەرچاوەی خۆکار - بە هەوشیار بکاربهێنە';
+$lang["action_dates_delete"] = 'بە خۆکار سڕینەوە یان گۆڕینی دۆخی سەرچاوەکان کاتێک بەرواری لە خانەی ئەم فیلدە دەگەینێت';
+$lang["action_dates_eligible_states"] = 'دۆخەکان کە لایەنی کارە سەرەکییەکانی خۆکارە. ئەگەر هیچ دۆخێک هەڵنەبژێردراوە، هەموو دۆخەکان لایەنیە.';
+$lang["action_dates_restrict"] = 'بە خۆکار سنوور دانەوە بۆ دەسەلاتی سەرچاوەکان کاتێک بەرواری لە خانەی ئەم فیلدە دەگەینێت. ئەمە تەنها بە سەرچاوەکان دەبێت کە دەسەلاتی ئەوان ئێستا کراوە.';
+$lang["action_dates_delete_logtext"] = ' - بە خۆکار لەلایەن پلاگینەکانی action_dates ئەنجام دەدرێت';
+$lang["action_dates_restrict_logtext"] = ' - بە خۆکار سنوور کراوە لەلایەن پلاگینەکانی action_dates';
+$lang["action_dates_reallydelete"] = 'سڕینەوەی تەواو لە سەرچاوەکە کاتێک بەرواری ئەنجامدانی کارەکە دەگات؟ ئەگەر بۆ دروستکراوە بێت، سەرچاوەکان بۆ دۆخی resource_deletion_state گواستنەوە دەکرێن و لەوەوە دەتوانرێن بەردەوام بێن.';
+$lang["action_dates_email_admin_days"] = 'ئاگادار بکە بەرێوەبەرانی سیستەم بە ژمارەیەک ڕۆژ پێش ئەوەی ئەم بەروارە دەگەینێت. ئەم هەڵبژاردنە بەتاڵ بێنە بۆ هیچ ئاگادارکردنەوەیەک نەنێردرێت.';
+$lang["action_dates_email_text_restrict"] = 'ئەمانە سەرچاوەکانن کە پێویستە سنوور بدرێن لە [days] ڕۆژ.';
+$lang["action_dates_email_text_state"] = 'ئەمانە سەرچاوەکانن کە پێویستە دۆخەکانیان گۆڕدرێن لە [days] ڕۆژ.';
+$lang["action_dates_email_text"] = 'ئەمانە سەرچاوەکانن کە پێویستە سنوور بدرێن و/یان دۆخەکان گۆڕدرێن لە [days] ڕۆژ.';
+$lang["action_dates_email_range_restrict"] = 'ئەمانە سەرچاوەکانن کە پێویستە لە نێوان [days_min] تا [days_max] ڕۆژ سنوور بدرێن.';
+$lang["action_dates_email_range_state"] = 'ئەمانە سەرچاوەکانن کە پێویستە لە نێوان [days_min] تا [days_max] ڕۆژ دۆخەکانیان گۆڕدرێن.';
+$lang["action_dates_email_range"] = 'ئەمانە سەرچاوەکانن کە پێویستە لە نێوان [days_min] تا [days_max] ڕۆژ سنوور بدرێن و/یان دۆخەکانیان گۆڕدرێن.';
+$lang["action_dates_email_subject_restrict"] = 'ئاگاداری لەسەر سەرچاوەکان کە دەبێت سنووردار بکرێن';
+$lang["action_dates_email_subject_state"] = 'ئاگاداری لەسەر سەرچاوەکان کە دەبێت بگۆڕدرێنەوە وەک دۆخ';
+$lang["action_dates_email_subject"] = 'ئاگاداری لەسەر سەرچاوەکان کە دەبێت سنووردار بکرێن و/یان بگۆڕدرێنەوە وەک دۆخ';
+$lang["action_dates_new_state"] = 'دۆخی نوێ بۆ گواستنەوە (ئەگەر ئەم هەڵبژاردنە لەسەرەوە هەڵبژێردرا، ئەم پارامەتەرە لەکار نایە)';
+$lang["action_dates_notification_subject"] = 'ئاگاداری لە فڵەگینەکانی کاتەکانی کردار';
+$lang["action_dates_additional_settings"] = 'کردارە زیاترەکان';
+$lang["action_dates_additional_settings_info"] = 'هەروەها سەرچاوەکان بگۆڕە بۆ دۆخی هەڵبژاردەکە کاتێک ئەو فیلدە دیاری کراوە دەگەینێت';
+$lang["action_dates_additional_settings_date"] = 'کاتێک ئەم ڕێکەوتە دەگەینێت';
+$lang["action_dates_additional_settings_status"] = 'گواستنەوە سەرچاوەکان بۆ ئەم دۆخی ئەرشیفە';
+$lang["action_dates_additional_settings_email_admin_days"] = 'ئاگاداری بۆ بەڕێوەبەرەکان ئەم چەند ڕۆژە پێش ئەوەی کردارەکە ئەنجام بدرێت (خالی بێنە بۆ ناچالاک کردن)';
+$lang["action_dates_remove_from_collection"] = 'سڕینەوەی سەرچاوەکان لە هەموو کۆلەکشنە پەیوەندیدارەکان کاتێک دۆخەکە گۆڕدرێت؟';
+$lang["action_dates_email_for_state"] = 'ناردنی ئاگاداری بۆ سەرچاوەکان کە دۆخەکەیان دەگۆڕێت. پێویستە فیلدهای گۆڕینی دۆخ لەسەرەوە پێکبەستن.';
+$lang["action_dates_email_for_restrict"] = 'ناردنی ئاگاداری بۆ سەرچاوەکان کە دەبێت سنووردار بکرێن. پێویستە فیلدهای سنوورداری سەرچاوە لەسەرەوە پێکبەستن.';
+$lang["action_dates_workflow_actions"] = 'ئەگەر فڵەگینەکانی Workflow پێشکەوتوو چالاک کرا، ئەو ئاگادارییان پێویستە بۆ گۆڕانکاریەکانی دۆخ کە لەلایەن ئەم فڵەگینەوە دەکرێن، بەکار بێنرێن؟';
+$lang["action_dates_weekdays"] = 'هەڵبژاردنی ڕۆژەکانی هەفتە کە کردارەکان لەسەر ئەنجام دەدرێن.';
+$lang["weekday-0"] = 'یەکشەممە';
+$lang["weekday-1"] = 'دوشەممە';
+$lang["weekday-2"] = 'سێشەممە';
+$lang["weekday-3"] = 'چوارشەممە';
+$lang["weekday-4"] = 'پێنجشەممە';
+$lang["weekday-5"] = 'هەینی';
+$lang["weekday-6"] = 'شەممە';
+$lang["page-title_action_dates_setup"] = 'ڕێکخستنەوەی پلاگین ڕێککەوتنەکانی کردار';

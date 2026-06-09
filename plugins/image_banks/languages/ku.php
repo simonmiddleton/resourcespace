@@ -1,0 +1,41 @@
+<?php
+
+
+$lang["image_banks_configuration"] = 'بانکەکانی وێنە';
+$lang["image_banks_search_image_banks_label"] = 'گەڕان لە بانکەکانی وێنەی دەرەوە';
+$lang["image_banks_pixabay_api_key"] = 'کلیل API';
+$lang["image_banks_image_bank"] = 'بانکەی وێنە';
+$lang["image_banks_image_bank_source"] = 'سەرچاوەی بانکەکانی وێنە';
+$lang["image_banks_create_new_resource"] = 'دروستکردنی سەرچاوەی نوێ';
+$lang["image_banks_shutterstock_token"] = 'تۆکنی Shutterstock (<a href=\'https://www.shutterstock.com/account/developers/apps\' target=\'_blank\'>هەڵبژێرە</a>)';
+$lang["image_banks_shutterstock_result_limit"] = 'سنوورەی ئەنجامەکان (بەرزترین 1000 بۆ هەژماری فری)';
+$lang["image_banks_shutterstock_id"] = 'IDی وێنەی Shutterstock';
+$lang["image_banks_label_resourcespace_instances_cfg"] = 'دەستگەیشتن بە ئەنجامەکان (فۆرمات: ناوی i18n|baseURL|ناوی بەکارهێنەر|کلیل|پێوەندیدار)';
+$lang["image_banks_resourcespace_file_information_description"] = 'ResourceSpace %SIZE_CODE قەبارە';
+$lang["image_banks_label_select_providers"] = 'هەڵبژاردنی پێشکەشکاران';
+$lang["image_banks_view_on_provider_system"] = 'بینین لە سیستەمی %PROVIDER';
+$lang["image_banks_system_unmet_dependencies"] = 'پێوەندیداری سیستەمی پلاگینەکانی ImageBanks نەگەیشتووە!';
+$lang["image_banks_provider_unmet_dependencies"] = '\'%PROVIDER\' پێشکەشکار پێوەندیداری نەگەیشتووە!';
+$lang["image_banks_provider_id_required"] = 'پێویستە IDی پێشکەشکەر بۆ تەواوکردنی گەڕانەوە';
+$lang["image_banks_provider_not_found"] = 'نەتوانرا پێشکەشکەر بەکارهێنانی IDەوە ناسراوە';
+$lang["image_banks_bad_request_title"] = 'داواکاریکردنەوەی خراپ';
+$lang["image_banks_bad_request_detail"] = 'داوا نەکراوە لەلایەن \'%FILE\' بەردەست نەکراوە';
+$lang["image_banks_unable_to_create_resource"] = 'نەتوانرا سەرچاوەیەکی نوێ دروست بکرێت!';
+$lang["image_banks_unable_to_upload_file"] = 'نەتوانرا فایل لە بانک وێنەی دەرەکی بار بکرێت بۆ سەرچاوە #%RESOURCE';
+$lang["image_banks_try_again_later"] = 'تکایە دووبارە هەوڵ بدەرەوە لە دواوە!';
+$lang["image_banks_warning"] = 'ئاگاداری: ';
+$lang["image_banks_warning_rate_limit_almost_reached"] = 'پێشکەشکەر \'%PROVIDER\' تەنها %RATE-LIMIT-REMAINING زیاتر ڕێگە دەدات بۆ گەڕانەوەکان. ئەم سنووردە دەستپێدەکات لە %TIME';
+$lang["image_banks_try_something_else"] = 'تکایە هەوڵ بدەرەوە شتێکی تر.';
+$lang["image_banks_error_detail_curl"] = 'پەکەجەی php-curl نصب نەکراوە';
+$lang["image_banks_error_generic_parse"] = 'نەتوانرا ڕێکخستنەکانی پێشکەشکەرەکان فێر بکرێن (بۆ چەندین کەسایەتی)';
+$lang["image_banks_error_resourcespace_invalid_instance_cfg"] = 'فۆرماتێکی نادروست لە ڕێکخستنەکانی \'%PROVIDER\' (پێشکەشکەر) کەسایەتی';
+$lang["image_banks_error_bad_url_scheme"] = 'فۆرماتێکی نادروست لە URL لە \'%PROVIDER\' (پێشکەشکەر) کەسایەتی';
+$lang["image_banks_error_unexpected_response"] = 'ببوره، وەڵامێکی نەگەرەکەوتوە لە لایەن پێشکەشکەرەوە. تکایە پەیوەندیدانی بەڕێوەبەر سیستەمەکەت بکە بۆ زانیاری زیاتر (ببینە لۆگێکی دیباگ).';
+$lang["image_banks_local_download_attempt"] = 'بەکارهێنەر هەوڵدانی داونلۆدکردنی \'%FILE\' بەکارهێنانی پلاگینەکانی ImageBank لە ڕێگەی نیشاندانی سیستەمێک کە بەشێک نییە لە پێشکەشکەری ڕێگەپێدراوەکان';
+$lang["image_banks_bad_file_create_attempt"] = 'بەکارهێنەر هەوڵدانی دروستکردنی سەرچاوە بە فایل \'%FILE\' بەکارهێنانی پلاگینەکانی ImageBank لە ڕێگەی نیشاندانی سیستەمێک کە بەشێک نییە لە پێشکەشکەری ڕێگەپێدراوەکان';
+$lang["image_banks_createdfromimagebanks"] = 'دروستکراوە لە پلاگینەکانی Image Banks';
+$lang["page-title_image_banks_download"] = 'داونلۆدکردنی سەرچاوە';
+$lang["page-title_image_banks_search"] = 'گەڕان';
+$lang["page-title_image_banks_setup"] = 'ڕێکخستنی پلاگینەکانی Image Banks';
+$lang["page-title_image_banks_shutterstock_license"] = 'بینینی وەسڵی Shutterstock';
+$lang["page-title_image_banks_view"] = 'بینینی سەرچاوە';

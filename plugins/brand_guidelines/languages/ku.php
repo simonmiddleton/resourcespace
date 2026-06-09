@@ -1,0 +1,43 @@
+<?php
+
+
+$lang["brand_guidelines_permission_bgv"] = 'دەتوانن ڕێنماییەکانی براند ببینن';
+$lang["brand_guidelines_permission_bge"] = 'دەتوانن ڕێنماییەکانی براند دەسەردەبەرن';
+$lang["brand_guidelines_top_nav_title"] = 'رێنماییەکان';
+$lang["brand_guidelines_new_resource"] = 'سەرچاوەی نوێ';
+$lang["brand_guidelines_existing_resource"] = 'سەرچاوەی بووەوە';
+$lang["brand_guidelines_new_content"] = 'زیادکردنی ناوەڕۆکی نوێ';
+$lang["brand_guidelines_new_page"] = '+ پەڕەی نوێ';
+$lang["brand_guidelines_new_section"] = '+ بەشێکی نوێ';
+$lang["brand_guidelines_view_table_of_content"] = 'بینینی خشتەی ناوەڕۆک';
+$lang["brand_guidelines_new_section_title"] = 'دروستکردنی بەشێکی نوێ';
+$lang["brand_guidelines_new_page_title"] = 'دروستکردنی پەڕەی نوێ';
+$lang["brand_guidelines_edit_section_title"] = 'دەسەردەبەرن بەش';
+$lang["brand_guidelines_edit_page_title"] = 'دەسەردەبەرن پەڕە';
+$lang["brand_guidelines_section"] = 'بەش';
+$lang["brand_guidelines_full_width"] = 'پەیوەندیدار بە پەیوەندیدار';
+$lang["brand_guidelines_half_width"] = 'نیشانی نیوەیەکی';
+$lang["brand_guidelines_title_new_text"] = 'دروستکردنی تێکستی نوێ';
+$lang["brand_guidelines_title_edit_text"] = 'دەسکاریکردنی تێکست';
+$lang["brand_guidelines_title_select_resource"] = 'هەڵبژاردنی سەرچاوەی پێشوو';
+$lang["brand_guidelines_err_invalid_input"] = 'داخلەی نادروست پێشکەش کراوە';
+$lang["brand_guidelines_hex"] = 'HEX';
+$lang["brand_guidelines_hex_help_txt"] = 'هێکساگۆڕی (0-9A-F). نمونەکان: #0FA، 0FA، 00FFAA';
+$lang["brand_guidelines_rgb"] = 'RGB';
+$lang["brand_guidelines_rgb_help_txt"] = 'RGB (0-255). نمونە: 116،182،50';
+$lang["brand_guidelines_cmyk"] = 'CMYK';
+$lang["brand_guidelines_cmyk_help_txt"] = 'CMYK (0-100). نمونە: 36،0،73،29';
+$lang["brand_guidelines_move_left"] = 'بڕۆ بۆ چەپ';
+$lang["brand_guidelines_move_right"] = 'بڕۆ بۆ راست';
+$lang["brand_guidelines_confirm_delete_group_members"] = 'دڵنیایت لە سڕینەوەی هەموو ئەندامانی ئەم گروپە؟';
+$lang["brand_guidelines_layout"] = 'پێوەندیدان';
+$lang["brand_guidelines_view_mode"] = 'حالت بینین';
+$lang["brand_guidelines_edit_mode"] = 'حالت دەسەڵاتدان';
+$lang["brand_guidelines_configuration"] = 'ڕێکخستنەوەی ڕێنمایی براند';
+$lang["brand_guidelines_fallback_size_thm"] = 'قەبارەی وێنەی پێشەکی لە کەرتی نیشانە';
+$lang["brand_guidelines_fallback_size_half_width"] = 'قەبارەی وێنەی پێشەکی لە کەرتی نیمەیەکی';
+$lang["brand_guidelines_fallback_size_full_width"] = 'قەبارەی وێنەی پێشەکی لە کەرتی تەواو';
+$lang["page-title_brand_guidelines_content"] = 'بەڕێوەبردنی ناوەڕۆکی ڕێنمایی براند';
+$lang["page-title_brand_guidelines_guidelines"] = 'ڕێنمایی براند';
+$lang["page-title_brand_guidelines_setup"] = 'ڕێکخستنەوەی پلاگینەکانی ڕێنمایی براند';
+$lang["page-title_brand_guidelines_toc"] = 'دەستکاری ناوەڕۆک';

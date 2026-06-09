@@ -1,0 +1,57 @@
+<?php
+
+
+$lang["offline_archive_configuration"] = 'پەڕەی ڕێکخستنەوەی ئەوارەی نەکراو';
+$lang["offline_archive_archivefield"] = 'تکایە خانەی داتای مەتا داتای کە کۆدی ئەوارەیە دەگرێت هەڵبژێرە';
+$lang["offline_archive_archivepath"] = 'تکایە شوێنەکە بنووسە کە ئەوارەکان لەیدا دروست دەکرێن';
+$lang["offline_archive_restorepath"] = 'بۆ ڕێکخستنی سەرچاوەکان لە فۆڵدەر StaticSync، دەتوانیت فۆڵدەرێکی بچوک لە فۆڵدەر StaticSync داخڵ بکەیت کە فایلەکانی ڕاستەوخۆ لەو فۆڵدەرەوە دابنێت';
+$lang["offline_archive_preservedate"] = 'کاتی فایلەکە بەردەوام بکە؟';
+$lang["offline_archive_administer_archive"] = 'بەڕێوەبردنی ئەوارەکان';
+$lang["offline_archive_view_pending"] = 'بینینی سەرچاوەکانی کە هەڵدەبژێرێن بۆ ئەوارە';
+$lang["offline_archive_view_pending_restore"] = 'بینینی سەرچاوەکانی کە هەڵدەبژێرێن بۆ ڕێکخستن';
+$lang["offline_archive_view_completed"] = 'بینینی کارەکانی ئەوارە';
+$lang["offline_archive_view_associated"] = 'بینینی سەرچاوەکانی پەیوەندیدار';
+$lang["offline_archive_view_as_search"] = 'بینینی سەرچاوەکان وەک گەڕان';
+$lang["offline_archive_entername"] = 'تکایە ناوی ئەوارە بنووسە';
+$lang["offline_archive_input_text"] = 'تکایە لیستی سەرچاوەکان یان ناسەی کۆلەکشنەکە بنووسە بۆ نیشاندانی ڕێکخستن';
+$lang["offline_archive_input_resources"] = 'تکایە ناسەی سەرچاوەکان بنووسە بۆ ڕێکخستن، جیاکراوە بە کۆما';
+$lang["offline_archive_input_collection"] = 'تکایە ناسەی کۆلەکشنەکە بنووسە بۆ ڕێکخستن';
+$lang["offline_archive_name"] = 'پێشەکی ئەرشیف';
+$lang["offline_archive_createnew"] = 'دروستکردنی کارەکەی ئەرشیف نوێ';
+$lang["offline_archive_archive_created"] = 'ئەرشیف بە سەرکەوتوویی دروست کرا';
+$lang["offline_archive_archive_ref"] = 'سەرچاوەی ئەرشیف';
+$lang["offline_archive_archive_date"] = 'بەرواری ئەرشیف';
+$lang["offline_archive_archive_status"] = 'دۆخی ئەرشیف';
+$lang["offline_archive_request_restore"] = 'داواکردنی گەڕاندنەوە';
+$lang["offline_archive_cancel_restore"] = 'هەڵوەشاندنەوەی گەڕاندنەوە';
+$lang["offline_archive_cancel_confirm"] = 'ئایا دڵنیایت لەوەی کە دەتەوێت گەڕاندنەوەی ئەم سەرچاوەیە هەڵوەشانی بکەیت؟';
+$lang["offline_archive_restore_pending"] = 'گەراندنەوەی پێندراو لە ئەرشیف';
+$lang["offline_archive_restore_confirm"] = 'دوایینەوەی گەڕاندنەوە';
+$lang["offline_archive_restore_resources"] = 'گەڕاندنەوەی سەرچاوەکان لە ئەرشیف';
+$lang["offline_archive_restore_resource"] = 'گەڕاندنەوە لە ئەرشیف';
+$lang["offline_archive_request_restore_text"] = 'تکایە هۆکارەکەی داواکردنەوە بنووسە';
+$lang["offline_archive_request_restore_reason"] = 'هۆکارەکەی داواکردنی گەڕاندنەوە';
+$lang["offline_archive_request_email_subject"] = 'داواکردنی گەڕاندنەوەی ئەوارەیەکی دەرەکی';
+$lang["offline_archive_requestsenttext"] = 'داواکردنی گەڕاندنەوەی ئەوارەکەت پێشکەش کراوە و زووە زوو چاودێر دەکرێت.';
+$lang["offline_archive_resources_restore_confirmed"] = 'سەرچاوەکان بە سەرکەوتوویی دیاری کراون بۆ گەڕاندنەوە و کاتێک ئەوارە پەیوەندیدار داخڵ کرا یان کۆپی کرا بۆ شوێنی ئەوارەی دیاری کراو، دەگەڕێن.';
+$lang["offline_archive_resources_restore_cancel_confirmed"] = 'سەرچاوە بە سەرکەوتوویی لە گەڕاندنەوەی پێندراوە لەسەرەوە هەسەندراوە';
+$lang["offline_archive_resource_log_archived"] = '- لەلایەن پلاگینەکەی ئەوارەیەکی دەرەکی کراوە. کۆدی ئەوارە: ';
+$lang["offline_archive_resource_log_restored"] = '- لەلایەن پلاگینەکەی ئەوارەیەکی دەرەکی گەڕاندوە';
+$lang["offline_archive_resource_log_restore_set"] = 'نیشان کراوە بۆ گەڕاندنەوە لە ئەوارە';
+$lang["offline_archive_resource_log_restore_removed"] = 'گەرەکی لە گەڕاندنەوەی ئەوارە هەسەندراوە';
+$lang["offline_archive_resource_log_restore_request"] = 'داواکردنی گەڕاندنەوە لە ئەوارە';
+$lang["offline_archive_resource_restore"] = 'گەڕاندنەوەی سەرچاوەکان';
+$lang["offline_archive_statustype"] = array (
+  0 => 'لە پێندراوە',
+  1 => 'لە پێشڕەویە',
+  2 => 'کامل کراو',
+);
+$lang["offline_archive_administer_archive-tooltip"] = 'گۆڕینی شوێنی فایلەکانی ئەوارە کراوە بۆ شوێنێکی دەرەکی';
+$lang["page-title_offline_archive_administer_archive"] = 'بەڕێوەبردنی ئەوارەکان';
+$lang["page-title_offline_archive_offline_archive_action"] = 'ئەوارەی دەرەکی';
+$lang["page-title_offline_archive_pending_restore"] = 'گەرەکی پێشنیارکراو بۆ گەڕاندنەوە';
+$lang["page-title_offline_archive_restore_request"] = 'داواکردنی ڕێکخستنەوەی سەرچاوە';
+$lang["page-title_offline_archive_restore"] = 'گەڕاندنەوەی ئە archive';
+$lang["page-title_offline_archive_setup"] = 'ڕێکخستنەوەی پلاگینەکانی archiveی دەرەکی';
+$lang["page-title_offline_archive_view_archives"] = 'بینینی archiveی سەرچاوەکان';
+$lang["page-title_offline_archive_view_pending"] = 'بینینی archiveی پێنەوە';

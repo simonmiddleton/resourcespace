@@ -1,0 +1,46 @@
+<?php
+
+
+$lang["clip-natural-language-search"] = 'گەڕان بە وەسفە';
+$lang["clip-natural-language-search-help"] = 'داخلکردنی وەسفەی وێنە، بۆ نمونە \'ئۆتۆمبێلێکی سەردەمی سەوز\'.';
+$lang["clip-configuration"] = 'کۆنفیگورەیشن CLIP';
+$lang["clip-ai-smart-search"] = 'گەڕانی زیرەکی AI';
+$lang["clip-visually-similar-images"] = 'وێنەکانی وێنەیەکی وەک وێنەیەکی تر';
+$lang["clip-duplicate-images"] = 'وێنەکانی دووبارە';
+$lang["clip-duplicate-images-all"] = 'هەموو وێنەکان کە دووبارەیەتیان هەیە ببینە';
+$lang["clip-search-upload-image"] = 'گەڕان بە دانانی وێنەیەک';
+$lang["clip_search_cutoff"] = 'کەشەی دوورگەی وێنەی وەسفەی زمانەکی سروشتی (پیشنهادی 25%; زیاد بکە بۆ تێکەڵکردنی گەڕان، کەم بکە بۆ فراوانکردنی گەڕان)';
+$lang["clip_similar_cutoff"] = 'کەشەی دوورگەی وێنەکانی وەک وێنە (پیشنهادی 50%; زیاد بکە بۆ تێکەڵکردنی گەڕان، کەم بکە بۆ فراوانکردنی گەڕان)';
+$lang["clip_duplicate_cutoff"] = 'کەشەی دوورگەی وێنەکانی دووبارە (پیشنهادی 90%; زیاد بکە بۆ تێکەڵکردنی گەڕان، کەم بکە بۆ فراوانکردنی گەڕان)';
+$lang["clip_results_limit_search"] = 'ژمارەی ئەنجامەکانی گەڕان کە پێویستە نمایش بدرێن';
+$lang["clip_results_limit_similar"] = 'ژمارەی سەرچاوەکانی وەک وێنە کە پێویستە نمایش بدرێن';
+$lang["clip_service_url"] = 'URLی خزمەتگوزاری CLIP';
+$lang["clip_text_search_fields"] = 'میدانەکانی داتاکان بۆ کۆمەڵەکردن بۆ وێنەی دەق. تەنها ئەو میدانانە هەڵبژێرە کە یارمەتیدەر بن بۆ دروستکردنی وەسفەی کورت و مەعنا دار. میدانە زیادە لە پێویست نین، مەعناکەیان دەشکێنێت. پێشنیار: تەنها ناونیشان. میدانەکانی کۆدەکان نەشێنە.';
+$lang["clip-vector-on-upload"] = 'درەوەیەتی ڤێکتۆری CLIP لە کاتی بارکردنی فایل';
+$lang["clip-generating"] = 'CLIP درەوەیەتی ڤێکتۆری CLIP بۆ سەرچاوە: ';
+$lang["clip-tagging"] = 'CLIP بە خۆکار تێگیشتنەوەی سەرچاوە دەکات: ';
+$lang["clip-automatic-tagging"] = 'تێگیشتنەوەی خۆکار';
+$lang["clip-title-field"] = 'خانە بۆ ناونیشانی دروستکراوی خۆکار بە سەرچاوەیەکی نزیک لە بنکەی داتای ڤێکتۆری دەربڕین';
+$lang["clip-title-url"] = 'بنکەی داتای ڤێکتۆری دەرەوە بۆ ناونیشانەکان';
+$lang["clip-keyword-field"] = 'خانە بۆ کلیلەوشەی نزیکترین هاوشێوە لە بنکەی داتای ڤێکتۆری دەرەوە';
+$lang["clip-keyword-url"] = 'بنکەی داتای ڤێکتۆری دەرەوە بۆ کلیلەوشەکان';
+$lang["clip-keyword-count"] = 'ژمارەی کلیلەوشەکان بۆ دانانی (x کلیلەوشەی نزیک بە هاوبەشایەتی کوسین)';
+$lang["clip_show_on_searchbar"] = 'پیشاندانی تایبەتمەندیەکانی CLIP لە سەر خانەیگەڕان';
+$lang["clip_show_on_view"] = 'پیشاندانی تایبەتمەندیەکانی CLIP لە پەڕەی بینینی سەرچاوە';
+$lang["clip_resource_types"] = 'دروستکردنی ڤێکتۆرەکان (گەڕان لەوانە) ئەم جۆرە سەرچاوەیانە';
+$lang["clip_vector-statistics"] = 'ئامارەکانی ڤێکتۆر';
+$lang["clip_count_vectors"] = 'ژمارەی ڤێکتۆرەکان';
+$lang["clip_missing_vectors"] = 'ڤێکتۆرەکان کە نییە';
+$lang["clip-vector-generation"] = 'درەختی وێکتۆر';
+$lang["clip-vector-cleanup"] = 'سڕینەوەی وێکتۆرەکانی بێ یارمەتیدەر';
+$lang["clip-vector-cleanup-description"] = 'سڕینەوەی وێکتۆرەکان کە بەسەرچوون لە سەر سەرچاوەکان کە نییە یان لە جۆرە سەرچاوەکانی سەرەوە نەبن';
+$lang["clip_enable_full_duplicate_search"] = 'BETA: ڕێگەدان بە هەڵبژاردنی \'وێنەکانی دووبارە\' لەگەڵگەڕانی AI Smart';
+$lang["page-title_clip_search"] = 'گەڕانی AI Smart';
+$lang["page-title_clip_setup"] = 'ڕێکخستنی پلاگین CLIP';
+$lang["page-title_clip_webcam"] = 'دروستکردنی نیشانی وێبکەم';
+$lang["clip-ai_smart_search"] = 'گەڕانی AI Smart لەگەڵ CLIP';
+$lang["clip-generate_vectors"] = 'درەختی وێکتۆرەکانی CLIP دروست بکە';
+$lang["clip-configure_job"] = 'ڕێکخستنی کار بۆ دروستکردنی وێکتۆرەکانی CLIP';
+$lang["clip-job_limit"] = 'سنوورەی کۆی کار';
+$lang["clip-job_limit_help"] = 'دانانی ئەم هەڵبژاردنە ئەم سنوورە لەسەر ژمارەی سەرچاوەکان کە لە یەک جار کار دەکرێن دەکات';
+$lang["clip-job_limit_error"] = 'نرخی دەبێت لە نێوان 1 و 100000 یان بەتاڵ بێت بۆ بێ سنوور';

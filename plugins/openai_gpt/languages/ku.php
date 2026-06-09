@@ -1,0 +1,41 @@
+<?php
+
+
+$lang["openai_gpt_title"] = 'پڕۆسەکردنی metadata لە OpenAI/Ollama';
+$lang["openai_gpt_intro"] = 'زیادکردنی metadata کە لە ڕێگەی ناردنی داتای پێشوو یان وێنەی پیشاندانی سەرچاوە بۆ API ی OpenAI (یان کە پێکدێت، وەک Ollama) بە پرۆمپی تایبەتی. بۆ زانیاری زیاتر، سەرچاوەی <a href=\'https://platform.openai.com/docs/introduction\' target=\'_blank\'>OpenAI</a> بەرەوپێش ببینە.';
+$lang["property-openai_gpt_prompt"] = 'پرۆمپی پڕۆسەکردنی AI';
+$lang["property-openai_gpt_input_field"] = 'داتای داخلکردنی AI';
+$lang["openai_gpt_api_key"] = 'کەیلی API ی OpenAI. کەیلی API خۆت لە <a href=\'https://openai.com/api\' target=\'_blank\'>https://openai.com/api</a> وەرگرە';
+$lang["openai_gpt_model"] = 'موودێلی OpenAI کە بەکار دەهێنرێت (وەک \'gpt-4o\')';
+$lang["openai_gpt_temperature"] = 'گەرمەی نمونەگیری لە نێوان 0 و 1 (نرخی زۆرتر واتە مودێل زیاتر هەوڵ دەدات بۆ هەڵە کردن)';
+$lang["openai_gpt_max_tokens"] = 'بەشترین tokens';
+$lang["openai_gpt_advanced"] = 'ئاگاداری - ئەم بەشە تەنها بۆ تاقیکردنەوەیە و نابێت لە سیستەمی ڕاستەوخۆ بگۆڕدرێت. گۆڕینی هەر یەک لە هەڵبژاردنەکانی پێوەندیدار لە ئەم شوێنە کاریگەری دەکات لەسەر هەموو خانەکانی metadata کە ڕێکخراوە. بە هەوشیار بگۆڕە!';
+$lang["openai_gpt_system_message"] = 'پەیامی سیستەمی سەرەتایی. جێگرەوەی %%IN_TYPE%% و %%OUT_TYPE%% لەگەڵ \'text\' یان \'json\' دەگۆڕدرێن بە پێی جۆری خانەی سەرچاوە/ئامانج';
+$lang["openai_gpt_model_override"] = 'موودێل لە ڕێکخراوی جیهانی دا داخڵ کراوە بۆ: [model]';
+$lang["openai_gpt_processing_multiple_resources"] = 'چەندین سەرچاوە';
+$lang["openai_gpt_processing_resource"] = 'سەرچاوە [resource]';
+$lang["openai_gpt_processing_field"] = 'دروستکردنی metadata ی AI بۆ خانە \'[field]\'';
+$lang["property-gpt_source"] = 'چوڵەی GPT';
+$lang["openai_gpt_language"] = 'زمانی بەرزکردنەوە';
+$lang["openai_gpt_language_user"] = 'زمانی بەکارهێنەر ئێستا';
+$lang["openai_gpt_overwrite_data"] = 'داتای پێشوو لە خانەکانەوە لە نوێ بنووسە؟';
+$lang["openai_gpt"] = 'OpenAI GPT';
+$lang["openai_gpt_process_existing"] = 'پڕۆسەکردنی خانەکانی AI کە پێشتر هەیە';
+$lang["openai_gpt_process_existing_configure"] = 'پێوەندیدانی کار بۆ پڕۆسەکردنی خانەکانی AI کە پێشتر هەیە';
+$lang["openai_gpt_process_existing_field_ref"] = 'خانەی AI';
+$lang["openai_gpt_process_existing_overwrite"] = 'نوێکردنەوە';
+$lang["openai_gpt_process_existing_field_ref_help"] = 'ئەمە خانەی ئامانجە کە دەبێت نوێکرێت.';
+$lang["openai_gpt_process_existing_collection_refs_help"] = 'دانانی ئەم هەڵبژاردنە واتە تەنها سەرچاوەکان لە لیستی کۆلەکشنەکان دەکرێن پڕۆسە بکرێن. ئەگەر هیچ کۆلەکشنێک دیاری نەکراوە، هەموو سەرچاوەکانی گونجاو پڕۆسە دەکرێن. کۆلەکشنەکان دەتوانرێن بە لیستی جیاکراو بە کۆما وەک 100،105،110-115 دیاری بکرن.';
+$lang["openai_gpt_process_existing_overwrite_help"] = 'دانانی ئەم هەڵبژاردنە واتە هەر داتای پێشوو لە خانەی ئامانجەوە نوێکرێت. تکایە سەرنج بدە کە ئەگەر نوێکردنەوە چالاک کرا و خانەی داخڵەکە هیچ داتا نەهەیە، خانەی ئامانج پاک دەبێت.';
+$lang["openai_gpt_limit_warning"] = 'ئاگاھی - سنوورەکانی تۆکەن زیاد کراوە، بۆیە داواکاریکردنەکانی API ی OpenAI زیاتر کار نەنەکەن. خانەکانی GPT نەنێرێن.';
+$lang["openai_gpt_limit_warning_short"] = 'ئاگاھی - سنوورەکانی تۆکەن زیاد کراوە، بۆیە خانەکانی GPT نەنێرێن.';
+$lang["openai_gpt_usage_days"] = 'بەکارهێنانی تۆکەن لە ڕۆژانی %%DAYS%% ڕۆژ';
+$lang["openai_gpt_token_limit"] = 'سنوورەکانی تۆکەن';
+$lang["openai_gpt_no_token_limit"] = 'سنوورەی تۆکەن نایەوە';
+$lang["openai_gpt_configured_limit"] = '%%TOKEN_LIMIT%% لە  %%DAYS%% ڕۆژ';
+$lang["openai_gpt_token_count"] = '%%TOKEN_COUNT%% تۆکەن';
+$lang["openai_gpt_provider"] = 'پێشکەشکەری AI';
+$lang["openai_gpt_provider_override"] = 'پێشکەشکەری لە ڕێکخستنە گشتییەکاندا داخڵ کراوە بۆ: [provider]';
+$lang["ollama_name"] = 'Ollama';
+$lang["ollama_model"] = 'مۆدێلی Ollama کە بەکار دەهێنرێت (وەک \'gemma3:12b\')';
+$lang["ollama_endpoint"] = 'نیشانی Ollama کە بەکار دەهێنرێت (وەک http://[IP]:11434/v1/chat/completions)';
