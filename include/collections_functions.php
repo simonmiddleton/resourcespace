@@ -6727,6 +6727,7 @@ function process_collection_download(array $dl_data): array
     $dl_data['filenames'] = []; // Set up an array to store the filenames as they are found (to analyze dupes)
     $dl_data['used_resources'] = [];
     $dl_data['subbed_original_resources'] = [];
+    $dl_data['available_sizes'] = [];
     $allsizes = get_all_image_sizes(true);
     $rescount = count($collection_resources);
 
@@ -6759,6 +6760,11 @@ function process_collection_download(array $dl_data): array
         $use_watermark = check_use_watermark();
         $subbed_original = false;
 
+        // Do not download permenantly deleted resources
+        if (get_resource_data($collection_resources[$n]['ref']) === false) {
+            debug('Collection download : skipping resource ID ' . $ref . ' resource does not exist.');
+            continue;
+        }
         // Do not download resources without proper access level
         if ($access > 1) {
             debug('Collection download : skipping resource ID ' . $ref . ' user ID ' . $GLOBALS["userref"] . ' does not have access to this resource');
@@ -6828,6 +6834,11 @@ function process_collection_download(array $dl_data): array
                     $dl_data['available_sizes'][$size_id][] = $ref;
                 }
             }
+        }
+
+        if (empty($dl_data['available_sizes'])) {
+            debug('Collection download : skipping resource ID ' . $ref . ' no sizes available');
+            continue;
         }
 
         // Check which size to use
@@ -7049,7 +7060,9 @@ function process_collection_download(array $dl_data): array
     if (0 < $count_data_only_types) {
         collection_download_process_data_only_types($dl_data, $zip);
     }
-    collection_download_process_summary_notes($dl_data, $filename, $zip);
+    if (isset($filename) && "" != $filename) {
+        collection_download_process_summary_notes($dl_data, $filename, $zip);
+    }
     if ($include_csv_file == 'yes') {
         collection_download_process_csv_metadata_file($dl_data, $zip);
     }
