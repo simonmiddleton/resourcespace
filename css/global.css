@@ -5167,7 +5167,7 @@ header.LoginHeader {
     background: var(--colour-surface-200);
 }
 
-.is-open {
+.resource-card-action-menu.is-open, .top-right-menu.is-open {
     background-color: var(--colour-surface-1000);
     color: var(--colour-surface-50);
 }
