@@ -3266,3 +3266,4 @@ $lang['language-bg'] = 'ਬੁਲਗਾਰੀਆਈ';
 $lang['language-zh-TW'] = 'ਪਰੰਪਰਾਗਤ ਚੀਨੀ';
 
 $lang["home__welcometext"] = 'ਸਭ ਤੋਂ ਅੱਗੇ ਖੁੱਲ੍ਹਾ ਸਰੋਤ ਕਾਰੋਬਾਰੀ ਡਿਜੀਟਲ ਐਸੈੱਟ ਮੈਨੇਜਮੈਂਟ ਸਿਸਟਮ।';
+$lang["language-ku"] = 'ਪੰਜਾਬੀ';

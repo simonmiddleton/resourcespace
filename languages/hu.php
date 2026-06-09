@@ -3258,3 +3258,4 @@ $lang['language-bg'] = 'Bulgár';
 $lang['language-zh-TW'] = 'Hagyományos kínai';
 
 $lang["home__welcometext"] = 'A vezető nyílt forráskódú vállalati digitális eszközkezelő rendszer.';
+$lang["language-ku"] = 'Kurdis';

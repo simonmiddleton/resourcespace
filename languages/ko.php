@@ -3266,3 +3266,4 @@ $lang['language-bg'] = '불가리아어';
 $lang['language-zh-TW'] = '번체 중국어';
 
 $lang["home__welcometext"] = '선도적인 오픈 소스 엔터프라이즈 디지털 자산 관리 시스템.';
+$lang["language-ku"] = '쿠르드어';

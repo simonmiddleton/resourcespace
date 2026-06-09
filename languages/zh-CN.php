@@ -3338,3 +3338,4 @@ $lang['language-bg'] = '保加利亚语';
 $lang['language-zh-TW'] = '繁体中文';
 
 $lang["home__welcometext"] = '领先的开源企业数字资产管理系统。';
+$lang["language-ku"] = '库尔德语';

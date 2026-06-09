@@ -3262,3 +3262,4 @@ $lang['language-bg'] = 'Bulgarca';
 $lang['language-zh-TW'] = 'Geleneksel Çince';
 
 $lang["home__welcometext"] = 'Önde gelen açık kaynaklı kurumsal dijital varlık yönetim sistemi.';
+$lang["language-ku"] = 'Kürtçe';

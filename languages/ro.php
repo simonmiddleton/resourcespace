@@ -3338,3 +3338,4 @@ $lang['language-bg'] = 'Limba română';
 $lang['language-zh-TW'] = 'Chineză tradițională';
 
 $lang["home__welcometext"] = 'Cel mai important sistem open source de gestionare a activelor digitale pentru întreprinderi.';
+$lang["language-ku"] = 'Kurmanji';

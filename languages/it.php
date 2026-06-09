@@ -3288,3 +3288,4 @@ $lang['language-bg'] = 'Bulgaro';
 $lang['language-zh-TW'] = 'Cinese Tradizionale';
 
 $lang["home__welcometext"] = 'Il principale sistema di gestione digitale delle risorse open source per le imprese.';
+$lang["language-ku"] = 'Curdo';

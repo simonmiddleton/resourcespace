@@ -3312,3 +3312,4 @@ $lang['language-bg'] = 'Bulgari';
 $lang['language-zh-TW'] = 'Perinteinen kiina';
 
 $lang["home__welcometext"] = 'Kansainvälisen avoimen lähdekoodin yritystason digitaalisen omaisuudenhallintajärjestelmän eturintamassa.';
+$lang["language-ku"] = 'Kurdi';

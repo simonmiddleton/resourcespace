@@ -3336,3 +3336,4 @@ $lang['language-bg'] = 'bułgarski';
 $lang['language-zh-TW'] = 'Tradycyjny chiński';
 
 $lang["home__welcometext"] = 'Wiodący otwartoźródłowy system zarządzania zasobami cyfrowymi dla przedsiębiorstw.';
+$lang["language-ku"] = 'Kurdyjski';

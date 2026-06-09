@@ -3266,3 +3266,4 @@ $lang['language-bg'] = 'بلغاریایی';
 $lang['language-zh-TW'] = 'چینی سنتی';
 
 $lang["home__welcometext"] = 'سیستم مدیریت دارایی دیجیتال سازمانی منبع باز پیشرو.';
+$lang["language-ku"] = 'کوردی';

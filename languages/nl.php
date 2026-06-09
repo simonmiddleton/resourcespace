@@ -3317,3 +3317,4 @@ $lang['language-bg'] = 'Bulgaars';
 $lang['language-zh-TW'] = 'Traditioneel Chinees';
 
 $lang["home__welcometext"] = 'Het toonaangevende open source enterprise digital asset management systeem.';
+$lang["language-ku"] = 'Koerdisch';

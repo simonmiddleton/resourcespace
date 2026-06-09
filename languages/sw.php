@@ -3262,3 +3262,4 @@ $lang['language-bg'] = 'Kibulgaria';
 $lang['language-zh-TW'] = 'Kichina cha Jadi';
 
 $lang["home__welcometext"] = 'Mfumo wa usimamizi wa mali za kidijitali wa kampuni wa chanzo huria unaoongoza.';
+$lang["language-ku"] = 'Kiswahili';

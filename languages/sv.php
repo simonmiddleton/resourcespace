@@ -3341,3 +3341,4 @@ $lang['language-bg'] = 'Bulgariska';
 $lang['language-zh-TW'] = 'Traditionell Kinesiska';
 
 $lang["home__welcometext"] = 'Det ledande open source-entreprenadssystemet för digitala tillgångar.';
+$lang["language-ku"] = 'Kurdiska';

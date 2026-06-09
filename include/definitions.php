@@ -935,6 +935,7 @@ $languages["hr"] = "Hrvatski"; # Croatian
 $languages["it"] = "Italiano"; # Italian
 $languages["jp"] = "日本語"; # Japanese
 $languages["ko"] = "한국어"; # Korean
+$languages["ku"] = "کوردی"; # Kurdish
 $languages["ms"] = "Bahasa Melayu"; # Malay
 $languages["nl"] = "Nederlands"; # Dutch
 $languages["no"] = "Norsk"; # Norwegian

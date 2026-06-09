@@ -3310,3 +3310,4 @@ $lang['language-bg'] = 'Búlgar';
 $lang['language-zh-TW'] = 'Xinès tradicional';
 
 $lang["home__welcometext"] = 'El sistema de gestió d\'actius digitals d\'empresa de codi obert líder.';
+$lang["language-ku"] = 'Kurdi';

@@ -3256,3 +3256,4 @@ $lang['language-bg'] = 'Tiếng Bulgaria';
 $lang['language-zh-TW'] = 'Tiếng Trung Phồn thể';
 
 $lang["home__welcometext"] = 'Hệ thống quản lý tài sản kỹ thuật số doanh nghiệp mã nguồn mở hàng đầu.';
+$lang["language-ku"] = 'Tiếng Kurd';

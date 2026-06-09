@@ -3477,6 +3477,7 @@ $lang["language-hu"] = "Hungarian";
 $lang["language-it"] = "Italian";
 $lang["language-jp"] = "Japanese";
 $lang["language-ko"] = "Korean";
+$lang["language-ku"] = "Kurdish";
 $lang["language-ms"] = "Malay";
 $lang["language-nl"] = "Dutch";
 $lang["language-no"] = "Norwegian";

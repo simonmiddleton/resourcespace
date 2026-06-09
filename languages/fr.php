@@ -3323,3 +3323,4 @@ $lang['language-bg'] = 'Bulgare';
 $lang['language-zh-TW'] = 'Chinois traditionnel';
 
 $lang["home__welcometext"] = 'Le principal système de gestion des actifs numériques d\'entreprise en open source.';
+$lang["language-ku"] = 'Kurmandji';

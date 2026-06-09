@@ -3264,3 +3264,4 @@ $lang['minimal_collection_bar'] = 'Минимална лента';
 $lang['thumbnails_collection_bar'] = 'Миниатюри';
 
 $lang["home__welcometext"] = 'Водещата система с отворен код за управление на корпоративни дигитални активи.';
+$lang["language-ku"] = 'Курдски';

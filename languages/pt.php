@@ -3324,3 +3324,4 @@ $lang['language-bg'] = 'Búlgaro';
 $lang['language-zh-TW'] = 'Chinês Tradicional';
 
 $lang["home__welcometext"] = 'O principal sistema de gerenciamento de ativos digitais empresarial de código aberto.';
+$lang["language-ku"] = 'Curdo';

@@ -3360,3 +3360,4 @@ $lang['language-bg'] = 'بلغارية';
 $lang['language-zh-TW'] = 'صينية تقليدية';
 
 $lang["home__welcometext"] = 'نظام إدارة الأصول الرقمية المؤسسي مفتوح المصدر الرائد.';
+$lang["language-ku"] = 'الكردية';

@@ -3321,3 +3321,4 @@ $lang['language-bg'] = 'ブルガリア語';
 $lang['language-zh-TW'] = '繁体字中国語';
 
 $lang["home__welcometext"] = '主要なオープンソースのエンタープライズデジタルアセット管理システム。';
+$lang["language-ku"] = 'クルド語';

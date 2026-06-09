@@ -3265,3 +3265,4 @@ $lang['language-bg'] = 'بلغاری';
 $lang['language-zh-TW'] = 'روایتی چینی';
 
 $lang["home__welcometext"] = 'مفت ماخذ ادارہ جاتی ڈیجیٹل اثاثہ جات کا سب سے آگے بڑھنے والا نظام۔';
+$lang["language-ku"] = 'اُردُو';

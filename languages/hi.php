@@ -3271,3 +3271,4 @@ $lang['language-bg'] = 'बुल्गारियाई';
 $lang['language-zh-TW'] = 'परंपरागत चीनी';
 
 $lang["home__welcometext"] = 'प्रमुख ओपन सोर्स एंटरप्राइज़ डिजिटल एसेट प्रबंधन प्रणाली।';
+$lang["language-ku"] = 'कुर्दी';

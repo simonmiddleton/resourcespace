@@ -3254,3 +3254,4 @@ $lang['language-bg'] = 'Bulgarian';
 $lang['language-zh-TW'] = 'Tradisyong Tsino';
 
 $lang["home__welcometext"] = 'Ang nangungunang open source na sistema para sa pamamahala ng digital na asset para sa negosyo.';
+$lang["language-ku"] = 'Kurdish';

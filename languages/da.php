@@ -3324,3 +3324,4 @@ $lang['language-bg'] = 'Bulgarisk';
 $lang['language-zh-TW'] = 'Traditionel Kinesisk';
 
 $lang["home__welcometext"] = 'Den førende open source virksomhedsdigital asset management system.';
+$lang["language-ku"] = 'Kurdiske';
