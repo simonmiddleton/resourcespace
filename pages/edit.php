@@ -2325,7 +2325,7 @@ else
     }
     
     // Edit the 'contributed by' value of the resource table
-    if($ref > 0 && $edit_contributed_by && !is_anonymous_user() && checkperm('v'))
+    if($ref > 0 && !is_anonymous_user() && acl_can_edit_contributed_by())
       {
       $sharing_userlists = false;
       $single_user_select_field_id = "created_by";
