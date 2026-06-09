@@ -1980,9 +1980,9 @@ hook("upload_page_top");
         exit();
     }
     ?>
-    <h1><?php echo $titleh1 ?></h1>
+    <h1><?php echo escape($titleh1); ?></h1>
     <div id="upload_instructions">
-        <p><?php echo $intro;render_help_link("user/uploading");?></p>
+        <p><?php echo escape($intro); render_help_link("user/uploading");?></p>
     </div>
 </div>
 
@@ -2035,7 +2035,7 @@ hook("upload_page_top");
         sort($allowedmime);
         $allowed_types = implode(",", $allowedmime);
         ?>
-        <p><?php echo str_replace_formatted_placeholder("%extensions", str_replace(",",", ",$allowed_types), $lang['allowedextensions-extensions'])?></p>
+        <p><?php echo escape(str_replace_formatted_placeholder("%extensions", str_replace(",",", ",$allowed_types), $lang['allowedextensions-extensions'])); ?></p>
         <?php
     } ?>
 
