@@ -5108,8 +5108,6 @@ function render_featured_collection(array $ctx, array $fc)
         <?php echo $html_container_data; ?> >
         <div 
             class="HomePanel featured-tile"
-            href="<?php echo $html_fc_a_href; ?>" 
-            onclick="return CentralSpaceLoad(this, true);" 
             id="featured_tile_<?php echo md5($fc['ref']); ?>"
             <?php echo $html_container_data; ?> >
             <?php
@@ -5150,7 +5148,7 @@ function render_featured_collection(array $ctx, array $fc)
                     tilehref = '';
                     tileonclick = '';
 
-                    jQuery(`a.FeaturedSimpleTile:not(fctilename)`).css('pointer-events', 'initial')
+                    jQuery(`a.FeaturedSimpleTile:not(${fctilename})`).css('pointer-events', 'initial')
                 }
             );
         })
