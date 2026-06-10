@@ -222,7 +222,7 @@ ResourceSpace.Modules.Header = (() => {
                 let elWidth = el.getBoundingClientRect().width; 
 
                 if (el.classList.contains('logo')) {
-                    elWidth = parseInt(getComputedStyle(el).maxWidth, 10);
+                    elWidth = parseInt(getComputedStyle(el).width, 10);
                 } else if(el.classList.contains('header-search-field')) {
                     // Same as CSS clamp rule for `#header-container .header-search-field`
                     elWidth = Math.min(Math.max(320, headerBB.width * 0.38), 400);
