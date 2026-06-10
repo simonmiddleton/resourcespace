@@ -98,8 +98,9 @@ $query_cache_enabled = true;
 // Query cache time in minutes. How long before the disk cache is refreshed for a given result set. Should not be necessary to change this.
 $query_cache_expires_minutes = 30;
 
-// The level of PHP error reporting to use. By default, hide warnings.
-$config_error_reporting = E_ALL & ~E_DEPRECATED;
+// The level of PHP error reporting to use. By default report all errors, warnings, and notices except deprecation warnings 
+// (both PHP's built-in deprecation notices and user-triggered deprecation notices).
+$config_error_reporting = E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED;
 
 // Enable work-arounds required when installed on Microsoft Windows systems
 $config_windows = false;
