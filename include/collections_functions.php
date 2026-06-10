@@ -6760,7 +6760,7 @@ function process_collection_download(array $dl_data): array
         $use_watermark = check_use_watermark();
         $subbed_original = false;
 
-        // Do not download permenantly deleted resources
+        // Do not download permanently deleted resources
         if (get_resource_data($collection_resources[$n]['ref']) === false) {
             debug('Collection download : skipping resource ID ' . $ref . ' resource does not exist.');
             continue;
