@@ -669,7 +669,7 @@ include "../include/header.php";
             <?php if (!$daterange_search) { ?>
                 <div class="Question">
                     <label><?php echo escape($lang["bydate"]) ?></label>
-                    <select name="basicyear" class="SearchWidth" style="width:120px;" onchange="UpdateResultCount();">
+                    <select name="basicyear" class="SearchWidth SearchWidthDate" onchange="UpdateResultCount();">
                         <option value=""><?php echo escape($lang["anyyear"]) ?></option>
                         <?php
                         $y = date("Y");
@@ -682,7 +682,7 @@ include "../include/header.php";
                         }
                         ?>
                     </select>
-                    <select name="basicmonth" class="SearchWidth" style="width:120px;" onchange="UpdateResultCount();">
+                    <select name="basicmonth" class="SearchWidth SearchWidthDate" onchange="UpdateResultCount();">
                         <option value=""><?php echo escape($lang["anymonth"]) ?></option>
                         <?php
                         for ($n = 1; $n <= 12; $n++) {
@@ -695,7 +695,7 @@ include "../include/header.php";
                         }
                         ?>
                     </select>
-                    <select name="basicday" class="SearchWidth" style="width:120px;" onchange="UpdateResultCount();">
+                    <select name="basicday" class="SearchWidth SearchWidthDate" onchange="UpdateResultCount();">
                         <option value=""><?php echo escape($lang["anyday"]) ?></option>
                         <?php
                         for ($n = 1; $n <= 31; $n++) {

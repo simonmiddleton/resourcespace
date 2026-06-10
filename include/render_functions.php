@@ -748,7 +748,7 @@ function render_search_field(
                 $found_day   = (array_key_exists(2, $s)) ? $s[2] : '';
                 }
             ?>      
-            <select name="<?php echo escape($name);?>-y" id="<?php echo $id?>-y" class="SearchWidth<?php if ($forsearchbar){ echo "Half";} ?>" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
+            <select name="<?php echo escape($name);?>-y" id="<?php echo $id?>-y" class="SearchWidth<?php if ($forsearchbar){ echo "Half";} else { echo " SearchWidthDate";} ?>" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
               <option value=""><?php echo escape($lang["anyyear"])?></option>
               <?php
               $y=date("Y");
@@ -759,7 +759,7 @@ function render_search_field(
                 }
               ?>
             </select>
-            <select name="<?php echo escape($name);?>-m" id="<?php echo $id?>-m" class="SearchWidth<?php if ($forsearchbar){ echo "Half SearchWidthRight";} ?>" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
+            <select name="<?php echo escape($name);?>-m" id="<?php echo $id?>-m" class="SearchWidth<?php if ($forsearchbar){ echo "Half SearchWidthRight";} else { echo " SearchWidthDate";}  ?>" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
               <option value=""><?php echo escape($lang["anymonth"])?></option>
               <?php
               for ($d=1;$d<=12;$d++)
@@ -773,7 +773,7 @@ function render_search_field(
             <?php if (!$forsearchbar || ($forsearchbar && $searchbyday)) 
                 { 
                 ?>
-                <select name="<?php echo escape($name);?>-d" id="<?php echo $id?>-d" class="SearchWidth<?php if ($forsearchbar){ echo "Half";} ?>" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
+                <select name="<?php echo escape($name);?>-d" id="<?php echo $id?>-d" class="SearchWidth<?php if ($forsearchbar){ echo "Half";} else { echo " SearchWidthDate";}  ?>" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
                   <option value=""><?php echo escape($lang["anyday"])?></option>
                   <?php
                   for ($d=1;$d<=31;$d++)
