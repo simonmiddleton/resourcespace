@@ -339,10 +339,6 @@ function CentralSpaceLoad (anchor,scrolltop,modal,keep_fragment = true)
                     {
                     pageScrolltop(scrolltopElementModal);
                     }
-                else if (jQuery(window).width() <= 1100)
-                    {
-                    pageScrolltop(scrolltopElementContainer);
-                    }
                 else
                     {
                     pageScrolltop(scrolltopElementCentral);
@@ -847,7 +843,10 @@ function ModalLoad(url,jump,fittosize,align)
         }
 
     // Window smaller than the modal? No point showing a modal as it wouldn't appear over the background.
-    if (jQuery(window).width()<=jQuery('#modal').width()) {return CentralSpaceLoad(url,jump);}
+    if (jQuery(window).width() <= 1280) 
+        {
+        return CentralSpaceLoad(url,jump);
+        }
 
     jQuery('#modal').draggable({ handle: ".RecordHeader", opacity: 0.7 });
 

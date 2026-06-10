@@ -6154,6 +6154,30 @@ body:has(.collection-bar-holder.state-thumbs) #UICenter {
         width: calc(100% - 6px);
     }
 
+    #previewimagewrapper {
+        min-width: 100%;
+    }
+
+    #previewimage {
+        width: 100%;
+    }
+    
+    #RecordDownloadTabContainer, .RecordTools {
+        width: 100%;
+    }
+
+    .RecordPanel .RecordDownloadSpace ul li {
+        display: block;
+    }
+
+    .CommentEntry, .comment_form_container {
+        max-width: 600px;
+        width: auto;
+    }
+
+    .CommentFormBody {
+        width: 100%;
+    }
 }
 
 @media(max-width: 1420px) {
