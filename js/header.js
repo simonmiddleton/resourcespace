@@ -188,9 +188,27 @@ ResourceSpace.Modules.Header = (() => {
 
     const nav = header?.querySelector('nav.primary-navigation');
     const list = nav?.querySelector(':scope > ul');
-    const panel = nav?.querySelector('ul.menu-panel');
+    let panel = nav?.querySelector('ul.menu-panel');
 
     function handlePrimaryNavigationOverflow() {
+        // Add the missing <li class="menu-overflow"><ul class="menu-panel" data-menu-panel role="menu" hidden></ul></li>
+        // that render_header_links() would create otherwise
+        if (list && !panel && getPrimaryNavigationLinkItems().length <= primaryNavOverflowThreshold) {
+            const li = document.createElement('li');
+            li.className = 'menu-overflow';
+
+            const ul = document.createElement('ul');
+            ul.className = 'menu-panel';
+            ul.setAttribute('data-menu-panel', '');
+            ul.setAttribute('role', 'menu');
+            ul.hidden = true;
+
+            li.appendChild(ul);
+
+            list.appendChild(li);
+            panel = nav?.querySelector('ul.menu-panel');
+        }
+
         if (!list || !panel || ResourceSpace.media.max('desktop').matches) return;
 
         restorePrimaryNavOverflowItems();
