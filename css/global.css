@@ -3358,7 +3358,7 @@ input[type="text"]#iconpicker-input {
     position: relative;
     display: flex;
     aspect-ratio: 3 / 1;
-    max-height: 640px;
+    max-height: 600px;
 }
 
 .hero-banner-progress {
