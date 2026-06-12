@@ -34,27 +34,17 @@
 	color:black;
 }
 
-#NewsPanel h2 {
-	color: #fff;
-	font-size: 1.4em;
-}
-
 #NewsPanel p {
 	padding: 3px 0;
 }
 
 #NewsPanel {
-	margin-bottom: 0;
-	padding: 15px;
-	display: inline-block;
-	width: 485px;
-	background-color: rgba(0, 0, 0, 0.45);
-	border-radius: 8px;
+	width: 1376px;
+	background-color: var(--colour-surface-card-content-background);
+	border-radius: var(--space-4);
 	color: white;
-}
-
-#NewsPanel a {
-	color: white;
+	box-sizing: border-box;
+	margin: var(--space-32) auto 0 auto;
 }
 
 #EditNewsBack {
@@ -64,4 +54,11 @@
 
 #NewsNav {
 	margin-top: 15px;
+}
+
+@media(max-width: 1376px) {
+	#NewsPanel {
+		width: auto;
+		margin: var(--space-16);
+	}
 }

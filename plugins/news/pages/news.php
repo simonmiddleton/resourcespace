@@ -89,16 +89,16 @@ include __DIR__."/../../../include/header.php";
 
 ?>
  
-<div>
-<form id="NewsNav" action="<?php echo $baseurl . '/plugins/news/pages/news.php?ref=' . escape($ref); ?>" method="post">
-<?php generateFormToken("news"); ?> 
-    <input name="previous" type="submit" value="&lt;"/> 
-    <?php if (checkperm("o")) { ?>  
-        <input name="edit" type="submit" value="<?php echo escape($lang["action-edit"]); ?>"/>
-    <?php } ?>      
-    <input name="next" type="submit" value="&gt;"/>
+<div class="BasicsBox">
+    <form id="NewsNav" action="<?php echo $baseurl . '/plugins/news/pages/news.php?ref=' . escape($ref); ?>" method="post">
+        <?php generateFormToken("news"); ?> 
+        <input name="previous" type="submit" value="&lt;"/> 
+        <?php if (checkperm("o")) { ?>  
+            <input name="edit" type="submit" value="<?php echo escape($lang["action-edit"]); ?>"/>
+        <?php } ?>      
+        <input name="next" type="submit" value="&gt;"/>
+    </form> 
 </div>
-</form> 
 
 <div class="BasicsBox" id="NewsDisplayBox"> 
     <h1><?php echo escape($newsdisplay[0]["title"]);?></h1>
