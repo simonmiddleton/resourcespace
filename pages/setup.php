@@ -382,20 +382,15 @@ if (get_post_bool('ajax')) {
             .language {clear:both; text-align:center; padding:20px;}
         </style> 
     </head>
-    <body class="SlimHeader">
+    <body>
         <div id="setup-container">
-            <div id="Header" style="height: 40px;">
-                <div class="HeaderImgLink">
-                    <img alt="" src="../gfx/titles/title-black.svg" id="HeaderImg" />
+            <header>
+                <div id="header-container">
+                    <div class="logo">
+                        <img alt="" src="../gfx/titles/title-black.svg" id="HeaderImg" />
+                    </div>
                 </div>
-                <div id="HeaderNav1" class="HorizontalNav ">
-                    <ul></ul>
-                </div>
-                <div id="HeaderNav2" class="HorizontalNav HorizontalWhiteNav">
-                    <ul></ul>
-                </div> 
-                <div class="clearer"></div>
-            </div>
+            </header>
 
             <?php
             // Check if config file already exists and die with an error if it does.
