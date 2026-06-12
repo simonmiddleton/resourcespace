@@ -228,8 +228,7 @@ include '../../include/header.php';
                                         id="slideshow_img_<?php echo (int) $slideshow_ref; ?>"
                                         src="<?php echo $slideshow_file_info['file_url']; ?>"
                                         alt="Slideshow Image <?php echo (int) $slideshow_ref; ?>"
-                                        width="150"
-                                        height="80"
+                                        width="200"
                                     >
                                 </a>
                             <?php } else { ?>
@@ -237,8 +236,7 @@ include '../../include/header.php';
                                     id="slideshow_img_<?php echo (int) $slideshow_ref; ?>"
                                     src="<?php echo $slideshow_file_info['file_url']; ?>"
                                     alt="Slideshow Image <?php echo (int) $slideshow_ref; ?>"
-                                    width="150"
-                                    height="80"
+                                    width="200"
                                 >
                             <?php } ?>
                         </td>
