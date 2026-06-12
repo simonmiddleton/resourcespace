@@ -4942,6 +4942,15 @@ header.LoginHeader {
         gap: var(--space-20);
         flex-wrap: wrap;
     }
+
+    #header-container a.UploadButton {
+        width: unset;
+        padding: 0 var(--space-16);
+    }
+
+    #header-container a.UploadButton span {
+        display: flex;
+    }
 }
 
 /* Tablet */
@@ -5086,12 +5095,7 @@ header.LoginHeader {
     }
 
     #header-container a.UploadButton {
-        width: unset;
-        padding: 0 var(--space-16);
-    }
-
-    #header-container a.UploadButton span {
-        display: flex;
+        margin-left: var(--space-12);
     }
 }
 
