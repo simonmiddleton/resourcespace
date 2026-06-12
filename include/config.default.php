@@ -1417,11 +1417,11 @@ $thumbs_display_fields = array(8); // ** SEE NOTE (1)
 // array of defined thumbs_display_fields to apply CSS modifications to (via $search_results_title_trim)
 $thumbs_display_extended_fields = array();
 # $search_result_title_height=26;
-$search_results_title_trim = 30;
+$search_results_title_trim = 26;
 
 // Enable extra large thumbnails option for search screen
 $xlthumbs = true;
-$xl_search_results_title_trim = 50;
+$xl_search_results_title_trim = 41;
 
 // SORT Fields: display fields to be added to the sort links in large,small, and xlarge thumbnail views
 $sort_fields = array(12); // ** SEE NOTE (1)
