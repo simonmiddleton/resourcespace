@@ -3142,7 +3142,13 @@ select.MultiSelect:before {
 .Question table td:has(> input[type="checkbox"]) { vertical-align: bottom; }
 .Question td > label{ margin-top: 0.1em; width: auto; }
 
-input[name="antispam_user_code"] { position: absolute; left: -2000px; }
+input[name="antispam_user_code"] {
+    display: none;
+}
+
+#antispam {
+    max-width: 420px;
+}
 
 /* Update Preview button for MultiRTypeSelect */
 .Question .updatePreviewButton {
