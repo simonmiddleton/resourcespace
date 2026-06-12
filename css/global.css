@@ -3342,12 +3342,6 @@ input[type="text"]#iconpicker-input {
     letter-spacing: -0.64px;
 }
 
-#HomeSiteText h1,
-#HomeSiteText p {
-    display: flex;
-    align-items: flex-start;
-}
-
 #HomeSiteText h1 {
     padding-bottom: var(--space-12, 12px);
     font-size: 48px;
